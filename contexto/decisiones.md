@@ -82,7 +82,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 
 **DEC-020 — La factura de almacenamiento siempre se genera** (2026-07-16). Sin tarifa, o si la regla falla, el cargo usa el valor mínimo de la modalidad; sin mínimo, sale en $0. La advertencia va al detalle de la factura y a una notificación para Facturación, que corrige con un override de línea. Nunca una advertencia sin factura: el operario no tiene cómo regenerarla.
 
-**DEC-021 — No hay creación manual de facturas en el frontend.** El sistema genera las facturas; Facturación asigna el N.º SIIGO, aprueba, envía y registra pagos. `create.vue`, `BillingPreviewPanel.vue` y `GetStorageInvoiceDraft` quedan congelados sin entrada en la UI: no los revivas.
+**DEC-021 — No hay creación manual de facturas en el frontend.** El sistema genera las facturas; Facturación asigna el N.º SIIGO, aprueba, envía y registra pagos. La pantalla de creación (`create.vue`), `BillingPreviewPanel.vue` y la consulta `GetStorageInvoiceDraft` se eliminaron; `BillingControllerSurfaceTests` asegura que no vuelvan. No los revivas.
 
 **DEC-022 — Recálculo único de la factura del período** (Ola 1, 2026-09-14). Un solo mecanismo sirve para el camión tardío, la TRM manual y el ajuste CE-7.
 - En Borrador o Pendiente de aprobación, la factura se recalcula.

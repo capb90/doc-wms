@@ -148,7 +148,7 @@ Los `[Authorize]` de ASP.NET se suman (AND): para aflojar una acción de un cont
 3. **IVA y retenciones.** Sin `ServiceTax` el IVA no se suma. `RETE_FUENTE` es una retención: no la sumes como IVA.
 4. **Un 403 de un rol operativo** suele venir de un servicio compartido que otro módulo importa (`app/features/weighbridge`, `app/features/entries`), no de una llamada directa del módulo.
 5. **`all=true`.** `pageSize > 50` se recorta sin avisar.
-6. **Pantallas retiradas.** Antes de mejorar una pantalla, comprueba que una ronda anterior no la retiró. Pasó con la creación manual de facturas: `pages/billing/invoices/create.vue`, `BillingPreviewPanel.vue` y `GetStorageInvoiceDraft` siguen congelados y sin entrada en la UI.
+6. **Pantallas retiradas.** Antes de mejorar una pantalla, comprueba que una ronda anterior no la retiró. Pasó con la creación manual de facturas: su pantalla, `BillingPreviewPanel.vue` y `GetStorageInvoiceDraft` se eliminaron, y `Wms.Tests/Api/BillingControllerSurfaceTests.cs` impide que vuelvan.
 7. **Componente y padre.** Verifica el componente y también quién lo instancia: las props declaradas no dicen qué le pasa el padre.
 8. **Carencias del modelo.** No conviertas una carencia del modelo de datos en una prohibición de negocio.
 9. **Nombres engañosos.** `ServiceRecord.CargoManifestNumber` es la carta porte, no el manifiesto.
