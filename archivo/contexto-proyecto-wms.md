@@ -1,5 +1,7 @@
 # Contexto del proyecto WMS (Bodegas Asociadas)
 
+> **Histórico (abril de 2026). Superado.** Varias afirmaciones ya no son ciertas: el depósito ya no se crea en el repesaje, los convenios ya no son un precio fijo por producto y la orden de cargue ya admite varios clientes. El contexto vigente está en `contexto/contexto-negocio-wms-para-ia.md`.
+
 Documento de referencia para implementaciones y ajustes futuros. Describe backend, frontend, modelo de datos y el flujo operativo, con énfasis en cómo se **generan y evolucionan los depósitos** (`warehouse_storages`).
 
 ---

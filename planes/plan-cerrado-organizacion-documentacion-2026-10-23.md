@@ -1,6 +1,6 @@
 # Plan cerrado — Organización de la documentación para agentes
 
-> **Fecha:** 2026-10-23 · **Estado:** pendiente de aprobación · **Alcance:** solo documentación y puntos de entrada para agentes. No cambia código de la aplicación (única excepción: una ruta en una herramienta de videos, §4 F2-7).
+> **Fecha:** 2026-10-23 · **Estado:** aprobado el 2026-10-23; F0–F2 ejecutadas (hub `cb35fb5` y `dacdf68`, BE `35a61b2`, FE `c924a8b`), F3 en curso · **Alcance:** solo documentación y puntos de entrada para agentes. No cambia código de la aplicación (única excepción: una ruta en una herramienta de videos, §4 F2-7).
 > **Repos al inicio:** `Backend/wms-api` `develop` `74e16f3` (limpio) · `Frontend/wms` `develop` `146e26d` (limpio).
 
 ## 1. Problema
@@ -154,7 +154,12 @@ Después de mover:
 5. `git status` de BE y FE: solo cambios en documentación y en los cuatro archivos de `tools/video-tutoriales`.
 6. Actualizar la memoria del agente con las rutas nuevas.
 
-## 5. Fuera de alcance
+## 5. Desviaciones registradas
+
+- **F2 (D9):** además de la herramienta de videos, se actualizó la constante `PLAN` de `db_legacy/trabajo/consultas/v2/extraer_del_plan.py` y `v3/extraer_del_plan.py`, que leían el plan de paridad desde su ruta en el backend. Sin ese cambio, la extracción para el corte real habría fallado.
+- **F2:** dos líneas históricas que citaban `code_workspace/ajustes/` conservan su texto original (`videos/guiones/inventario-cambios-guiones.md`, fila 2, y `archivo/prompts/videos/prompt-actualizar-guiones-video.md`, línea 22): son registros de lo que existía entonces.
+
+## 6. Fuera de alcance
 
 - Publicar el hub en un remoto (GitHub). Recomendado después, para que las sesiones en la nube lo puedan clonar.
 - Reorganizar el repo `bodegas-legacy` o unir sus dos análisis.

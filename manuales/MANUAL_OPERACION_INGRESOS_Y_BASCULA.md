@@ -1,5 +1,7 @@
 # Manual de operación: Ingresos y Báscula
 
+> **Aviso de vigencia (2026-10-23): parcialmente desactualizado.** Es anterior a la báscula rápida, a la unidad de carga y al selector de conductor. La tarifa de báscula se configura en el servicio `BASCULA`, no en el producto `SRV-BASCULA`. El flujo vigente está en `contexto/contexto-negocio-wms-para-ia.md` §5. Para operarios, la guía actual es `planes/migracion-staging/resultados/guia-pruebas-operarios.md` y los video tutoriales (`videos/`).
+
 Guía para el personal que usa el sistema de ingresos de camiones y el módulo de báscula. Incluye qué configurar antes de empezar y cómo realizar cada operación paso a paso.
 
 ---

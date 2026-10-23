@@ -1,5 +1,10 @@
 # Manual de Operación — Módulo de Facturación
 
+> **Aviso de vigencia (2026-10-23): desactualizado. No lo uses como especificación.**
+> - No existe creación manual de facturas: el sistema las genera, y Facturación asigna el N.º SIIGO, aprueba, envía y registra pagos.
+> - Los períodos de almacenamiento son `Open` y `Closed`, y se cobran por fórmula y por cargo, no con «tarifa diaria».
+> Para las reglas vigentes, lee `contexto/contexto-negocio-wms-para-ia.md` §7 y `contexto/decisiones.md`.
+
 ## Tabla de Contenido
 
 1. [Descripción General](#1-descripción-general)
