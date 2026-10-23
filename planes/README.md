@@ -5,7 +5,7 @@
 
 | Plan | Fecha | Estado | Notas |
 | --- | --- | --- | --- |
-| `plan-cerrado-organizacion-documentacion-2026-10-23.md` | 2026-10-23 | En ejecución | Este hub. F0–F2 hechas; F3–F5 en curso |
+| `plan-cerrado-organizacion-documentacion-2026-10-23.md` | 2026-10-23 | Ejecutado | Creó este hub. Pendiente fuera de alcance: publicarlo en un remoto |
 | `plan-cerrado-selector-conductor-2026-10-08.md` | 2026-10-08 | Ejecutado | Verificado en staging el 2026-10-08 (BE `044be08` / FE `4ca4e0a`). Siguen abiertos DEF-F11-023, 024 y 026 (MINOR) |
 | `plan-cerrado-permisos-por-usuario-2026-10-07.md` | 2026-10-07 | **Diferido** | No implementar antes del corte. Su §11 lista correcciones obligatorias antes de retomarlo |
 | `migracion-staging/plan-migracion-legacy-staging.md` | 2026-10-06 | Ejecutado | Fases 1–5 completadas el 2026-10-07. Siguen abiertos el corte real con un volcado nuevo y vaciar o anonimizar staging (`contexto/estado.md`) |

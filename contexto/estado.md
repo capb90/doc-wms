@@ -27,7 +27,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 2026-10-06 → 07 | **Migración del legacy a staging** (fases 1–5) y QA S6 en staging | `5bcdbd8`; fixes S6 `84c712f` / `8527144` |
 | 2026-10-08 | **Selector de conductor**, verificado en staging | `044be08` / `4ca4e0a` |
 | 2026-10-08 → 09 | Fixes tras el despliegue, producción de videos (F1–F7) y centro de ayuda | `74e16f3` / `146e26d` |
-| 2026-10-23 | Hub de documentación (`docs/`, repo propio) | `35a61b2` / `c924a8b` |
+| 2026-10-23 | Hub de documentación (`docs/`, repo propio) y `AGENTS.md`/`CLAUDE.md` en cada repo | `b27c9bf` / `31da26c` |
 
 ## 3. Staging
 

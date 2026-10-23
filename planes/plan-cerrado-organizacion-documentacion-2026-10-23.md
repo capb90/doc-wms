@@ -1,6 +1,6 @@
 # Plan cerrado — Organización de la documentación para agentes
 
-> **Fecha:** 2026-10-23 · **Estado:** aprobado el 2026-10-23; F0–F2 ejecutadas (hub `cb35fb5` y `dacdf68`, BE `35a61b2`, FE `c924a8b`), F3 en curso · **Alcance:** solo documentación y puntos de entrada para agentes. No cambia código de la aplicación (única excepción: una ruta en una herramienta de videos, §4 F2-7).
+> **Fecha:** 2026-10-23 · **Estado:** ejecutado el 2026-10-23 (F0–F5). Hub `cb35fb5` → `6f2c580`; BE `35a61b2`, `b27c9bf`; FE `c924a8b`, `31da26c` · **Alcance:** solo documentación y puntos de entrada para agentes. No cambia código de la aplicación (única excepción: una ruta en una herramienta de videos, §4 F2-7).
 > **Repos al inicio:** `Backend/wms-api` `develop` `74e16f3` (limpio) · `Frontend/wms` `develop` `146e26d` (limpio).
 
 ## 1. Problema
@@ -158,6 +158,9 @@ Después de mover:
 
 - **F2 (D9):** además de la herramienta de videos, se actualizó la constante `PLAN` de `db_legacy/trabajo/consultas/v2/extraer_del_plan.py` y `v3/extraer_del_plan.py`, que leían el plan de paridad desde su ruta en el backend. Sin ese cambio, la extracción para el corte real habría fallado.
 - **F2:** dos líneas históricas que citaban `code_workspace/ajustes/` conservan su texto original (`videos/guiones/inventario-cambios-guiones.md`, fila 2, y `archivo/prompts/videos/prompt-actualizar-guiones-video.md`, línea 22): son registros de lo que existía entonces.
+
+- **F3:** se encargó a cuatro agentes de solo lectura la verificación del contexto contra el código (roles y stack, flujos, facturación, estado); las afirmaciones que cambian reglas se comprobaron además a mano.
+- **F4:** el README del backend, además de .NET 10 y el enlace, perdió la mención a DotNetEnv (ya no se usa) y cerró un bloque de código sin cerrar.
 
 ## 6. Fuera de alcance
 
