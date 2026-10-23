@@ -2,6 +2,8 @@
 
 > Corte: **2026-10-07 01:15** (hora Colombia, re-test en staging posterior a S6, FE `8527144` / BE `84c712f`). Antes: 00:45, sesión S6 en staging · Build candidato **FE `24d742d` / BE `f6f1828`**, desplegado en staging como FE `508b91b` / BE `b31ddb6` (el candidato más DEF-MIG-007, DEF-MIG-008 y «Estadísticas» oculto) · Ejecutor: Claude (agente QA, Opus 5.5).
 > El veredicto se basa en el ambiente local (S0–S5) y en **staging con datos migrados (S6, `F11-informe-S6-2026-10-06.md`)**. De lo diferido a staging solo queda PRF-002, que mide un operario (decisión del usuario).
+>
+> **Actualización del 2026-10-23 (fichas posteriores al corte).** El 2026-10-07 y el 2026-10-08 se agregaron DEF-F11-022 a DEF-F11-027, durante el selector de conductor y por reporte del usuario (`SEL-informe-2026-10-08.md`). Se verificaron en staging DEF-F11-022, 025 y 027 (BE `044be08` / FE `4ca4e0a`). DEF-F11-023, 024 y 026 (MINOR) siguen «Nuevo»; se desplegaron con ellos por decisión del usuario. Hoy hay **153 fichas: 150 verificadas y 3 nuevas MINOR** (`defectos/INDICE.md`). **El veredicto no cambia: GO condicionado solo a PRF-002.** Las cifras de abajo son las del corte del 2026-10-07.
 
 ## Resumen ejecutivo
 
@@ -11,7 +13,7 @@
   - **DEF-F11-020 (MINOR):** dos respaldos simultáneos dan 202 y 409, y los del mismo minuto quedan en archivos distintos.
   - La observación **O-3** también quedó verificada: el «por facturar» de báscula responde `totalAmount` 20.000.
 - Quedan anotados 130 P1 aceptados con cobertura indirecta.
-- La campaña ejecutó 955 casos en F0–F10 y abrió 126 fichas. La fase 11 re-testeó 145 fichas: las 126 de la campaña y 19 propias. S6 agregó 2 en staging, re-testeadas allí después del redespliegue. Hoy hay **147 fichas: 147 Verificadas, 0 Reabiertas y 0 abiertas**.
+- La campaña ejecutó 955 casos en F0–F10 y abrió 126 fichas. La fase 11 re-testeó 145 fichas: las 126 de la campaña y 19 propias. S6 agregó 2 en staging, re-testeadas allí después del redespliegue. Al corte del 2026-10-07 había **147 fichas: 147 Verificadas, 0 Reabiertas y 0 abiertas** (ver la actualización del 2026-10-23 al inicio).
 - **S5 (2026-10-06)** verificó las dos fichas que dejaban el NO-GO de S4 sobre BE `00d6ac3`:
   - **DEF-F11-017 (CRITICAL):** el recálculo del almacenamiento ya cobra la cantidad del período: 41 y 40 bultos, no 11 y 10. La factura conserva su N.º y su aprobación, y Facturación recibe el aviso con el total anterior y el nuevo.
   - **DEF-F11-016 (MAJOR):** corregir el motivo ya no saca al camión de la cola de báscula.

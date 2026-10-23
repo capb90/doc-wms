@@ -68,19 +68,14 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 10 | Video tutoriales: F7 entregada para revisión; etiquetas de Trazabilidad en inglés (H1) | `videos/guiones/plan-produccion-videos.md` | |
 | 11 | Permisos por usuario | `planes/plan-cerrado-permisos-por-usuario-2026-10-07.md` | **Diferido** después del corte |
 
-**Documentos con estado atrasado** (no son trabajo pendiente del sistema, solo de documentación):
-
-- `planes/paridad-legacy/plan-backend-paridad-legacy.md` marca la fase 6 «falta E19». La prueba con datos reales se hizo en la migración (`planes/migracion-staging/resultados/informe-fase-1-repeticion.md`). Además, su mensaje de commit de documentación quedó sin commitear.
-- La cabecera de `qa/plan-correccion-defectos.md` dice «propuesto», pero sus 12 fases están completadas.
-- `qa/resultados/informe-final.md` dice «147/147»; hoy son 150 fichas verificadas y 3 nuevas.
-- La ficha `DEF-MIG-007` sigue en «Corregido», aunque el plan de migración lo da por verificado en staging.
+Los documentos con estado atrasado se pusieron al día el 2026-10-23: la fase 6 del plan backend de paridad (E19 cumplida), la cabecera del plan de corrección, el informe final de QA (153 fichas) y la ficha `DEF-MIG-007` (verificada).
 
 ## 5. Defectos
 
 | Origen | Total | Estado |
 | --- | --- | --- |
 | Campaña QA (`DEF-F*`) | 153 fichas: CRITICAL 16, MAJOR 52, MINOR 77, TRIVIAL 7, 1 duplicada | 150 verificadas, 3 nuevas (DEF-F11-023, 024 y 026) |
-| Migración (`DEF-MIG-*`) | 8 | 001–006 y 008 verificadas; 007 verificada según el plan (ficha atrasada) |
+| Migración (`DEF-MIG-*`) | 8 | 8 verificadas |
 
 Los defectos nuevos siguen en `DEF-F11-028` y `DEF-MIG-009` (`procesos/qa-y-defectos.md`).
 

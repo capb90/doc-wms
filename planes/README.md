@@ -9,10 +9,10 @@
 | `plan-cerrado-selector-conductor-2026-10-08.md` | 2026-10-08 | Ejecutado | Verificado en staging el 2026-10-08 (BE `044be08` / FE `4ca4e0a`). Siguen abiertos DEF-F11-023, 024 y 026 (MINOR) |
 | `plan-cerrado-permisos-por-usuario-2026-10-07.md` | 2026-10-07 | **Diferido** | No implementar antes del corte. Su §11 lista correcciones obligatorias antes de retomarlo |
 | `migracion-staging/plan-migracion-legacy-staging.md` | 2026-10-06 | Ejecutado | Fases 1–5 completadas el 2026-10-07. Siguen abiertos el corte real con un volcado nuevo y vaciar o anonimizar staging (`contexto/estado.md`) |
-| `paridad-legacy/plan-backend-paridad-legacy.md` | 2026-09-29 | Ejecutado | Fases 1–6 con commit. La tabla del plan aún marca la fase 6 «falta E19», pero la prueba con datos reales se hizo en la migración (`migracion-staging/resultados/informe-fase-1-repeticion.md`) |
+| `paridad-legacy/plan-backend-paridad-legacy.md` | 2026-09-29 | Ejecutado | Fases 1–6 completadas. E19 (datos reales) se cumplió el 2026-10-06 en la migración (`migracion-staging/resultados/informe-fase-1-repeticion.md`) |
 | `paridad-legacy/plan-frontend-paridad-legacy.md` | 2026-09-30 | Ejecutado | Fases 1–5 y 7 completadas; la 6 no lleva código. Pendiente F1-09, que es la medición PRF-002 con un operario |
 | `paridad-legacy/contrato-api-paridad.md` | 2026-09-29 | Referencia | Contrato de los endpoints `C-Fx-yy` de la paridad |
-| `../qa/plan-correccion-defectos.md` | 2026-10-03 | Ejecutado | 12 fases y CHG-01…90, completadas el 2026-10-05. La cabecera aún dice «propuesto» |
+| `../qa/plan-correccion-defectos.md` | 2026-10-03 | Ejecutado | 12 fases y CHG-01…90, completadas el 2026-10-05 |
 
 ## Planes que ya no existen
 

@@ -11,7 +11,7 @@
 | Riesgo del plan (§9) | «La herramienta nunca se probó con datos reales (E19)» |
 | Ambiente y commits | Local (`wms_migracion`) · BE `9c5c81b` · FE `4799cc4` |
 | Rol / usuario | `mig.comext` (Comercio Exterior) |
-| Estado | Corregido |
+| Estado | Verificado |
 
 ## Precondiciones y datos
 - Cualquier depósito migrado. Ejemplo: BA0042 (v2 `2024BA00002`).
