@@ -1,0 +1,63 @@
+# S4 · DIR · P0 pendientes de F6 (Facturación) · 2026-10-06 09:44 · FE e41decf / BE ea14548
+## F6-REC-002 · CE-7 en 2026BA00010 (QA Cliente Consolidado, tarifa base PER_UOM 1.500/bulto)
+antes: 15428832-8aaa-4b53-8ec7-93c1ca7e9d2a · (sin N.º) · Draft · 474360.00 · aprobada no · período 05/10-19/10 · qty 40.00
+CE-7 recibido 40 → 41: HTTP 200 | {"previousReceivedQuantity": null, "newReceivedQuantity": null, "newStock": 11.0, "adminNotified": true}
+después: 15428832-8aaa-4b53-8ec7-93c1ca7e9d2a · (sin N.º) · Draft · 422595.00 · aprobada no · período 05/10-19/10 · qty 11.00
+Líneas de la factura consolidada 15428832-8aaa-4b53-8ec7-93c1ca7e9d2a tras el CE-7: 2026BA00010 qty 11.00 = 19635.00 · 2026BA00011 qty 1.00 = 184000.00 · 2026BA00012 qty 1.00 = 218960.00
+Stock y recibido de 2026BA00010: recibido 41.00 · declarado 40.00 · stock 11.00 · despachado antes del CE-7: 30 (OC de S0/S1)
+→ El primer período (05/10-19/10) pasó de cobrar 40 a cobrar 11: ver DEF-F11-017.
+
+## F6-REC-004 · recálculo con la factura aprobada y con N.º (y restauración del CE-7)
+asignar N.º QA-SIIGO-F11-S4-0010: HTTP 204
+aprobar: HTTP 200
+antes: QA-SIIGO-F11-S4-0010 · Approved · 422595.00 · aprobada por 01a10e12-e0d5-76e7-b41e-1c320f332ce0
+CE-7 recibido 41 → 40 (restauración): HTTP 200
+después: QA-SIIGO-F11-S4-0010 · Approved · 420810.00 · aprobada por 01a10e12-e0d5-76e7-b41e-1c320f332ce0 · facturas activas del período: 1
+líneas: 2026BA00010 qty 10.00 = 17850.00 · 2026BA00011 qty 1.00 = 184000.00 · 2026BA00012 qty 1.00 = 218960.00
+aviso a Facturación: Factura de almacenamiento actualizada — La factura QA-SIIGO-F11-S4-0010 del depósito 2026BA00010 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 422.595, total nuevo $ 420.810.
+recibido: recibido 40.00 · stock 10.00
+
+## F6-INV-007 · BASCULA inmediata de QAK601 (S4): Paid · total 30000.00 = 25210.08 + IVA 4789.92 · destinatario Pedro QA Conductor Colombia (IVA 19 % de BASCULA)
+## F6-INV-009 · MONTACARGAS de S4 (sin IVA): Paid · Servicio de montacargas — Tractomula · total 80000.00 · IVA 0.00
+   y con IVA (S0, GuacalEstiba): Cancelled · Servicio de montacargas — Guacal / Estiba · 30000.00 + IVA 5700.00 = 35700.00
+## F6-INV-010 · GUIA_SALIDA de 2026S00010 (S4): Paid · Guía de Salida Importación 2026S00010 - Orden 2026OC00016 · cantidad 1.00 × 35700.00 + IVA = 35700.00 · guía enlazada true — el total de 35.700 lo envió QA en `billing.totalAmount` (el total es editable, como en báscula). La vista previa de la guía (`GET loading-orders/{id}/dispatch-guide-preview`) propone 30.000 = convenio GUIA_SALIDA de QA Cliente Uno × 1 depósito (2026BA00021), sin IVA: cumple F6-INV-010.
+## F6-FOR-001 · FIXED: BASCULA 25.000 + IVA = 29.750 (convenio) · ALMACENAMIENTO EXP 150.000 + IVA = 178.500 (2026EXP00003)
+## F6-FOR-003 · PER_UOM: 2026BA00007 50 × 1.500 + IVA = 89.250 · 2026BA00010 40 × 1.500 + IVA = 71.400 (antes del CE-7)
+## F6-FOR-004 · PERCENTAGE_OF_VALUE: 2026BA00021 USD 30.000 × TRM 3.209,78 × 0,255 % = 245.548,17 + IVA = 292.202,32 (no multiplica por el stock de 8)
+## F6-ALM-002 · primer período = total declarado: 2026BA00007 (50) y 2026BA00010 (40) al abrir.
+## F6-ALM-009 · renovaciones (S1/S3, palancas): 2026BA00001 07/12–07/01 cobra el CIF completo (496.670,28); 2026BA00006 13/10–20/10 cobra el saldo de 110 por PER_UOM.
+## F6-ACC-011 · anular la factura Borrador de almacenamiento de 2026EXP00003 (motivo de 10+): HTTP 200 | ok
+   estado Cancelled · motivo QA S4 DIR anular borrador
+## F6-ACC-013 · anular la factura pagada de QAK601: HTTP 400 | No se puede anular la factura porque tiene pagos recibidos o verificados. Gestione la devolución o el traslado del dinero antes de anularla.
+
+## F6-CAR-008 · desbloqueo de QA Cliente Mora al pagar la deuda vencida
+antes: Blocked · vencido 89250.00 · facturas vencidas: QA-SIIGO-F11-S1-0002 Overdue pendiente 89250.00
+pago de 89250.00 a 72543069-259a-4190-aec3-39a3513b46a9: HTTP 201
+inmediatamente después: Active · vencido 0.00
+Resultado F6-CAR-008: PASA (el pago dispara la reevaluación; no hizo falta reiniciar el API). Efecto en los datos: QA Cliente Mora ya no está bloqueado; para volver a probar la mora hace falta otra factura vencida y la palanca.
+
+## F7-PDF-003 · PDF de la guía 2026S00010 (anulada)
+Encabezado «Guía de Salida No. 2026S00010», importador, placa QAK611, tiquete, conductor, transportadora y agencia con NIT; línea QA CEBOLLA · 2026BA00021 · manifiesto QA-MAN-S4-BA21 · levante QA-LEV-S4-01 · aceptación QA-ACE-S4-01 · BULTO · QA CAJA DE CARTÓN · Entrada 8 · Saldo ant. 8 · Sale 2 · Nuevo saldo 6; «Total en esta salida 2 BULTO»; destino QA Quito, vence 2026-10-09 (3 días); firmas; pie con los datos de la empresa; marca «ANULADA». No se cotejó contra el PDF del legacy (no está en el ambiente local).
+
+## En pantalla, rol facturacion
+- F6-INV-001 · /billing/invoices: pestañas «Báscula 50», «Montacargas 7», «Guía de salida 7», «Almacenamiento 23», cada una con su tabla y su paginación.
+- F6-INV-002 · columnas «N° Factura · Identificación · Destinatario · Estado · Total · Pendiente · Vencimiento · Creada · Acciones». Filas con «Pendiente de número» y «NIT 900100001»; la de QAK601 muestra «CC 1000000001 · Pedro QA Conductor Colombia · No registrado».
+- F6-INV-005 · detalle de la factura de 2026BA00021 (537ef935…):
+  - «Factura pendiente de número», historial («Creada 06/10/2026 09:41») y detalle WMS-21 («ALMACENAMIENTO DE: 8 BULTO QA Cebolla, CARTA PORTE:…, 2026BA00021, PERIODO…, AGENCIA…»).
+  - Información del depósito: USD 30.000, TRM aplicada $ 3.209,78 · DIAN · 06/10/2026, valor en COP $ 96.293.400.
+  - Línea con «Método cálculo: Acuerdo (nivel 1)»; subtotal, impuestos y total; «Pagos (0)»; botón «PDF».
+- F6-ACC-001 · «Acciones» en la factura Borrador sin N.º:
+  - «Guardar número» deshabilitado hasta digitar.
+  - «Aprobar» deshabilitado con «Asigne el N.º SIIGO antes de aprobar.».
+  - «Enviar» y «Registrar pago» deshabilitados, con su motivo.
+  - «Guardar detalle (147 / 1000)», «Guardar notas» y «Anular factura» (deshabilitado hasta un motivo de 10+).
+- F6-ACC-016 · cubierto en S3 (F11-REG-024, `S3-REG-024-trm-manual.txt`): con TRM pendiente, el N.º y la aprobación responden 400 «Registre la TRM del depósito 2026BA00015 antes de…».
+- F6-REC-001 · cubierto en S1 (`S1-cadena-B.txt`, F3-MCA-009): el camión tardío en 2026BA00003 confirmado recalculó la factura del período.
+- F6-TRM-001 · ver S4-DIR-P0-F4-F5.txt: 2026INSP00006 (USD) confirmado con TRM DIAN 3.209,78 del 06/10 (fecha de ingreso), factura en pesos.
+- F6-ALM-012 · ver S4-DIR-P0-F4-F5.txt: 2026EXP00003 agotado → Closed, período Closed y la factura conserva 178.500.
+- F6-CFG-001..003 y F6-CAR-006 · ver S4-DIR-P0-F0-F1-F9.txt.
+
+Resultado F6: PASA en todos los P0 pendientes salvo F6-REC-002, que FALLA → DEF-F11-017 (CRITICAL). F6-REC-004 pasa en lo que verifica: misma factura, N.º, aprobación y aviso.
+
+## F10-RES-001 · báscula a 1366×768 (bascula, ficha de QAK608 abierta)
+Viewport emulado 1366×768: scrollWidth = clientWidth = 1351 (sin scroll horizontal). Ningún elemento del contenido sobrepasa el ancho y «Guardar» queda dentro de la vista. PASA. No hay captura porque el panel estaba oculto; la medida es del DOM.

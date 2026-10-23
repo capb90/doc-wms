@@ -1,0 +1,5 @@
+# S1 · DEF-F6-005 / CHG-12 — Borradores sin vencimiento (18:01)
+## tras la corrida del job con due_date forzado al pasado (palanca): QAS101 por facturar Consolidado: - | Draft | 28560.00 | pagado 0 | vence 2026-10-03 · Montacargas 9457d5fe: - | Draft | 35700.00 | pagado 0 | vence 2026-10-03
+## Facturación asigna N.º y aprueba la factura por facturar del Consolidado (plazo 15 días)
+N.º:  · aprobar: Approved · QA-SIIGO-F11-S1-0003 | Approved | 28560.00 | pagado 0 | vence 2026-10-20 (aprobada 05/10 + 15 días = 20/10/2026)
+## REG-030 (E2E-07 fin): Facturación registra el pago total → Verified · QA-SIIGO-F11-S1-0003 | Paid | 28560.00 | pagado 28560.00 | vence 2026-10-20

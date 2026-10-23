@@ -1,0 +1,22 @@
+# S3 · R-TRZ — servicio descartado sin salida en la trazabilidad · 2026-10-05 23:14 · BE 44bd80a (migración AddEntryLogServiceDiscardedAt)
+Ingreso nuevo QAJ204 (Solo báscula, Pedro QA, registrado en S3 a las 23:12), operación de Solo báscula iniciada, sin cobro ni salida
+## Antes del descarte
+[{"plate":"QAJ204","stage":"En tránsito","stageName":null}]
+
+## Descartar (DELETE weighbridge/incomplete/{servicio})
+HTTP 204
+service_discarded_at=2026-10-06 04:14:51.137342+00
+## Tablero (Hoy, placa QAJ204)
+[{"plate":"QAJ204","stage":"Cancelado","stageName":null}]
+## Resumen del día tras el descarte
+{"totalEntries":52,"inSite":10,"inGate":1,"inWeighbridge":1,"inWarehouse":0,"pendingDeparture":0,"completed":45,"nationalized":5}
+{"Cancelado":1,"Completado":34,"En portería":1,"En tránsito":4,"Pesado (1er peso)":1,"Salida registrada":11}
+En portería: ["QAG703"] (ninguno es QAJ204)
+## Registrar de nuevo la Solo báscula de QAJ204
+{"serviceRecordId":"b565d02d-f692-4aca-9da7-1b54b4df3af0"}
+service_discarded_at=NULL
+## Tablero tras el nuevo registro
+[{"plate":"QAJ204","stage":"En tránsito","salida":null,"servicio":"Input"}]
+## Descartes anteriores a la migración (sin marca)
+QAC402: [{"plate":"QAC402","stage":"Salida registrada","salida":"2026-10-05T22:09:19.086657+00:00","servicio":null}] · marca NULL
+QAG703: [{"plate":"QAG703","stage":"En portería","salida":null,"servicio":null}] · marca NULL

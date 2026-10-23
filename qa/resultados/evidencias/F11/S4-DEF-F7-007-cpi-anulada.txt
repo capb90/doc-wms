@@ -1,0 +1,26 @@
+# S4 · DEF-F7-007 (F7-REP-022) · 2026-10-06 09:02 · BE ea14548 / FE e41decf · rol facturacion
+## GET reports/deposit-billing?warehouseStorageNumber=2026BA00002
+HTTP 200
+{"warehouseStorageNumber": "2026BA00002", "cargoManifestNumber": "QA-CP-F11-005", "importerName": "QA Importación Andina Ltda", "entryDate": "2026-10-05T22:03:12.758356+00:00", "customsAgencyName": "QA Agencia SIA Aduanas", "manifestNumber": "QA-MAN-F11-005", "entryTrm": 3273.49, "invoicesTotal": 100000.0}
+products:
+  {"productName": "QA Aceite", "receivedQuantity": 30000.0, "dispatchedQuantity": 0, "currentStock": 30000.0}
+dispatches:
+invoices:
+  {"invoiceId": "20451d53-9c90-4199-b1f3-9dc0eb1cb960", "invoiceNumber": null, "invoiceDate": "2026-10-06T01:50:42.878624+00:00", "periodStart": "2026-10-05T05:00:00+00:00", "periodEnd": "2026-11-05T05:00:00+00:00", "limitDate": "2026-11-08", "billedTo": "QA Cliente Uno SAS", "total": 100000.0, "status": "Cancelled", "notes": "Factura de almacenamiento - período 05/10/2026 - 05/11/2026", "isReissued": true, "reissuedAsInvoiceNumber": null}
+  {"invoiceId": "a5894ced-a672-4d3b-8e85-b135ff185e32", "invoiceNumber": null, "invoiceDate": "2026-10-06T04:28:54.945326+00:00", "periodStart": "2026-10-05T05:00:00+00:00", "periodEnd": "2026-11-05T05:00:00+00:00", "limitDate": "2026-11-08", "billedTo": "QA Cliente Uno SAS", "total": 100000.0, "status": "Draft", "notes": "Factura de almacenamiento - período 05/10/2026 - 05/11/2026", "isReissued": false, "reissuedAsInvoiceNumber": null}
+## GET reports/deposit-billing?warehouseStorageNumber=2026BA00016
+HTTP 200
+{"warehouseStorageNumber": "2026BA00016", "cargoManifestNumber": "QA-CP-F11-S3-CAM", "importerName": "QA Importación Andina Ltda", "entryDate": "2026-10-06T04:12:03.40859+00:00", "customsAgencyName": "QA Agencia SIA Aduanas", "manifestNumber": "MAN-QA-CP-F11-S3-CAM", "entryTrm": 3273.49, "invoicesTotal": 496670.28}
+products:
+  {"productName": "QA Cebolla", "receivedQuantity": 10.0, "dispatchedQuantity": 0, "currentStock": 10.0}
+dispatches:
+invoices:
+  {"invoiceId": "256772da-57f6-4971-aee2-2b9e64576fd1", "invoiceNumber": "QA-SIIGO-F11-S3-0016", "invoiceDate": "2026-10-06T04:29:53.610805+00:00", "periodStart": "2026-10-05T05:00:00+00:00", "periodEnd": "2026-11-05T05:00:00+00:00", "limitDate": "2026-11-08", "billedTo": "QA Cliente Uno SAS", "total": 496670.28, "status": "Cancelled", "notes": "Factura de almacenamiento - período 05/10/2026 - 05/11/2026", "isReissued": true, "reissuedAsInvoiceNumber": null}
+  {"invoiceId": "7f48699a-64f4-4f16-8831-170a05d7e4ef", "invoiceNumber": null, "invoiceDate": "2026-10-06T04:29:53.872439+00:00", "periodStart": "2026-10-05T05:00:00+00:00", "periodEnd": "2026-11-05T05:00:00+00:00", "limitDate": "2026-11-08", "billedTo": "QA Cliente Uno SAS", "total": 496670.28, "status": "Draft", "notes": "Factura de almacenamiento - período 05/10/2026 - 05/11/2026", "isReissued": false, "reissuedAsInvoiceNumber": null}
+## Control sin refacturación: GET reports/deposit-billing?warehouseStorageNumber=2026BA00003
+HTTP 200 | invoicesTotal 595000.0
+   QA-SIIGO-F11-S2-0001 PartiallyPaid 595000.0 isReissued False
+## En pantalla (/billing/reports/deposit-billing «Facturación por CPI», rol facturacion)
+- 2026BA00016: dos filas en «Facturas»: QA-SIIGO-F11-S3-0016 · $ 496.670,28 · «Anulada» · Refacturada como «Sin número»; y «Sin número» · $ 496.670,28 · «Borrador». «Total facturado: $ 496.670,28» (la anulada no suma). Captura S4-DEF-F7-007-cpi-2026BA00016.jpg.
+- 2026BA00002: «Sin número» · $ 100.000 · «Anulada» · Refacturada como «Sin número»; y «Sin número» · $ 100.000 · «Borrador». «Total facturado: $ 100.000».
+Resultado: PASA (F7-REP-022). La anulada aparece con su marca, la nueva también y los totales no cambian. DEF-F7-007 Verificado; R-FAC-10 queda corregido en sus dos partes.

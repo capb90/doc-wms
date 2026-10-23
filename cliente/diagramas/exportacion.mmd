@@ -1,0 +1,71 @@
+---
+config:
+  look: neo
+  theme: redux-color
+---
+sequenceDiagram
+  actor cl as Cliente
+  actor cd as Conductor
+  participant in as Ingreso
+  participant bs as Bascula
+  participant bg as Bodega
+  participant cex as Comercio Exterior
+  participant fac as Facturación
+  Note over in,fac: Proceso de Exportacion
+  alt Ingresos
+    cd->>+in:Ingresa mercancia
+    in->>in:Registro de ingreso
+    in->>-bs:Ingresa a bascula
+    
+    bs->>bs:Registro de información
+
+    alt No Descargue vehículo
+      bs-->>cd:Realiza el cobro
+      par Sistema Facturación 
+        bs--)fac:Sistema envia a facturación por bascula
+      end
+      bs->>bs:Realiza pesaje vehiculo + MCia
+      bs->>bg:Ingreso a bodega
+      bg->>bg:Remolque permanece en bodega
+
+    else Descargue vehiculo
+      bs->>bg:Ingreso a bodega
+      alt Montacargas
+        bg->>bg:Resgistra info montacargas
+      par Sistema Facturación
+        bg--)fac:Sistema envia a facturación por montacargas
+      end
+      else Manual
+        bg->>bg:Descargue MCia
+      end
+      bg->>bg:MCia permanece en bodega
+    end
+
+    par Impresión de etiqueta
+      bs--)+cex:Notifica Creacion de deposito de exportacion
+      alt Se descargo MCia
+        cex->>cex:Imprimir etiqueta: Valor Cant. contada
+      else
+        cex->>cex:Imprimir etiqueta: Valor pesado
+      end
+      
+      cex-->>-bg:Pegar etiqueta
+    end
+  else Salidas
+    cl->>cex:Solicitud de salida
+    cex->>cex:Ingresa datos de salida
+    cex-->>cl:Genera orden de cargue
+    
+    cd->>+in:Ingreso por cargue
+    in->>-in:Regista ingreso camion
+
+    in->>bg:Ingresa a bodega
+    bg->>bg:Verificación orden de cargue
+    bg-->>bg:Cargue camion
+    bg->>bg:Registro de salida - Cambio de estado
+    par Sistema
+      cex->>cex:Genera una guía de salida
+      cex->>cex:Finaliza el depostio
+    end
+  end
+

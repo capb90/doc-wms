@@ -1,0 +1,23 @@
+# S1 · DEF-F6-002 / CHG-10 — cierre manual de períodos (17:56)
+## BA00006 (semanal, PER_UOM, stock 110) antes:
+Open | 2026-10-05 → 2026-10-12 | límite 2026-10-15 | ServiceRule | factura 9233bb32 Draft 196350.00 | creado 17:55:50
+cierre manual: 
+HTTP 204
+después:
+Closed | 2026-10-05 → 2026-10-12 | límite 2026-10-15 | ServiceRule | factura 9233bb32 Draft 196350.00 | creado 17:55:50
+Open | 2026-10-13 → 2026-10-20 | límite 2026-10-23 | ServiceRule | factura ca7ab3b4 Draft 196350.00 | creado 17:56:03
+## BA00001 (mensual, convenio PERCENTAGE_OF_VALUE) antes:
+Open | 2026-10-05 → 2026-11-05 | límite 2026-11-08 | Agreement | factura ebb447cc PartiallyPaid 496670.28 | creado 17:06:24
+cierre manual: 
+HTTP 204
+después:
+Closed | 2026-10-05 → 2026-11-05 | límite 2026-11-08 | Agreement | factura ebb447cc PartiallyPaid 496670.28 | creado 17:06:24
+Open | 2026-11-06 → 2026-12-06 | límite 2026-12-09 | Agreement | factura f6db57ba Draft 496670.28 | creado 17:56:03
+## períodos solapados (detección fase-03-periodos-duplicados): 0
+## avisos del cierre manual desde 2026-10-05 22:56:03:
+facturacion | Almacenamiento renovado | El depósito 2026BA00006 abrió un nuevo período de almacenamiento del 13/10/2026 al 20/10/2026. Revise la factura en Borrador.
+facturacion | Almacenamiento renovado | El depósito 2026BA00001 abrió un nuevo período de almacenamiento del 06/11/2026 al 06/12/2026. Revise la factura en Borrador.
+j_coral | Almacenamiento renovado | El depósito 2026BA00006 abrió un nuevo período de almacenamiento del 13/10/2026 al 20/10/2026. Revise la factura en Borrador.
+j_coral | Almacenamiento renovado | El depósito 2026BA00001 abrió un nuevo período de almacenamiento del 06/11/2026 al 06/12/2026. Revise la factura en Borrador.
+v_montenegro | Almacenamiento renovado | El depósito 2026BA00006 abrió un nuevo período de almacenamiento del 13/10/2026 al 20/10/2026. Revise la factura en Borrador.
+v_montenegro | Almacenamiento renovado | El depósito 2026BA00001 abrió un nuevo período de almacenamiento del 06/11/2026 al 06/12/2026. Revise la factura en Borrador.

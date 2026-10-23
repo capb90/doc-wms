@@ -1,0 +1,24 @@
+# S3 · DEF-F9-006 (sondeo F9-API-*) y DEF-F6-019 (F6-PAG-006) — CHG-48 · 2026-10-05 23:22 · BE 44bd80a · capb90 (Admin)
+Cuerpo enviado: {"__qa": (JSON mal formado) a cada POST/PUT/PATCH del swagger, con los {id} reemplazados por un GUID inexistente.
+## Resumen por código
+   1 202
+ 145 400
+   2 403
+  15 404
+   5 415
+## Respuestas 500 (si hay)
+(ninguna)
+## Descripciones de 400 (muestra)
+ 145    El cuerpo de la solicitud no es un JSON válido.
+## Muestras
+## F6-PAG-006 pago con paymentMethod «Transfer» (QA-SIIGO-F11-S2-0001)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El método de pago no es válido.","traceId":"00-cbbd905b4c0c3646a3279540cfc20aac-99800d0a0f682358-00"}
+HTTP 400
+## amount «abc»
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El valor del campo 'amount' no es válido.","traceId":"00-c57ae4f604bd27125f6b3a47dbd6fdb7-21e4b9ce38eb4b8d-00"}
+HTTP 400
+## sin cuerpo (POST product)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El cuerpo de la solicitud es requerido.","traceId":"00-e19dd5c57c160b0d534c99ee53aab032-52bdaaab04987046-00"}
+HTTP 400
+pagos de la factura: 3 (eran 3)
+202 POST administration/backups/run (no lee cuerpo): corrida manual Failed «No hay destinos de respaldo activos.» y aviso a Admin «Falló el respaldo — El respaldo del 05/10/2026 falló en ningún destino: No hay destinos de respaldo activos..» (texto a revisar; observación)

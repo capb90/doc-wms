@@ -1,0 +1,25 @@
+# S3 · CHG-15/31/32 — DEF-F4-012, DEF-F4-014, DEF-F8-008 · 2026-10-05 23:37 · BE 44bd80a
+Orden nueva 2026OC00012 (Pending) sobre 2026BA00001, 5 QA Cebolla, camión QAJ801
+## DEF-F8-008 (E2E-01 paso 10): QAJ801 ingresa e inicia la salida con la orden
+{"serviceRecordId":"4a27a473-9482-466e-a312-cfa379db5c13"}
+orden: InProgress
+### se descarta la operación (DELETE weighbridge/incomplete/{servicio})
+HTTP 204
+orden: Pending
+## DEF-F4-012 (F4-CAR-010): Bodega ejecuta el cargue por API sin firma
+"errors":[{"code":"SignatureDriver","description":"La firma del conductor es requerida."}]
+"description":"Error de validación de datos"
+HTTP 400
+### con firma y completedBy = facturacion
+"status":"Loaded","message"
+HTTP 200
+completada por: bodega · firma guardada true
+## DEF-F4-014 (F4-CAR-007): ejecutar de nuevo la orden cargada
+"description":"La orden ya fue cargada."
+HTTP 400
+### ejecutar de nuevo una orden despachada (2026OC00010)
+"description":"La orden ya fue despachada."
+HTTP 400
+### se revierte el cargue de 2026OC00012 (queda Pendiente; dato sin guía no se deja cargado)
+HTTP 200
+Reverted

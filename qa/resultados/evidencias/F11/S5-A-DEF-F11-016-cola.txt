@@ -1,0 +1,70 @@
+# S5 · Parte A · DEF-F11-016 · 2026-10-06 · FE bd729e5 / BE 00d6ac3
+## 1) QAK504 (S4: corregido de «Otro» a «Descargue importación», quedó Completed) sin tocar datos
+BD: ['Completed | Descargue mercancia importacion | sin salida']
+cola de báscula (bascula): PRESENTE {"entryReasonName": "Descargue mercancia importacion", "state": "NotStarted", "driverName": "Pedro QA Conductor Colombia", "waitingMinutes": 97}
+otros abiertos de S4 en la cola: {'QAK501': False, 'QAK503': False, 'QAK592': False, 'QAK601': False, 'QAK701': False}
+## 2) F2-COR-011 · ingreso nuevo QAL201 con conductor Pedro QA y motivo «Otro» (sin pesaje)
+BD tras el ingreso: ['Registered | Otro | sin salida'] · en cola: False
+PUT entry-logs/{id}/correction (vigilancia) motivo → Descargue importación: 200 ok
+BD: ['Completed | Descargue mercancia importacion | sin salida'] · cola: PRESENTE {"entryReasonName": "Descargue mercancia importacion", "state": "NotStarted"}
+segunda corrección → Cargue importación: 200 ok
+BD: ['Completed | Cargue mercancia importacion | sin salida'] · cola: PRESENTE {"entryReasonName": "Cargue mercancia importacion", "state": "NotStarted"}
+tercera corrección → Otro (sin pesaje): 200 ok
+BD: ['Completed | Otro | sin salida'] · cola: AUSENTE (esperado: motivo sin pesaje)
+cuarta corrección → Descargue importación: 200
+cola: PRESENTE Descargue mercancia importacion
+## 3) Edición del ingreso desde Vigilancia y salida
+PATCH entry-logs/{id} (vigilancia, observaciones y conductor): 200 ok
+BD: ['Completed | Descargue mercancia importacion | sin salida'] · cola: PRESENTE Descargue mercancia importacion
+corrección de placa QAL201 → QAL291: 200 ok
+cola: QAL291 PRESENTE · QAL201 ausente
+salida registrada (vigilancia): 200 ok
+BD: ['Completed | Descargue mercancia importacion | 2026-10-06 16:00:47+00'] · cola: AUSENTE (esperado)
+## 4) Cruce de ingresos abiertos (sin salida) con la cola de báscula
+   QAF103 | Registered | Solo bodega | f |  | InTransit → cola: no
+   QAG703 | Registered | Solo Bascula | t |  |  → cola: SÍ NotStarted
+   QAG901 | Registered | Descargue mercancia importacion | t | Complete | Weighing → cola: no
+   QAG902 | Registered | Descargue mercancia importacion | t | Complete | Weighing → cola: no
+   QAJ101 | Registered | Descargue mercancia importacion | t | ReadyForWeighing | Weighing → cola: SÍ ReadyForWeighing
+   QAJ201 | Registered | Descargue mercancia importacion | t |  | InTransit → cola: SÍ PendingPayment
+   QAJ202 | Registered | Solo Bascula | t |  | InTransit → cola: SÍ PendingPayment
+   QAJ203 | Registered | Solo Bascula | t |  | InTransit → cola: SÍ PendingPayment
+   QAJ204 | Registered | Solo Bascula | t |  | InTransit → cola: SÍ PendingPayment
+   QAJ301 | Registered | Descargue mercancia exportacion | t | Complete | Weighing → cola: no
+   QAJ401 | Registered | Descargue mercancia importacion | t | Complete | Weighing → cola: no
+   QAJ402 | Registered | Descargue mercancia importacion | t | Complete | Weighing,InTransit → cola: no
+   QAJ601 | Registered | Descargue mercancia importacion | t | FirstWeightCaptured | Weighing → cola: SÍ PendingSecondWeight
+   QAJ801 | Registered | Cargue mercancia importacion | t |  |  → cola: SÍ NotStarted
+   QAJ901 | Registered | Solo bodega | f |  |  → cola: no
+   QAJ902 | Registered | Descargue mercancia importacion | t |  |  → cola: SÍ NotStarted
+   QAJ903 | Registered | Solo Bascula | t |  |  → cola: SÍ NotStarted
+   QAK402 | Registered | Descargue mercancia importacion | t | Complete | InTransit,Weighing → cola: no
+   QAK503 | Registered | Otro | f |  |  → cola: no
+   QAK504 | Completed | Descargue mercancia importacion | t |  |  → cola: SÍ NotStarted
+   QAK592 | Registered | Otro | f |  |  → cola: no
+   QAK601 | Registered | Descargue mercancia importacion | t | Complete | Weighing → cola: no
+   QAK602 | Registered | Descargue mercancia importacion | t |  |  → cola: SÍ NotStarted
+   QAK603 | Registered | Descargue mercancia exportacion | t |  | InTransit → cola: SÍ PendingPayment
+   QAK604 | Registered | Descargue mercancia importacion | t | Complete | Weighing → cola: no
+   QAK605 | Registered | Solo Bascula | t |  |  → cola: SÍ NotStarted
+   QAK606 | Registered | Descargue mercancia importacion | t |  | InTransit → cola: SÍ PendingPayment
+   QAK607 | Registered | Descargue mercancia importacion | t |  | Weighing → cola: SÍ PendingPayment
+   QAK608 | Registered | Descargue mercancia exportacion | t |  | Discarded → cola: SÍ NotStarted
+   QAK609 | Registered | Cargue mercancia exportacion | t | Complete | Completed → cola: no
+   QAK610 | Registered | Cargue mercancia exportacion | t | Complete | Completed → cola: no
+   QAK611 | Registered | Cargue mercancia importacion | t |  |  → cola: SÍ NotStarted
+   QAK612 | Registered | Solo bodega | f |  | InTransit → cola: no
+   QAK701 | Registered | Otro | f |  |  → cola: no
+   QAM101 | Registered | Cargue mercancia importacion | t | FirstWeightCaptured | Loading → cola: SÍ PendingSecondWeight
+en cola y no listados arriba: []
+## 5) F11-REG-005 (F2-ING-001, F2-ING-004) y F11-REG-006 (F2-INT-001, F2-INT-004)
+F2-ING-001 en pantalla (vigilancia): placa QAL101 → «Vehículo encontrado.» → Descargue importación → «Ingreso registrado · Placa QAL101»; «Camiones en planta» 35 → 36 (captura S5-A-REG-005-ingreso-QAL101.jpg)
+F2-ING-004 en pantalla: QAL101 otra vez → «Esta placa ya tiene un ingreso abierto desde 06/10/2026 11:01.», aviso «Ingreso duplicado · Este vehículo ya tiene un ingreso abierto.» y «Registrar ingreso» deshabilitado (captura S5-A-REG-005-ingreso-duplicado.jpg)
+F2-ING-004 por API (POST entry-logs con QAL101 abierto): 409 Recurso duplicado.
+F2-INT-001 por API: QAL101 en la cola: {"entryReasonName": "Descargue mercancia importacion", "state": "NotStarted", "driverName": null}
+F2-INT-004 por API (bodega, GET warehouse/pending-direct-reception): 200 ['QAK701', 'QAK503', 'QAK592', 'QAJ901']
+## 6) En pantalla
+Vigilancia → Historial → «Editar» en QAL101 (abierto, sin conductor): motivo Descargue → Cargue mercancía importación, motivo de corrección «QA S5 motivo mal elegido en porteria» → «Revisar cambios» (anterior → nuevo) → «Confirmar corrección» → «Ingreso corregido», marca «Corregido» (S5-A-DEF-F11-016-vigilancia-corregido.jpg)
+Báscula (bascula) → Proceso de Pesaje: «Cola de camiones · 20 con ingreso abierto», chip «Sin iniciar (10)»: QAK504 «Descargue mercancia importacion» y QAL101 «Cargue mercancia importacion» con el motivo nuevo (S5-A-DEF-F11-016-cola-QAK504-QAL101.jpg)
+salida de QAL101 (vigilancia): 200
+QAL101 en la cola tras la salida: False

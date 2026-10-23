@@ -1,0 +1,17 @@
+# S2 · Recepción directa desde la pantalla (bodega) de QAF103 · DEF-F11-005 (firma), DEF-F10-001 (doble clic), DEF-F9-003 (autor) · FE 15a5028 / BE 214f5f6 · 2026-10-05 20:34
+Pantalla: Recepciones → «Recepción Directa» → QAF103 «Recibir»; conductor por documento (precargado), carta porte QA-CP-F11-S2-RSB, cliente QA Cliente Uno SAS, QA Repuestos 8 Unidad, descargado 8 en A01-R02-N02, firma capturada («Firma capturada exitosamente»), motivo; «Completar Recepción Manual» con DOBLE CLIC.
+Consola (console.error, onerror, promesas rechazadas) desde que se abrió la página hasta el final: 0 entradas; sin «No PrimeVue Toast provided!». Avisos: «Firma capturada exitosamente», «Recepción directa completada».
+Red: 1 solo POST warehouse/receptions/without-weighbridge → 201 (más su OPTIONS).
+## Base (solo lectura)
+depósitos INSP creados en S2 (debe ser 1):
+2026INSP00005|Draft|2026-10-05 20:33:56.642433
+recepciones del ingreso QAF103 (debe ser 1, recibida por bodega):
+Completed|bodega|t
+movimientos del depósito (autor):
+In|8.00|DeclaredEntry|0.00|8.00|bodega
+ingresos abiertos de QAF103:
+1
+## DEF-F4-005 / F4-RSB-007: segunda recepción directa del mismo ingreso de QAF103 (API, bodega, cuerpo completo)
+{"status":409,"description":"El ingreso de la placa QAF103 ya tiene una recepción registrada."}
+ingresos abiertos de QAF103: 1
+## DEF-F8-005 / E2E-08: 2026INSP00005 — estado Draft, períodos de almacenamiento 0, facturas que lo mencionan 0 (CE lo completa y confirma; no se confirma en S2).

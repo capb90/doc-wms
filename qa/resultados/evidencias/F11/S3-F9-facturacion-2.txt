@@ -1,0 +1,47 @@
+# S3 · CHG-66 — DEF-F8-006 (E2E-02) · 2026-10-05 23:28 · BE 44bd80a
+## 2026BA00013 (Borrador, QA Cliente Uno, USD) antes
+6.00|6.00|6.00
+## CE-7 6 → 5
+{"previousStock":6.00,"newStock":5.00,"adminNotified":true}
+## Confirmar
+HTTP 200
+6.00|5.00|5.00
+## Detalle de la factura del período
+Draft | 496670.28
+ALMACENAMIENTO DE: 5 BULTO QA Cebolla, CARTA PORTE:QA-CP-F11-S2-UI, 2026BA00013, PERIODO: 05/10/2026 - 05/11/2026, AGENCIA:QA Agencia SIA Aduanas
+
+# CHG-67 — DEF-F8-007 (E2E-11 paso 6) · 2026-10-05 23:28
+## CE anula 2026BA00013 (stock 5 QA Cebolla, factura de almacenamiento en Borrador 496.670,28) con motivo «Prueba QA S3»
+{"data":{"warehouseStorageId":"4b519dd5-31e6-40e9-94ad-5d1b66d154cb","status":"Cancelled","removedOrderItems":0,"cancelledOrders":[],"closedPeriods":1,"cancelledInvoices":[{"invoiceId":"86f2dad7-69b6-4340-9b63-05c3b3c11525","invoiceNumber":null,"total":496670.28}],"invoicesToReview":[]}}
+HTTP 200
+
+2026BA00013|Cancelled
+## Avisos
+Facturación ← Factura anulada por depósito anulado | El depósito 2026BA00013 fue anulado y el WMS anuló la factura sin número (496.670). Motivo: Prueba QA S3.
+Operario bodega ← Depósito anulado: mercancía fuera del inventario | El depósito 2026BA00013 fue anulado y su mercancía salió del inventario (5 en 1 producto(s)). Motivo: Prueba QA S3.
+
+# CHG-65 — DEF-F7-007 (F7-REP-022) · 2026-10-05 23:28
+## Factura de almacenamiento de 2026BA00002 antes: (sin N.º) | Draft | 100000.00
+## Anular (motivo ≥ 10)
+HTTP 200
+## Refacturar
+{"id":"a5894ced-a672-4d3b-8e85-b135ff185e32","invoiceNumber":null,"status":"Draft","total":100000.00}
+## Refacturar otra vez la anulada (DEF-F6-020, texto)
+"description":"La factura anulada sin número ya fue refacturada; la nueva factura está en Borrador y aún no tiene número SIIGO."
+HTTP 409
+## GET reports/deposit-billing?warehouseStorageNumber=2026BA00002 (facturacion)
+{"invoicesTotal":100000.00,"invoices":[{"invoiceNumber":null,"status":"Draft","total":100000.00,"isReissued":false,"reissuedAs":null}]}
+
+## Repetición con una factura aprobada y con N.º: 2026BA00016 (QAJ201, QA Cliente Uno, USD 50.000)
+HTTP 200
+HTTP 204
+HTTP 200
+factura: QA-SIIGO-F11-S3-0016 | Approved | 496670.28
+HTTP 200
+refacturada: {"id":"7f48699a-64f4-4f16-8831-170a05d7e4ef","invoiceNumber":null,"status":"Draft","total":496670.28}
+## Refacturar otra vez (texto DEF-F6-020)
+"description":"La factura QA-SIIGO-F11-S3-0016 ya fue refacturada; la nueva factura está en Borrador y aún no tiene número SIIGO."
+HTTP 409
+## Reporte por CPI de 2026BA00016
+{"invoicesTotal":496670.28,"invoices":[{"invoiceNumber":null,"status":"Draft","total":496670.28,"isReissued":false,"reissuedAsInvoiceNumber":null}]}
+enlace de la línea de la anulada: NULL

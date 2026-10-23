@@ -1,0 +1,16 @@
+# S0 — Comprobación del API (2026-10-05, hora Colombia ~17:00)
+POST http://localhost:5281/api/v1/auth/login con usuario inexistente (cuerpo: {username:'qa_noexiste', password:<inválida>})
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Credenciales inválidas","traceId":"00-d0624ccd2ffb4d5018259d0a54ce7891-ffea1bcd68582c95-00"}
+HTTP 400
+
+Commits: frontend 0a6267b · backend 09b0baf
+Migraciones aplicadas:
+20261001193201_InitialParityLegacy
+20261004183610_FixRoleSeedAndOperationalUniqueness
+20261004201645_AddLoadingOrderSignatureAndWeighbridgeIdempotency
+20261004212549_AddMinimumIncludesVatSetting
+20261004213217_AddPerishableToRuleUniqueIndexes
+20261005024953_AddDispatchGuideLineReleaseSnapshot
+20261005161115_AddInvoiceDueNoticeSentAt
+20261005170122_AddValidationTemplateAndReceptionReceiver
+20261005184916_SeedCompanyParameters

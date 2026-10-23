@@ -1,0 +1,168 @@
+400 POST /api/v1/foreign-trade/imports/{id}/extension El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/administration/system-parameters/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/administration/packaging-types El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/administration/packaging-types/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/administration/unit-measures El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/administration/unit-measures/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/administration/cargo-unit-types El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/administration/cargo-unit-types/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/auth/login El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/auth/refresh-token El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/auth/change-password El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/auth/request-password-reset El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/auth/reset-password El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/administration/backup-destinations El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/administration/backup-destinations/{id} El cuerpo de la solicitud no es un JSON válido.
+404 POST /api/v1/administration/backup-destinations/{id}/test El destino de respaldo no existe.
+202 POST /api/v1/administration/backups/run 
+400 POST /api/v1/billing/invoice-items/{id}/override El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/billing/invoices/{id} El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/billing/invoices/{id}/recipient El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/billing/invoices/{id}/number El cuerpo de la solicitud no es un JSON válido.
+404 PATCH /api/v1/billing/invoices/{id}/approve Factura con ID 00000000-0000-0000-0000-000000000001 no encontrada.
+404 PATCH /api/v1/billing/invoices/{id}/send Factura con ID 00000000-0000-0000-0000-000000000001 no encontrada.
+400 PATCH /api/v1/billing/invoices/{id}/cancel El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/billing/invoices/{invoiceId}/payments El cuerpo de la solicitud no es un JSON válido.
+415 POST /api/v1/billing/payments/vouchers 
+404 PATCH /api/v1/billing/payments/{id}/verify Pago con ID 00000000-0000-0000-0000-000000000001 no encontrado.
+400 PATCH /api/v1/billing/payments/{id}/reject El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/billing/configurations/{stakeholderId} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/billing/storage-periods/close El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/billing/warehouse-storages/{id}/trm El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/billing/preview El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/billing/formula-preview El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/administration/cities El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/administration/cities/{id} El cuerpo de la solicitud no es un JSON válido.
+415 POST /api/v1/administration/cities/import 
+400 POST /api/v1/administration/crews El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/administration/crews/{id} El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/departure-authorizations/{id} El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/warehouse-storages/{id}/entries/{entryId}/manifest El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/foreign-trade/deposits/{id}/products/{storageProductId}/catalog-product El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/foreign-trade/warehouse-storages/{id}/entries/{entryId}/cargo-unit-breakdown El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/warehouse-storages/{id}/entry-date El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/drivers El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/drivers/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/entry-logs El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/entry-logs/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/entry-logs/{id}/departure El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/entry-logs/{id}/departure-authorizations El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/entry-logs/{id}/manifests El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/entry-logs/{id}/correction El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/entry-reasons El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/entry-reasons/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/imports/{id}/validate El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/imports/{id}/releases El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/imports/{id}/releases/{releaseId} El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/imports/{id}/manifest El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/warehouse-storages/{id}/customer El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/foreign-trade/warehouse-storages/{id}/stakeholders El cuerpo de la solicitud no es un JSON válido.
+404 POST /api/v1/foreign-trade/warehouse-storages/{id}/confirm El depósito no existe.
+404 POST /api/v1/foreign-trade/warehouse-storages/{id}/close-truck-entries El depósito no existe.
+400 PATCH /api/v1/foreign-trade/warehouse-storages/{id}/draft El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/warehouse-storages/{id}/shipping-form-number El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/warehouse-storages/{id}/return-for-correction El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/warehouse-storages/{id}/cancel El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/warehouse-storages/{warehouseStorageId}/cargo-units/{cargoUnitId} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/deposits/{id}/products El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/foreign-trade/deposits/{id}/products/{productId} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/loading-orders El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/loading-orders/{id}/cancel El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/dispatch-guides El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/foreign-trade/dispatch-guides/{id}/payment-mode El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/forklift-rates/{vehicleType} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/imports/{id}/releases/{releaseId}/withdraw El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/inventory/adjustments El cuerpo de la solicitud no es un JSON válido.
+404 POST /api/v1/billing/invoices/{id}/reissue Factura con ID 00000000-0000-0000-0000-000000000001 no encontrada.
+415 POST /api/v1/administration/legacy-import/{entity} 
+415 POST /api/v1/administration/legacy-import/reconciliation 
+400 POST /api/v1/administration/legacy-import/open-billing El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/foreign-trade/loading-orders/{id}/items El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/dispatch-guides/{id}/cancel El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/loading-orders/{id}/revert El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/loading-orders/{id}/exit-with-entry-ticket El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/foreign-trade/packing-list-suppliers El cuerpo de la solicitud no es un JSON válido.
+415 POST /api/v1/foreign-trade/packing-lists/import 
+400 POST /api/v1/foreign-trade/deposits/{id}/entries/{entryId}/packing-list-items El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/product El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/product/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/service El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/service/{id} El cuerpo de la solicitud no es un JSON válido.
+404 POST /api/v1/service/{id}/activate El servicio no existe.
+404 POST /api/v1/service/{id}/deactivate El servicio no existe.
+400 POST /api/v1/service/{id}/prices El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/service/{id}/prices/{priceId} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/service/{id}/pricing-rules El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/service/{id}/pricing-rules/{ruleId} El cuerpo de la solicitud no es un JSON válido.
+404 PATCH /api/v1/service/{id}/pricing-rules/{ruleId}/activate La tarifa base no existe.
+404 PATCH /api/v1/service/{id}/pricing-rules/{ruleId}/deactivate La tarifa base no existe.
+400 PUT /api/v1/service/{id}/minimum-values/{minimumValueId} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/service/{id}/assign-tax El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/service/{id}/remove-tax El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/stakeholder El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/stakeholder/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/stakeholder/{id}/assign-role El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/stakeholder/{id}/remove-role El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/stakeholder/{id}/bank-account El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/stakeholder/{stakeholderId}/bank-account/{bankAccountId} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/stakeholder/{id}/contact El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/stakeholder/{stakeholderId}/contact/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/stakeholder/{stakeholderId}/agreement El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/stakeholder/{stakeholderId}/agreement/{id} El cuerpo de la solicitud no es un JSON válido.
+404 POST /api/v1/stakeholder/{stakeholderId}/agreement/{id}/activate El tercero ingresado no existe.
+404 POST /api/v1/stakeholder/{stakeholderId}/agreement/{id}/deactivate El tercero ingresado no existe.
+400 POST /api/v1/stakeholder/{stakeholderId}/agreement/{agreementId}/services El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/stakeholder/{stakeholderId}/agreement/{agreementId}/services/{agreementServiceId} El cuerpo de la solicitud no es un JSON válido.
+404 POST /api/v1/stakeholder/{stakeholderId}/agreement/{agreementId}/services/{agreementServiceId}/activate El tercero no existe.
+404 POST /api/v1/stakeholder/{stakeholderId}/agreement/{agreementId}/services/{agreementServiceId}/deactivate El tercero no existe.
+400 POST /api/v1/user El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/user/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/user/{id}/assign-roles El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/user/{id}/remove-roles El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/user/{id}/reset-password El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/user/{id}/manage-active El cuerpo de la solicitud no es un JSON válido.
+403 POST /api/v1/user/{userId}/notifications/{notificationId}/read 
+403 POST /api/v1/user/{id}/notifications/read-all 
+400 POST /api/v1/vehicles El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/vehicles/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/receptions El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/receptions/register-arrival El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/receptions/{id}/complete El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/receptions/without-weighbridge El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/forklift-uses/start El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/forklift-uses/{id}/end El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/warehouse/forklift-uses/{id}/payment-mode El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/loading-orders El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/warehouse/loading-orders/{id}/cancel El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/loading-orders/{id}/execute El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/locations El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/warehouse/locations/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/novelties El cuerpo de la solicitud no es un JSON válido.
+400 PUT /api/v1/warehouse/novelties/{id} El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/novelties/{id}/void El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/storage-products/{id}/placements El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/storage-products/{id}/placements/move El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/warehouse/storage-products/{id}/placements/release El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/weighing-only/initiate El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/weighing-only/process-payment El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/weighing-only/start-pending-billing El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/storage/initiate El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/storage/register El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/storage/process-payment El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/storage/start-pending-billing El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/output/initiate El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/output/process-payment El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/output/start-pending-billing El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/cycles/{cycleId}/weighings El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/cycles/{cycleId}/complete El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/weighbridge/{id}/weighing-date El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/weighbridge/{id}/ticket-observations El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/stakeholders/quick El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/weighbridge/{id}/first-weight-modify El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/weighbridge/{id}/second-weight El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/output/cycles/{cycleId}/additional-orders El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/output/from-entry-ticket El cuerpo de la solicitud no es un JSON válido.
+400 PATCH /api/v1/weighbridge/entry-log/{id}/info El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/service-records/{serviceRecordId}/documents El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/transport-companies/quick El cuerpo de la solicitud no es un JSON válido.
+400 POST /api/v1/weighbridge/cycles/{cycleId}/void El cuerpo de la solicitud no es un JSON válido.

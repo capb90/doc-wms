@@ -1,0 +1,15 @@
+# S3 · DEF-F11-009 (F3-MUL-001..004) — depósito adicional sin cliente · 2026-10-05 23:16–23:20 · FE d9783af (código 20bb089) / BE 44bd80a · usuario bascula en pantalla
+Preparación por API: QAJ402 «Descargue importación», registro 2026BA00018 (QA-CP-F11-S3-MULB, QA Cliente Uno, 8 QA Cebolla), cobro 29.750 y llegada a Bodega.
+1. Pantalla, QAJ402 → primer peso BRUTO 30.000 → «Peso registrado. El ciclo queda abierto.» con «Agregar otro depósito» (F3-MUL-001).
+2. «Agregar otro depósito»: aviso «Depósito adicional · modalidad IMP y pesaje heredados»; Carta Porte QA-CP-F11-S3-MULX (documento nuevo), QA Cebolla 44 (se quería 4: el campo numérico tomó dos entradas de la automatización), sin abrir los datos de Comercio Exterior (sin cliente) → «Guardar» → «Camión asociado al depósito 2026BA00019».
+3. Paso de cobro «Depósito adicional — factura en cero … Elija a quién se emite la factura en cero.» con DESTINATARIO (Tercero registrado / Conductor del vehículo / Persona no registrada / Consumidor final), sin prellenar (el depósito no tiene cliente; no toma el del principal).
+4. «Confirmar y continuar» sin elegir tercero → el campo queda marcado «Seleccione el tercero registrado a facturar.» y no se envía nada (captura S3-DEF-F11-009-sin-destinatario-bloqueado.jpg).
+5. «Consumidor final» → «Confirmar y continuar» → «Depósito adicional agregado — Continúe con el pesaje intermedio del camión…»; la ficha pasa a Peso con tipo INTERMEDIO (captura S3-DEF-F11-009-consumidor-final-intermedio.jpg).
+6. Pesaje intermedio 26.000 desde la pantalla; tara 14.000 por API tras la llegada a Bodega del adicional (sin ella: 409 «El camión QAJ402 no tiene registrada su llegada a Bodega (depósito 2026BA00019)…», CHG-36).
+## Resultado en la base y el API
+Factura del adicional: {"status":"Paid","total":0.00,"isZeroValue":true,"customerName":"Consumidor Final","isUnregisteredRecipient":true,"items":["Servicio de Báscula — Depósito adicional"]}
+Pesajes del ciclo: 0:Gross 30000.00 · 1:Intermediate 26000.00 · 2:Tare 14000.00 · ciclo Complete
+Entradas por depósito:
+2026BA00018 · QA-CP-F11-S3-MULB · tiquete 2026T00038 · neto 4000.00 · cliente QA Cliente Uno SAS
+2026BA00019 · QA-CP-F11-S3-MULX · tiquete 2026T00039 · neto 12000.00 · cliente (sin cliente)
+Resultado: PASA (F3-MUL-001 a 004). Hallazgo nuevo: tras confirmar, la línea «Registro» de la ficha dice «depósito 2026BA00019 · Documento QA-CP-F11-S3-MULB» (documento del depósito principal) → DEF-F11-010.

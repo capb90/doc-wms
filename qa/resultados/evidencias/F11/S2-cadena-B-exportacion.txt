@@ -1,0 +1,29 @@
+# S2 · Cadena B — exportación 2026EXP00001 · DEF-F4-004/DEF-F4-014 (CHG-31), DEF-F3-012/DEF-F8-008 (CHG-32), DEF-F4-006 (CHG-43) · BE 214f5f6 · 2026-10-05 20:44
+## OC por 50 de 2026EXP00001 (QAG701): {"id":"a7ae4861-98ee-48ca-b214-721836b33611","orderNumber":"2026OC00005","status":"Pending"}
+## DEF-F4-004 / F5-COR-005: CE devuelve 2026EXP00001 a Borrador con la OC pendiente
+(primer intento con PATCH …/draft, que es «editar Borrador», no «devolver a Borrador»: 400 «Solo se puede editar un depósito en estado Borrador…»; repetición abajo con POST …/return-for-correction)
+## CHG-31 crit. 2: OC sobre un depósito en Borrador (2026INSP00005)
+{"status":400,"description":"No se pueden crear órdenes de cargue para depósitos en estado Borrador. Confirme primero: 2026INSP00005","errors":[]}
+## DEF-F4-004 / F5-COR-005 (repetición): POST return-for-correction de 2026EXP00001 con 2026OC00005 pendiente
+{"status":409,"description":"No se puede devolver el depósito 2026EXP00001 a Borrador: tiene órdenes de cargue activas (2026OC00005 (pendiente)). Cancele las pendientes o revierta las cargadas antes de devolverlo."}
+estado: Confirmed
+## QAG701 inicia salida con 2026OC00005: {"serviceRecordId":"f1f3b310-55bb-4db9-8a00-1781c37da3b5","customerId":"e329015c-1131-456e-8351-5dd40420f26b","totalAmount":29750.00} · OC: InProgress
+## Descartar la operación (DELETE weighbridge/incomplete/{servicio}): 204 · OC: Pending
+## QAG701 vuelve a iniciar la salida: {"serviceRecordId":"c1634f60-d9dd-403c-8d76-65eb910790cf"} · OC: InProgress
+## OC anulada: OC por 2 de 2026INSP00004 (QAG702), CE la anula y báscula inicia la salida con ella
+OC: {"orderNumber":"2026OC00006","status":"Pending"}
+anular: "ok" · estado: Cancelled
+{"status":409,"description":"La orden 2026OC00006 está cancelada; no se puede iniciar la salida en báscula."}
+## Cobro y tara de QAG701: {"weighbridgeCycleId":"cd6722b2-40ee-4af2-92d8-e751faca073f","invoiceId":"bfd2ddbf-59c1-4729-89f1-1b219cd66ed4","totalAmount":29750.00} · {"status":"FirstWeightCaptured","ticket":"2026T00027","net":null}
+## Bodega ejecuta el cargue de 2026OC00005 por API con firma y completedBy de facturacion en el cuerpo
+(primer intento con el campo «quantity» en lugar de «loadedQuantity»: 400 «No se cargó mercancía: cancele la orden en lugar de ejecutarla.»; repetición abajo)
+## Repesaje (bruto 40.000): {"status":"Complete","ticket":"2026T00027","net":null} · OC: InProgress · EXP00001: Confirmed  ← OBSERVACIÓN: báscula cerró el repesaje de salida de una OC de exportación que aún no estaba cargada (ver nota al final)
+## Bodega ejecuta el cargue (repetición, loadedQuantity 50) con firma y completedBy de facturacion en el cuerpo
+"200 OK"
+OC: Dispatched · completada por bodega · firma true · guía: 2026S00004 (Export) · EXP00001: Closed · stock 0.00
+## DEF-F4-014 / F4-CAR-007: Bodega ejecuta de nuevo la orden
+{"status":400,"description":"La orden ya fue despachada."}
+## DEF-F4-006 / F4-CAR-009: lista de exportaciones (c_exterior) → [{"warehouseStorageNumber":"2026EXP00001","status":"Closed"}]
+GET foreign-trade/exports/{id} de 2026EXP00001: HTTP 200 · {"warehouseStorageNumber":"2026EXP00001","status":"Closed","warehouseStorageStatus":null}
+Kanban/depósitos (foreign-trade/deposits) fila de EXP00001: [{"status":"Closed","modality":null}]
+## OBSERVACIÓN (sin ficha): con la OC de exportación 2026OC00005 en «En progreso» (aún sin cargar), báscula aceptó el repesaje bruto de QAG701 y cerró el ciclo (Complete); el cargue posterior despachó la orden. Para importación CHG-33 lo impide (exige guía, que solo existe tras cargar); para exportación no hay regla. Se deja a decisión del negocio si el repesaje de salida debe exigir la orden cargada.

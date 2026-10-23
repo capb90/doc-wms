@@ -1,0 +1,14 @@
+# S2 · DEF-F3-002 / DEF-F8-001 (CHG-17) · F3-COB-013, F3-COB-001, E2E-18, E2E-20 · BE 214f5f6 · 2026-10-05 20:34 · bascula
+Ingreso QAG201 (Descargue importación) creado por vigilancia: 13666dbe-1420-40b3-88cc-f3074f8b9207
+## Dos POST weighbridge/storage/register simultáneos (mismo cuerpo, QA-CP-F11-S2-IDEM, QA Cebolla 6)
+envío 1: HTTP 409 {"status":409,"title":"Recurso duplicado.","description":"Este ingreso ya tiene un servicio de báscula asignado. Actualice la cola."}
+envío 2: HTTP 201 {"serviceRecordId":"f37bcb8d-2e98-4358-a50b-4ecd59dd8d04","warehouseStorageNumber":"2026BA00009","totalAmount":29750.00,"customerId":"e329015c-1131-456e-8351-5dd40420f26b"}
+## Base (solo lectura): depósitos con la carta porte, servicios del ingreso y stock
+2026BA00009|Draft|6.00
+1|1
+## Dos POST weighbridge/storage/process-payment simultáneos (cobro inmediato 29.750, QA Cliente Uno)
+envío 1: HTTP 409 {"status":409,"title":"Recurso duplicado.","description":"Este camión ya tiene el cobro de báscula registrado."}
+envío 2: HTTP 200 {"weighbridgeCycleId":"bdfd1c3f-07fc-4ed6-8cfe-cfb8fd060d0d","invoiceId":"f4ddf10a-7270-4298-887c-5e30ac25e2c9","totalAmount":29750}
+## Base: ciclos y facturas BASCULA del servicio
+1
+facturas creadas en los últimos 5 min (todas las del API): 1 · f4ddf10a Paid 29750.00

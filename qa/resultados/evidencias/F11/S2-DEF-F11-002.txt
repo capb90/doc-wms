@@ -1,0 +1,18 @@
+# S2 · DEF-F11-002 · BE 214f5f6 · 2026-10-05 20:20 · capb90 (Admin) · POST stakeholder
+## idType "PASAPORTEX" (inexistente)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"IdType","description":"El tipo de documento no es válido."}],"description":"Error de validación de datos","traceId":"00-9d96bee4147fb6a63b6ec857a8f9f118-941ab64527bf9ad8-00"}
+HTTP 400
+
+## idType "99" (inexistente)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"IdType","description":"El tipo de documento no es válido."}],"description":"Error de validación de datos","traceId":"00-53d74b13cffb22ea2118ee15a5370eb8-b3d875c8da376f48-00"}
+HTTP 400
+
+## idType "NIT" (aceptado a propósito: el parseo no distingue mayúsculas)
+{"id":"2851c3c1-f432-4f80-b724-bb484e66bfe9","name":"QA F11 Tipo NIT Mayusculas","idType":"Nit","idNumber":"900199904"}
+## Cuenta bancaria anidada con bankAccountType inexistente
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"BankAccounts[0].BankAccountType","description":"El tipo de cuenta no puede estar vacío."},{"code":"BankAccounts[0].BankAccountNumber","description":"El número de cuenta no puede estar vacío."}],"description":"Error de validación de datos","traceId":"00-572f9c19d77ea2e49ab69573213f56c5-e2d6395f41794a67-00"}
+HTTP 400
+## (repetición con los nombres de campo correctos) cuenta anidada bankAccountType "CORRIENTEX"
+{"status":400,"errors":[{"code":"BankAccounts[0].BankAccountType","description":"Ingrese un tipo de cuenta válido."}]}
+## POST drivers con idType "PASAPORTEX" (vigilancia)
+{"status":400,"errors":[{"code":"IdType","description":"El tipo de identificación no es válido."}],"description":"Error de validación de datos"}

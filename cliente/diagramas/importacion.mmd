@@ -1,0 +1,109 @@
+---
+config:
+  look: neo
+  theme: redux-color
+---
+sequenceDiagram
+  actor cl as Cliente
+  actor cd as Conductor
+  participant in as Ingreso
+  participant bs as Bascula
+  participant bg as Bodega
+  participant cex as Comercio Exterior
+  participant fac as Facturación
+  Note over in,fac: Proceso de importación
+  alt Ingresos
+    cd->>+in:Ingresa mercancia
+    in->>-in:Registro de ingreso
+    in->>+bs:Ingresa a bascula
+
+    bs-->>-cd:Realiza el cobro
+    par Sistema Facturación 
+      bs--)fac:Sistema envia a facturación por bascula
+    end
+
+    bs->>bs:Realiza pesaje con mercancia
+    bs->>bs:Crea deposito
+
+    par Impresion de etiqueta
+      bs--)+cex:Notifica Creacion de deposito
+      cex->>cex:Validacion de cant y peso
+      cex->>cex:Imprimir etiqueta:Sin Nacionalizar
+      cex-->>-bg:Pegar etiqueta
+      loop levante
+        cex-->>cex:Inspeccionar plataformas DIAN 
+        break Hay levante
+          cex->>cex:Imprimir etiqueta:Sin Nacionalizar
+          cex-->>bg:Pegar etiqueta
+        end
+      end
+    end
+
+    bs->>+bg:Ingresa a patio
+
+    alt Montacargas
+      bg->>bg:Resgistra info montacargas
+      par Sistema Facturación
+        bg--)fac:Sistema envia a facturación por montacargas
+      end
+    else Manual
+      bg->>bg:Descargue mercancia
+    end
+
+    bg->>-bg:Registro de inventario
+    bg->>+bs:Regresa a bascula
+    bs->>bs:Realiza repesaje - Registra información
+    bs--)-cd:Imprime ticket
+    
+
+  else Salidas
+    cl-->>cex:Solicitud de salida
+
+    alt Hay inventario y cliente al día en pagos
+      cex->>cex:Genera orden de cargue
+      cex->>cl:Envia orden de cargue
+      par Sistema
+        cex--)cex:Sistema genera reserva de inventario
+      end
+    end
+
+    cd->>+in:Ingreso por cargue
+    in->>-in:Regista ingreso camion
+    in->>+bs:Ingresa a bascula
+    bs->>bs:Realiza pesaje del camion
+    bs->>bs:Registra información
+
+    bs-->>-cd:Realiza el cobro
+    par Sistema Facturación
+      bs--)fac:Sistema envia a facturación por bascula
+    end
+
+    bs->>+bg:Ingreso a patio
+    bg->>bg:Verificación orden de cargue
+    bg-->>bg:Cargue camion
+    bg->>bg:Registro de salida
+    par Sistema
+      bg--)bg:Sistema Modifica inventario
+    end
+    
+    par Impresion de guias de salida 
+      cd->>+cex:Solicita imprimir guias
+      cex->>cex:Generar guias de salida
+      cex->>cex:Imprime guias de salida
+      cex-->>cd:Entrega guias de salida
+      par Sistema Facturación
+        cex--)fac:Sistema envia a facturacion por guias
+      end
+      par Imprimir etiqueta si hay mercancia
+        cex->>-cex:Imprimir etiqueta:Nacionalizado
+        cex->>bg:Cambia etiquetas 
+      end
+    end
+    
+    bg->>bs:Regresa a bascula
+    bs->>bs:Repesaje camion cargado
+    bs->>bs:Registra información
+    bs->>in:registra salida de camión
+    
+  end
+

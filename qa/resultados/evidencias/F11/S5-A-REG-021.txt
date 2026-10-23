@@ -1,0 +1,23 @@
+## 5) F11-REG-021 (F6-ALM-001, F6-TAR-001..004) con despacho parcial
+2026BA00029 (QA Cliente Uno, COP 100.000.000, 50 QA Cebolla) · factura al confirmar: ['(sin N.º) | Draft | 303450.00 |  | 303450.00 | - | -']
+   {"description": "Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026", "quantity": 1.0, "unitPrice": 255000.0, "subTotal": 255000.0, "taxAmount": 48450.0, "total": 303450.0, "source": "Agreement"}
+   claves del ítem en el API: ['description', 'id', 'isOverridden', 'lineNumber', 'notes', 'overrideOriginalAmount', 'overrideReason', 'productId', 'productName', 'quantity', 'serviceCode', 'serviceId', 'serviceName', 'servicePriceId', 'source', 'subTotal', 'taxAmount', 'taxRate', 'total', 'unitPrice']
+períodos: ['a310d095-f70b-4627-8636-97a1cbb66806 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 255000.00 | 255000.00 | PERCENTAGE_OF_VALUE | 3964e6f5-eb68-495c-b5f0-56072950aa28']
+límite: ['2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | 2026-11-09']
+levante QA-LEV-F11-S5-R21 (20): 200
+2026OC00020 por 20 con QAL108 · guía 2026S00014 (30000, convenio GUIA_SALIDA) · OC Dispatched · depósito ['Confirmed', '6226e2ae-7660-4c52-958e-4e082915ef89', '50.00', '50.00', '30.00', '0.00']
+factura tras el despacho: ['(sin N.º) | Draft | 303450.00 |  | 303450.00 | - | -']
+CE-7 50 → 51: 200
+factura: ['(sin N.º) | Draft | 303450.00 |  | 303450.00 | - | -']
+   2026BA00029 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 255000.00 | 303450.00 | f
+CE-7 51 → 50: 200
+factura: ['(sin N.º) | Draft | 303450.00 |  | 303450.00 | - | -']
+   2026BA00029 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 255000.00 | 303450.00 | f
+TAR-002 (nivel 2, tarifa base) · 2026BA00027:
+   {"description": "Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026", "quantity": 45.0, "unitPrice": 1500.0, "subTotal": 67500.0, "taxAmount": 12825.0, "total": 80325.0, "source": "ServiceRule"}
+TAR-003 (nivel 3, precio base) · cobro de báscula de QAL101 a QA Cliente REG F11 (sin convenio): ['28560.00 | 24000.00 | 4560.00']
+TAR-004 (nivel 4, valor mínimo) · 2026BA00028 QA Repuestos:
+   {"description": "Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026", "quantity": 20.0, "unitPrice": 1500.0, "subTotal": 30000.0, "taxAmount": 5700.0, "total": 35700.0, "source": "ServiceRule"}
+   {"description": "Almacenamiento (valor mínimo) QA Repuestos 06/10/2026 - 06/11/2026", "quantity": 1.0, "unitPrice": 184000.0, "subTotal": 184000.0, "taxAmount": 34960.0, "total": 218960.0, "source": "MinimumValue"}
+   detalle: ALMACENAMIENTO DE: 10 UNIDAD QA Repuestos, CARTA PORTE:QA-CP-F11-S5-R17-AG, 2026BA00028, PERIODO: 06/10/2026 - 06/11/2026, AGENCIA:QA Agencia SIA Aduanas
+ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Importación ($184.000,00 más IVA). Valide y corrija el valor de la línea. Motivo: sin convenio, tarifa base ni precio base.

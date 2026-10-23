@@ -1,0 +1,35 @@
+# S2 · Cadena C — depósito de QA Cliente Consolidado · DEF-F8-003 (CHG-33) y DEF-F8-002 (CHG-34) · BE 214f5f6 · 2026-10-05 20:46
+Ingreso QAG801 (Descargue importación): 55e0d0ec-e810-4e64-8cf7-62ea768c4b61
+## Registro: {"serviceRecordId":"a7d09ef0-7e42-406f-b076-2777b76a9634","warehouseStorageId":"83205640-ff59-4184-9fc8-f87e149873a5","warehouseStorageNumber":"2026BA00010","isFirstTruck":true,"totalAmount":28560.0000}
+## Cobro inmediato a Consolidado: {"weighbridgeCycleId":"2d9b854c-de3c-455c-a703-91a6ade45203","invoiceId":"00e844ba-9954-46ae-8ffa-01219cbe56e8","totalAmount":28560.0000}
+## Bruto 30.000: {"status":"FirstWeightCaptured","ticket":"2026T00028","net":null} · llegada: f096483a-7131-40e4-83ab-42565a2a6ce9
+depósito: 2026BA00010 (83205640-ff59-4184-9fc8-f87e149873a5) producto 12c96a3a-3936-419c-94c4-489b00147896
+## Recepción 40: {"status":"Completed","id":null} · tara 10.000: {"status":"Complete","ticket":"2026T00028","net":null}
+## CE: requisitos de confirmación: {"warehouseStorageId":"83205640-ff59-4184-9fc8-f87e149873a5","warehouseStorageNumber":"2026BA00010","canConfirm":true,"missing":[]}
+## CE confirma 2026BA00010: {"status":"Confirmed","trm":null}
+## CE cierra el ingreso de camiones: "ok"
+## Levante QA-LEV-F11-S2-ETQ (40): "ok" · estado: Confirmed
+## OC por 20 de 2026BA00010 para el mismo camión QAG801: {"orderNumber":"2026OC00007","status":"Pending"}
+## CE: salida con el tiquete de ingreso (POST loading-orders/{id}/exit-with-entry-ticket, ciclo de ingreso 2d9b854c-de3c-455c-a703-91a6ade45203)
+{"serviceRecordId":"c1f8787c-0aec-4925-8b01-122f1ff7f165","loadingOrderId":"7134c7d3-6266-427e-9d68-8056dcdfd8c6","loadingOrderNumber":"2026OC00007","ticketNumber":"2026T00028","dispatched":false,"awaitingGuide":false}
+OC: InProgress
+## Bodega ejecuta el cargue (20, con firma): "200 OK"
+OC tras el cargue: Loaded · depósito: Confirmed · stock 20.00
+Aviso a CE: Guía de salida requerida — Orden 2026OC00007 cargada (Importación) con la salida ya registrada. Genere la guía de salida: con ella la orden se despacha.
+## Vigilancia intenta la salida de QAG801 sin guía
+{"status":409,"description":"No se puede registrar la salida del vehículo QAG801: la orden 2026OC00007 es de importación y no tiene guía de salida vigente. Comercio Exterior debe emitir la guía."}
+## «Crear guía»: órdenes pendientes de guía → [{"orderNumber":"2026OC00007","status":"Loaded","statusLabel":null}]
+## CE emite la guía (vista previa total 35000.00): {"guideNumber":"2026S00005"}
+OC: Dispatched
+## Vigilancia registra la salida de QAG801: {"status":null,"description":null}
+## OC multicliente (BA00001 Uno 10 + BA00010 Consolidado 10, QAG802): {"orderNumber":"2026OC00008","status":"Pending"}
+## Salida en báscula: {"customerId":"e329015c-1131-456e-8351-5dd40420f26b","totalAmount":29750.00} · cobro: {"weighbridgeCycleId":"985268f4-9707-4208-b5a9-905fb7771c54","invoiceId":"672e92c6-5f61-4b42-8642-a44a2257bf43","totalAmount":29750.00} · tara: {"status":"FirstWeightCaptured","ticket":"2026T00029","net":null}
+## Bodega carga las dos líneas: "200 OK" · OC: Loaded
+## Vista previa del cobro («Continuar al cobro»): {"isMultiClient":true,"total":65000.00,"charges":[{"customerName":"QA Cliente Uno SAS","depositNumbers":["2026BA00001"],"unitPrice":30000,"total":30000},{"customerName":"QA Cliente Consolidado SAS","depositNumbers":["2026BA00010"],"unitPrice":35000.00,"total":35000.00}]}
+## Guía con destinatario único (QA Cliente Uno)
+{"status":400,"description":"La orden 2026OC00008 tiene depósitos de 2 clientes: la guía se factura a cada cliente dueño. Use el destinatario «Clientes»."}
+## Guía con destinatario «Clientes» (multiClient), firmante Conductor: {"guide":"2026S00006","totalAmount":65000.00,"invoices":[{"customerName":"QA Cliente Uno SAS","total":30000,"status":null},{"customerName":"QA Cliente Consolidado SAS","total":35000.00,"status":null}]}
+Base · facturas GUIA_SALIDA de la guía: QA Cliente Consolidado SAS 35000.00 Paid ; QA Cliente Uno SAS 30000.00 Paid ; QA Cliente Consolidado SAS 35000.00 Paid
+PDF: firmante/encabezado → Guía de Salida No. 2026S00006 Importador: QA Importación Andina Ltda Conductores: Pedro QA Conductor Colombia (1000000001) 
+## Repesaje bruto 33.000: {"status":"Complete","ticket":"2026T00029","net":null} · OC: Dispatched · salida Vigilancia: {"status":null,"description":null}
+## PDF 2026S00006 (S2-DEF-F8-002-guia-multicliente.pdf): «Firma Conductor: PEDRO QA CONDUCTOR COLOMBIA (1000000001)»; placas QAG802; tiquetes de ingreso de los dos depósitos; «Total en esta salida 20 BULTO». Dos facturas GUIA_SALIDA pagadas: QA Cliente Uno 30.000 (convenio) y QA Cliente Consolidado 35.000 (precio base); suma 65.000 = «Total a cobrar» de la vista previa.

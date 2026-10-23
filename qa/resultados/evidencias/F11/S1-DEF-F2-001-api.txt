@@ -1,0 +1,53 @@
+# S1 · DEF-F2-001 / CHG-05 — verificación por API (2026-10-05 17:41 -05)
+## by-plate exacto
+GET weighbridge/vehicles/by-plate/qaa101:
+{"data":{"id":"33274f52-46e4-479e-83ea-2053f61b0311","licensePlate":"QAA101","carrierCompanyId":"0f89cd64-8519-4f50-b024-5c3a81a57437","country":"Colombia","vehicleType":"Tractomula","isActive":true,"createdAt":"2026-10-05T22:01:03.616433+00:00","updatedAt":"2026-10-05T22:03:44.144656+00:00"}}
+HTTP 200
+
+GET weighbridge/vehicles/by-plate/AA102:
+{"data":null}
+HTTP 200
+
+GET weighbridge/vehicles/by-plate/QAB20:
+{"data":null}
+HTTP 200
+
+GET weighbridge/vehicles/by-plate/qab201:
+{"data":{"id":"eb9233c2-ba58-43fb-a15c-08cd0e37d022","licensePlate":"QAB201","carrierCompanyId":"0f89cd64-8519-4f50-b024-5c3a81a57437","country":"Colombia","vehicleType":"Tractomula","isActive":true,"createdAt":"2026-10-05T22:03:01.635364+00:00","updatedAt":"2026-10-05T22:04:01.311667+00:00"}}
+HTTP 200
+
+## POST vehicles qaa101 (duplicado en minúsculas)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"La placa QAA101 ya existe.","traceId":"00-48afdb85242ba5abe860fa2ac438a0ee-cee9af9db2e7abf2-00"}
+HTTP 409
+## POST vehicles AB#12 (formato inválido)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"La placa 'AB#12' no es válida: use de 3 a 20 letras, números o guiones.","traceId":"00-2804e2f3141f68af1d9628cc6a5c3e9b-96ad7f5ab1a3fd84-00"}
+HTTP 400
+## POST vehicles QA A-1# 
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"La placa 'QA A-1#' no es válida: use de 3 a 20 letras, números o guiones.","traceId":"00-cf87559195a635e386ae7889cdb77029-b0724061c3dc6697-00"}
+HTTP 400
+## POST vehicles con transportadora sin rol (QA Cliente Uno)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El tercero 'QA Cliente Uno SAS' no tiene el rol de empresa de transporte.","traceId":"00-bf259dcccf6d557d165e49640a98dead-479be70740f787f8-00"}
+HTTP 400
+## GET vehicles?licensePlate=QAB20 (filtro parcial)
+jq: error (at <stdin>:0): Cannot index array with string "items"
+{"data":{"id":"e222dc7d-15dd-4253-afe7-d8e752a7a6a0","serviceRecordId":null,"vehicleId":"eb9233c2-ba58-43fb-a15c-08cd0e37d022","driverId":"28c2adbd-cffc-4698-b368-5988b2706751","entryReasonId":"1e7a8f2b-9c4d-4a1e-b3f6-2d8e5c0a1b70","entryAuthorizedById":"01a10e12-e058-7461-bf37-e0b785d011aa","dateTimeEntry":"2026-10-05T22:41:12.002939+00:00","status":"Registered","departureAuthorizedById":null,"dateTimeDeparture":null,"observations":"QA F11 S1 REG IMP camion 1","createdAt":"2026-10-05T22:41:12.002992+00:00","updatedAt":null,"isCorrected":false,"lastCorrectedAt":null,"lastCorrectedByName":null,"hasOperation":false,"hasDeposits":false,"vehicle":{"id":"eb9233c2-ba58-43fb-a15c-08cd0e37d022","licensePlate":"QAB201","carrierCompanyId":"0f89cd64-8519-4f50-b024-5c3a81a57437","country":"Colombia","vehicleType":"Tractomula","isActive":true,"createdAt":"2026-10-05T22:03:01.635364+00:00","updatedAt":"2026-10-05T22:04:01.311667+00:00"},"driver":{"id":"28c2adbd-cffc-4698-b368-5988b2706751","firstName":"Pedro QA","lastName":"Conductor Colombia","idNumber":"1000000001","idType":"Cc","country":"Colombia","phoneNumber":"3002000001","isActive":true,"createdAt":"2026-10-05T22:00:51.637005+00:00","updatedAt":null},"entryReason":{"id":"1e7a8f2b-9c4d-4a1e-b3f6-2d8e5c0a1b70","description":"Descargue mercancia importacion","requiresWeighing":true},"manifests":[],"departureAuthorizations":[]}}
+HTTP 201
+["QAB201","QAB202","QAB205","QAB203","QAB204"]
+## UI: AA102 + Enter → «No existe, se creará al registrar»; motivo Otro → «Ingreso registrado · Placa AA102». Base:
+QAA102|2026-10-05 22:03:12.707187+00|2026-10-05 22:08:24.540283+00|QA F11 S0: EXP
+AA102|2026-10-05 22:41:48.745364+00||
+## UI historial filtro «qab20»: QAB20, QAB201 (x2), QAB202, QAB203, QAB204, QAB205 — 7 registros (antes solo QAB201)
+## F2-ING-004: segundo ingreso de QAB201 (abierto)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"La placa ya tiene un ingreso abierto.","traceId":"00-ff357849d6d6123e8c819b1cba05d890-fd96a4c5f6cbbc26-00"}
+HTTP 409
+salida AA102 473089c0-7473-4898-a865-cf16ec062760
+HTTP 200
+salida QAB20 045094e8-77fe-41c2-8fd3-c81e4e865e8d
+HTTP 200
+## Vehículo inactivo: QAZ902 creado y desactivado (PATCH isActive=false)
+creado id=369d46a9-c38e-440e-810f-9de4e1a207af placa=QAZ902
+HTTP 200
+by-plate QAZ902:
+null
+by-plate QAZ902?includeInactive=true:
+{"licensePlate":"QAZ902","isActive":false}

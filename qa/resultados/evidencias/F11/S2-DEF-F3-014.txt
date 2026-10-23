@@ -1,0 +1,15 @@
+# S2 · DEF-F3-014 (CHG-37) · F3-PES-007, F3-COR-003 + hallazgo ModifyWeighingDialog · BE 214f5f6 / FE 15a5028 · 2026-10-05 20:27 · bascula
+## Pantalla (historial → detalle del ciclo 2026T00023, QAR101, BA00008): «Editar» del pesaje 1 abre «Modificar Pesaje 1 (Bruto)» con 25.000; 25.000 → 25.500 cambia solo el pesaje 1 (pesaje 2 sigue 16.000; neto 9.500). Captura S2-CHG-37-modificar-pesaje1.jpg
+## Pantalla: «Modificar Pesaje 2 (Tara)» a 30.000 → «La tara (30.000 kg) no puede ser mayor que el peso bruto (25.500 kg).» y el botón queda deshabilitado (S2-DEF-F3-014-modificar-tara-mayor.jpg)
+## API PATCH weighbridge/{cycle}/second-weight 30.000 (bruto 25.500)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"La tara (30.000 kg) no puede ser mayor que el peso bruto (25.500 kg).","traceId":"00-5836a4c16ddb8e0b17a6c8a97c93c51c-9fe73d5729ed9200-00"}
+HTTP 400
+
+## API second-weight igual al bruto (25.500) → neto 0
+{"newSecondWeight":25500,"newNetWeight":0.00}
+## Restaurar la tara a 16.000
+{"newSecondWeight":16000,"newNetWeight":9500.00}
+## API first-weight-modify a 10.000 (menor que la tara 16.000)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"La tara (16.000 kg) no puede ser mayor que el peso bruto (10.000 kg).","traceId":"00-2000f80f45818b6a0f2f6bf9bc438e61-39e5110ca271e7df-00"}
+HTTP 400
+

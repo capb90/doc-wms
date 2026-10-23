@@ -1,0 +1,32 @@
+# S6 · Recorrido por rol con las cuentas qa.* (el usuario inició cada sesión en el navegador integrado) · 2026-10-07 00:05–00:33 (hora Colombia)
+Cuentas creadas por el usuario con crear-cuentas-qa-staging.sh: qa.vigilancia, qa.bascula, qa.bodega, qa.comext, qa.facturacion; un rol cada una, correo alias del usuario, mustChangePassword false (SQL de solo lectura). Contraseñas solo en db_legacy/trabajo/credenciales-qa-staging.local.md (600).
+
+| Cuenta | Ruta inicial | Grupos del menú | Páginas del menú | Ruta ajena |
+| qa.vigilancia | /operations/entries | Notificaciones, Vigilancia | 4, todas 200 | /billing → /access-denied |
+| qa.bascula | / → /operations/weighbridge | Notificaciones, Báscula | 5, sin 4xx/5xx | /billing → /access-denied |
+| qa.bodega | /warehouse | Notificaciones, Bodega | 11, sin 4xx/5xx | /billing → /access-denied |
+| qa.comext | / | Notificaciones, Dashboards, Comercio Exterior | 23, sin 4xx/5xx | /billing → /access-denied |
+| qa.facturacion | /billing | Notificaciones, Facturación | 11, sin 4xx/5xx | /operations/entries → /access-denied |
+
+F0-LOG-008: con sesión, router.push('/auth/login') → ruta del rol (Vigilancia). Con carga completa de /auth/login (Báscula) queda en /auth/login/ con sesión activa → DEF-F11-021.
+Sin sesión: /auth/reset-password?token=… y /auth/request-password-reset → 308 a la ruta con «/» final → el middleware no las reconoce como públicas → /auth/login (se pierde el token) → DEF-F11-021.
+
+## Vigilancia
+FA-MIG-009: placa migrada KEJ500 en Ingreso → «Vehículo encontrado.» (no se registró el ingreso).
+Salida de QSB201 por pantalla → toast «Salida registrada Placa QSB201»; camiones en planta 7 → 6.
+## Báscula
+F3-REI-007: QSB202 (primer peso del Admin) abre con qa.bascula en «Peso · Pesaje 2 de 2» con BRUTO 30.000 kg 23:50, cobro Efectivo $ 20.000, depósito 2026BA00002, camión y conductor hidratados. Se soltó sin pesar.
+F3-REI-005: tras recargar, QSE502 abre en «Cobro» con el resumen del registro (2026BA00003, QA-S6-CP-003), conductor y cliente; total $ 20.000. Cobro por pantalla → «Pago registrado»; primer peso 22.000 kg con el botón → «Peso registrado. El ciclo queda abierto.»
+  (El Enter justo después de escribir con la automatización no tomó el valor: el campo no aplicó el formato «22.000 kg», señal de que la escritura simulada no pasó por el manejador del InputNumber. No se registra como defecto; lo cubre PRF-002 con el operario.)
+FA-MIG-009: vehículo migrado KEJ500 por placa (país «COL»); lookup de QSP001 con transportadora y conductor migrados; conductor migrado por documento.
+## Bodega
+F2-INT-004: «Recepción Directa» lista QSE501 (Solo bodega, sin conductor) en «Ingresos Directos Pendientes».
+Ingresos a Bodega: llegada de QSB202 y QSE502 por pantalla → «Llegada registrada … Hora de ingreso registrada».
+FA-MIG-009: Consultar stock 2024BA00058 → 200 + 1.223 = 1.423, reservado 0 (igual a la fase 3); 2024BA00002 → 398 (tras la salida de S6). Ubicaciones: selector con las 9 migradas; «Patio 1 BA · Disponible: Sí · Total: 58» con 2026BA00002.
+F4-UBI-001: ubicar 20 en Cobertizo → 200; pendiente por ubicar 40 → 20. F4-UBI-003: mover 10 de Patio 1 BA a Bodega 3 BA-[1][1] → 200; quedan Patio 1 BA 48, Bodega 3 BA 10, Cobertizo 20. Ubicar en Bodega 1 BA-[1][1] → 409 «La ubicación … está deshabilitada.»
+## Comercio Exterior
+Ver S6-B-pdf-guias-tiquete-etiqueta.txt.
+## Facturación
+billing/invoices: 142 facturas. Draft 129 = 90.954.014,65 (127 migradas en Borrador = 91.257.475,39 − 472.210,74; + almacenamiento 2026BA00002 148.750; + báscula por facturar de QSB201 20.000). Approved 2 = 758.683,61 (QA-S6-0001 y QA-S6-0042). Paid 11 = 244.500 (7 báscula, 3 guías, 1 montacargas).
+Pestañas: Báscula 8 · Montacargas 1 · Guía de salida 3 · Almacenamiento 130.
+PDF de QA-S6-0042: «Aprobada», período 01/10/2026 - 16/10/2026, 1 línea, subtotal 396.815,75, IVA 75.394,99, total 472.210,74; detalle «ALMACENAMIENTO DE: 448 UNIDAD … 2024BA00002, PERIODO: 01/10/2026 - 16/10/2026».

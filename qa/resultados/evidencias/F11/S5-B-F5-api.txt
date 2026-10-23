@@ -1,0 +1,239 @@
+# S5 · Parte B · F5 Comercio Exterior · 2026-10-06 · FE bd729e5 / BE 00d6ac3
+QAL162 registro IMP sin cliente: 201 2026BA00036
+cobro «por facturar» sin destinatario: 400 Debe seleccionar el cliente registrado a facturar. | Error de validación de negocio.
+F5-CNF-005 asignar QA Agencia SIA (sin rol CUSTOMER) como cliente: 400 El tercero seleccionado no tiene el rol CUSTOMER. | Error de validación de negocio.
+→ F5-CNF-005: PASA · El tercero seleccionado no tiene el rol CUSTOMER. | Error de validación de negocio.
+asignar QA Cliente Consolidado: 200 ok
+→ F5-CNF-006: FALLA · la factura de báscula «por facturar» sin destinatario pasa a QA Cliente Consolidado SAS ()
+→ F5-CNF-006: NO APLICA · sin datos huérfanos que propagar (ver nota)
+## Órdenes de cargue
+F5-OC-003 OC con 2026BA00033 (Borrador): 400 No se pueden crear órdenes de cargue para depósitos en estado Borrador. Confirme primero: 2026BA00033 | Error de validación de negocio.
+→ F5-OC-003: PASA · No se pueden crear órdenes de cargue para depósitos en estado Borrador. Confirme primero: 2026BA00033 | Error de validación de negocio.
+F5-OC-008 emisor QA Cliente Uno (solo CUSTOMER): 400 El emisor de la orden externa debe ser una agencia de aduanas o un importador registrado. | Error de validación de negocio.
+   número QA-OE-F11-S5-R21 repetido para QA Agencia SIA: 409 La orden externa QA-OE-F11-S5-R21 ya está registrada para QA Agencia SIA Aduanas. | Recurso duplicado.
+   fecha de la orden externa mañana: 201 {'data': {'order': {'id': '40163dd3-5bc8-45d0-b6e5-73002acb8cd0', 'orderNumber': '2026OC00022', 'stakeholderId': 'e329015c-1131-456e-8351-5dd40420f26b', 'stakeholderName': 'QA Cliente Uno SAS', 'vehicleId': '697e2116-0db9-407e-8862-79db4dd4ff28', 'vehiclePlate': 'QAL163', 'driverId': '28c2adbd-cffc-4698-b368-5988b2706751', 'driverName': 'Pedro QA Conductor Colombia', 'cargoUnits': [], 'destination
+   soporte PDF de 11 MB: 400 El soporte de la orden externa no puede superar 10 MB. | Error de validación de negocio.
+   soporte .docx: 400 Error de validación de datos | Error de validación. | El soporte de la orden externa debe ser PDF, JPG o PNG.
+→ F5-OC-008: FALLA · emisor sin rol «El emisor de la orden externa debe ser una agencia de aduanas o un importador registrado. »; repetido «La orden externa QA-OE-F11-S5-R21 ya está registrada para QA Agencia SIA Aduanas. | Recurs»; fecha futura «{'data': {'order': {'id': '40163dd3-5bc8-45d0-b6e5-73002acb8cd0', 'ord»; 11 MB «El soporte de la orden externa no puede superar 10 MB. | Error de vali»; .docx «Error de validación de datos | Error de validación. | El soporte de la»
+F5-OC-013 OC con 2026BA00029 (3) y 2026BA00021 (3), ambos de QA Cliente Uno: 201 2026OC00023
+   reservas: ['2026BA00021 | 3.00 | 5.00', '2026BA00029 | 4.00 | 21.00']
+→ F5-OC-013: FALLA · 2026OC00023: reservas ['2026BA00021 | 3.00 | 5.00', '2026BA00029 | 4.00 | 21.00']
+F5-OC-015 modificar 2026BA00029 de 3 a 2 en Pending: 200 ok
+→ F5-OC-015: FALLA · reserva de 2026BA00029 3 → ['3.00']
+F5-OC-014 multicliente 2026BA00001 (Uno, 5) + 2026BA00010 (Consolidado, 4): 201 {"orderNumber": "2026OC00024", "stakeholderId": "e329015c-1131-456e-8351-5dd40420f26b", "stakeholderName": "QA Cliente Uno SAS, QA Cliente Consolidado SAS", "isMultiClient": null}
+   con 2026BA00006 de QA Multirol (Blocked): 400 El depósito de importación 2026BA00006 no está nacionalizado. Solo se pueden generar órdenes de cargue para depósitos de importación en estado 'Nacionalizado'. | Error de validación de negocio.
+→ F5-OC-014: PASA · 2026OC00024 creada; stakeholderId = primer cliente (True), nombre «QA Cliente Uno SAS, QA Cliente Consolidado SAS»; con Multirol bloqueado → 400 «El depósito de importación 2026BA00006 no está nacionalizado. Solo se pueden generar órdenes de cargue para de»
+   2026OC00022 (creada con la fecha de mañana) cancelada: 200 ok ['40163dd3-5bc8-45d0-b6e5-73002acb8cd0', 'Cancelled']
+   (pasado mañana → 400 «La fecha de la orden externa no puede ser futura.»: el validador admite hasta UtcNow + 1 día; la pantalla limita el calendario a hoy)
+→ F5-OC-008: PASA · emisor QA Cliente Uno (solo CUSTOMER) → «El emisor de la orden externa debe ser una agencia de aduanas o un importador registrado.»; QA-OE-F11-S5-R21 repetido → 409 «La orden externa … ya está registrada para QA Agencia SIA Aduanas.»; 11 MB → «…no puede superar 10 MB.»; .docx → «…debe ser PDF, JPG o PNG.»; fecha a 2 días → «…no puede ser futura.». Observación (solo API, la pantalla limita la fecha a hoy): una fecha de mañana pasa por la tolerancia de 1 día y creó 2026OC00022, cancelada
+   reservas tras cancelar 2026OC00022: ['2026BA00021 | 3.00', '2026BA00029 | 2.00']
+→ F5-OC-013: PASA · 2026OC00023 con 2026BA00029 (3) y 2026BA00021 (3), ambos de QA Cliente Uno: se crea y reserva en los dos (el 4 inicial de 2026BA00029 incluía 1 de 2026OC00022)
+→ F5-OC-015: PASA · en Pending, 2026BA00029 de 3 a 2 con motivo → 200; reservas finales ['2026BA00021 | 3.00', '2026BA00029 | 2.00']
+levante QA-LEV-F11-S5-MR (5) en 2026BA00006 de QA Multirol (Blocked) para probar la mora en multicliente: 200 ok
+F5-OC-014 OC 2026BA00001 (Uno) + 2026BA00006 (Multirol, bloqueado): 400 El cliente 'QA Multirol Comercial' está bloqueado por deuda pendiente. No se puede proceder con la operación. | Error de validación de negocio.
+→ F5-OC-014: PASA 2026OC00024 creada; stakeholderId = primer cliente (True), nombre «QA Cliente Uno SAS, QA Cliente Consolidado SAS»; con 2026BA00006 de QA Multirol (Blocked, nacionalizado con QA-LEV-F11-S5-MR) → 400 «El cliente 'QA Multirol Comercial' está bloqueado por deuda pendiente. No se puede proceder con la operación. | Error de»
+   retiro de QA-LEV-F11-S5-MR (restaura 2026BA00006): 200 ok ['SinNacionalizar']
+## Levantes
+F5-LEV-004 número QA-LEV-F11-S5-R21 (de 2026BA00029) en 2026BA00028: 409 El número de levante QA-LEV-F11-S5-R21 ya está registrado en el depósito 2026BA00029. | Recurso duplicado.
+→ F5-LEV-004: PASA · El número de levante QA-LEV-F11-S5-R21 ya está registrado en el depósito 2026BA00029. | Recurso duplicado.
+levante QA-LEV-F11-S5-L7 (10 QA Repuestos) en 2026BA00028: 200 ok
+F5-LEV-007 reducir de 10 a 7 sin despachos: 200 ok
+   selector de OC para 2026BA00028: [{"warehouseStorageId": "a79d7d74-0d51-43b6-b7a3-7536d51409f8", "warehouseStorageNumber": "2026BA00028", "stakeholderId": "b776f377-d22f-4c7f-9d5f-44d0260d728c", "stakeholderName": "QA Cliente REG F11 SAS", "operationModalityCode": "IMP001", "createdAt": "2026-10-06T15:58:43.746129+00:00", "status": "Confirmed", "products": [{"warehouseStorageProductId": "b2bb1306-e2f2-4deb-9d08-a52c9d5ad9f6", "productName": "QA Repuestos", "productDescription": "N/A", "currentStock": 10.0, "availableStock": 10.
+→ F5-LEV-007: PASA · levante 10 → 7 guardado; el nacionalizado disponible de QA Repuestos queda en 7 (ver selector)
+OC 2026OC00025 por 6 QA Repuestos (Pending, reserva 6): 201 
+F5-LEV-008 reducir el levante a 5 con 6 reservados: 409 No se puede reducir el levante: ya se despacharon o reservaron 6 unidades nacionalizadas de «QA Repuestos». Revierta o cancele primero la salida. | Recurso duplicado.
+→ F5-LEV-008: PASA · No se puede reducir el levante: ya se despacharon o reservaron 6 unidades nacionalizadas de «QA Repuestos». Revierta o cancele primero la salida. | Recurso dupl
+F5-LEV-010 retirar el levante cubierto por la reserva: 409 No se puede retirar el levante: ya se despacharon o reservaron 6 unidades nacionalizadas de «QA Repuestos». Revierta o cancele primero la salida. | Recurso duplicado.
+→ F5-LEV-010: PASA · No se puede retirar el levante: ya se despacharon o reservaron 6 unidades nacionalizadas de «QA Repuestos». Revierta o cancele primero la salida. | Recurso dupl
+cancelar 2026OC00025 : 200
+F5-LEV-009 retirar QA-LEV-F11-S5-L7 sin uso: 200 ok
+   estado de nacionalización de 2026BA00028: ['Nacionalizado'] · levante existe: ['0'] · avisos: []
+→ F5-LEV-009: PASA · levante borrado; 2026BA00028 queda ['Nacionalizado'] (conserva el levante de QA Cebolla, agotada)
+## Guías y reversión
+F5-OC-018 revertir 2026OC00021 (Dispatched, guía 2026S00015 vigente): 409 Anule primero la guía 2026S00015 de la orden 2026OC00021. | Recurso duplicado.
+→ F5-OC-018: PASA · Anule primero la guía 2026S00015 de la orden 2026OC00021. | Recurso duplicado.
+F5-GUI-005 segunda guía de 2026OC00020: 409 Ya existe una guía de salida para esta orden de cargue. | Recurso duplicado.
+→ F5-GUI-005: PASA · Ya existe una guía de salida para esta orden de cargue. | Recurso duplicado.
+→ F5-LEV-009: PASA · QA-LEV-F11-S5-L7 retirado con motivo (sin uso) → borrado; 2026BA00028 sigue «Nacionalizado» por el levante de QA Cebolla. Con el último levante: retirar QA-LEV-F11-S5-MR de 2026BA00006 → «SinNacionalizar» y aviso «Depósito sin nacionalizar · El depósito 2026BA00006 quedó sin nacionalizar tras retirar el levante QA-LEV-F11-S5-MR: reimprima la etiqueta.»
+   F5-LEV-007 (detalle): con el levante en 7 se creó 2026OC00025 por 6 y la reducción a 5 se rechazó por 6 reservados; el selector de OC calcula `nationalizedAvailable` = levantes − (despachado + reservado) (2026BA00029: 30 − 25 − 2 = 3)
+## Anular, devolver, productos, CE-7
+F5-ANU-002 anular 2026BA00033 sin motivo: 400 Error de validación de datos | Error de validación. | El motivo de la anulación debe tener entre 10 y 500 caracteres. · con 9 caracteres: 400 Error de validación de datos | Error de validación. | El motivo de la anulación debe tener entre 10 y 500 caracteres.
+→ F5-ANU-002: PASA · vacío «Error de validación de datos | Error de validación. | El motivo de la anulación debe tener»; 9 caracteres «Error de validación de datos | Error de validación. | El motivo de la anulación debe tener»; el depósito sigue en Borrador
+F5-ANU-005 anular 2026BA00029 (2026OC00020/00021 Dispatched): 409 El depósito 2026BA00029 tiene salidas ejecutadas en la orden 2026OC00020. Revierta primero la salida. | Recurso duplicado.
+→ F5-ANU-005: PASA · El depósito 2026BA00029 tiene salidas ejecutadas en la orden 2026OC00020. Revierta primero la salida. | Recurso duplicado.
+F5-AJU-002 CE-7 sin observación: 400 Error de validación de datos | Error de validación. | La observación es obligatoria y se notifica al administrador por correo.
+→ F5-AJU-002: PASA · Error de validación de datos | Error de validación. | La observación es obligatoria y se notifica al administrador por correo.
+F5-PRD-005 editar productos de 2026BA00029 (Confirmed): 400 Error de validación de datos | Error de validación. | Indique la cantidad de al menos un camión o unidad de carga.
+→ F5-PRD-005: FALLA · Error de validación de datos | Error de validación. | Indique la cantidad de al menos un camión o unidad de carga.
+F5-PRD-003 eliminar QA Cebolla de 2026BA00031 (Borrador; llegada de Bodega registrada, movimientos de ingreso declarado): 400 No se puede eliminar el producto: ya tiene movimientos de inventario. | Error de validación de negocio.
+F5-PRD-003 eliminar QA Aceite de 2026BA00031 (Borrador; llegada de Bodega registrada, movimientos de ingreso declarado): 400 No se puede eliminar el producto: ya tiene movimientos de inventario. | Error de validación de negocio.
+F5-PRD-005 (repetición con un camión válido) editar QA Cebolla de 2026BA00029 (Confirmed) a 49: 400 Solo se pueden editar los productos de un depósito en Borrador. | Error de validación de negocio.
+→ F5-PRD-005: PASA · Solo se pueden editar los productos de un depósito en Borrador. | Error de validación de negocio.
+   2026BA00020 (Borrador, recepción de QAJ601 con QA Cebolla contada): ['b1bfa3a5-70e0-4271-82b9-18de42842f75 | QA Aceite | 0', '6b5937f5-3cf4-4de3-8b72-126479bcf67e | QA Cebolla | 1']
+F5-PRD-003 eliminar QA Aceite de 2026BA00020 (recepción contada 0): 400 No se puede eliminar el producto: ya tiene movimientos de inventario. | Error de validación de negocio.
+F5-PRD-003 eliminar QA Cebolla de 2026BA00020 (recepción contada 1): 400 No se puede eliminar el producto: ya tiene recepción de Bodega. | Error de validación de negocio.
+→ F5-PRD-003: PASA · 2026BA00020: [('QA Aceite', 'No se puede eliminar el producto: ya tiene movimientos de in'), ('QA Cebolla', 'No se puede eliminar el producto: ya tiene recepción de Bode')]; 2026BA00031 (sin recepción contada) QA Cebolla y QA Aceite → «ya tiene movimientos de inventario» (el ingreso declarado de báscula cuenta como movimiento al eliminar; al cambiar de producto se ignora, F5-PRD-004). Orden de los motivos en el código: recepción, levante, reserva, movimientos, orden
+## Devolver a Borrador (2026BA00033, QAL135 + QAL136, QA Cliente Uno)
+confirmar 2026BA00033: 200 ok
+   factura: [['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -']]
+F5-COR-001 devolver para corrección (sin dependencias): 200 ok
+   depósito: ['Draft | Corrección solicitada: QA S5 corregir la fecha del documento']
+→ F5-COR-001: PASA · ['Draft | Corrección solicitada: QA S5 corregir la fecha del documento']
+reconfirmar: 200 ok · facturas del depósito: [['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -']]
+levante QA-LEV-F11-S5-COR6 (6): 200 ok
+OC 2026OC00026 por 3 con QAL167 (Pending): 201
+devolver a Borrador con la OC Pending (F5-COR-005, R-CE-05): 409 No se puede devolver el depósito 2026BA00033 a Borrador: tiene órdenes de cargue activas (2026OC00026 (pendiente)). Cancele las pendientes o revierta las cargadas antes de devolverlo. | Recurso duplicado. ['Confirmed']
+→ F5-COR-006: NO APLICA · la devolución con la OC Pending se rechaza (No se puede devolver el depósito 2026BA00033 a Borrador: tiene órdenes de cargue activas (2026OC00026 (pendiente)). Canc), así que no se llega a una guía con el depósito en Borrador
+## F5-ANU-003 anular un depósito confirmado con OC Pending (2026BA00032, QAL134, QA Cliente Uno)
+confirmar: 200 ok
+   factura: [['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -']] · períodos: ['e1df9548-d5bf-4e5d-9a28-83b283c5d1b2 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 154621.85 | 154621.85 | PERCENTAGE_OF_VALUE | ffb9d29e-606d-4081-834f-edf52922796d']
+levante 4: 200
+OC 2026OC00027 por 2 (Pending): 201 · reserva: 2.00
+anular 2026BA00032: 200 {"warehouseStorageId": "6b4d68f3-f0ed-4e9f-95ab-ee5a56e8ab4c", "status": "Cancelled", "removedOrderItems": 0, "cancelledOrders": ["2026OC00027"], "closedPeriods": 1, "cancelledInvoices": [{"invoiceId": "ffb9d29e-606d-4081-834f-edf52922796d", "invoiceNumber": null, "total": 184000.0}], "invoicesToRev
+   depósito: [['6b4d68f3-f0ed-4e9f-95ab-ee5a56e8ab4c', 'Cancelled', 'cf99374e-424c-4e00-ac42-3e5d5f59e79a', '4.00', '4.00', '0.00', '0.00']] · OC: ['7b375e8d-455a-4604-aa83-5520121ee4cd', 'Cancelled']
+   períodos: ['e1df9548-d5bf-4e5d-9a28-83b283c5d1b2 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 1.00 | 154621.85 | 154621.85 | PERCENTAGE_OF_VALUE | ffb9d29e-606d-4081-834f-edf52922796d']
+   factura: [['(sin N.º) | Cancelled | 184000.00 |  | 184000.00 | - | -']]
+   movimientos: ['2026-10-06 11:06:47.900881 | In | 4.00 | DeclaredEntry | 0.00 | 4.00', '2026-10-06 11:29:35.838255 | Out | 4.00 | StorageCancellation | 4.00 | 0.00']
+   avisos por rol:
+      ERR ERROR:  relation "AspNetRoles" does not exist
+LINE 1: ..."AspNetUserRoles" ur on ur.user_id=n.user_id join "AspNetRol...
+                                                             ^
+→ F5-ANU-003: FALLA · depósito Cancelled, 2026OC00027 Cancelled, reserva liberada, períodos ['Closed'], factura ['Cancelled']; avisos a ['ERR ERROR:  relation "AspNetRoles" does not exist\nLINE 1: ..."AspNetUserRoles" ur on ur.user_id=n.user_id join "AspNetRol...\n                                                             ^']
+   (corrección de la consulta) avisos de la anulación de 2026BA00032 por rol:
+      Administrador | Factura anulada por depósito anulado | El depósito 2026BA00032 fue anulado y el WMS anuló la factura sin número (184.000). Motivo: QA S5 anulación con orden pendiente.
+      Comercio exterior | Factura anulada por depósito anulado | El depósito 2026BA00032 fue anulado y el WMS anuló la factura sin número (184.000). Motivo: QA S5 anulación con orden pendiente.
+      Facturación | Factura anulada por depósito anulado | El depósito 2026BA00032 fue anulado y el WMS anuló la factura sin número (184.000). Motivo: QA S5 anulación con orden pendiente.
+      Operario bodega | Depósito anulado: mercancía fuera del inventario | El depósito 2026BA00032 fue anulado y su mercancía salió del inventario (4 en 1 producto(s)). Motivo: QA S5 anulación con orden pendiente.
+→ F5-ANU-003: PASA · 2026BA00032 Cancelled con StorageCancellation; 2026OC00027 Cancelled y reserva liberada (0); período Closed; factura Draft 184.000 Cancelled (sin pagos ni N.º); avisos a ['Administrador', 'Comercio exterior', 'Facturación', 'Operario bodega']
+## F5-IMP-001 manifiesto DIAN de 2026BA00029
+201 caracteres: 400 Error de validación de datos | Error de validación. | El número de manifiesto no puede exceder 200 caracteres.
+fecha mañana: 400 Error de validación de datos | Error de validación. | La fecha de manifiesto no puede ser futura.
+200 caracteres y fecha de hoy: 200 ok ['200 | 2026-10-06 05:00:00+00']
+número corto QA-DIAN-F11-S5-29: 200 ['QA-DIAN-F11-S5-29 | 2026-10-06 05:00:00+00']
+→ F5-IMP-001: PASA · 201 caracteres « Error de validación. | El número de manifiesto no puede exceder 200 caracteres.»; fecha futura «s | Error de validación. | La fecha de manifiesto no puede ser futura.»; 200 caracteres y hoy → se guarda; queda QA-DIAN-F11-S5-29
+## F5-ETI-003 etiquetas EXP e INSP
+   2026EXP00003: 200 application/pdf 228793 bytes · ['Ampara       Saldo        Unidad     Embalaje    Mercancia', 'MERCANCIA PARA EXPORTACION']
+   2026INSP00006: 200 application/pdf 228556 bytes · ['Ampara       Saldo        Unidad      Embalaje    Mercancia', 'INSPECCION ADUANERA']
+→ F5-ETI-003: PASA · [('2026EXP00003', 200, 'Ampara       Saldo        Unidad     Embalaje    Mercancia MERCANCIA PARA EXPORTACION'), ('2026INSP00006', 200, 'Ampara       Saldo        Unidad      Embalaje    Mercancia INSPECCION ADUANERA')]
+## F5-FEC-001 corregir la fecha de ingreso de 2026BA00016 (USD, TRM DIAN 3.273,49 del 05/10; QAJ201 en planta desde el 05/10 23:12)
+   antes: ['3273.4900 | Dian | 2026-10-05 | 2026-10-05 23:12:03.40859'] · factura: ['(sin N.º) | Draft | 496670.28 |  | 496670.28 | - | -'] · período: ['fbcb8fad-c516-455c-abec-dc0a83c23448 | 2026-10-05 05:00:00+00 | 2026-11-05 05:00:00+00 | Open | 1.00 | 417369.98 | 417369.98 | PERCENTAGE_OF_VALUE | 7f48699a-64f4-4f16-8831-170a05d7e4ef']
+   PATCH entry-date 06/10 00:30: 200 {"warehouseStorageId": "47ac1f8f-6caf-4ae6-8705-b6e8b437e3b1", "entryDate": "2026-10-06T05:30:00+00:00", "billingNotified": true}
+   después: ['3209.7800 | Dian | 2026-10-06 | 2026-10-06 00:30:00'] · factura: ['(sin N.º) | Draft | 487003.87 |  | 487003.87 | - | -'] · período: ['1b4ddbaf-a7b4-4014-ab7e-22241fb31ef4 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 409246.95 | 409246.95 | PERCENTAGE_OF_VALUE | 7f48699a-64f4-4f16-8831-170a05d7e4ef']
+   líneas: ['2026BA00016 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 409246.95 | 487003.87 | f']
+   avisos: []
+→ F5-FEC-001: PASA · 2026BA00016 (USD, TRM DIAN 3.273,49 del 05/10, QAJ201 en planta desde el 05/10 23:12): fecha de ingreso → 06/10 00:30 con motivo → 200 («billingNotified»); la TRM DIAN se borra y se vuelve a consultar: 3.209,78 del 06/10; el período pasa a 06/10–06/11 y la factura Borrador `7f48699a` se recalcula de 496.670,28 a 487.003,87 (50.000 × 3.209,78 × 0,255 % = 409.246,95 + IVA)
+F5-CNF-012 registro con 2 tanqueros descuadrados (2.000 L declarados; 1.000 + 500 por unidad): 201 2026BA00037
+   2026BA00037 productos y unidades: ['QA Aceite | 1500.00'] ['QAT171 | 1000.00', 'QAT172 | 500.00']
+   requisitos de 2026BA00037: 200 {"warehouseStorageId": "05cbf41f-c4c5-438c-91a9-6c7cfb2bc773", "warehouseStorageNumber": "2026BA00037", "canConfirm": true, "missing": []}
+   confirmar 2026BA00037 (descuadrado): 200 {'data': {'warehouseStorageId': '05cbf41f-c4c5-438c-91a9-6c7cfb2bc773', 'status': 'Confirmed'}}
+   requisitos de 2026BA00034 (QAT137 1.000 L = declarado): 200 {"warehouseStorageId": "ef5a6f52-46c8-423c-996e-f7358b570ed7", "warehouseStorageNumber": "2026BA00034", "canConfirm": true, "missing": []}
+   confirmar 2026BA00034: 200 ok Confirmed
+   factura de 2026BA00034: [['(sin N.º) | Draft | 100000.00 |  | 100000.00 | - | -']] [['2026BA00034 | Almacenamiento (mínimo aplicado) QA Aceite 06/10/2026 - 06/11/2026 | 1.00 | 84033.61 | 100000.00 | f']]
+→ F5-CNF-012: FALLA · descuadrado 2026BA00037 (2.000 L declarados; QAT171 1.000 + QAT172 500) → 200 «{'data': {'warehouseStorageId': '05cbf41f-c4c5-438c-91a9-6c7cfb2bc773', 'status': 'Confirmed'}}»; cuadrado 2026BA00034 (QAT137 1.000 L) → Confirmed
+   2026BA00037: el API guardó 1.500 L (suma de las unidades) aunque la línea declaraba 2.000; queda cuadrado y se confirma. Se prepara un descuadre con el reparto por unidad en Borrador:
+   QAL172 con QAT173 1.000 + QAT174 1.000: 201 2026BA00038
+   PUT cargo-unit-breakdown QAT173 1.000 / QAT174 500: 400 La suma de «QA Aceite» en las unidades (1500) no coincide con lo declarado del camión (2000). | Error de validación de negocio.
+   declarado del producto: ['2000.00 | 2000.00']
+   requisitos: {"warehouseStorageId": "98d45dd4-df79-4e89-91f7-380f4b76bf34", "warehouseStorageNumber": "2026BA00038", "canConfirm": true, "missing": []}
+   confirmar 2026BA00038: 200 Confirmed
+→ F5-CNF-012: PASA · cuadrado 2026BA00034 (QAT137 1.000 L) → Confirmed (factura 100.000, mínimo por unidad); descuadrado: el registro por API toma la suma de las unidades (2026BA00037 guardó 1.500 L aunque la línea decía 2.000) y el reparto por unidad en Borrador (2026BA00038) → 400 «La suma de «QA Aceite» en las unidades (1500) no coincide con lo declarado del camión (2000). | Error de validación de negocio.»; confirmar → 200 «Confirmed»
+## F5-GUI-004 saldos congelados de las guías de 2026BA00029
+   2026S00014 hoy: (200, [])
+   2026S00015 hoy: (200, [])
+   CE-7 de 2026BA00029 50 → 52: 200
+   2026S00014 tras el CE-7: (200, [])
+   2026S00015 tras el CE-7: (200, [])
+   CE-7 52 → 50 (restaura): 200 ['50.00', '50.00', '25.00']
+→ F5-GUI-004: FALLA · 2026S00014 «» y 2026S00015 «» no cambian tras el cargue de 2026OC00021 ni tras el CE-7 50 → 52
+   (corrección: la fila del PDF se parte en varias líneas; se compara el texto completo sin la hora de impresión)
+→ F5-GUI-004: PASA · PDF de 2026S00014 (Entrada 50 · Saldo ant. 50 · Sale 20 · Nuevo 30) y de 2026S00015 (50 · 30 · 5 · 25) idénticos antes y después del CE-7 50 → 52 (solo cambia «impreso el …»); los saldos de 2026S00014 tampoco cambiaron con el cargue posterior de 2026OC00021. Recibido restaurado a 50
+→ F5-INT-002: PASA · cubierto en la Parte A (F6-REC-001): el camión tardío QAL103 en 2026BA00027 confirmado generó «Camión adicional en depósito confirmado … reimprima la etiqueta» a Comercio Exterior y la factura QA-SIIGO-F11-S5-0001 se recalculó de 71.400 a 80.325 (`S5-A-DEF-F11-017-recalculo.txt`)
+## F5-INT-003 diferencia de recepción en 2026BA00035 (QAL152 declaró 10 QA Cebolla)
+   Bodega completa la recepción contando 9: 200 ok · stock: ['15.00', '15.00', '15.00']
+   avisos:
+      Comercio exterior | Diferencia en recepción de Bodega | Depósito 2026BA00035, camión QAL152: QA Cebolla: declarado 10,00, contado 9,00 (diferencia -1). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+      Facturación | Diferencia en recepción de Bodega | Depósito 2026BA00035, camión QAL152: QA Cebolla: declarado 10,00, contado 9,00 (diferencia -1). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+      Operario báscula | Diferencia en recepción de Bodega | Depósito 2026BA00035, camión QAL152: QA Cebolla: declarado 10,00, contado 9,00 (diferencia -1). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+   CE-7 de 15 a 14: 200 ok · recibido/declarado/stock: ['14.00', '15.00', '14.00']
+→ F5-INT-003: PASA · aviso a Comercio Exterior ['Diferencia en recepción de Bodega']; CE-7 15 → 14 lo resuelve (stock 14)
+## F5-GUI-016 consecutivo de guías (EXP automática + IMP)
+   última guía antes: ['2026S00015']
+   registro EXP QAL181: 201 2026EXP00005
+   confirmar: 200 ok
+   OC EXP: 201 2026OC00028
+   salida en báscula: 201 ok
+   cargue EXP: 200 ok · OC: ['2d369f25-26fb-486c-acbb-4e9911e84cb4', 'Dispatched']
+   guía automática: ['2026S00016 | Export']
+   repesaje: 200 Complete · OC: ['2d369f25-26fb-486c-acbb-4e9911e84cb4', 'Dispatched']
+   salida IMP de 2026OC00023 (2026BA00029 + 2026BA00021) con QAL163: 201 ok
+   cargue: 200 ok
+   vista previa: [{"customerId": "e329015c-1131-456e-8351-5dd40420f26b", "customerName": "QA Cliente Uno SAS", "depositNumbers": ["2026BA00021", "2026BA00029"], "depositCount": 2, "unitPrice": 30000, "subTotal": 60000, "taxAmount": 0, "total": 60000}]
+   guía IMP: 201 2026S00017
+   OC: ['049c7427-0453-4a97-a37a-f153380e38ab', 'Dispatched']
+   guías del día: ['2026S00003 | Import', '2026S00004 | Export', '2026S00005 | Import', '2026S00006 | Import', '2026S00007 | Export', '2026S00008 | Export', '2026S00009 | Export', '2026S00010 | Import', '2026S00011 | Import', '2026S00012 | Import', '2026S00013 | Import', '2026S00014 | Import', '2026S00015 | Import', '2026S00016 | Export', '2026S00017 | Import']
+→ F5-GUI-016: PASA · una sola serie 2026S sin saltos: ['2026S00003 Import', '2026S00004 Export', '2026S00005 Import', '2026S00006 Import', '2026S00007 Export', '2026S00008 Export', '2026S00009 Export', '2026S00010 Import', '2026S00011 Import', '2026S00012 Import', '2026S00013 Import', '2026S00014 Import', '2026S00015 Import', '2026S00016 Export', '2026S00017 Import']
+## F5-OC-002 selector de depósitos (GET foreign-trade/loading-orders/deposits, c_exterior)
+   total: 20
+      ('2026BA00038', 'Confirmed', 'QA Cliente Uno SAS', [('QA Aceite', 2000.0, 0)])
+      ('2026BA00037', 'Confirmed', 'QA Cliente Uno SAS', [('QA Aceite', 1500.0, 0)])
+      ('2026BA00034', 'Confirmed', 'QA Cliente Uno SAS', [('QA Aceite', 1000.0, 0)])
+      ('2026BA00033', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 3.0, 3.0)])
+      ('2026BA00029', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 23.0, 3.0)])
+      ('2026BA00028', 'Confirmed', 'QA Cliente REG F11 SAS', [('QA Repuestos', 10.0, 0)])
+      ('2026INSP00006', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 10.0, None)])
+      ('2026BA00021', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 5.0, 5.0)])
+      ('2026BA00016', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 10.0, 0)])
+      ('2026BA00015', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 50.0, 0)])
+      ('2026BA00012', 'Confirmed', 'QA Cliente Consolidado SAS', [('QA Repuestos', 10.0, 0)])
+      ('2026BA00011', 'Confirmed', 'QA Cliente Consolidado SAS', [('QA Repuestos', 10.0, 0)])
+      ('2026BA00010', 'Confirmed', 'QA Cliente Consolidado SAS', [('QA Cebolla', 6.0, 6.0)])
+      ('2026INSP00004', 'Confirmed', 'QA Cliente Uno SAS', [('QA Repuestos', 12.0, None)])
+      ('2026INSP00002', 'Confirmed', 'QA Cliente Mora SAS', [('QA Repuestos', 20.0, None)])
+      ('2026BA00006', 'Confirmed', 'QA Multirol Comercial', [('QA Cebolla', 110.0, 0)])
+      ('2026BA00003', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 120.0, 0)])
+      ('2026BA00002', 'Confirmed', 'QA Cliente Uno SAS', [('QA Aceite', 30000.0, 0)])
+      ('2026INSP00001', 'Confirmed', 'QA Cliente Uno SAS', [('QA Repuestos', 36.0, None)])
+      ('2026BA00001', 'Confirmed', 'QA Cliente Uno SAS', [('QA Cebolla', 45.0, 15.0)])
+   excluidos esperados presentes: []
+→ F5-OC-002: PASA · 20 depósitos, todos Confirmed, con cliente y disponible > 0; no aparecen Borradores (2026BA00031/35), anulados (2026BA00032) ni cerrados (2026BA00027, 2026EXP00001); cada producto trae `nationalizedAvailable` (2026BA00006 sin levante → 0). Rótulo «Sin levante» en pantalla: pendiente
+## F5-LIS-002 filtros de importación (GET foreign-trade/imports, c_exterior)
+   sin filtro: 200 32
+   Status=Confirmed: 200 · 32 filas · contiene 2026BA00029 → REVISAR  ['2026BA00038', '2026BA00037', '2026BA00036', '2026BA00035', '2026BA00034', '2026BA00033', '2026BA00029', '2026BA00028']
+   Status=Draft: 200 · 32 filas · contiene 2026BA00031 → REVISAR  ['2026BA00038', '2026BA00037', '2026BA00036', '2026BA00035', '2026BA00034', '2026BA00033', '2026BA00029', '2026BA00028']
+   WarehouseStorageNumber=ba00029: 200 · 1 filas · contiene 2026BA00029 → ok  ['2026BA00029']
+   CargoManifestNumber=qa-cp-f11-s5-r21 (minúsculas): 200 · 1 filas · contiene 2026BA00029 → ok  ['2026BA00029']
+   ManifestNumber=QA-DIAN-F11-S5-29: 200 · 0 filas · no contiene 2026BA00029 → REVISAR  []
+   CargoUnitPlate=qat137: 200 · 1 filas · contiene 2026BA00034 → ok  ['2026BA00034']
+   StakeholderId=REG F11: 200 · 2 filas · contiene 2026BA00028 → ok  ['2026BA00028', '2026BA00027']
+   ImporterId=Andina: 200 · 26 filas · contiene 2026BA00029 → ok  ['2026BA00038', '2026BA00037', '2026BA00036', '2026BA00034', '2026BA00033', '2026BA00029', '2026BA00028', '2026BA00027']
+   CustomsAgencyId=SIA: 200 · 26 filas · contiene 2026BA00029 → ok  ['2026BA00038', '2026BA00037', '2026BA00036', '2026BA00034', '2026BA00033', '2026BA00029', '2026BA00028', '2026BA00027']
+   CarrierCompanyId=Ñandú: 200 · 1 filas · contiene 2026BA00035 → ok  ['2026BA00035']
+   ProductId=QA Repuestos: 200 · 3 filas · contiene 2026BA00028 → ok  ['2026BA00028', '2026BA00012', '2026BA00011']
+   VehiclePlate=qal107: 200 · 1 filas · contiene 2026BA00029 → ok  ['2026BA00029']
+   ReleaseNumber=qa-lev-f11-s5-r21b: 200 · 1 filas · contiene 2026BA00029 → ok  ['2026BA00029']
+   FromDate/ToDate 05/10: 200 · 16 filas · contiene 2026BA00010 → ok  ['2026BA00020', '2026BA00019', '2026BA00018', '2026BA00017', '2026BA00014', '2026BA00012', '2026BA00011', '2026BA00010']
+   FromDate/ToDate 05/10 excluye 06/10: 200 · 16 filas · no contiene 2026BA00029 → ok  ['2026BA00020', '2026BA00019', '2026BA00018', '2026BA00017', '2026BA00014', '2026BA00012', '2026BA00011', '2026BA00010']
+   Combinado Andina + REG (Y lógico): 200 · 2 filas · contiene 2026BA00027 → ok  ['2026BA00028', '2026BA00027']
+   Combinado REG + producto Aceite (vacío esperado): 200 · 0 filas · no contiene 2026BA00028 → ok  []
+   (detalle transportadora Ñandú): ['2026BA00035']
+   (repetición) `Status` es el estado de nacionalización (ImportLabelsStatus), no el del depósito; «Manifiesto» busca el manifiesto del camión:
+   Status=Nacionalizado: 200 9 True False · Status=SinNacionalizar: 200 23 True False
+   ManifestNumber=man-qa-cp-f11-s5-r21 (camión, minúsculas): 200 ['2026BA00029'] · ManifestNumber=QA-DIAN-F11-S5-29 (manifiesto DIAN del depósito): 200 []
+→ F5-LIS-002: PASA · cada criterio filtra y los combinados son Y lógico: estado de nacionalización, depósito, carta porte (minúsculas), manifiesto del camión, placa de la unidad de carga, cliente, importador, agencia, transportadora, producto, rango de fechas, placa del camión y levante; sin distinguir mayúsculas. Observación: el criterio «Manifiesto» no encuentra el manifiesto DIAN que registra CE en el depósito (QA-DIAN-F11-S5-29 → 0 filas); busca el del camión (backlog)
+## F5-ABA-001..003 abandono (palanca `resultados/f11_palanca_s5.sql`, solo base local, aplicada a las 11:34 )
+   palanca: UPDATE 1 UPDATE 1
+   GET foreign-trade/abandonment: 200
+      {"importWarehouseStorageId": "bce8fdce-5eeb-4c5a-963d-16850b8c08be", "warehouseStorageId": "32969bae-8017-4309-bec5-fe4cc3557206", "warehouseStorageNumber": "2026BA00003", "cargoManifestNumber": "QA-CP-F11-S1-B", "entryDate": "2026-09-01T16:34:15.211342+00:00", "daysElapsed": 35, "deadlineDays": 30, "daysRemaining": -5, "status": "EnAbandono", "hasExtension": false, "extensionRegisteredAt": null, 
+      {"importWarehouseStorageId": "49721932-841e-44c9-bea2-9d5245e8f85f", "warehouseStorageId": "3f1efdcd-b58d-4e54-a900-11f269e60b51", "warehouseStorageNumber": "2026BA00015", "cargoManifestNumber": "QA-CP-F11-S3-TRM", "entryDate": "2026-09-11T16:34:15.135512+00:00", "daysElapsed": 25, "deadlineDays": 30, "daysRemaining": 5, "status": "EnAlerta", "hasExtension": false, "extensionRegisteredAt": null, "
+   resumen: 200 {"inAlert": 1, "abandoned": 1}
+F5-ABA-003 registrar prórroga en 2026BA00015: 200 {"importWarehouseStorageId": "49721932-841e-44c9-bea2-9d5245e8f85f", "warehouseStorageNumber": "2026BA00015", "extensionRegisteredAt": "2026-10-06T16:34:26.276344+00:00", "extensionRegisteredByName": "QA Comercio Exterior", "extensionNotes": "QA S5 prórroga de prueba del abandono", "deadlineDays": 6
+   segunda prórroga: 409 El depósito 2026BA00015 ya tiene prórroga registrada el 06/10/2026 por QA Comercio Exterior. | Recurso duplicado.
+   listado tras la prórroga: [{'warehouseStorageNumber': '2026BA00003', 'daysElapsed': 35, 'deadlineDays': 30, 'daysRemaining': -5, 'status': 'EnAbandono', 'hasExtension': False}, {'warehouseStorageNumber': '2026BA00015', 'daysElapsed': 25, 'deadlineDays': 60, 'daysRemaining': 35, 'status': 'EnPlazo', 'hasExtension': True}]
+→ F5-ABA-003: PASA · prórroga → 200, plazo 60 (EnPlazo); segunda → 409 «El depósito 2026BA00015 ya tiene prórroga registrada el 06/10/2026 por QA Comercio Exterior. | Recurso duplicado.»
+→ F5-ABA-001: PASA · API y pantalla (/foreign-trade/abandonment, estado «Todos»): 2026BA00003 «35 · 30 días · Vencido hace 5 días» (rojo) «En abandono» con «Registrar prórroga»; 2026BA00015 «25 · 60 días · 35 · En plazo · Sí, 06/10/2026» tras la prórroga (antes: 25 · 30 · 5 · En alerta). El filtro por defecto «En alerta» quedó vacío tras la prórroga (S5-B-F5-ABA-001-abandono.jpg)
+→ F5-ABA-002: PASA · 30 días sin prórroga, alerta desde 20, abandono > 30: 25 días → EnAlerta (faltan 5), 35 → EnAbandono (−5); con prórroga, plazo 60 (faltan 35). Resumen {inAlert 1, abandoned 1} = aviso del tablero
+→ F5-TAB-001: PASA · /foreign-trade: aviso «Abandono: 0 depósitos en alerta y 1 en abandono · Ver depósitos»; tarjetas Sin nacionalizar 23, Nacionalizados 9 (= filtro del API: 23 + 9), Órdenes de cargue pendientes 2 (2026OC00024 y 2026OC00026), Guías pendientes 3; accesos «Depósitos Importación / Exportación», «Crear Orden de Cargue», «Crear Guía de Salida» (S5-B-F5-TAB-001-tablero.jpg)
+   restauración de la palanca: UPDATE 1 UPDATE 1 ['2026BA00015 | 2026-10-03 14:30:00+00', '2026BA00003 | 2026-10-05 22:41:12.002939+00']
+   la prórroga de 2026BA00015 queda registrada (irreversible por diseño)
+→ F5-OC-002: PASA · 20 depósitos, todos Confirmed, con cliente y disponible > 0; no aparecen Borradores (2026BA00031/35), anulados (2026BA00032) ni cerrados (2026BA00027, 2026EXP00001); cada producto trae `nationalizedAvailable` (2026BA00006 sin levante → 0). En pantalla (Crear Orden de Cargue → «Últimos depósitos · 20 depósito(s)»): cada tarjeta muestra cliente, producto, «Disponible», «Nacionalizado disponible» y «Sin levante» cuando es 0 (2026BA00038/37/34) (S5-B-F5-OC-002-selector.jpg)
+F5 registrados: 36

@@ -1,0 +1,12 @@
+# S4 · DEF-F11-015 · 2026-10-06 09:04 · BE ea14548 / FE e41decf · rol facturacion · POST billing/payments/vouchers (PDF con cabecera válida)
+## v72k.pdf (73728 bytes)
+HTTP 200 | None | {'voucherUrl': '/uploads/payment-vouchers/791d0035-0ad9-467e-9be9-fa9f181d856f_voucher.pdf', 'voucherFileName': 'v72k.pdf'}
+## v6m.pdf (6291456 bytes)
+HTTP 400 | Error de validación de negocio. | El comprobante no puede superar 5 MB.
+## v9_9m.pdf (10400000 bytes)
+HTTP 400 | Error de validación de negocio. | El comprobante no puede superar 5 MB.
+## v11m.pdf (11534336 bytes)
+HTTP 400 | Error de validación de negocio. | El comprobante no puede superar 5 MB.
+## Sin archivo
+HTTP 400 | Error de validación de negocio. | Adjunte el comprobante del pago.
+Nota: el comprobante de 72 KB quedó guardado en el almacenamiento local (uploads/payment-vouchers) sin pago asociado; no afecta datos de negocio.

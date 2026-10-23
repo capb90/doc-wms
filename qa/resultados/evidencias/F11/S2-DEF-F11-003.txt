@@ -1,0 +1,38 @@
+# S2 · DEF-F11-003 · BE 214f5f6 / FE 15a5028 · 2026-10-05 20:18 (hora Colombia) · usuario facturacion
+## Base (solo lectura) antes: is_zero_value guardado sigue en false (regla calculada, sin migración ni cambio de datos)
+e894f3ef|Draft|0.00|f|NULL
+eeb133f1|Draft|0.00|f|QA-SIIGO-F11-S1-ZERO
+da4f86a8|Draft|0.00|f|NULL
+## GET billing/invoices/eeb133f1-9a33-4391-98a0-590009bd9e65
+{"invoiceNumber":"QA-SIIGO-F11-S1-ZERO","status":"Draft","total":0.00,"isZeroValue":true}
+## GET billing/invoices/e894f3ef-33eb-4647-aaba-d11e8d4f49be
+{"invoiceNumber":null,"status":"Draft","total":0.00,"isZeroValue":true}
+## GET billing/invoices/da4f86a8-d634-40be-b741-79fd13be6b6e
+{"invoiceNumber":null,"status":"Draft","total":0.00,"isZeroValue":true}
+## Listado GET billing/invoices?pageSize=100 (las tres)
+jq: error (at <stdin>:0): Cannot index array with string "items"
+## F6-ACC-005: asignar N.º a INSP00002 (sin número)
+{"title":"Error de validación de negocio.","description":"Una factura en cero no requiere número fiscal."}
+## F6-ACC-005: cambiar el N.º de INSP00001 (ya tenía QA-SIIGO-F11-S1-ZERO, asignado en S1 cuando existía el defecto)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Una factura en cero no requiere número fiscal.","traceId":"00-61cf7a54257247acec321d0326bc67e8-1c048c56e5e22327-00"}
+HTTP 400
+
+## F6-INV-011: aprobar INSP00002 sin N.º
+{"data":{"id":"e894f3ef-33eb-4647-aaba-d11e8d4f49be","invoiceNumber":null,"isZeroValue":true,"customerId":"9aa003ad-f17d-4352-aa77-d08ca167532b","customerName":"QA Cliente Mora SAS","customerIdNumber":"900100002","isUnregisteredRecipient":false,"recipientIdType":"Nit","recipientPhone":null,"status":"Approved","subTotal":0.00,"taxAmount":0.00,"total":0.00,"amountPaid":null,"pendingAmount":0.00,"dueDate":"2026-11-05T01:18:19.281755+00:00","paidDate":null,"notes":"Factura de almacenamiento - período 05/10/2026 - 05/11/2026","internalNotes":null,"detail":"ALMACENAMIENTO DE: 20 UNIDAD QA Repuestos, CARTA PORTE:QA-CP-F11-S1-INSP, 2026INSP00002, PERIODO: 05/10/2026 - 05/11/2026, AGENCIA:N/A\nADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Depósito por Inspección ($0,00 más IVA). Valide y corrija el valor de la línea. Motivo: sin convenio, tarifa base ni precio base.","periodStartDate":"2026-10-05T05:00:00+00:00","periodEndDate":"2026-11-05T05:00:00+00:00","createdById":null,"approvedById":"01a10e12-e0d5-76e7-b41e-1c320f332ce0","approvedAt":"2026-10-06T01:18:19.281858+00:00","sentAt":null,"cancelledById":null,"cancelledAt":null,"cancellationReason":null,"reissuedFromInvoiceId":null,"reissuedAsInvoiceId":null,"createdAt":"2026-10-05T22:58:15.487848+00:00","updatedAt":"2026-10-06T01:18:19.281875+00:00","items":[{"id":"73642545-cb39-4f6a-8eef-12bc49314ea0","serviceId":"a9c0d1e2-f3a4-4567-c8d9-e0f1a2b3c4d6","serviceCode":"ALMACENAMIENTO","serviceName":"Almacenamiento en Bodega","servicePriceId":null,"productId":"e770c353-2127-4879-82bd-5e88f9da2981","productName":"QA Repuestos","lineNumber":1,"description":"Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 05/11/2026","quantity":1.00,"unitPrice":0.00,"taxRate":19.00,"subTotal":0.00,"taxAmount":0.00,"total":0.00,"notes":null,"isOverridden":false,"overrideOriginalAmount":null,"overrideReason":null,"source":"MinimumValue"}],"payments":[],"deposits":[{"warehouseStorageId":"dcd9af37-d9b0-4f61-ba8a-b9b3ed02c911","warehouseStorageNumber":"2026INSP00002","operationModalityName":"Depósito por Inspección","entryDate":"2026-10-05T22:58:15.236629+00:00","currency":"COP","cargoValue":5000000.00,"trm":null,"trmSource":null,"trmDate":null,"trmPending":false,"cargoValueCop":5000000.00}]}}
+HTTP 200
+
+## Después
+{"invoiceNumber":null,"status":"Approved","total":0.00,"isZeroValue":true,"dueDate":"2026-11-05T01:18:19.281755+00:00"}
+## Listado GET billing/invoices?pageSize=200 (facturas de INSP en cero)
+{"id":"da4f86a8","invoiceNumber":null,"status":"Draft","total":0.00,"isZeroValue":true}
+{"id":"eeb133f1","invoiceNumber":"QA-SIIGO-F11-S1-ZERO","status":"Draft","total":0.00,"isZeroValue":true}
+{"id":"e894f3ef","invoiceNumber":null,"status":"Approved","total":0.00,"isZeroValue":true}
+## Historial del depósito GET billing/pending-deposits → invoiceHistory (INSP)
+{"n":"2026INSP00001","inv":[{"id":"eeb133f1","invoiceNumber":"QA-SIIGO-F11-S1-ZERO","status":"Draft","total":null,"isZeroValue":true}]}
+{"n":"2026INSP00002","inv":[{"id":"e894f3ef","invoiceNumber":null,"status":"Approved","total":null,"isZeroValue":true}]}
+{"n":"2026INSP00004","inv":[{"id":"da4f86a8","invoiceNumber":null,"status":"Draft","total":null,"isZeroValue":true}]}
+## Pantalla (facturacion)
+- Facturas → Almacenamiento: las tres facturas en $0 muestran «—» en N.º (INSP00004 Borrador, INSP00002 Aprobada) o su número antiguo (INSP00001); ninguna «Pendiente de número»; las de total > 0 sí lo muestran (S2-DEF-F11-003-listado-almacenamiento.jpg).
+- Detalle de la factura de INSP00004 → Acciones: «Factura en cero», «Asignar N.º SIIGO» deshabilitado con «Las facturas en cero no llevan número.», «Aprobar» habilitado (S2-DEF-F11-003-acciones-factura-cero.jpg). La factura se deja en Borrador.
+- Depósitos Pendientes → historial de INSP00002: N.º «—», Aprobado; INSP00001: QA-SIIGO-F11-S1-ZERO (S2-DEF-F11-003-historial-deposito.jpg).
+- Residuo: el encabezado del detalle de la factura en cero dice «Factura pendiente de número» (app/pages/billing/invoices/[id].vue:42 usa invoiceNumber ?? 'pendiente de número' sin mirar isZeroValue). La tarjeta «Información General» sí muestra «—». → ficha nueva TRIVIAL DEF-F11-006.

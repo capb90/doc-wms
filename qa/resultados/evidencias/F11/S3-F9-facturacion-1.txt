@@ -1,0 +1,35 @@
+# S3 · CHG-60/61/64 — DEF-F6-008, DEF-F6-014, DEF-F6-016 · 2026-10-05 23:27 · BE 44bd80a
+## DEF-F6-008 (F6-ALM-006, F6-CFG-004): GET billing/configurations/cycles
+["Weekly","Biweekly","Days15","Monthly","Days30","Days90","Days180","Days360"]
+## PUT configuración de QA Cliente Consolidado con OnDemand
+"description":"El ciclo de facturación no es válido."
+"description":"Error de validación de datos"
+HTTP 400
+## PerWeighbridgeCycle (CHG-63)
+HTTP 200
+Biweekly|PerWeighbridgeCycle|10000000.00 (el API lo acepta: la tarjeta CHG-63 solo lo retira de la pantalla; se restauró «Consolidated» de inmediato)
+
+## DEF-F6-014 (F6-CFG-006): QA Cliente Mora (límite 1.000)
+Blocked|89250.00|1000.00|Monthly|30|PerService
+### Facturación guarda la configuración sin límite (creditLimit null)
+HTTP 200
+OverdueWarning|89250.00|(sin límite)
+### se restaura el límite 1.000 (dato de prueba de mora)
+HTTP 200
+Blocked|1000.00
+
+## DEF-F6-016 (F6-PRE-001..003): POST billing/formula-preview (parámetros como texto, igual que la pantalla)
+FIXED 100.000 con IVA incluido (19 %): {"amount":84033.61,"taxAmount":15966.39,"total":100000.00,"minimumApplied":false,"explanation":"Tarifa fija de $ 100.000 (IVA incluido)."}
+FIXED 100.000 sin IVA incluido: {"amount":100000,"taxAmount":19000,"total":119000,"minimumApplied":false,"explanation":"Tarifa fija de $ 100.000."}
+PRORATED 1 %, CIF 10.000.000, cantidad 40, recibido 100: {"err":"Parámetro inválido: 'minimum' debe ser un decimal mayor o igual a 0.","errors":[]}
+PER_CARGO_UNIT 35.000 con 2 unidades: {"err":"Parámetro inválido: 'cargoUnitTypeCode' es obligatorio.","errors":[]}
+PER_CARGO_UNIT con 0 unidades: {"err":"Parámetro inválido: 'cargoUnitTypeCode' es obligatorio.","errors":[]}
+PER_VEHICLE_TYPE solo Tractomula 80.000, vehículo Tractomula: {"err":"Parámetro inválido: 'rateTractomula' debe ser un valor decimal en el acuerdo.","errors":[]}
+PER_VEHICLE_TYPE sin tipo de vehículo: {"err":"Indique el tipo de vehículo a previsualizar.","errors":[]}
+PER_VEHICLE_TYPE con tipo «Camion»: {"err":"El tipo de vehículo no es válido.","errors":[]}
+### repetición con los nombres de parámetro del catálogo
+PRORATED 1 %, mínimo 0, CIF 10.000.000, cantidad 40, recibido 100: {"amount":40000.00,"taxAmount":0.00,"total":40000.00,"minimumApplied":false,"explanation":"Se cobró 1 % del valor de la mercancía."}
+PER_CARGO_UNIT 35.000 TANQUERO con 2 unidades: {"amount":70000,"taxAmount":0,"total":70000,"minimumApplied":false,"explanation":"Se aplicó la tarifa de la fórmula."}
+PER_CARGO_UNIT con 0 unidades: {"err":"La cantidad facturable para la fórmula 'PER_CARGO_UNIT' debe ser mayor que cero.","errors":[]}
+PER_VEHICLE_TYPE solo rateTractomula 80.000, vehículo Tractomula: {"amount":80000,"taxAmount":0,"total":80000,"minimumApplied":false,"explanation":"Se aplicó la tarifa de la fórmula."}
+PER_VEHICLE_TYPE solo rateTractomula, vehículo Turbo: {"err":"Parámetro inválido: 'rateTurbo' debe ser un valor decimal en el acuerdo.","errors":[]}

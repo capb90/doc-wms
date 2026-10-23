@@ -1,0 +1,16 @@
+# S2 · DEF-F1-002 (CHG-14) · F1-AUT-011 · BE 214f5f6 · 2026-10-05 20:22 · usuario qa_cambio (Admin le restablece la contraseña temporal del README)
+## Admin restablece la contraseña de qa_cambio: HTTP 200
+login qa_cambio: 200 mustChange=true roles=["Warehouse"]
+## change-password «Abcd12345» (sin especial): {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"NewPassword","description":"Debe contener al menos un caracter especial"}],"description":"Error de validación de datos","traceId":"00-f50cb73a7c8814a745e84ed3c3d5f640-4791a7ffe2003361-00"} HTTP 400
+
+## change-password «Abc# 12345» (con espacio): {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"NewPassword","description":"No puede contener espacios"}],"description":"Error de validación de datos","traceId":"00-a8bd47ceab357468e86c15d34deab80c-83780e73d2f6d19f-00"} HTTP 400
+
+## change-password «Abcd-12345» (especial no admitido): {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"NewPassword","description":"Debe contener al menos un caracter especial"}],"description":"Error de validación de datos","traceId":"00-a6119962f0181e3f1ad42435635e490f-e0ff2bdc9d382ac3-00"} HTTP 400
+
+## change-password 101 caracteres: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"NewPassword","description":"La contraseña no puede exceder 100 caracteres"}],"description":"Error de validación de datos","traceId":"00-ebb15687ec7e1eb22164798c98433c88-bd9c4596df2c1919-00"} HTTP 400
+
+## la contraseña no cambió: login con la temporal → login qa_cambio: 200 mustChange=true roles=["Warehouse"]
+## change-password válida (la del README):  HTTP 204
+
+## login con la nueva → login qa_cambio: 200 mustChange=? roles=["Warehouse"]
+## DELETE entry-reasons/{id mal formado} (Admin): {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"Id","description":"El Id del motivo de ingreso no es válido."}],"description":"Error de validación de datos","traceId":"00-4c943efb78d8cda04373bbedcbc22388-38ff05c865ddb6a5-00"} HTTP 400

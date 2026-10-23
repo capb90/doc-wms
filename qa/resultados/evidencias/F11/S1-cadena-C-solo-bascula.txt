@@ -1,0 +1,36 @@
+# S1 · Cadena C — Solo báscula (REG-013, REG-030 / E2E-07)
+## F3-SBA-001: QAA103 un pesaje, cobro inmediato efectivo QA Cliente Uno
+{"weighbridgeCycleId":null,"invoiceId":null,"totalAmount":null}
+{"status":null,"ticket":null,"net":null}
+jq: error (at <stdin>:0): Cannot iterate over null (null)
+ERROR:  invalid input syntax for type uuid: "null"
+LINE 1: ...t service_record_id from weighbridge_cycles where id='null')
+                                                                ^
+ciclo:  · depósitos del servicio: 
+ERROR:  invalid input syntax for type uuid: "null"
+LINE 1: ...ica/Bogota','YYYY-MM-DD'),'—') from invoices where id='null'
+                                                                 ^
+factura: 
+salida de Vigilancia: HTTP 200
+(nota) El primer intento de cobro falló por un error del script de QA (cuerpo vacío → 400 «El cuerpo de la solicitud no es un JSON válido.»), y la salida de Vigilancia se registró con el servicio sin cobrar ni ciclo: es lo que CHG-30 deja fuera a propósito («el servicio sin cobrar ni ciclo se descarta desde Recuperar operaciones»). Se descarta: HTTP 204
+nuevo ingreso QAA103 Solo báscula 4d73a2e9-19b8-486c-a94b-1395576a4867
+{"serviceRecordId":"0e1d72a0-fefe-4ee1-b0da-6248c6e74b3f","totalAmount":29750.00}
+## F3-SBA-001: cobro inmediato efectivo QA Cliente Uno + un pesaje (Tara 18.000)
+{"weighbridgeCycleId":"4f6dad9d-135f-45a3-812a-b690d48a01d8","invoiceId":"87b4bb84-e14b-4f3c-a1a3-0e9e857bb9ea","totalAmount":29750.00}
+{"status":"Complete","ticket":"2026T00014","net":null}
+ciclo: {"status":"Complete","tickets":["2026T00014"],"pesos":["Tare 18000.00"],"entries":0} · depósitos del servicio: 0
+factura: - | Paid | 29750.00 | pagado 29750.00 | vence —
+salida de Vigilancia: HTTP 200
+## E2E-07 parte 2 / F3-COB-007 / DEF-F6-005: QAS101 Solo báscula, dos pesajes, POR FACTURAR a QA Cliente Consolidado
+ingreso bfc28be8-4002-4bff-8348-7cd5cd8c5583
+{"serviceRecordId":"701a5347-6c0d-4b7c-b1a9-1b3084db2c22","totalAmount":28560.0000,"customerName":"QA Cliente Consolidado SAS"}
+{"weighbridgeCycleId":"0a2de8f4-3c67-4acf-83ce-494fb67d313e","invoiceId":"568d8ac9-926e-404d-a12f-cdc1328b0771","totalAmount":28560.0000}
+{"status":"FirstWeightCaptured","ticket":"2026T00015","net":null}
+{"status":"Complete","ticket":"2026T00015","net":null}
+ERROR:  column i.recipient_name does not exist
+LINE 1: select coalesce(s.name,i.recipient_name) from invoices i lef...
+                               ^
+factura por facturar (F6-INV-008/F6-CON-003): - | Draft | 28560.00 | pagado 0 | vence — · destinatario  · due_date crudo: NULL
+neto: ["2026T00015 bruto 21000.00 tara 9000.00 neto 12000.00"]
+salida: HTTP 200
+## Borradores existentes sin vencimiento (CHG-12): 3 Draft/PendingApproval con due_date: 0

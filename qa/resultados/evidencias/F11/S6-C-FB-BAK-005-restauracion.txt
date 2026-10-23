@@ -1,0 +1,11 @@
+# S6 · FB-BAK-005 · restauración en base aparte (autorizada por el usuario en el chat, 2026-10-06) · 23:53 (hora Colombia)
+Contenedor wms-staging-postgres-1. Bases antes: postgres, template0, template1, wms_staging.
+Copia de /opt/wms/backups/2026/10/wms_20261006_2302.dump (4.065.098 B, «staging migrado») a /tmp del contenedor
+createdb wms_restore_test · pg_restore --no-owner --exit-on-error → exit 0 en 2,02 s
+
+| base | depósitos | Confirmed | facturas | Draft | total | ubicaciones | usuarios | migraciones |
+| wms_restore_test | 128 | 128 | 128 | 128 | 91.257.475,39 | 9 | 1 | 11 |
+| wms_staging (solo lectura, ya con las operaciones QA-S6) | 130 | 129 | 140 | 129 | 91.877.698,26 | 9 | 1 | 11 |
+
+La restaurada es idéntica al punto «staging migrado» de la fase 3. dropdb wms_restore_test y borrado del archivo temporal.
+Bases después: postgres, template0, template1, wms_staging. Nunca se restauró sobre wms_staging.

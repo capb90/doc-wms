@@ -1,0 +1,38 @@
+# S4 · DEF-F11-011 (F3-HIS-002) · 2026-10-06 09:02 · BE ea14548 / FE e41decf · rol bascula · GET weighbridge/history
+## ?ticketNumber=2026T00006
+HTTP 200 | total 1
+   2026T00006 ['2026T00006'] Input QAA103 None Complete
+## ?ticketNumber=2026T00034
+HTTP 200 | total 1
+   2026T00034 ['2026T00034'] Input QAH102 None Complete
+## ?ticketNumber=2026T00036
+HTTP 200 | total 1
+   2026T00036 ['2026T00036'] OutputCargo QAJ302 None Complete
+## ?ticketNumber=T00034
+HTTP 200 | total 1
+   2026T00034 ['2026T00034'] Input QAH102 None Complete
+## ?ticketNumber=2026T00034&vehiclePlate=QAA103
+HTTP 200 | total 0
+## ?ticketNumber=2026T99999
+HTTP 200 | total 0
+## ?ticketNumber=2026T00034&vehiclePlate=QAH102
+HTTP 200 | total 1
+   2026T00034 ['2026T00034'] Input QAH102 None Complete
+## ?ticketNumber=2026T00001
+HTTP 200 | total 1
+   2026T00001 ['2026T00001'] Input QAA101 QA-CP-F11-001 Complete
+## ?ticketNumber=2026T00040
+HTTP 200 | total 0
+## ?ticketNumber=2026t00036
+HTTP 200 | total 1
+   2026T00036 ['2026T00036'] OutputCargo QAJ302 None Complete
+## Sin filtro (control: otros filtros intactos)
+HTTP 200 | total 37
+   2026T00041 ['2026T00041'] OutputCargo QAJ701 None Complete
+Nota: 2026T00040 (ciclo de QAJ601 en FirstWeightCaptured) no aparece porque el historial lista solo ciclos terminales (Complete o Canceled, WeighbridgeHistoryFilters.cs:82); es el comportamiento previo, no relacionado con el filtro por tiquete.
+## En pantalla (/operations/weighbridge/history, rol bascula)
+- Pestaña «Entradas», «Más filtros» → Ticket 2026T00006 → 1 fila: 2026T00006 · QAA103 · Sin cliente asignado · Ingreso · Otros (Solo báscula) · Completo.
+- Ticket 2026T00034 → 1 fila: 2026T00034 · QAH102 · Ingreso · Otros · Completo (captura S4-DEF-F11-011-historial-T00034.jpg).
+- Pestaña «Salidas» (filtros propios) → Ticket 2026T00036 → «Mostrando 1 a 1 de 1 registros»: 2026T00036 · QAJ302 · Salida · EXP · Completo (captura S4-DEF-F11-011-historial-T00036-salidas.jpg).
+- Los contadores superiores (Entradas/Salidas/Completos) siguen los filtros de cada pestaña.
+Resultado: PASA. DEF-F11-011 Verificado.

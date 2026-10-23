@@ -1,0 +1,24 @@
+# S4 · DEF-F11-012 · 2026-10-06 09:04 · BE ea14548 / FE e41decf · rol c_exterior
+## PATCH foreign-trade/imports/{id}/manifest · 2026BA00004(Anulado)
+HTTP 400 | Error de validación de negocio. | No se puede modificar el manifiesto de un depósito anulado.
+## PATCH foreign-trade/imports/{id}/manifest · 2026BA00013(Anulado)
+HTTP 400 | Error de validación de negocio. | No se puede modificar el manifiesto de un depósito anulado.
+## Control: 2026BA00003 (Confirmado) → 200 y se restaura a vacío
+HTTP 200 | manifestNumber QA-S4-MAN-CTRL | manifestDate 2026-10-05T05:00:00+00:00 | warehouseStorageStatus Confirmed
+HTTP 200 | manifestNumber None | manifestDate None | warehouseStorageStatus Confirmed
+## Base (solo lectura) tras las pruebas
+2026BA00013|Cancelled|(vacío)
+2026BA00004|Cancelled|(vacío)
+2026BA00003|Confirmed|(vacío)
+## Auditoría de otros PATCH sobre 2026BA00004 (Anulado)
+### PATCH warehouse-storages/{id}/shipping-form-number
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"No se puede editar la planilla de envío de un depósito anulado.","traceId":"00-e8710a9f3901efe38bdcec89ac5f0c1a-cc3270cd868950df-00"}
+HTTP 400
+
+### PATCH warehouse-storages/{id}/draft (cuerpo mínimo)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Solo se puede editar un depósito en estado Borrador. Estado actual: Anulado.","traceId":"00-089d45911d185925e4305465ce75440a-a696620b2bb2a0df-00"}
+HTTP 400
+
+## En pantalla (c_exterior)
+- /foreign-trade/imports/2a55a8f2… (2026BA00004, Anulado): banner «Depósito anulado el 05/10/2026 17:50…»; la tarjeta «MANIFIESTO DIAN» muestra «—» y la página no tiene ningún botón «Editar» (lista de botones leída del DOM: Volver, Imprimir etiqueta, Documentos). Captura S4-DEF-F11-012-anulado-sin-editar.jpg.
+- Control 2026BA00003 (Confirmado): la página ofrece «Editar», «Editar» y «Editar fecha» como antes.

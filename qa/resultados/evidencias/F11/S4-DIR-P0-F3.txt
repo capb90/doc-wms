@@ -1,0 +1,68 @@
+# S4 · DIR · P0 pendientes de F3 (Báscula) · 2026-10-06 09:30 · FE e41decf / BE ea14548
+## En pantalla, rol bascula (QAK601, ingreso con Pedro QA, «Descargue mercancia importacion»; QAK601–QAK607 creados en S4)
+- F3-COL-001 · la cola muestra «QAK601 · Sin iniciar · Descargue mercancia importacion · 0 min en espera» (y QAK602…QAK607).
+- F3-COL-004 · clic en QAK601 → ficha con «Ingreso con depósito» e «Importación» preseleccionados («Según el motivo de ingreso»); transportadora precargada.
+- F3-REI-001 · se digita «QA-CP-F11-S4-REI» en el documento sin guardar → se abre QAK602 (campo vacío) → se vuelve a QAK601: el campo conserva «QA-CP-F11-S4-REI».
+- F3-CAM-003 · «Guardar» sin tipo de vehículo → no guarda; «Tipo de Vehículo · Requerido», «Camión y conductor · Falta 1 dato» y el foco queda en ese campo.
+- F3-REG-009 · QA Cebolla sin cantidad → «La cantidad debe ser mayor que cero.» y «Ingrese la cantidad de al menos un producto para este camión.»; foco en «Cantidad».
+- F3-REG-013 · con Tractomula y QA Cebolla 5, sin importador ni agencia (panel de CE cerrado) → «Depósito 2026BA00023 creado · Documento QA-CP-F11-S4-REI».
+- F3-COB-002 · sin cliente: «Total a pagar $ 28.560» = precio base BASCULA 24.000 + IVA 19 % (con QA Cliente Uno, el convenio da $ 29.750: ver QAK402 en S4-DEF-F11-010-adicional-documento.txt).
+- F3-COB-004 · destinatario preseleccionado «Conductor del vehículo»: «Se facturará al conductor como persona no registrada; no se crea un tercero.», con nombre «Pedro QA Conductor Colombia», CC 1000000001 y teléfono precargados.
+- F3-COB-008 · total 0 → «El total a pagar debe ser mayor a cero.»; total 30.000 → «Cobrado: $ 30.000 · Efectivo».
+- F3-PES-012 · peso 25.000 kg con dos clics seguidos en «Registrar peso» y un Enter → un solo pesaje (ciclo en FirstWeightCaptured con 1 pesaje en la base) y «Pesaje 2 de 2» en la ficha.
+### Factura del cobro (solo lectura)
+30000.00|25210.08|4789.92|Paid|Pedro QA Conductor Colombia|1000000001
+## F3-INT-002 · Bodega (GET warehouse/pending-from-weighbridge): QAK601 presente = 1
+## F3-INT-003 · CE (GET foreign-trade/imports?pageSize=100): 2026BA00023 presente = 1
+## F3-INT-005 · Facturación (GET billing/invoices, servicio báscula): factura de 2026BA00023 presente = 1
+## Llegada a Bodega y segundo pesaje (para el tiquete)
+HTTP 201
+HTTP 200 | ciclo Complete | tiquete 2026T00044
+
+## Por API (rol bascula; bodega para la llegada)
+### F3-REG-004 · QAK603 EXP «QA-CP-F11-S4-EXP», exportador QA Exportador SAS
+HTTP 201 | {"warehouseStorageNumber": "2026EXP00003", "serviceRecordId": "f1a08c5b-7966-44df-ae74-98141b49d185", "warehouseStorageId": "0ad9adb6-8cba-4191-b941-33ec30925659", "totalAmount": 29750.0, "singleWeightOnly": false, "configuredFirstWeightType": "Gross", "isFirstTruck": true, "cycleStatus": null, "ticketNumber": null, "weighbridgeCycleId": null}
+estado: 2026EXP00003 Draft
+### F3-REG-005 / F3-PES-008 · QAK604 INSP «QA-CP-F11-S4-INSP» (un solo pesaje)
+HTTP 201 | {"warehouseStorageNumber": "2026INSP00006", "serviceRecordId": "bace8656-b460-4272-b958-379bd454bb8d", "warehouseStorageId": "ad4ec3e5-9842-475b-9a06-7b765b5ce0cb", "totalAmount": 29750.0, "singleWeightOnly": true, "configuredFirstWeightType": "Gross", "isFirstTruck": true, "cycleStatus": null, "ticketNumber": null, "weighbridgeCycleId": null}
+cobro INSP: HTTP 200 · ciclo 0bebfab5-4dd8-492b-949b-34a857e31b67
+pesaje único Bruto 20.000:
+HTTP 200 | ciclo Complete | completo True | tiquete 2026T00045 
+segundo intento Tara 10.000:
+HTTP 400 | El ciclo no permite capturar un pesaje en estado Completo.
+### F3-MCA-005 · QAK606 con el documento de 2026BA00023 (QA-CP-F11-S4-REI, IMP) pero modalidad EXP
+HTTP 409 | El documento 'QA-CP-F11-S4-REI' con fecha '6/10/2026' ya tiene un depósito con modalidad 'IMP001'. No se puede asociar un camión con modalidad 'EXP'.
+### F3-UCA-001 · QAK606 IMP «QA-CP-F11-S4-UCA», unidades de carga: Tanquero QAT601 con QA Aceite 30.000 litros
+HTTP 201 | 2026BA00024
+base: 2026BA00024 · cargo_handling=CargoUnits · unidades: QAT601 (Tanquero)
+### F3-SBA-006 · QAK605 Solo báscula (QA Cliente Uno, 29.750): depósitos antes = 33
+cobro: HTTP 200 · ciclo 4fb587ab-0827-4c17-99ca-ec6c9c1505aa
+HTTP 200 | ciclo FirstWeightCaptured | tiquete 2026T00046 
+HTTP 200 | ciclo Complete | tiquete 2026T00046 
+depósitos después = 33 (sin depósito ni stock nuevo)
+### F3-COR-007 · anular el pesaje de QAK605 (operación completa sin salida asociada)
+HTTP 200 | {"weighbridgeCycleId": "4fb587ab-0827-4c17-99ca-ec6c9c1505aa", "ticketNumber": "2026T00046", "kind": "WeighingOnly", "voidedEntries": [], "cancelledDeposits": [], "revertedOrders": [], "cancelledInvoices": [], "invoicesToReview": [{"invoiceId": "684940b3-9556-4548-bc71-75dc3f566c72", "invoiceNumber": null, "status": "Paid", "total": 29750.0}]}
+ciclo: Canceled · factura del cobro: Paid
+### F3-COR-001 · QAK601 (2026T00044, Bruto 25.000 / Tara 15.000): modificar el pesaje #1 a 26.000
+antes: 0:Gross 25000.00 · 1:Tare 15000.00 · neto entrada ERROR:  column "net_weight" does not exist
+HTTP 200 | {"weighbridgeCycleId": "39b85912-70c4-4fca-bb3f-466d6f2ad7b0", "originalFirstWeight": 25000.0, "newFirstWeight": 26000, "newNetWeight": 11000.0, "modifiedBy": "bascula", "modifiedAt": "2026-10-06T14:33:13.583442+00:00", "reason": "QA S4 DIR correccion del primer peso"}
+después: 0:Gross 26000.00 · 1:Tare 15000.00
+avisos a Admin: 
+avisos: 3 «Modificación de Peso en Báscula» («El usuario bascula modificó el primer peso del ciclo 39b85912... Peso original: 25.000,00 kg, Nuevo peso: 26.000,00 kg. Razón: …»), neto nuevo 11.000; y 3 «Pesaje anulado con factura emitida» («El pesaje del camión QAK605 (2026T00046) fue anulado. Revise la factura sin número (Pagada, 29.750): el WMS no la modificó.»).
+### Preparación de F3-REC-002/004 · QAK602 registrado por API sin cobrar («QA-CP-F11-S4-DESC», IMP)
+HTTP 201 | 2026BA00025
+### En pantalla · F3-REG-020 / F3-MCA-002 · QAK607 con «QA-CP-F11-S4-REI» + Enter
+«Se asociará al depósito 2026BA00023 (Borrador) · Camiones ingresados: 1 · Ver camiones»; modalidad «La fija el documento.», tipo de carga «Lo fijó el primer camión del documento.», QA Cebolla precargada. Cantidad 10 → «Guardar» → «Camión asociado al depósito 2026BA00023».
+base: stock QA Cebolla de 2026BA00023 = 15.00 declarado / 15.00 stock · entradas = 2
+Nota F3-PES-012: el segundo clic del doble envío mostró «Error al registrar peso · Este pesaje ya fue registrado. Actualice la pantalla.» (un solo pesaje en la base).
+### En pantalla · F3-REC-002 / F3-REC-004 · /operations/weighbridge/recover (QAK602, 2026BA00025 sin cobrar)
+Fila «QAK602 · Pedro QA Conductor Colombia · QA Cliente Uno SAS · Ingreso con depósito · Sin ciclo (abandonada)» con «Retomar» y «Descartar».
+«Retomar» → abre el banco en el paso Cobro («Registrado: depósito 2026BA00025 · Documento QA-CP-F11-S4-DESC»), sin modal; aviso «Operación restaurada · Puede continuar desde donde quedó».
+«Descartar» → confirmación «¿Descartar la operación abandonada del vehículo QAK602? Se eliminará el registro de servicio creado. Esta acción no se puede deshacer.» → «Operación descartada · Vehículo QAK602»; la fila desaparece.
+base: servicio Discarded · depósito 2026BA00025 Cancelled · stock 0.00 · movimientos In 10.00
+Resultado F3: PASA en los 29 P0 pendientes (ver arriba). Observación: el tiquete de una factura al conductor (persona no registrada) imprime «Cliente: CONSUMIDOR FINAL» (cumple F3-TIQ-002, que admite «cliente o CONSUMIDOR FINAL»).
+Observación (sin ficha; F3-REC-004 pasa): el descarte en báscula anula el stock con `product.VoidStock()` (DiscardIncompleteOperationHandler.cs:83) sin registrar movimiento. El kárdex de 2026BA00025 queda con «In 10» y stock 0, sin la salida que sí registra la anulación de CE (`StorageCancellation`, WarehouseStorageCancellationService.cs:155).
+
+## Mapeo de IDs de esta evidencia
+- F3-TIQ-001 · tiquete 2026T00044 de QAK601: `GET weighbridge/{id}/ticket/pdf` → 200 application/pdf, 1 página de 80 mm, con «ORDEN DE PESO No.: 2026T00044», placa, conductor, entrada/salida, peso de mercancía y valor total (texto en la sesión). El diálogo de impresión del navegador no se probó porque el panel estaba oculto.
+- F3-REI-012 · QAK601: borrador conservado (REI-001) → registro, cobro y primer pesaje en pantalla → llegada y segundo pesaje → ciclo Complete con un solo depósito (2026BA00023) y una sola factura de báscula (bd4ddaa3…, 30.000).

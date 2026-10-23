@@ -1,0 +1,5 @@
+# S1 · REG-023 (F6-PAG-001..003) sobre QA-SIIGO-F11-S1-0001 (18:01)
+antes: QA-SIIGO-F11-S1-0001 | Approved | 298002.17 | pagado 0 | vence 2026-11-04
+F6-PAG-001 pago parcial 100.000 transferencia → {"status":"Verified","amount":100000} · QA-SIIGO-F11-S1-0001 | PartiallyPaid | 298002.17 | pagado 100000.00 | vence 2026-11-04 · pendiente 198002.17
+F6-PAG-003 pago de 300.000 (excede) → El monto del pago excede el saldo pendiente.
+F6-PAG-002 pago del saldo 198.002,17 → {"status":"Verified","amount":198002.17} · QA-SIIGO-F11-S1-0001 | Paid | 298002.17 | pagado 298002.17 | vence 2026-11-04 · pendiente 0.00

@@ -1,0 +1,55 @@
+# S3 · Fase 10 del plan (CHG-69 a CHG-74) — DEF-F5-008, DEF-F5-009, DEF-F5-012, DEF-F4-018, DEF-F5-007 · 2026-10-05 23:33 · BE 44bd80a
+## DEF-F5-008 (F5-VAL-001/003): validation-info de 2026BA00001 (QAA101 20.000 + QAB201 18.000)
+{"registeredWeight":38000.00,"templateWeight":null,"isValidated":false}
+### validar con plantilla 38.000 kg y 160 unidades
+{"depositId":"a5747e47-9c1c-4336-bc83-f095ec9ee343","hasWeightDifference":false,"hasQuantityDifference":true,"observations":"[2026-10-05 23:33] VALIDACIÓN: Peso plantilla: 38000 kg, Peso registrado: 38000,00 kg. Cantidad plantilla: 160, Cantidad registrada: 50,00. QA F11 S3 validacion (DEF-F5-008)","registeredWeight":38000.00,"registeredQuantity":50.00,"templateWeight":38000,"templateQuantity":160}
+{"registeredWeight":38000.00,"templateWeight":38000.0000,"templateQuantity":160.0000,"hasWeightDifference":false,"isValidated":true}
+### validar de nuevo
+"description":"El depósito 2026BA00001 ya fue validado el 05/10/2026 23:33."
+HTTP 409
+avisos de discrepancia de validación en esta sesión: 3
+
+## DEF-F5-009 (F5-OC-019): filtros de órdenes de cargue
+(«CommercialDocument» no es un valor de la lista: la pantalla envía «CommercialDocNumber»; ver repetición)
+Importer = Andina → ["2026OC00009","2026OC00008","2026OC00007","2026OC00004","2026OC00003","2026OC00002","2026OC00001"]
+DianManifest = QA-DIAN-F11-001 → ["2026OC00008","2026OC00004","2026OC00001"]
+CommercialDocNumber = QA-CP-F11-001 → ["2026OC00008","2026OC00004","2026OC00001"]
+Importer = Andina → ["2026OC00009","2026OC00008","2026OC00007","2026OC00004","2026OC00003","2026OC00002","2026OC00001"]
+Importer = Exportador → []
+SearchField inválido «Xyz» → 10
+(observación: un SearchField desconocido se ignora y la lista sale completa, sin error)
+
+## DEF-F5-012 (F5-CNF-001 detalle): 2026BA00020 (QAJ601, ingreso por vigilancia, recepción completada por bodega; QA Cebolla 2 bultos + QA Aceite 7 litros)
+{"receivedAt":"2026-10-06T04:23:52.405516+00:00","responsibleName":"QA Operario Bodega","receivedQuantity":null,"amparedQuantity":null,"quantityDifference":null,"status":"Completed","lines":[{"productName":"QA Cebolla","unitMeasure":"Bulto","amparedQuantity":2.00,"receivedQuantity":2.00,"quantityDifference":0.00},{"productName":"QA Aceite","unitMeasure":"Litro","amparedQuantity":7.00,"receivedQuantity":0,"quantityDifference":-7.00}]}
+
+## DEF-F4-018 (F4-INV-001): inventario de Bodega (GET warehouse/inventory/deposits)
+[{"warehouseStorageNumber":"2026BA00020","status":"Draft","customer":null},{"warehouseStorageNumber":"2026BA00016","status":"Confirmed","customer":null},{"warehouseStorageNumber":"2026BA00009","status":"Draft","customer":null},{"warehouseStorageNumber":"2026INSP00005","status":"Draft","customer":null},{"warehouseStorageNumber":"2026BA00008","status":"Draft","customer":null}]
+### CE, selector de depósitos para orden de cargue (no debe traer Borradores)
+[]
+
+## DEF-F5-007 (F5-LIS-001): Kanban por columna (GET foreign-trade/deposits?Status=…&PageSize=10)
+Draft → {"total":9,"enPagina":9}
+Confirmed → {"total":12,"enPagina":10}
+Closed → {"total":4,"enPagina":4}
+Cancelled → {"total":2,"enPagina":2}
+### tarjeta de 2026BA00020 (QA Cebolla 2 bultos + QA Aceite 7 litros)
+[{"warehouseStorageNumber":"2026BA00020","stockSummary":"2 Bulto + 7 Litro"}]
+### lista de importaciones (saldos por unidad)
+[{"warehouseStorageNumber":"2026BA00020","balances":[{"unitMeasure":"Bulto","receivedQuantity":2.00,"nationalizedQuantity":0,"pendingToNationalize":2.00,"dispatchedQuantity":0,"currentStock":2.00},{"unitMeasure":"Litro","receivedQuantity":7.00,"nationalizedQuantity":0,"pendingToNationalize":7.00,"dispatchedQuantity":0,"currentStock":7.00}]}]
+
+## DEF-F5-010 (F5-GUI-003, F5-INT-001)
+### guía 2026S00001 reimpresa: líneas de producto y firma
+13:Empresa de transporte: QA Transportes SAS
+25:  1    QA CEBOLLA                                                                                     DE          160     160         80      80
+31:Unidades de carga: N/A
+39:                     Firma Entrega:                                                               Firma Importador:
+67:Empresa de transporte: QA Transportes SAS
+79:  1    QA CEBOLLA                                                                                     DE          160     160         80      80
+85:Unidades de carga: N/A
+93:                     Firma Entrega:                                                               Firma Importador:
+### etiqueta de 2026BA00001 (Intermediario)
+1:Deposito No. 2026BA00001                        Importador:        QA Importación
+3:                                                Intermediario:     QA Agencia SIA
+5:                                                Transportadora:    QA Transportes SAS
+### detalle de facturas de almacenamiento con agencia
+ALMACENAMIENTO DE: 50 BULTO QA Cebolla, CARTA PORTE:QA-CP-F11-S3-TRM, 2026BA00015, PERIODO: 03/10/2026 - 03/11/2026, AGENCIA:QA Agencia SIA Aduanas

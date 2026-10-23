@@ -1,0 +1,17 @@
+# S0 — Hallazgo a verificar en S2 (DEF-F1-009 / CHG-16): token nuevo rechazado hasta 15 s después de cambiar la contraseña
+
+Reproducción por API (2026-10-05 ~16:58 hora Colombia), usuario qa_inactivo antes de desactivarlo:
+1. Admin `capb90` restablece la contraseña (POST user/{id}/reset-password) → 200.
+2. Login con la contraseña temporal → 200, mustChangePassword=true. GET user/me con ese token → 200.
+3. POST auth/change-password → 204.
+4. Login inmediato con la contraseña nueva → 200 (token con el sello de seguridad nuevo).
+5. GET user/me con el token nuevo, 8 veces cada 2 s durante ~15 s → 401 las 8 veces (WWW-Authenticate: Bearer error="invalid_token").
+6. Pasados ~20 s, GET user/me con el mismo token → 200.
+
+Mismo síntoma al crear las cuentas QA: login justo después del cambio obligatorio → 401 en user/me y en POST user.
+
+Causa probable (lectura de código, sin modificar nada):
+- `Wms.Infrastructure/Services/UserSessionGuard.cs:15,21-23` guarda en IMemoryCache el estado {IsActive, SecurityStamp} del usuario 15 s.
+- `Wms.Application/Auth/Commands/ChangePassword/ChangePasswordHandler.cs` rota el sello (ResetPasswordAsync) pero no llama `IUserSessionGuard.Invalidate(userId)`; la caché conserva el sello viejo hasta que expira.
+
+Impacto a confirmar en la interfaz (S2, F1-AUT-010): tras el cambio obligatorio, la pantalla sigue con el token anterior (aceptado mientras dure la caché) y luego refresca; el rechazo se vería si el usuario cierra sesión y vuelve a entrar dentro de esos 15 s.

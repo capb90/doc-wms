@@ -1,0 +1,11 @@
+# S4 · AUT · 2026-10-06 09:00–09:15 · FE e41decf / BE ea14548 (local, con Docker para Testcontainers)
+## F11-AUT-001 · dotnet test (Backend/wms-api, Wms.sln)
+Passed!  - Failed: 0, Passed: 1605, Skipped: 0, Total: 1605 - Wms.Tests.dll (net10.0)
+Passed!  - Failed: 0, Passed:  269, Skipped: 0, Total:  269, Duration: 1 m 10 s - Wms.IntegrationTests.dll (net10.0)
+Total: 1874 pruebas, 0 fallos.
+## F11-AUT-002 · yarn build (Frontend/wms)
+Código de salida 0 · «✨ Build complete!» · Σ Total size: 3.53 MB (680 kB gzip). No modificó archivos versionados.
+## yarn test (Frontend/wms, Vitest)
+Test Files 66 passed (66) · Tests 266 passed (266).
+## F11-AUT-003 · yarn lint (Frontend/wms)
+✖ 692 problems (279 errors, 413 warnings) → 279 errores = tope vigente (279). No supera el tope.

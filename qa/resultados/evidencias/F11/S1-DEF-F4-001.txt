@@ -1,0 +1,11 @@
+# S1 · DEF-F4-001 / CHG-07 — recepción de unidades de carga (17:55)
+## (CHG-36) segundo pesaje de QAB202 antes de la llegada: El camión QAB202 no tiene registrada su llegada a Bodega (depósito 2026BA00002). Bodega debe registrar la llegada antes del segundo pesaje.
+## llegada de QAB202 a Bodega
+recepción c2f54471-25ec-4dd4-b6c3-adb1565672d7
+## F4-RUC-002: completar sin productos y sin confirmar QAT001 → Confirme que llegaron completas todas las unidades de carga del camión: QAT001.
+## completar con productos contados → En un depósito de unidades de carga no se cuentan productos: confirme las unidades recibidas completas.
+## F4-RUC-001: completar sin productos y con QAT001 confirmada → status=Completed
+## F4-RUC-004: estado de la recepción y de la unidad: Completed · QAT001 InWarehouse recibida 17:55
+detalle CE (unidades de carga del depósito): [{"plateNumber":"QAT001","status":"InWarehouse"}]
+## tara de QAB202 tras la llegada: Complete
+salida QAB202: HTTP 200

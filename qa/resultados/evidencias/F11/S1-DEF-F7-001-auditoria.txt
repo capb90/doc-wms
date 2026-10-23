@@ -1,0 +1,28 @@
+# S1 · DEF-F7-001 / CHG-02 — auditoría sin secretos (2026-10-05 17:46 -05) · BE c56cc86
+## Detección global previa (fase-01-auditoria.sql, bloque de detección):
+(fin: sin filas = 0)
+## Alta de qa_cambio (Warehouse) por capb90
+{"id":"01a10e3e-e81c-7217-992c-d9380cd3d641","username":"qa_cambio","roles":["Operario bodega"],"must":true,"title":null,"description":null,"errors":null}
+## POST user/{qa_cambio}/reset-password (Admin)
+HTTP 200
+## PATCH user/{qa_cambio} name → «QA Cambio Auditoria Editado»
+HTTP 200
+## Filas de audit_logs de qa_cambio (sin valores sensibles: se listan solo las CLAVES de previous/new)
+Create|ApplicationUser|-|Id,Name,Email,IsActive,UserName,CreatedAt,PhoneNumber,EmailConfirmed,LockoutEnabled,NormalizedEmail,TwoFactorEnabled,AccessFailedCount,MustChangePassword,NormalizedUserName,IdentificationNumber,PhoneNumberConfirmed|22:46:06
+Update|ApplicationUser|UpdatedAt|UpdatedAt|22:46:18
+Update|ApplicationUser|Name,UpdatedAt|Name,UpdatedAt|22:46:18
+## Fila Update del cambio de nombre (valores completos):
+{"Name":"QA Cambio Auditoria","UpdatedAt":"2026-10-05T22:46:18.367244+00:00"}|{"Name":"QA Cambio Auditoria Editado","UpdatedAt":"2026-10-05T22:46:18.398187+00:00"}
+## API GET administration/audit-logs?AffectedTable=ApplicationUser (contiene claves sensibles?)
+jq: error (at <stdin>:0): Cannot index array with string "items"
+## Detección global posterior:
+(fin)
+## Recepciones con firma (SignatureDriver) auditadas sin la firma: 12 filas de recepción; con SignatureDriver: 0
+## API GET administration/audit-logs?AffectedTable=ApplicationUser&All=true
+filas: 27 · con PasswordHash/SecurityStamp/ConcurrencyStamp: 0
+## F7-AUD-002 filtros por API
+UserName=capb90 & Action=Update & tabla ApplicationUser → 0 filas; acciones distintas: []; tablas: []; usuarios: []
+F7-AUD-002 Action=Update&AffectedTable=ApplicationUser → {"filas":16,"acciones":["Update"],"tablas":["ApplicationUser"],"usuarios":["QA Administrador Trabajo","QA Comercio Exterior","QA Facturacion","QA Multirol Admin Facturacion","QA Multirol Bascula CE","QA Multirol Facturacion CE","QA Operario Bascula","QA Operario Bodega","QA Operario Vigilancia","QA Usuario Inactivo"]}
+F7-AUD-002 UserName=Carlos&AffectedTable=ApplicationUser → {"filas":1,"acciones":["Create"],"tablas":["ApplicationUser"],"usuarios":["Carlos Andres Portillo B."]}
+F7-AUD-002 UserName=capb90 → {"filas":0,"acciones":[],"tablas":[],"usuarios":[]}
+F7-AUD-002 AffectedTable=Vehicle → {"filas":32,"acciones":["Create","Update"],"tablas":["Vehicle"],"usuarios":["QA Administrador Trabajo","QA Comercio Exterior","QA Operario Bascula","QA Operario Vigilancia"]}

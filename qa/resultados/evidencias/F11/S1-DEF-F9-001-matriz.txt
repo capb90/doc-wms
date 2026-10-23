@@ -1,0 +1,123 @@
+# S1 · DEF-F9-001 / CHG-03 — matriz de escrituras por rol (2026-10-05 17:44 -05) · BE c56cc86
+## 1. bascula: escrituras de terceros, convenios, servicios y motivos (esperado 403)
+POST stakeholder: 403
+PATCH stakeholder/{Uno}: 403
+POST stakeholder/{Uno}/agreement: 403
+POST stakeholder/{Uno}/agreement/{QA-CONV-001}/services: 403
+POST entry-reasons: 403
+## Admin crea «QA Motivo pesaje F11» (para DELETE/PATCH por otros roles)
+capb90 POST entry-reasons → id 4a3345f2-57cd-47c5-b413-021033719ff1
+bascula DELETE entry-reasons/{id}: 403 · PATCH requiresWeighing: 403
+bodega DELETE entry-reasons/{id}: 403 · PATCH requiresWeighing: 403
+facturacion DELETE entry-reasons/{id}: 403 · PATCH requiresWeighing: 403
+vigilancia DELETE entry-reasons/{id}: 403 · PATCH requiresWeighing: 403
+c_exterior DELETE entry-reasons/{id}: 403 · PATCH requiresWeighing: 403
+ERROR:  column "is_active" does not exist
+LINE 1: select description, requires_weighing, is_active from entry_...
+                                               ^
+Motivo tras los intentos: 
+## 2. facturacion: convenios y servicios 2xx; tercero 403
+facturacion POST stakeholder: 403
+## 3. c_exterior: tercero 2xx; convenio 403
+c_exterior POST stakeholder: 400
+   id null
+c_exterior PATCH stakeholder/{nuevo}: 400
+c_exterior POST stakeholder/{nuevo}/agreement: 403
+facturacion POST stakeholder/{nuevo}/agreement: 400
+   id null
+facturacion POST .../services: 400
+   id null
+facturacion PATCH agreement: 400
+bascula PATCH agreement: 403 · POST services: 403
+bodega PATCH agreement: 403 · POST services: 403
+vigilancia PATCH agreement: 403 · POST services: 403
+c_exterior PATCH agreement: 403 · POST services: 403
+bodega POST stakeholder: 403
+vigilancia POST stakeholder: 403
+## 4. Productos (POST/PATCH product solo Admin)
+facturacion POST product: 403 · PATCH product/{Repuestos}: 403
+vigilancia POST product: 403 · PATCH product/{Repuestos}: 403
+bodega POST product: 403 · PATCH product/{Repuestos}: 403
+bascula POST product: 403 · PATCH product/{Repuestos}: 403
+c_exterior POST product: 403 · PATCH product/{Repuestos}: 403
+## 5. Conductores y vehículos (Admin, Vigilancia, Báscula, CE)
+bodega POST vehicles: 403 · POST drivers: 403
+facturacion POST vehicles: 403 · POST drivers: 403
+c_exterior POST vehicles QAZ903: 201 · POST drivers: 201
+## 6. Vigilancia sin Bodega; Bodega sin portería
+vigilancia POST warehouse/receptions/without-weighbridge: 403
+vigilancia POST warehouse/forklift-uses/start: 403
+vigilancia POST warehouse/loading-orders/{OC00001}/execute: 403
+vigilancia GET warehouse/inventory/deposits: 403
+bodega POST entry-logs: 403
+bodega POST entry-logs/{QAB201}/departure: 403
+bodega GET warehouse/inventory/deposits: 200
+## 7. Reportes de inventario
+bascula GET reports/general-inventory: 403 · GET warehouse/movements-report?warehouseStorageId=BA00001: 403 · GET reports/general-inventory/locations: 403
+vigilancia GET reports/general-inventory: 403 · GET warehouse/movements-report?warehouseStorageId=BA00001: 403 · GET reports/general-inventory/locations: 403
+bodega GET reports/general-inventory: 200 · GET warehouse/movements-report?warehouseStorageId=BA00001: 400 · GET reports/general-inventory/locations: 200
+c_exterior GET reports/general-inventory: 200 · GET warehouse/movements-report?warehouseStorageId=BA00001: 400 · GET reports/general-inventory/locations: 200
+facturacion GET reports/general-inventory: 200 · GET warehouse/movements-report?warehouseStorageId=BA00001: 400 · GET reports/general-inventory/locations: 200
+capb90 GET reports/general-inventory: 200 · GET warehouse/movements-report?warehouseStorageId=BA00001: 400 · GET reports/general-inventory/locations: 200
+## 8. F9-API-016 lookups sin token (aceptado por §10 · Catálogos sin autenticación)
+anon GET administration/system-roles: 200
+anon GET business-role: 404
+anon GET taxes: 404
+anon GET operation-modalities: 404
+anon GET packaging-types: 404
+## (repetición con el contrato correcto: businessRoles con el Id del rol CUSTOMER)
+Motivo QA Motivo pesaje F11 tras los intentos: QA Motivo pesaje F11|t
+facturacion POST stakeholder (contrato válido): 403
+bascula POST stakeholder (contrato válido): 403
+bodega POST stakeholder (contrato válido): 403
+vigilancia POST stakeholder (contrato válido): 403
+c_exterior POST stakeholder: 500
+   id null
+c_exterior PATCH stakeholder/{nuevo}: 400
+c_exterior POST stakeholder/{nuevo}/agreement: 403
+facturacion POST stakeholder/{nuevo}/agreement: 400
+   id null
+facturacion POST .../services: 400
+{"description":"Error de validación de datos","errors":[{"code":"StakeholderId","description":"Ingrese un Id válido para el tercero."},{"code":"AgreementId","description":"Ingrese un Id válido para el acuerdo."}]}
+
+facturacion PATCH agreement: 400
+bascula PATCH agreement: 403 · POST services: 403
+bodega PATCH agreement: 403 · POST services: 403
+vigilancia PATCH agreement: 403 · POST services: 403
+c_exterior PATCH agreement: 403 · POST services: 403
+bascula GET warehouse/movements-report?warehouseStorageNumber=2026BA00001: 403
+vigilancia GET warehouse/movements-report?warehouseStorageNumber=2026BA00001: 403
+bodega GET warehouse/movements-report?warehouseStorageNumber=2026BA00001: 200
+c_exterior GET warehouse/movements-report?warehouseStorageNumber=2026BA00001: 200
+facturacion GET warehouse/movements-report?warehouseStorageNumber=2026BA00001: 200
+capb90 GET warehouse/movements-report?warehouseStorageNumber=2026BA00001: 200
+anon GET administration/system-roles: 200
+anon GET administration/business-role: 200
+anon GET administration/taxes: 200
+anon GET administration/operation-modalities: 200
+anon GET administration/packaging-types: 200
+## (repetición con idType «Nit», el valor que envía la pantalla)
+c_exterior POST stakeholder: 201
+   id 440518a6-b261-42b8-956c-81389cf5ad0b
+c_exterior PATCH stakeholder/{nuevo}: 200
+{"description":null,"errors":null}
+
+c_exterior POST stakeholder/{nuevo}/agreement: 403
+facturacion POST stakeholder/{nuevo}/agreement: 201
+   id 51a849f5-5d46-45e3-ad0a-62c942d1516e
+facturacion POST .../services: 400
+{"description":"El parámetro requerido 'rate' no fue proporcionado.","errors":[]}
+
+facturacion PATCH agreement: 200
+bascula PATCH agreement: 403 · POST services: 403
+bodega PATCH agreement: 403 · POST services: 403
+vigilancia PATCH agreement: 403 · POST services: 403
+c_exterior PATCH agreement: 403 · POST services: 403
+Convenios del tercero: QA-F11-FAC QA Convenio Facturacion F11 editado Draft
+Terceros creados por roles no autorizados en esta sesión: 0
+facturacion POST .../services (rate 20.000): 201
+facturacion POST .../services/{id}/deactivate: 204
+bascula POST .../services/{id}/activate: 403
+bascula DELETE .../services/{id}: 403
+bascula GET stakeholder/{Uno}/agreement (lectura de tarifas, §10): 200
+Resultado DEF-F9-001: VERIFICADO (todas las escrituras de roles sin permiso → 403; Admin/CE/Facturación según §10 → 2xx)

@@ -1,0 +1,19 @@
+# S1 · DEF-F6-003 / DEF-F6-004 / CHG-11 — override del total de la línea (17:56)
+## F6-OVR-003 (DEF-F6-003): línea BA00006 cantidad 110, IVA 19 %, en Borrador. Antes:
+92d0d45a | Almacenamiento QA Cebolla 05/10/2026 - 12/10/2026 | qty 110.00 | unit 1500.00 | sub 165000.00 | iva 31350.00 | total 196350.00 | overridden false
+POST billing/invoice-items/{id}/override newAmount 8000:
+{"invoiceItemId":"92d0d45a-d53a-4d4a-abbb-4690bef8a889","originalAmount":196350.00,"overrideAmount":8000,"newSubTotal":6722.69,"newTaxAmount":1277.31,"newInvoiceTotal":8000.00}
+después:
+92d0d45a | Almacenamiento QA Cebolla 05/10/2026 - 12/10/2026 | qty 110.00 | unit 61.12 | sub 6722.69 | iva 1277.31 | total 8000.00 | overridden true
+factura: - | Draft | 8000.00 | pagado 0 | vence — · sub/iva: 6722.69 / 1277.31 / pendiente 8000.00
+registro del override: 196350.00 → 8000.00
+segundo override sobre la misma línea: Esta línea ya fue sobrescrita.
+## F6-OVR-002 (DEF-F6-004 criterio 3): línea de cantidad 1 (BA00001 renovación, 496.670,28) → newAmount 95.000 por API. Antes:
+38132fea | Almacenamiento QA Cebolla 06/11/2026 - 06/12/2026 | qty 1.00 | unit 417369.98 | sub 417369.98 | iva 79300.30 | total 496670.28 | overridden false
+{"invoiceItemId":"38132fea-0da9-42da-a193-e8d1e093af46","originalAmount":496670.28,"overrideAmount":95000,"newSubTotal":79831.93,"newTaxAmount":15168.07,"newInvoiceTotal":95000.00}
+después:
+38132fea | Almacenamiento QA Cebolla 06/11/2026 - 06/12/2026 | qty 1.00 | unit 79831.93 | sub 79831.93 | iva 15168.07 | total 95000.00 | overridden true
+registro: 496670.28 → 95000.00
+## UI (facturacion) factura BA00003: diálogo «Sobrescribir total de la línea» · «Total actual de la línea (IVA incluido): $ 606.900» · campo «Nuevo total de la línea (IVA incluido) *» · al digitar 595.000: «Base $ 500.000 + IVA 19 %: $ 95.000 = Total $ 595.000» · guardado: línea $ 595.000 «Sobrescrito», subtotal 500.000, impuestos 95.000
+base: 500000.00 + 95000.00 = 595000.00 unit 500000.00 · registro: 606900.00 → 595000.00
+Resultado: DEF-F6-003 VERIFICADO · DEF-F6-004 VERIFICADO

@@ -1,0 +1,38 @@
+# S3 · CHG-84 — DEF-F7-011 (F7-PDF-001, F7-PDF-004, F7-PDF-007) · 2026-10-05 23:37 · BE 44bd80a
+## F7-PDF-001: factura de almacenamiento QA-SIIGO-F11-0001 (2026BA00001) → 200
+4:IPIALES - COLOMBIA | Tel: 7736748 - 7736522                                                                            Fecha: 05/10/2026
+5-info@bodegasasociadas.com                                                                                              Estado: Vencida
+6-                                                                                                                       Vence: 03/10/2026
+--
+27:DETALLE:
+28:ALMACENAMIENTO DE: 160 BULTO QA Cebolla, CARTA PORTE:QA-CP-F11-001, 2026BA00001, PERIODO: 05/10/2026 - 05/11/2026,
+29-AGENCIA:QA Agencia SIA Aduanas
+30-
+--
+32: Fecha                    Método                            Monto    Estado                 Referencia
+33-
+34-05/10/2026               Transferencia                 $ 200.000,00 Verificado              QA-PAG-F11-001
+creada (UTC): 2026-10-05 22:06 → Colombia 05/10/2026 17:06
+## F7-PDF-004: tiquete 2026T00001 (QAA101, cobrado a QA Cliente Uno) → 200
+2:                      NIT: 837.000.606-1
+4:                   Tel: 7736748 - 7736522
+10:Cliente: QA Cliente Uno SAS
+11:Nit/C.C.: 900100001
+12:Dirección: Calle QA 1-23
+13:Teléfono: 3001000001
+## tiquete 2026T00006 (Solo báscula a Consumidor final) → 200
+4:                   Tel: 7736748 - 7736522
+10:Cliente: CONSUMIDOR FINAL
+12:Dirección: N/A
+13:Teléfono: N/A
+## F7-PDF-007: Admin cambia COMPANY_EMAIL a qa-empresa-s3@bodegas-qa.test
+HTTP 200
+inv (200):    1 qa-empresa-s3@bodegas-qa.test 
+tk (200):    1 qa-empresa-s3@bodegas-qa.test 
+gu (200):    2 qa-empresa-s3@bodegas-qa.test 
+din (200):    1 qa-empresa-s3@bodegas-qa.test 
+dout (200):    1 qa-empresa-s3@bodegas-qa.test 
+dbill (200):    2 qa-empresa-s3@bodegas-qa.test 
+## se restaura COMPANY_EMAIL
+HTTP 200
+info@bodegasasociadas.com

@@ -1,0 +1,55 @@
+# S3 · CHG-57/58 — DEF-F4-011, DEF-F4-013, DEF-F4-016, DEF-F4-017 · 2026-10-05 23:25 · BE 44bd80a
+## DEF-F4-011 (F4-NOV-006): novedad de 2026BA00020 / QA Cebolla con total 100, buena 90, dañada 20
+{"status":null,"d":{"id":"16b61d38-100f-4c2f-bed3-c0024ea48c97","quantityWarning":"La suma de buena, dañada y faltante (110) no coincide con el total (100)."},"description":null}
+## total 100 = 80 + 15 + 5 (cuadra)
+{"d":{"quantityWarning":null},"description":null}
+
+## DEF-F4-013 (F4-MON-004): iniciar montacargas con horómetro 0 (servicio de QAJ601)
+"errors":[{"code":"InitHourmeter","description":"El horómetro inicial debe ser mayor que cero."}]
+"description":"Error de validación de datos"
+HTTP 400
+## DEF-F4-017 (F4-MON-012): sin servicio
+"errors":[{"code":"ServiceRecordId","description":"El camión no tiene un servicio activo. Seleccione un camión con servicio activo para iniciar el montacargas."}]
+"description":"Error de validación de datos"
+HTTP 400
+## servicio mal formado «abc»
+"errors":[{"code":"ServiceRecordId","description":"El camión no tiene un servicio activo. Seleccione un camión con servicio activo para iniciar el montacargas."}]
+"description":"Error de validación de datos"
+HTTP 400
+## tipo de vehículo «Camion» y «99»; modo de pago «Credito»
+"errors":[{"code":"VehicleType","description":"Seleccione el tipo de vehículo: Tractomula, Doble troque, Sencillo, Turbo o Guacal / Estiba."}]
+"description":"Error de validación de datos"
+HTTP 400
+"errors":[{"code":"VehicleType","description":"Seleccione el tipo de vehículo: Tractomula, Doble troque, Sencillo, Turbo o Guacal / Estiba."}]
+"description":"Error de validación de datos"
+HTTP 400
+"errors":[{"code":"PaymentMode","description":"Seleccione el modo de pago: Pago inmediato o Pendiente por facturar."}]
+"description":"Error de validación de datos"
+HTTP 400
+## cliente «abc»
+"errors":[{"code":"StakeholderId","description":"El cliente indicado no es válido."}]
+"description":"Error de validación de datos"
+HTTP 400
+## inicio válido con 100
+uso b918bf8f-3d43-4afa-a7e4-e62abe98ad99
+## segundo inicio con el uso activo
+"description":"Ya existe un uso de montacargas activo para este camión. Finalícelo antes de iniciar uno nuevo."
+HTTP 409
+## F4-MON-006: finalizar con 100 (igual al inicial)
+"errors":[]
+"description":"El horómetro final debe ser mayor que el inicial (100)."
+HTTP 400
+## finalizar con 0
+"errors":[{"code":"EndHourmeter","description":"El horómetro final debe ser mayor que cero."}]
+"description":"Error de validación de datos"
+HTTP 400
+## finalizar con id mal formado
+"errors":[{"code":"ForkliftUseId","description":"El uso de montacargas indicado no es válido."}]
+"description":"Error de validación de datos"
+HTTP 400
+## finalizar con 105 (5 h), cobro inmediato 90.000 a QA Cliente Uno sin IVA
+{"status":"Complete","totalHours":null,"invoiceId":null}
+## DEF-F4-016 (F4-MON-014): GET warehouse/forklift-uses (historial) — fila del uso
+## DEF-F4-016 (F4-MON-014): GET warehouse/forklift-uses?Status=Complete — fila del uso
+[{"initHourmeter":100.00,"endHourmeter":105.00,"subTotal":90000.00,"taxAmount":0.00,"total":90000.00,"paymentMode":"Immediate","invoiceId":"ae62e96e-37bb-4297-ae44-60526072d8de","invoiceNumber":null,"status":"Complete"}]
+(la tabla del historial en pantalla se revisa en el bloque de navegador)

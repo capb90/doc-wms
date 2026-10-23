@@ -1,0 +1,15 @@
+# S2 · DEF-F1-004 (CHG-27) · F1-CNV-006 · BE 214f5f6 · 2026-10-05 20:25 · facturacion · convenio QA-F11-FAC (Borrador, de QA F11 Tercero CE SAS)
+## Agregar ALMACENAMIENTO PERCENTAGE_OF_VALUE · QA Repuestos · IMP con porcentaje 150
+{"status":400,"description":"Parámetro inválido: 'percentage' debe ser un decimal en el rango 0–100."}
+## Mismo servicio con porcentaje 100
+{"status":null,"data":{"id":"5841bf82-4220-45e2-9a75-5e9f75d6c956","productName":"QA Repuestos","params":["percentage=100","minimum=150000","minimumThreshold=50000000"]}}
+## Editar el servicio existente (0,3 %) a 1 %
+{"status":null,"description":null}
+## Editarlo a 150 %
+{"status":400,"description":"Parámetro inválido: 'percentage' debe ser un decimal en el rango 0–100."}
+## Conserva 1 %
+["minimum=150000","minimumThreshold=50000000","percentage=1"]
+## Tarifa base con 150 (misma regla): {"status":400,"description":"Parámetro inválido: 'percentage' debe ser un decimal en el rango 0–100."}
+## Restaurar 0,3 % y desactivar el servicio de 100 %
+{"status":null,"description":null}
+desactivar 5841bf82-4220-45e2-9a75-5e9f75d6c956: 204

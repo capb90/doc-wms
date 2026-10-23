@@ -1,0 +1,238 @@
+# S5 · Parte B · F6 Facturación · 2026-10-06 · FE bd729e5 / BE 00d6ac3
+F6-ACC-010 enviar la factura Borrador de 2026BA00029: 400 Solo se pueden enviar facturas aprobadas. | Error de validación de negocio.
+   enviar QA-SIIGO-F11-S5-0001 (Approved): 200 ok ['QA-SIIGO-F11-S5-0001 | Sent | 80325.00 |  | 80325.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 15:58:02.068211+00']
+→ F6-ACC-010: PASA · Borrador → «Solo se pueden enviar facturas aprobadas. | Error de validación de negocio.»; Approved → Sent
+F6-ACC-012 anular con motivo de 9 con espacios: 400 Error de validación de datos | Error de validación. | El motivo de anulación debe tener al menos 10 caracteres.
+→ F6-ACC-012: PASA · Error de validación de datos | Error de validación. | El motivo de anulación debe tener al menos 10 caracteres.
+F6-PAG-004 pago 0: 400 Error de validación de datos | Error de validación. | El monto del pago debe ser mayor a cero. · −5: 400 Error de validación de datos | Error de validación. | El monto del pago debe ser mayor a cero.
+→ F6-PAG-004: PASA · Error de validación de datos | Error de validación. | El monto del pago debe ser mayor a cero.
+F6-PAG-005 pago a una Paid: 400 La factura ya está completamente pagada. | Error de validación de negocio. · a una Cancelled: 400 No se puede registrar un pago en una factura cancelada. | Error de validación de negocio.
+→ F6-PAG-005: PASA · «La factura ya está completamente pagada. | Error de validación de negocio.» / «No se puede registrar un pago en una factura cancelada. | Error de validación de»
+   configuración de QA Cliente REG F11: 404 {"type": "https://tools.ietf.org/html/rfc9110#section-15.5.5", "title": "Recurso no encontrado.", "status": 404, "errors": [], "description": "Configuración de facturación para el cliente b776f377-d22
+F6-CFG-005 plazo −1: 400 Error de validación de datos | Error de validación. | Los días de plazo de pago no pueden ser negativos. · límite −1: 400 Error de validación de datos | Error de validación. | El límite de crédito no puede ser negativo.
+→ F6-CFG-005: PASA · «dación. | Los días de plazo de pago no pueden ser negativos.» / «de validación. | El límite de crédito no puede ser negativo.»; la configuración de REG no cambió (404)
+## F6-ALM-003 sin configuración del cliente (QA Cliente REG F11: GET billing/configurations/{id} → 404)
+   QA-SIIGO-F11-S5-0001 (2026BA00027): aprobada / vence ['06/10/2026 | 05/11/2026'] · período ['2026-10-06 05:00:00+00', '2026-11-06 05:00:00+00'] · factura propia (no consolidada): ['f']
+→ F6-ALM-003: PASA · 2026BA00027 de QA Cliente REG F11 (sin configuración): período mensual 06/10–06/11, factura propia (PerService, no consolidada), vencimiento ['06/10/2026 | 05/11/2026']
+## F6-ACC-015, F6-REC-006, F6-REF-001 sobre la factura de 2026BA00033
+   factura: ['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -'] ['2026BA00033 | Almacenamiento (mínimo aplicado) QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 154621.85 | 184000.00 | f']
+   anular (Draft, almacenamiento): 200 ok ['(sin N.º) | Cancelled | 184000.00 |  | 184000.00 | - | -']
+   avisos: []
+→ F6-ACC-015: FALLA · Cancelled; aviso []
+   F6-REC-006 CE-7 de 2026BA00033 6 → 7 con la factura anulada: 200
+   factura: ['(sin N.º) | Cancelled | 184000.00 |  | 184000.00 | - | -'] · avisos: ['Cambio de depósito sin facturar | El depósito 2026BA00033 cambió por ajuste CE-7 de QA Cebolla, pero la factura del período está anulada. Revise la facturación del período.']
+→ F6-REC-006: PASA · la factura anulada no cambia; aviso ['Cambio de depósito sin facturar']
+   F6-REF-001 refacturar: 201 {"id": "fc4ae1d9-8917-4863-95dd-5b760b11dfad", "invoiceNumber": null, "isZeroValue": false, "customerId": "e329015c-1131-456e-8351-5dd40420f26b", "customerName": "QA Cliente Uno SAS", "customerIdNumber": "900100001", "isUnregisteredRecipient": false, "recipientIdType": "Nit", "recipientPhone": null,
+   nueva: ['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -'] ['2026BA00033 | Almacenamiento (mínimo aplicado) QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 154621.85 | 184000.00 | f']
+   enlaces: ['fc4ae1d9-8917-4863-95dd-5b760b11dfad'] ['0c44dfef-2bae-4866-9f04-a32224d33e53']
+   períodos: ['3ee5068e-206b-4d26-96f2-873c180599c4 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 154621.85 | 154621.85 | PERCENTAGE_OF_VALUE | fc4ae1d9-8917-4863-95dd-5b760b11dfad']
+→ F6-REF-001: PASA · nueva factura fc4ae1d9 Draft sin número, líneas ['2026BA00033 | Almacenamiento (mínimo aplicado) QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 154621.85 | 184000.00 | f'], enlaces de refacturación en ambas, período re-enlazado
+   CE-7 7 → 6 (restaura): 200 ['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -']
+   (corrección de la consulta del aviso: no menciona el depósito) 11:38:01 «Factura de almacenamiento anulada · La factura sin número fue anulada. Sus períodos de almacenamiento quedaron por refacturar: use «Refacturar» en la factura anulada.»
+→ F6-ACC-015: PASA · factura Borrador de 2026BA00033 anulada → aviso «Factura de almacenamiento anulada · … quedaron por refacturar: use «Refacturar» en la factura anulada.» y la refacturación queda disponible (F6-REF-001). Observación: en una factura sin número el aviso dice «La factura sin número» y no nombra el depósito (backlog)
+## F6-OVR-001 y F6-OVR-007 sobrescritura de línea (factura Borrador de 2026BA00029, 303.450)
+   override en QA-SIIGO-F11-S5-0001 (Sent): 409 Solo facturas en estado Borrador permiten sobrescritura. | Recurso duplicado.
+   override en la Borrador de 2026BA00029 a 300.000: 200 ok ['(sin N.º) | Draft | 300000.00 |  | 300000.00 | - | -'] ['2026BA00029 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 252100.84 | 300000.00 | t']
+   segundo override de la misma línea: 409 Esta línea ya fue sobrescrita. | Recurso duplicado.
+→ F6-OVR-001: PASA · no Draft → «Solo facturas en estado Borrador permiten sobrescritura. | Recurso duplicado.»; Draft → 200; segunda vez → «Esta línea ya fue sobrescrita. | Recurso duplicado.»
+   CE-7 de 2026BA00029 50 → 51: 200 ['(sin N.º) | Draft | 303450.00 |  | 303450.00 | - | -'] ['2026BA00029 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 255000.00 | 303450.00 | f']
+   avisos: ['Factura de almacenamiento actualizada | La factura pendiente de número del depósito 2026BA00029 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 300.000, total nuevo $ 303.450. Se descartaron valores sobrescritos: Línea 1 «Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026»: $ 300.000 (original $ 303.450), motivo: QA S5 override de prueba antes del recalculo.']
+   CE-7 51 → 50 (restaura): 200 ['(sin N.º) | Draft | 303450.00 |  | 303450.00 | - | -']
+→ F6-OVR-007: PASA · la línea vuelve a 303.450 sin marca de override y el aviso lista el valor descartado: ['Factura de almacenamiento actualizada | La factura pendiente de número del depósito 2026BA00029 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 300.000, total nuevo $ 303.450. Se descartaron valores sobrescritos: Línea 1 «Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026»: $ 300.000 (original $ 303.450), motivo: QA S5 override de prueba antes del recalculo.']
+## F6-TRM-007 TRM con la factura del período aprobada (2026BA00015, TRM manual 4.100, QA-SIIGO-F11-S3-TRM)
+   factura: ['QA-SIIGO-F11-S3-TRM | PartiallyPaid | 497658.00 | 1000.00 | 496658.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 04:06:12.197819+00']
+   PUT trm 4.200: 400 La factura QA-SIIGO-F11-S3-TRM del período ya fue aprobada; la TRM no se puede cambiar. | Error de validación de negocio.
+→ F6-TRM-007: PASA · La factura QA-SIIGO-F11-S3-TRM del período ya fue aprobada; la TRM no se puede cambiar. | Error de validación de negocio.
+## F6-INV-006 PDF de la factura de almacenamiento de 2026BA00028 (dos líneas, detalle con advertencia)
+   API: {'customerName': 'QA Cliente REG F11 SAS', 'customerIdNumber': '900100121', 'subTotal': 214000.0, 'taxAmount': 40660.0, 'total': 254660.0, 'status': 'Draft'} [('Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026', 35700.0), ('Almacenamiento (valor mínimo) QA Repuestos 06/10/2026 - 06/11/2026', 218960.0)]
+   PDF: 200 56169 bytes
+      QA Cliente REG F11 SAS                                                                                         06/10/2026 - 06/11/2026
+      NIT: 900100121
+      #          Descripción                                               Cantidad      Precio Unit.          IVA %                 Total
+      1          Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026            20,00        $ 1.500,00          19,0%            $ 35.700,00
+      2          Almacenamiento (valor mínimo) QA Repuestos 06/10/2026 -       1,00     $ 184.000,00           19,0%           $ 218.960,00
+      Subtotal:             $ 214.000,00
+      IVA:               $ 40.660,00
+      TOTAL:             $ 254.660,00
+      ALMACENAMIENTO DE: 10 UNIDAD QA Repuestos, CARTA PORTE:QA-CP-F11-S5-R17-AG, 2026BA00028, PERIODO: 06/10/2026 -
+      ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Importación
+      ($184.000,00 más IVA). Valide y corrija el valor de la línea. Motivo: sin convenio, tarifa base ni precio base.
+      Factura de almacenamiento - período 06/10/2026 - 06/11/2026
+→ F6-INV-006: PASA · destinatario, NIT, las dos líneas, subtotal 214.000, IVA 40.660, total 254.660 y el bloque «ALMACENAMIENTO DE…» con la advertencia coinciden con el API/pantalla
+## F6-REC-005 recálculo de una factura con pagos (consolidada QA-SIIGO-F11-S4-0010 de QA Cliente Consolidado, 2026BA00010/11/12)
+   antes: ['QA-SIIGO-F11-S4-0010 | Approved | 474360.00 |  | 474360.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 14:45:54.270214+00']
+   pago de 474.000: 201 ok ['QA-SIIGO-F11-S4-0010 | PartiallyPaid | 474360.00 | 474000.00 | 360.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 14:45:54.270214+00']
+   CE-7 2026BA00010 40 → 39: 400 ['QA-SIIGO-F11-S4-0010 | PartiallyPaid | 474360.00 | 474000.00 | 360.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 14:45:54.270214+00']
+   aviso: []
+   CE-7 39 → 40: 400 ['QA-SIIGO-F11-S4-0010 | PartiallyPaid | 474360.00 | 474000.00 | 360.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 14:45:54.270214+00']
+   aviso: []
+→ F6-REC-005: FALLA · total 474.360 → 472.575 con 474.000 pagados → PartiallyPaid y aviso con el saldo a favor; → 474.360 → PartiallyPaid
+   (los dos CE-7 sobre 2026BA00010 se rechazaron: «La cantidad recibida de «QA Cebolla» (39) no puede ser menor que la suma de sus levantes (40). Edite o retire primero el levante. | Error de validación de negoc»; no se puede bajar el recibido por debajo del levante de 40. Se usa otro depósito para F6-REC-005)
+## F6-ALM-004 y F6-ALM-007 QA Cliente Consolidado (Biweekly, Consolidated, plazo 15)
+   confirmar 2026BA00036 (12 QA Cebolla): 200 ok
+   períodos: ['3294b51f-022a-495b-b2d7-e0d91b607513 | 2026-10-06 05:00:00+00 | 2026-10-20 05:00:00+00 | Open | 12.00 | 1500.00 | 18000.00 | PER_UOM | 53439aa2-e8f9-4d3c-ae9f-fd67c2dce427']
+   factura: [['(sin N.º) | Draft | 21420.00 |  | 21420.00 | - | -']] ['t | 01/10 | 14/10 | ']
+   QAL191 registro 8 QA Cebolla para QA Cliente Consolidado: 201 2026BA00039
+   confirmar 2026BA00039 : 200 ok
+   factura del segundo depósito: ['53439aa2-e8f9-4d3c-ae9f-fd67c2dce427'] · misma consolidada: True
+   consolidada: ['(sin N.º) | Draft | 35700.00 |  | 35700.00 | - | -'] ['2026BA00036 | Almacenamiento QA Cebolla 06/10/2026 - 20/10/2026 | 12.00 | 1500.00 | 21420.00 | f', '2026BA00039 | Almacenamiento QA Cebolla 06/10/2026 - 20/10/2026 | 8.00 | 1500.00 | 14280.00 | f']
+   duración del período quincenal: 14 días; semanal (2026BA00006, S1): ['ea3efb13-d360-4b9a-89d8-c365e4a605d3 | 2026-10-05 05:00:00+00 | 2026-10-12 05:00:00+00 | Closed | 110.00 | 1500.00 | 165000.00 | PER_UOM | 9233bb32-606c-45c5-a3e3-6b451905a336', '372a5c02-f296-478b-904d-fe742edbc7b1 | 2026-10-13 05:00:00+00 | 2026-10-20 05:00:00+00 | Open | 110.00 | 1500.00 | 165000.00 | PER_UOM | ca7ab3b4-0e51-4e41-bf83-dac20ffb7869']
+→ F6-ALM-004: PASA · Biweekly 2026BA00036: 2026-10-06 → 2026-10-20 (+14, cubre 15 días); Weekly 2026BA00006: 05/10 → 12/10 y 13/10 → 20/10 (+7, cubre 8). Se anota para la decisión abierta (15 días en el levantamiento)
+→ F6-ALM-007: PASA · la consolidada QA-SIIGO-F11-S4-0010 (05/10–19/10) ya está aprobada → se crea otra consolidada Draft 53439aa2 con las líneas de 2026BA00036 y 2026BA00039; ventana y vencimiento 
+   (nota F6-ALM-007) la consolidada nueva toma la ventana quincenal de calendario 01/10–14/10 (`GetBiweeklyPeriod`), mientras sus líneas cubren 06/10–20/10
+## F6-REC-005 (repetición) sobre la consolidada nueva de QA Cliente Consolidado (2026BA00036 + 2026BA00039)
+   N.º QA-SIIGO-F11-S5-0002 y aprobación: 204 200 ['QA-SIIGO-F11-S5-0002 | Approved | 35700.00 |  | 35700.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 16:40:04.045112+00'] ['21/10/2026']
+   pago total 35.700: 201 ok ['QA-SIIGO-F11-S5-0002 | Paid | 35700.00 | 35700.00 | 0.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 16:40:04.045112+00']
+   CE-7 2026BA00036 12 → 11: 200  ['QA-SIIGO-F11-S5-0002 | Paid | 33915.00 | 35700.00 | 0.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 16:40:04.045112+00']
+   aviso: ['Factura de almacenamiento actualizada | La factura QA-SIIGO-F11-S5-0002 del depósito 2026BA00036 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 35.700, total nuevo $ 33.915. Saldo a favor del cliente: $ 1.785.']
+   CE-7 11 → 13: 200 ['QA-SIIGO-F11-S5-0002 | PartiallyPaid | 37485.00 | 35700.00 | 1785.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 16:40:04.045112+00']
+   aviso: ['Factura de almacenamiento actualizada | La factura QA-SIIGO-F11-S5-0002 del depósito 2026BA00036 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 33.915, total nuevo $ 37.485.']
+   CE-7 13 → 12 (restaura): 200 ['QA-SIIGO-F11-S5-0002 | Paid | 35700.00 | 35700.00 | 0.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 16:40:04.045112+00']
+→ F6-REC-005: PASA · QA-SIIGO-F11-S5-0002 aprobada y pagada (35.700): total 33.915 → Paid y aviso con saldo a favor; total 37.485 → PartiallyPaid; restaurado a 35.700
+→ F6-ALM-007: PASA (vencimiento según CHG-12: aprobación 06/10 + 15 = 21/10)
+## F6-REC-007 otros disparadores del recálculo
+   fecha de ingreso: F5-FEC-001 (2026BA00016 → factura Borrador 496.670,28 → 487.003,87 con la TRM nueva)
+   manifiesto del camión de 2026BA00029: 200 ok · factura: ['(sin N.º) | Draft | 303450.00 |  | 303450.00 | - | -'] · períodos: ['562f7fb1-ed74-4d1a-8147-14ec28878b45 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 255000.00 | 255000.00 | PERCENTAGE_OF_VALUE | 3964e6f5-eb68-495c-b5f0-56072950aa28']
+   avisos: []
+   restaurado: 200
+   manifiesto (2.ª prueba): período antes 9245c4d2 después 794a1bf7 → se recalculó (período reemplazado)
+   restaurado: 200
+   ciclos de 2026BA00003: ['d3d3fa05-d265-4bca-bd72-1f89075d9185 |  | QAB201 | Complete', '6ca60890-9c85-4eb6-9639-2af88f800ce2 |  | QAA101 | Complete', '400d5f0b-0db3-4ae9-acde-36a7d3773bf1 |  | QAA102 | Complete']
+   depósito: [['32969bae-8017-4309-bec5-fe4cc3557206', 'Confirmed', 'ea0b5f56-ebf2-4d16-90ad-8eee3d676733', '120.00', '120.00', '120.00', '0.00']]
+   factura: ['QA-SIIGO-F11-S2-0001 | PartiallyPaid | 595000.00 | 8000.00 | 587000.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 01:20:35.199132+00'] ['2026BA00003 | Almacenamiento QA Cebolla 05/10/2026 - 05/11/2026 | 1.00 | 500000.00 | 595000.00 | t']
+   cobro de QAL191 (2026BA00039 confirmado): 200 ok
+   pesajes: 200 ['Gross 16000.00, Tare 10000.00']
+   antes de anular: depósito [['ca429383-9c7b-4238-9cec-dd1e1292354f', 'Confirmed', 'ac354e40-5b6a-4670-be9e-9be8c0dd0a40', '8.00', '8.00', '8.00', '0.00']] · consolidada ['QA-SIIGO-F11-S5-0002 | Paid | 35700.00 | 35700.00 | 0.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 16:40:04.045112+00'] ['2026BA00039 | Almacenamiento QA Cebolla 06/10/2026 - 20/10/2026 | 8.00 | 1500.00 | 14280.00 | f', '2026BA00036 | Almacenamiento QA Cebolla 06/10/2026 - 20/10/2026 | 12.00 | 1500.00 | 21420.00 | f']
+   anular el pesaje de QAL191: 200 {"weighbridgeCycleId": "23cdd09e-c062-4635-8831-be1691290eaa", "ticketNumber": "2026T00068", "kind": "StorageInput", "voidedEntries": [{"warehouseStorageNumber": "2026BA00039", "vehiclePlate": "QAL191"}], "cancelledDeposits": ["2026BA00039"], "revertedOrders": [], "cancelledInvoices": [], "invoicesT
+   después: ciclo ['Canceled'] · depósito [['ca429383-9c7b-4238-9cec-dd1e1292354f', 'Cancelled', 'ac354e40-5b6a-4670-be9e-9be8c0dd0a40', '0.00', '0.00', '0.00', '0.00']] · consolidada ['QA-SIIGO-F11-S5-0002 | Paid | 35700.00 | 35700.00 | 0.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 16:40:04.045112+00'] ['2026BA00039 | Almacenamiento QA Cebolla 06/10/2026 - 20/10/2026 | 8.00 | 1500.00 | 14280.00 | f', '2026BA00036 | Almacenamiento QA Cebolla 06/10/2026 - 20/10/2026 | 12.00 | 1500.00 | 21420.00 | f']
+   avisos: ['Depósito anulado con factura emitida | El depósito 2026BA00039 fue anulado. Revise la factura QA-SIIGO-F11-S5-0002 (Pagada, 35.700): el WMS no la modificó.', 'Pesaje anulado | Báscula anuló el pesaje del camión QAL191 en el depósito 2026BA00039. Motivo: QA S5 REC-007 anular pesaje en deposito confirmado. Reimprima la etiqueta si cambió la cantidad.']
+   movimientos: ['2026-10-06 11:39:32.39135 | In | 8.00 | DeclaredEntry | 0.00 | 8.00', '2026-10-06 11:41:15.452013 | Out | 8.00 | WeighingVoid | 8.00 | 0.00']
+→ F6-REC-007: FALLA · anular el pesaje de QAL191 (2026BA00039 confirmado) → {'data': {'weighbridgeCycleId': '23cdd09e-c062-4635-8831-be1691290eaa', 'ticketNumber': '2026T00068', 'kind': 'StorageIn; corregir el manifiesto del camión de 2026BA00029 reemplaza el período (recalcula); cambiar la fecha de ingreso de 2026BA00016 recalcula (F5-FEC-001)
+   (anular el pesaje del único camión de 2026BA00039 anuló el depósito: «Depósito anulado con factura emitida · … Revise la factura QA-SIIGO-F11-S5-0002 (Pagada, 35.700): el WMS no la modificó.» Es la política de anulación con factura emitida. Para el recálculo se repite con un depósito de dos camiones)
+   2026BA00033 antes: [['c28b32de-e87f-4a92-a5f6-f5e9e0bec917', 'Confirmed', '9f667a76-00c0-44ba-a55b-3b2564355097', '6.00', '6.00', '6.00', '3.00']] ['5f57ba2d-e640-40c1-a620-656647c371ea | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 154621.85 | 154621.85 | PERCENTAGE_OF_VALUE | fc4ae1d9-8917-4863-95dd-5b760b11dfad']
+   cobro de QAL136 (2.º camión de 2026BA00033, 2 bultos): 200 ok
+   anular el pesaje de QAL136: 409 No se puede anular el pesaje: los levantes de «QA Cebolla» (6) superarían la cantidad que queda en el depósito 2026BA00033 (4). Retire primero el levante. | Recurso duplicado.
+   después: depósito [['c28b32de-e87f-4a92-a5f6-f5e9e0bec917', 'Confirmed', '9f667a76-00c0-44ba-a55b-3b2564355097', '6.00', '6.00', '6.00', '3.00']] · períodos ['5f57ba2d-e640-40c1-a620-656647c371ea | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 154621.85 | 154621.85 | PERCENTAGE_OF_VALUE | fc4ae1d9-8917-4863-95dd-5b760b11dfad'] · facturas [['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -']]
+   avisos: []
+→ F6-REC-007: FALLA · anular el pesaje de QAL136 en 2026BA00033 (2 camiones, confirmado): stock 6 → 6.00, el período se reemplaza (recálculo) y se avisa; manifiesto del camión de 2026BA00029: recalcula; fecha de ingreso de 2026BA00016: recalcula (F5-FEC-001). Con un solo camión, anular el pesaje anula el depósito y avisa que la factura emitida no se modificó
+   (bloqueo correcto: «No se puede anular el pesaje: los levantes de «QA Cebolla» (6) superarían la cantidad que queda…». Se reduce el levante QA-LEV-F11-S5-COR6 de 6 a 4 y se repite)
+   levante 6 → 4: 200 ok
+   anular el pesaje de QAL136: 200 {"weighbridgeCycleId": "7162720b-7fde-477f-84ea-d69aff1219f3", "ticketNumber": "2026T00069", "kind": "StorageInput", "voidedEntries": [{"warehouseStorageNumber": "2026BA00033", "vehiclePlate": "QAL136"}], "cancelledDeposits": [], "revertedOrders": [], "cancell
+   después: depósito [['c28b32de-e87f-4a92-a5f6-f5e9e0bec917', 'Confirmed', '9f667a76-00c0-44ba-a55b-3b2564355097', '4.00', '4.00', '4.00', '3.00']] · período ['ebbf77c7-d224-4e67-bddb-75dc31e48e1e | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 154621.85 | 154621.85 | PERCENTAGE_OF_VALUE | fc4ae1d9-8917-4863-95dd-5b760b11dfad'] · facturas [['(sin N.º) | Draft | 184000.00 |  | 184000.00 | - | -']]
+   avisos: ['Pesaje anulado | Báscula anuló el pesaje del camión QAL136 en el depósito 2026BA00033. Motivo: QA S5 REC-007 anular pesaje de un camion de deposito con dos camiones. Reimprima la etiqueta si cambió la cantidad.']
+→ F6-REC-007: PASA · anular el pesaje de QAL136 en 2026BA00033 (2 camiones, confirmado) → stock 4.00 y el período se reemplaza (recálculo; la factura queda en el mínimo 184.000); manifiesto del camión de 2026BA00029: el período se reemplaza; fecha de ingreso de 2026BA00016: recalcula (F5-FEC-001). Con un solo camión (2026BA00039), anular el pesaje anula el depósito y avisa que la factura emitida no se modificó. Los avisos: ['Pesaje anulado']
+## F6-ALM-011 renovación con un producto sin stock (2026BA00028: QA Cebolla 0, QA Repuestos 10)
+   antes: ['1d584318-95c9-4fef-91c3-8d5789e30de3 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 20.00 | 1500.00 | 30000.00 | PER_UOM | 48aaf424-51c7-42df-b774-ed6951ab13f7', '6fc10ec3-3fc4-4acf-b776-789f6a515591 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 184000.00 | 184000.00 | MINIMUM_VALUE | 48aaf424-51c7-42df-b774-ed6951ab13f7']
+   POST billing/storage-periods/close: 204 ""
+   después:
+      1d584318-95c9-4fef-91c3-8d5789e30de3 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 20.00 | 1500.00 | 30000.00 | PER_UOM | 48aaf424-51c7-42df-b774-ed6951ab13f7
+      6fc10ec3-3fc4-4acf-b776-789f6a515591 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 1.00 | 184000.00 | 184000.00 | MINIMUM_VALUE | 48aaf424-51c7-42df-b774-ed6951ab13f7
+      c089e075-89a6-47ae-b0ed-caeee6804cc3 | 2026-11-07 05:00:00+00 | 2026-12-07 05:00:00+00 | Open | 1.00 | 184000.00 | 184000.00 | MINIMUM_VALUE | 8654fd73-f884-4f0f-9ccb-398a4b1e0eb6
+   facturas nuevas: [(['(sin N.º) | Draft | 218960.00 |  | 218960.00 | - | -'], ['2026BA00028 | Almacenamiento (valor mínimo) QA Repuestos 07/11/2026 - 07/12/2026 | 1.00 | 184000.00 | 218960.00 | f'])]
+→ F6-ALM-011: PASA · la renovación abre solo el cargo de QA Repuestos (stock 10); QA Cebolla (stock 0) queda cerrada y sin línea nueva: [['2026BA00028 | Almacenamiento (valor mínimo) QA Repuestos 07/11/2026 - 07/12/2026 | 1.00 | 184000.00 | 218960.00 | f']]
+## F6-ALM-013 reapertura por reversa (2026EXP00005 cerrado por 2026OC00028, guía EXP automática 2026S00016)
+   antes: [['65fd2818-56c6-4062-bfb4-9be176608ac4', 'Closed', 'd0ef6bb0-7306-494f-8d13-c048eeedca72', '10.00', '10.00', '0.00', '0.00']] ['b1984e96-3176-4559-b7a4-4da6dd8db04b | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 1.00 | 150000.00 | 150000.00 | FIXED | dfbc131f-8a34-4bb8-9916-b8802220f812']
+   revertir con la guía vigente: 409 Anule primero la guía 2026S00016 de la orden 2026OC00028. | Recurso duplicado.
+   anular la guía 2026S00016: 200 ok
+   revertir 2026OC00028: 200 {"loadingOrderId": "2d369f25-26fb-486c-acbb-4e9911e84cb4", "orderNumber": "2026OC00028", "status": "Reverted", "returnedItems": [{"warehouseStorageProductId": "d0ef6bb0-7306-494f-8d13-c048eeedca72", "warehouseStorageNumber": "2026EXP00005", "productN
+   después: [['65fd2818-56c6-4062-bfb4-9be176608ac4', 'Confirmed', 'd0ef6bb0-7306-494f-8d13-c048eeedca72', '10.00', '10.00', '10.00', '0.00']] · OC: ['2d369f25-26fb-486c-acbb-4e9911e84cb4', 'Reverted']
+      b1984e96-3176-4559-b7a4-4da6dd8db04b | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 150000.00 | 150000.00 | FIXED | dfbc131f-8a34-4bb8-9916-b8802220f812
+   movimientos: ['2026-10-06 11:32:39.810477 | In | 10.00 | DeclaredEntry | 0.00 | 10.00', '2026-10-06 11:32:40.457309 | Out | 10.00 | LoadingOrder | 10.00 | 0.00', '2026-10-06 11:42:10.473532 | In | 10.00 | LoadingOrderReversal | 0.00 | 10.00']
+→ F6-ALM-013: PASA · tras anular la guía y revertir, 2026EXP00005 vuelve a Confirmed con stock 10.00 y el período queda Open: ['2026-10-06→2026-11-06 Open']
+## F6-INV-003 filtros del listado de facturas (GET billing/invoices, facturacion)
+   sin filtro: 200 125
+    ('Estado Paid', True, 90)
+    ('N.º parcial «s5-00» (minúsculas)', True, ['QA-SIIGO-F11-S5-0002', 'QA-SIIGO-F11-S5-0001'])
+    ('Destinatario por nombre «REG F11»', True, 12)
+    ('Destinatario por identificación 900100121', False, 12)
+    ('Consumidor final por identificación en «Recipient»', False, 4)
+    ('Día de creación 05/10 (hora Colombia)', True, '74 filas; de ellas 33 con fecha UTC 06/10 antes de las 05:00 (= 05/10 en Colombia)')
+    ('Varios estados', True, 8)
+→ F6-INV-003: FALLA · Estado Paid: 90; N.º parcial «s5-00» (minúsculas): ['QA-SIIGO-F11-S5-0002', 'QA-SIIGO-F11-S5-0001']; Destinatario por nombre «REG F11»: 12; Destinatario por identificación 900100121: 12; Consumidor final por identificación en «Recipient»: 4; Día de creación 05/10 (hora Colombia): 74 filas; de ellas 33 con fecha UTC 06/10 antes de las 05:00 (= 05/10 en Colombia); Varios estados: 8
+   (corrección: el listado usa `recipientIdNumber`, no `customerIdNumber`) identificación 900100121 → 12 filas, todas QA Cliente REG F11 SAS · 900100121; «222222222222» → 4 filas «Consumidor Final»
+→ F6-INV-003: PASA · estado (Paid → 90 filas, todas Paid; varios estados Draft + Cancelled → 8); N.º parcial «s5-00» sin distinguir mayúsculas → QA-SIIGO-F11-S5-0001 y 0002; destinatario por nombre «REG F11» (12) y por identificación 900100121 (12) y 222222222222 (4 de Consumidor Final); día de creación 05/10 en hora Colombia: incluye las facturas creadas el 05/10 después de las 19:00 (06/10 en UTC)
+## F6-FOR-011 PER_VEHICLE_TYPE (convenio QA-CONV-001: Sencillo 50.000) y F6-TAR-005 convenio inactivo
+   tarifa resuelta QA Cliente Uno · Sencillo: 200 {"ratePerHour": 50000, "taxRatePercent": 0, "vatRatePercent": 19.0}
+   uso de montacargas Sencillo 300 → 301 h, cobro inmediato: (201, 200, 'ok')
+   factura: ['ERR ERROR:  invalid input syntax for type uuid: "ERR ERROR:  column "invoice_id" does not exist\nLINE 1: BEGIN READ ONLY; select invoice_id from forklift_uses where ...\n                                ^"\nLINE 1: ...sce(approved_at::text,\'-\') from invoices where id=\'ERR ERROR...\n                                                             ^'] ['ERR ERROR:  invalid input syntax for type uuid: "ERR ERROR:  column "invoice_id" does not exist\nLINE 1: BEGIN READ ONLY; select invoice_id from forklift_uses where ...\n                                ^"\nLINE 1: ...n w.id=p.warehouse_storage_id where it.invoice_id=\'ERR ERROR...\n                                                             ^']
+→ F6-FOR-011: PASA · tarifa del convenio para Sencillo: {"ratePerHour": 50000, "taxRatePercent": 0, "vatRatePercent": 19.0}; factura ['ERR ERROR:  invalid input syntax for type uuid: "ERR ERROR:  column "invoice_id" does not exist\nLINE 1: BEGIN READ ONLY; select invoice_id from forklift_uses where ...\n                                ^"\nLINE 1: ...sce(approved_at::text,\'-\') from invoices where id=\'ERR ERROR...\n                                                             ^']
+   desactivar MONTACARGAS del convenio: 204 ok
+   tarifa resuelta con el servicio inactivo: 200 {"ratePerHour": 45000.0, "taxRatePercent": 0, "vatRatePercent": 19.0}
+   uso con el convenio inactivo: (201, 200, 'ok')
+   factura: ['ERR ERROR:  invalid input syntax for type uuid: "ERR ERROR:  column "invoice_id" does not exist\nLINE 1: BEGIN READ ONLY; select invoice_id from forklift_uses where ...\n                                ^"\nLINE 1: ...sce(approved_at::text,\'-\') from invoices where id=\'ERR ERROR...\n                                                             ^'] ['ERR ERROR:  invalid input syntax for type uuid: "ERR ERROR:  column "invoice_id" does not exist\nLINE 1: BEGIN READ ONLY; select invoice_id from forklift_uses where ...\n                                ^"\nLINE 1: ...n w.id=p.warehouse_storage_id where it.invoice_id=\'ERR ERROR...\n                                                             ^']
+   reactivar: 204 ok
+   tarifa tras reactivar: {"ratePerHour": 50000, "taxRatePercent": 0, "vatRatePercent": 19.0}
+   (corrección de la consulta) usos de montacargas de S5 y sus facturas:
+      Sencillo | 300.00 | 301.00 | Paid | Servicio de montacargas — Sencillo | 50000.00 | 50000.00 | QA S5 FOR-011
+      QA S5 FOR-011
+      Sencillo | 300.00 | 301.00 | Paid | Servicio de montacargas — Sencillo | 45000.00 | 45000.00 | QA S5 TAR-005
+      QA S5 TAR-005
+→ F6-FOR-011: PASA · tarifa resuelta del convenio QA-CONV-001 para Sencillo: 50.000/h; el uso Sencillo 300 → 301 h de QA Cliente Uno se factura en 50.000 (Paid, «Servicio de montacargas — Sencillo», sin IVA)
+→ F6-TAR-005: PASA · con el servicio MONTACARGAS del convenio desactivado, la tarifa resuelta cae a la tarifa base Sencillo 45.000 y el uso se factura en 45.000; reactivado vuelve a 50.000
+## Convenio de prueba QA-CONV-REG-S5 (QA Cliente REG F11, creado por capb90) para F6-FOR-002, F6-FOR-006 y F6-FOR-007
+   convenio: 201 7b14651f-c160-4aa4-b0b6-947a05c24825
+   servicio BASCULA FIXED 25.000 IVA incluido: 201 0bd2eac7-0085-4213-b973-bfdc1086aa36
+   servicio ALMACENAMIENTO IMP QA Repuestos PRORATED 1 %: 201 875df357-1659-4f3b-828d-cbd76425c478
+   servicio ALMACENAMIENTO IMP QA Aceite PER_VEHICLE 50.000: 201 4c76ed08-985a-4d63-b56e-022a6d21922e
+## F6-FOR-002 FIXED IVA incluido (BASCULA 25.000 IVA incluido para QA Cliente REG F11)
+   Solo báscula QAL192 para REG: 201 {"weighingPrice": 21008.4, "taxAmount": 3991.596, "totalAmount": 24999.996}
+   cobro: 200 
+   factura: ['21008.40 | 1.00 | 21008.40 | 3991.60 | 25000.00 | 25000.00']
+→ F6-FOR-002: PASA · vista previa 21008.4 + 3991.596 = 24999.996; factura unitario 21008.40 (25.000 ÷ 1,19 = 21.008,403 → 21.008,40), IVA 3991.60, total 25000.00 (sin diferencia de centavos)
+   (F6-FOR-002) la vista previa del cobro trae 21.008,40 + 3.991,596 = 24.999,996; la factura redondea a 25.000,00: diferencia de 0,004 anotada
+## F6-FOR-007 PER_VEHICLE (QA Aceite IMP 50.000 por vehículo, REG) con dos camiones
+   camión 1 QAL193: 201 2026BA00040
+   camión 2 QAL194: 201 2026BA00040
+   confirmar: 200 ok
+   factura: ['(sin N.º) | Draft | 119000.00 |  | 119000.00 | - | -'] ['2026BA00040 | Almacenamiento QA Aceite 06/10/2026 - 06/11/2026 | 2.00 | 50000.00 | 119000.00 | f']
+   período: ['55cca7d0-6140-454b-9286-bec603e0f030 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 2.00 | 50000.00 | 100000.00 | PER_VEHICLE | 4a1e2fd4-a48f-4bc3-9744-34f1618c9bde']
+→ F6-FOR-007: PASA · 2026BA00040 (QAL193 + QAL194): ['2026BA00040 | Almacenamiento QA Aceite 06/10/2026 - 06/11/2026 | 2.00 | 50000.00 | 119000.00 | f']
+## F6-FOR-006 PERCENTAGE_OF_VALUE_PRORATED (QA Repuestos IMP 1 %, mínimo 0, REG)
+   registro QAL195 10 QA Repuestos, COP 10.000.000: 201 2026BA00041
+   confirmar: 200 ok
+   1.er período: ['(sin N.º) | Draft | 119000.00 |  | 119000.00 | - | -'] ['2026BA00041 | Almacenamiento QA Repuestos 06/10/2026 - 06/11/2026 | 1.00 | 100000.00 | 119000.00 | f']
+   levante 10: 200
+   OC 2026OC00029 por 5: 201
+   cargue: 200
+   guía: 201 2026S00018
+   depósito: [['49f7eb1e-aaf0-4480-bf52-5f87af4aa2d3', 'Confirmed', 'd823fc03-d4bc-4785-8025-0283dd244a72', '10.00', '10.00', '5.00', '0.00']]
+   renovación (POST billing/storage-periods/close): 204
+      beb08cf7-0009-424b-9956-6ff37bafaee0 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 1.00 | 100000.00 | 100000.00 | PERCENTAGE_OF_VALUE_PRORATED | 9bffe292-1a36-4506-89e2-4ee03c4f4178
+      6c19b068-597f-48a4-9589-879bd50afcd4 | 2026-11-07 05:00:00+00 | 2026-12-07 05:00:00+00 | Open | 1.00 | 50000.00 | 50000.00 | PERCENTAGE_OF_VALUE_PRORATED | 5fbb4491-dbfe-4971-b535-4219597f0563
+   factura de la renovación: ['(sin N.º) | Draft | 59500.00 |  | 59500.00 | - | -'] ['2026BA00041 | Almacenamiento QA Repuestos 07/11/2026 - 07/12/2026 | 1.00 | 50000.00 | 59500.00 | f']
+→ F6-FOR-006: PASA · 1.er período: 1 % × 10.000.000 × 10/10 = 100.000 + IVA (['2026BA00041 | Almacenamiento QA Repuestos 06/10/2026 - 06/11/2026 | 1.00 | 100000.00 | 119000.00 | f']); tras despachar 5 de 10 y renovar: 1 % × 10.000.000 × 5/10 = 50.000 + IVA (['2026BA00041 | Almacenamiento QA Repuestos 07/11/2026 - 07/12/2026 | 1.00 | 50000.00 | 59500.00 | f'])
+## F6-ALM-014 servicio complementario sin tarifa
+   PAPELERIA complementario de ALMACENAMIENTO sin parámetros: 400 El parámetro requerido 'rate' no fue proporcionado. | Error de validación de negocio.
+→ F6-ALM-014: NO APLICA · el servicio complementario sin tarifa no se puede crear: 400 «El parámetro requerido 'rate' no fue proporcionado. | Error de validación de negocio.» (igual que en F6); R-FAC-08 sigue descartado
+## F6-TAR-006 escalera producto + modalidad (QA-CONV-001: ALMACENAMIENTO IMP genérico PERCENTAGE_OF_VALUE y QA Aceite IMP PER_CARGO_UNIT)
+   2026BA00029: [(['Draft', '303450.00'], ['2026BA00029 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 1.00 | 255000.00 | 303450.00 | f'], ['Agreement'])] ['1.00', '255000.00', '255000.00', 'PERCENTAGE_OF_VALUE']
+   2026BA00034: [(['Draft', '100000.00'], ['2026BA00034 | Almacenamiento (mínimo aplicado) QA Aceite 06/10/2026 - 06/11/2026 | 1.00 | 84033.61 | 100000.00 | f'], ['Agreement'])] ['1.00', '84033.61', '84033.61', 'PER_CARGO_UNIT']
+   2026BA00038: [(['Draft', '199999.99'], ['2026BA00038 | Almacenamiento (mínimo aplicado) QA Aceite 06/10/2026 - 06/11/2026 | 2.00 | 84033.61 | 199999.99 | f'], ['Agreement'])] ['2.00', '84033.61', '168067.22', 'PER_CARGO_UNIT']
+→ F6-TAR-006: PASA · QA Cliente Uno: 2026BA00029 (QA Cebolla) toma la regla genérica IMP (PERCENTAGE_OF_VALUE 0,255 %); 2026BA00034 y 2026BA00038 (QA Aceite) toman la específica producto + modalidad (PER_CARGO_UNIT) aunque la genérica IMP también aplica
+→ F6-FOR-008: PASA · PER_CARGO_UNIT (rate 70.000 por TANQUERO, mínimo por unidad 100.000 IVA incluido): 2026BA00034 con 1 tanquero → cantidad 1, «(mínimo aplicado)» 100.000; 2026BA00038 con 2 tanqueros → cantidad 2 con el mínimo por unidad (ver líneas). La base son las unidades del tipo no despachadas
+## F6-DSH-001/002 tablero de Facturación frente al listado (todas las facturas son de octubre)
+   API summary: {'totalInvoicedMonth': 9619723.09, 'pendingAmount': 5398869.73, 'overdueInvoiceCount': 2, 'overdueAmount': 265230.28, 'draftInvoiceCount': 22, 'paidInvoiceCount': 95, 'totalInvoiceCount': 133}
+   listado: {'Draft': 22, 'Paid': 95, 'Cancelled': 8, 'Sent': 1, 'PartiallyPaid': 3, 'Approved': 2, 'Overdue': 2} · total sin anuladas 9619723.09 · pendiente (no pagadas ni anuladas, incluye Borradores) 5398869.73 · vencidas 2 265230.28
+   base: total del mes (Colombia) sin anuladas: ['9619723.09']
+→ F6-DSH-001: PASA · /billing (facturacion): «Facturado este mes $ 9.619.723,09 · Cartera pendiente $ 5.398.869,73 · Facturas vencidas 2 · Borradores 22 · Total facturas 133», últimas facturas y clientes con mora (QA Cliente Uno 246.670,28; QA Multirol 18.560); enlaces a /billing/invoices con el estado. Observación (backlog): el enlace de «Cartera pendiente» abre solo las Enviadas (?status=Sent, 1 factura) y el KPI suma también Borradores, Aprobadas, Pago parcial y Vencidas (S5-B-F6-DSH-001-tablero.jpg)
+→ F6-DSH-002: PASA · coinciden con el listado: facturado del mes = suma de no anuladas incluidos Borradores (9.619.723,09); cartera = pendiente de no anuladas ni pagadas incluidos Borradores (5.398.869,73); vencidas 2 / 265.230,28; Borradores 22; Pagadas 95; total 133
+## Palanca para F6-ALM-015 y F6-CAR-004 (`f11_palanca_s5.sql` pasos 3 y 4, solo base local), aplicada a las 11:46
+    UPDATE 1 UPDATE 1
+    ['2026-10-04'] ['2026-10-04 16:46:37.566952+00 | PartiallyPaid']
+## Reinicio del API por QA (autorizado por el usuario) a las 11:51 sobre BE 00d6ac3 (pestaña «wms-api (QA F11 S5)»)
+   log: OverdueDetectionJob «1 facturas vencidas, 1 stakeholders actualizados»; StoragePeriodAutoCloseJob «1 períodos cerrados, 1 facturas generadas»; InvoicePaymentReconciliationJob «5 facturas conciliadas, 3 clientes»; InvoiceDueNotificationJob «0 notificaciones enviadas»; AbandonmentAlertJob sin alertas; ninguna línea `fail:`
+   2026BA00040: 55cca7d0-6140-454b-9286-bec603e0f030 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 2.00 | 50000.00 | 100000.00 | PER_VEHICLE | 4a1e2fd4-a48f-4bc3-9744-34f1618c9bde
+   2026BA00040: 86542b5a-aa5e-4be0-8fba-d182316ea26a | 2026-11-07 05:00:00+00 | 2026-12-07 05:00:00+00 | Open | 2.00 | 50000.00 | 100000.00 | PER_VEHICLE | a0e1f989-8ec0-4872-ac07-4ee3d3c2492f
+   factura de la renovación: [(['(sin N.º) | Draft | 119000.00 |  | 119000.00 | - | -'], ['2026BA00040 | Almacenamiento QA Aceite 07/11/2026 - 07/12/2026 | 2.00 | 50000.00 | 119000.00 | f'])]
+   avisos: ['Almacenamiento renovado | El depósito 2026BA00040 abrió un nuevo período de almacenamiento del 07/11/2026 al 07/12/2026. Revise la factura en Borrador.']
+→ F6-ALM-015: PASA · con `limit_date` en el pasado y el reinicio, el job cerró el período 06/10–06/11 y abrió ['2026-11-07→2026-12-07'] con una factura nueva Draft (2 vehículos × 50.000 + IVA)
+   F6-CAR-004 QA-SIIGO-F11-S4-0010: ['Overdue | 360.00 | 2026-10-04'] · QA Cliente Consolidado: ['OverdueWarning | 360.00']
+→ F6-CAR-004: PASA · la factura vencida pasa a Overdue (pendiente 360) y QA Cliente Consolidado (límite 10.000.000) queda OverdueWarning con 360 vencido: no se bloquea
+→ F6-JOB-001: PASA · dos arranques del API en la sesión (10:51 y el reinicio de las 11:4x): los cuatro jobs de facturación (vencidas, conciliación de pagos, avisos de vencimiento y cierre/renovación de períodos) corren sin excepciones; el de períodos programa la próxima corrida («próximo período vence el 23/10/2026»). Única traza de error de la sesión: el SMTP de Mailtrap rechazó un correo de CE-7 por límite de envíos («Too many emails per second»), sin efecto en el ajuste
+## Restauración tras los jobs
+   pago del saldo de 360 de QA-SIIGO-F11-S4-0010: 201 ok
+    UPDATE 1 ['Paid | 0.00 | 2026-10-21 14:45:54.270068+00'] ['Active | 0.00']
+   desactivar servicio bas de QA-CONV-REG-S5: 204
+   desactivar servicio pro de QA-CONV-REG-S5: 204
+   desactivar servicio veh de QA-CONV-REG-S5: 204
+→ F6-REC-003: PASA · Parte A: CE-7 de 2026BA00027 40 → 41 con la factura en Borrador → líneas reemplazadas (41 bultos, 73.185) sin aviso; con override, el recálculo lo descarta y avisa (F6-OVR-007) (`S5-A-DEF-F11-017-recalculo.txt`)

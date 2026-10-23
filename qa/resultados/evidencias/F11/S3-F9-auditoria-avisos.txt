@@ -1,0 +1,46 @@
+# S3 · CHG-68 (DEF-F7-008, F7-AUD-004) y CHG-62 (DEF-F6-018) · 2026-10-05 23:31 · BE 44bd80a
+## Admin cambia el embalaje QA-CAJA, la unidad «Saco» y la tarifa de montacargas Turbo; asigna y retira el rol Facturación a qa_cambio
+HTTP 200
+HTTP 200
+HTTP 200
+HTTP 200
+HTTP 200
+## Restauración de los valores originales
+HTTP 200
+HTTP 200
+HTTP 200
+## audit_logs desde 2026-10-06T04:31:35 UTC
+23:31:36 | PackagingType | Update |  | {"Name":"QA Caja de cart\u00F3n","UpdatedAt":null} → {"Name":"QA Caja de carton S3","UpdatedAt":"2026-10-06T04:31:36.019367+00:00"}
+23:31:36 | UnitMeasure | Update |  | {"Name":"Saco","UpdatedAt":"2026-10-06T04:25:59.059558+00:00"} → {"Name":"Saco QA S3","UpdatedAt":"2026-10-06T04:31:36.110775+00:00"}
+23:31:36 | ForkliftRate | Update |  | {"Amount":40000.00,"UpdatedAt":null} → {"Amount":41000,"UpdatedAt":"2026-10-06T04:31:36.147741+00:00"}
+23:31:36 | PackagingType | Update |  | {"Name":"QA Caja de carton S3","UpdatedAt":"2026-10-06T04:31:36.019367+00:00"} → {"Name":"QA Caja de cart\u00F3n","UpdatedAt":"2026-10-06T04:31:36.314407+00:00"}
+23:31:36 | UnitMeasure | Update |  | {"Name":"Saco QA S3","UpdatedAt":"2026-10-06T04:31:36.110775+00:00"} → {"Name":"Saco","UpdatedAt":"2026-10-06T04:31:36.328343+00:00"}
+23:31:36 | ForkliftRate | Update |  | {"Amount":41000.00,"UpdatedAt":"2026-10-06T04:31:36.147741+00:00"} → {"Amount":40000,"UpdatedAt":"2026-10-06T04:31:36.343337+00:00"}
+23:31:36 | ApplicationUser | Update | Roles asignados a qa_cambio: Facturación | new_value (vacío)
+23:31:36 | ApplicationUser | Update | Roles retirados a qa_cambio: Facturación | new_value (vacío)
+(el valor nuevo de la fila del usuario no incluye PasswordHash ni SecurityStamp: CHG-02)
+
+## CHG-62 (DEF-F6-018, F6-JOB-002 / F6-CAR-011): avisos «Factura próxima a vencer» tras la segunda corrida del job (API reiniciado a las 23:30)
+23:29:14 | avisos 3 | usuarios 3 | La factura QA-SIIGO-F11-0002 del cliente QA Cliente Uno SAS vence en 2 día(s). Monto pendiente: $ 178.500.
+23:29:14 | avisos 3 | usuarios 3 | La factura QA-SIIGO-F11-S3-TRM del cliente QA Cliente Uno SAS vence en 2 día(s). Monto pendiente: $ 497.658.
+corridas del job en el log de S3: 3
+      InvoiceDueNotificationJob completado en 27ms: 0 notificaciones enviadas
+      InvoiceDueNotificationJob completado en 44ms: 2 notificaciones enviadas
+      InvoiceDueNotificationJob completado en 32ms: 0 notificaciones enviadas
+
+## CHG-62 (F6-ALM-008): Facturación cierra a mano el período abierto de 2026BA00001
+2026-10-05 → 2026-11-05 | Closed
+2026-11-06 → 2026-12-06 | Open
+
+HTTP 204
+
+2026-10-05 → 2026-11-05 | Closed
+2026-11-06 → 2026-12-06 | Closed
+2026-12-07 → 2027-01-07 | Open
+aviso: Almacenamiento renovado | El depósito 2026BA00001 abrió un nuevo período de almacenamiento del 06/11/2026 al 06/12/2026. Revise la factura en Borrador.
+Almacenamiento renovado | El depósito 2026BA00001 abrió un nuevo período de almacenamiento del 07/12/2026 al 07/01/2027. Revise la factura en Borrador.
+
+## CHG-63 (DEF-F6-017): log del job diario renombrado
+Conciliación diaria de pagos: 3 facturas con pagos conciliadas de 2 clientes
+InvoicePaymentReconciliationBackgroundService
+InvoicePaymentReconciliationJob

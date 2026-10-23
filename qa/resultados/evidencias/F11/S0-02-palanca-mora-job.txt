@@ -1,0 +1,17 @@
+# S0 — Palanca de mora (f11_palanca_mora_s0.sql) y corrida del job OverdueDetection tras reiniciar el API
+Antes: QA-SIIGO-F11-0010 Approved, vence 2026-11-04 (aprobada el 05/10); QA Cliente Mora SAS Active (límite 1.000).
+Palanca: due_date = now() - 2 días (solo base local).
+Log del API (extracto):
+info: Wms.Api.BackgroundJobs.OverdueDetectionBackgroundService[0]
+      OverdueDetectionJob iniciado. Intervalo: 24h, delay inicial: 30s
+info: Wms.Api.BackgroundJobs.OverdueDetectionBackgroundService[0]
+      OverdueDetectionJob: iniciando ejecución...
+      AutoCloseExpiredStoragePeriods: sin depósitos con períodos vencidos (05/10/2026 22:13).
+      StoragePeriodAutoCloseJob completado en 59ms: 0 períodos cerrados, 0 facturas generadas
+      Facturas marcadas como vencidas: 1
+      Stakeholder 9aa003ad-f17d-4352-aa77-d08ca167532b (QA Cliente Mora SAS): Active → Blocked (deuda vencida: 28,560.00)
+info: Wms.Api.BackgroundJobs.OverdueDetectionBackgroundService[0]
+      OverdueDetectionJob completado en 249ms: 1 facturas vencidas, 1 stakeholders actualizados
+Después:
+QA-SIIGO-F11-0010|Overdue|28560.00
+QA Cliente Mora SAS|Blocked

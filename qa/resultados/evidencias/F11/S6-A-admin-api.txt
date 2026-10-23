@@ -1,0 +1,34 @@
+# S6 · Bloque A con Admin (API del navegador con la sesión de admin; build BE b31ddb6 / FE 508b91b) · 2026-10-06 23:30–23:55 (hora Colombia)
+Resultados resumidos de las respuestas del API (las respuestas completas no se guardan: nombran terceros migrados).
+
+## F0-API (lecturas)
+user/me 200 admin [Administrador] mustChangePassword=false · operation-modalities 200 EXP001,OTH001,INSP001,IMP001
+entry-reasons 200: 7 (5 con pesaje + Solo bodega + Otro) · weighbridge/queue 200 (0) · foreign-trade/deposits 200 (128) · billing/invoices 200 (128)
+warehouse/locations 200: 9 (migradas, DEF-MIG-008; ya no 20 sembradas) · service: ALMACENAMIENTO, MONTACARGAS, PAPELERIA, GUIA_SALIDA, BASCULA
+taxes: IVA 19, RETE_FUENTE 3 · unit-measures 10 · cargo-unit-types Contenedor, Remolque, Tanquero · system-roles 6
+SignalR: /hubs/notifications/negotiate?negotiateVersion=1 200 · recarga en /foreign-trade/imports conserva sesión
+INVENTORY_ADJUSTMENT_ADMIN_EMAIL = dirección del usuario (D4) · COMPANY_NAME con valor
+forklift-rates: Tractomula, DobleTroque, Sencillo, Turbo, GuacalEstiba con amount=null (sin tarifa en staging)
+
+## F0-NAV-001/003 · F11-REG-002 (Admin)
+Grupos: Notificaciones, Dashboards, Administración, Vigilancia, Báscula, Bodega, Comercio Exterior, Facturación (los reportes cuelgan de CE y Facturación; sin «Estadísticas», decisión del usuario).
+66 rutas únicas del menú recorridas con el router: 66 cargan con contenido, 0 respuestas 4xx/5xx del API, 0 redirecciones a access-denied.
+
+## F11-REG-003 (F1-TER-001/005)
+POST stakeholder «QA-S6 Cliente Uno SAS» NIT 900666601, CUSTOMER, cuenta Ahorros y contacto (correo alias del usuario) → 201, financialStatus Active
+Mismo NIT → 409 «Recurso duplicado.» «Ya existe un tercero con número de identificación 900666601.»
+Además: QA-S6 Importador SAS (900666602), QA-S6 Agencia de Aduanas SAS (900666603), QA-S6 Transportadora SAS (900666604) → 201
+
+## F11-REG-004 (F1-SRV-002 equivalente, F1-CNV-002)
+BASCULA tiene T3 como ServicePrice vigente desde 01/10 ($16.806,72); otro precio lo reemplazaría → F1-SRV-002 se ejecuta en PAPELERIA (sin uso ni precio):
+POST service/PAPELERIA/prices basePrice 1000, 06/10–08/10 → 200 isActive true
+POST stakeholder/{QA-S6 Cliente}/agreement QA-S6-CNV-001 Active → 201; + servicio ALMACENAMIENTO IMP PERCENTAGE_OF_VALUE percentage 0.25, minimum 60000, minimumThreshold 24000000 → 201
+
+## FB-BAK-003
+Dos POST administration/backups/run simultáneos → 202 y 202; las dos corridas Succeeded (04:36:31 UTC) → DEF-F11-020
+POST, y otro a los 250 ms → 202 y 409 «Recurso duplicado.» «Ya hay un respaldo en curso.» · GET backups/runs lista las corridas
+Las 3 corridas del minuto 23:36 escriben el mismo wms_20261006_2336.dump (4.067.187 B); pg_restore --list OK (705 líneas).
+
+## B.4 Detalle con un Id que no existe
+/foreign-trade/imports/{Id de warehouse_storages de BA0042}: API 404; pantalla: «Error al cargar depósito — El depósito de importación no existe.», botón «Volver», toast «No encontrado». El subtítulo del encabezado sigue «Cargando…».
+/foreign-trade/imports/00000000-0000-4000-8000-000000000000: «Página no encontrada … Volver · Ir a mi inicio».

@@ -1,0 +1,42 @@
+# S2 · DEF-F1-009 (CHG-16) · F1-USR-015, F1-USR-010, F1-AUT-018, F9-SES-001/002 · BE 214f5f6 · 2026-10-05 20:23
+## F1-USR-015 desactivar con sesión abierta (qa_inactivo)
+Admin reactiva qa_inactivo: 200
+login qa_inactivo: 200 mustChange=? roles=["Warehouse"]
+GET user/me con su token: 200
+Admin desactiva qa_inactivo: 200
+GET user/me con el token anterior (inmediato): 401
+refresh con su refresh token: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"No autorizado.","status":401,"errors":[],"description":"No se pudo obtener el token de acceso","traceId":"00-b40750a3bd749ef34d3aae7d9e7eddc2-33215801e64e9c81-00"} HTTP 401
+login: login qa_inactivo: 400 {"title":"Error de validación de negocio.","description":"Usuario inactivo. Comuníquese con el administrador.","errors":[]}
+## F1-USR-010 quitar rol con sesión abierta (j_coral: Billing + ForeignTrade)
+GET billing/invoices antes: 200
+Admin quita Billing: 200
+GET billing/invoices con el token anterior: 401
+refresh: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"No autorizado.","status":401,"errors":[],"description":"No se pudo obtener el token de acceso","traceId":"00-9366bde00c5696e5f8bd7
+GET billing/invoices con el token nuevo: 401 · GET foreign-trade (rol que conserva) con el nuevo: 404
+Admin devuelve Billing a j_coral: 200
+login j_coral: 200 mustChange=? roles=["Billing","ForeignTrade"]
+## F1-AUT-018 cerrar sesión (bodega)
+antes: 200
+logout: 204
+access token reutilizado: 401
+refresh reutilizado: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.2","title":"No autorizado.","status":401,"errors":[],"description":"No se pudo obtener el token de acceso","traceId":"00-3446428b544283007e061
+## DEF-F11-001 token del login hecho justo después de cambiar la contraseña (qa_cambio, ya hecho arriba)
+Admin restablece qa_cambio: 200
+chpw qa_cambio: 204
+GET user/me +1s: 200
+GET user/me +2s: 200
+GET user/me +3s: 200
+## Nota: la primera corrida llamó al refresh sin la cabecera Authorization (la aplicación la envía: el API la usa para identificar al usuario); el control con c_exterior también respondió 401. Se repite F1-USR-010 como lo hace la aplicación:
+control c_exterior (token vigente) refresh con cabecera: token nuevo emitido
+j_coral GET billing/invoices antes: 200
+Admin quita Billing: 200
+GET billing/invoices con el token anterior: 401
+refresh (con cabecera, como la aplicación): token nuevo emitido
+GET billing/invoices con el token nuevo: 403 · GET foreign-trade/deposits/imports (rol que conserva): 404
+Admin devuelve Billing: 200 · token del refresh tras devolver el rol → billing: 401
+login j_coral: 200 mustChange=? roles=["Billing","ForeignTrade"]
+j_coral con el token del refresh, rol que conserva: GET foreign-trade/deposits → 401
+## Repetición de los refresh con cabecera (como la aplicación)
+qa_inactivo: reactivar 200; login qa_inactivo: 200 mustChange=? roles=["Warehouse"]; desactivar 200; user/me → 401; refresh → 401 Refresh token inválido o expirado
+bodega: logout 204; access → 401; refresh → 401 Refresh token inválido o expirado
+Estado final: qa_inactivo inactivo; j_coral con Billing + ForeignTrade.

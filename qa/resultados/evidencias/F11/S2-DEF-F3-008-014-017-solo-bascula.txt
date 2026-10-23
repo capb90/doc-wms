@@ -1,0 +1,17 @@
+# S2 · Solo báscula QAG202 · DEF-F3-008 (CHG-46), DEF-F3-007 (CHG-19), DEF-F3-017 (CHG-20), DEF-F3-014 (CHG-37) · BE 214f5f6 · 2026-10-05 20:36 · bascula
+Ingreso QAG202 «Solo báscula» (vehículo creado por vigilancia como Sencillo/Colombia/QA Transportes): ffcf8b94-0d1d-40de-8765-4a6314b13521
+## weighing-only/initiate con conductor NUEVO (Luis QA Nuevo Ecuador, pasaporte 1700000911), transportadora QA Compañía Ñandú, tipo DobleTroque, país Ecuador, cliente QA Cliente Uno
+{"serviceRecordId":"ade4d881-d586-4369-8bd2-0ffa419b7eae","customerId":"e329015c-1131-456e-8351-5dd40420f26b","totalAmount":29750.00,"operationType":null}
+## Base: conductor del ingreso y datos del vehículo
+Luis QA Nuevo Ecuador · 1700000911
+QAG202 · DobleTroque · Ecuador · QA Compañía Ñandú Transportes
+## DEF-F3-017: cobrar el Solo báscula por la ruta de depósito (storage/process-payment)
+{"status":409,"description":"Este servicio es de Solo báscula; no se puede cobrar como un ingreso con depósito."}
+## Cobro por la ruta correcta (weighing-only/process-payment): {"weighbridgeCycleId":"0f8d5960-1496-48f4-be2e-a06d471c84ae","invoiceId":"d3c89aa1-5bd4-44a2-8e35-93425af986ae","totalAmount":29750.00}
+Base: factura enlazada al ciclo: Paid 29750.00
+## DEF-F3-014 registro: bruto 15.000 y luego tara 35.000
+bruto: {"status":"FirstWeightCaptured","ticket":"2026T00025","net":null}
+{"status":400,"description":"La tara (35.000 kg) no puede ser mayor que el peso bruto (15.000 kg)."}
+estado del ciclo: FirstWeightCaptured
+## tara igual al bruto (15.000): {"status":"Complete","ticket":"2026T00025","net":null}
+neto (base): Gross 15000.00 / Tare 15000.00

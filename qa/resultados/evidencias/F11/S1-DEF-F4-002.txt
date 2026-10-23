@@ -1,0 +1,19 @@
+# S1 · DEF-F4-002 / CHG-08 — recepción directa sin báscula (18:02)
+## F2-INT-004 / REG-006: pendientes directos de Bodega: [{"plate":"QAB204","reason":null}]
+ingresos abiertos QAB204 antes: 1
+cola de báscula contiene QAB204: 0
+## UI (bodega): Recepción Directa → Recibir QAB204 → conductor precargado por documento, carta porte QA-CP-F11-S1-RSB, cliente QA Cliente Uno, QA Repuestos 12 Unidad, descargado 12, A01-R02-N02, firma, motivo → «Recepción directa completada»
+petición: POST warehouse/receptions/without-weighbridge (sin authorizedByUserId ni vehiclePlate; entryLogId del ingreso «Solo bodega»)
+depósito: 2026INSP00004 Draft modalidad INSP001
+stock y movimiento: stock 12.00 · DeclaredEntry In 12.00 autorizado por bodega
+recepción: Completed · ingresos abiertos de QAB204: 1 (total ingresos QAB204: 1)
+períodos/facturas de almacenamiento: 0 · pendientes directos ahora: []
+## criterio 2: segunda recepción directa para el mismo ingreso → 409 El ingreso de la placa QAB204 ya tiene una recepción registrada.
+## criterio 4: ingreso con motivo que requiere pesaje (QAA102? usamos uno nuevo QAF102 «Descargue importación») → 
+400 El ingreso de la placa QAF102 requiere pesaje en báscula; la recepción directa solo aplica a ingresos que no requieren pesaje. · salida QAF102: HTTP 200
+## criterio 3 / E2E-08 paso 4: requisitos de INSP00004: {"canConfirm":false,"missing":["fecha del documento","valor de la mercancía","número de manifiesto del camión QAB204","peso del manifiesto del camión QAB204"]}
+PATCH draft (fecha 05/10/2026, COP 3.000.000): HTTP 200
+manifiesto del camión: HTTP 200
+requisitos: {"canConfirm":true,"missing":[]}
+confirmar: HTTP 200
+período y factura: Open MinimumValue Draft 0.00

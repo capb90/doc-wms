@@ -1,0 +1,72 @@
+# S3 · Fase 11 del plan (CHG-76 a CHG-83) — DEF-F3-015, DEF-F8-009, DEF-F4-007, DEF-F4-008, DEF-F7-012, DEF-F7-010, DEF-F7-004, DEF-F7-003 · 2026-10-05 23:34 · BE 44bd80a
+## DEF-F3-015 (F3-HIS-001/005): historial de báscula de operaciones de un pesaje
+(primera consulta con nombres de campo equivocados; ver «campos del historial» abajo)
+## F3-DSH-001: GET weighbridge/dashboard frente a la cola
+{"todayCycles":39,"completedToday":36,"inProgress":3,"pendingReweigh":2}
+## DEF-F8-009 (E2E-20): reporte diario de báscula del 05/10/2026
+{"totals":{"totalOperations":39,"totalWeight":255000.00,"totalBilled":936000.00,"totalTax":177840.00,"grandTotal":1113840.00,"operationsByType":{"Ingreso":23,"Salida":7,"Solo Pesaje":9},"billedByType":{"Ingreso":646170.00,"Salida":207060.00,"Solo Pesaje":260610.00}},"conteos":{},"inspecciones":[{"ticketNumber":"2026T00004","serviceType":"Ingreso","modality":null}]}
+(campos del historial: grossWeightKg / tareWeightKg / netWeightKg)
+2026T00004 (INSP, un pesaje bruto) → [{"grossWeightKg":21000.00,"tareWeightKg":null,"netWeightKg":21000.00,"status":"Complete"}]
+QAA103 (Solo báscula, un pesaje tara) → [{"ticketNumber":"2026T00014","grossWeightKg":null,"tareWeightKg":18000.00,"netWeightKg":18000.00},{"ticketNumber":"2026T00006","grossWeightKg":null,"tareWeightKg":18000.00,"netWeightKg":18000.00}]
+cola de báscula (state): ReadyForWeighing 1 · PendingSecondWeight 2 · NotStarted 1 · PendingPayment 4 → «En proceso» 3 (2 por repesar + 1 listo) y «Pendientes repesaje» 2 coinciden con el tablero; «Ciclos hoy» 39 = reporte diario (Ingreso 23 + Salida 7 + Solo Pesaje 9 = 39), con la inspección 2026T00004 como «Ingreso».
+HALLAZGO NUEVO (DEF-F11-011): el filtro TicketNumber del historial no encuentra Solo báscula ni Salida: 2026T00006 → [], 2026T00034 → [], 2026T00036 (salida QAJ302) → []; 2026T00037 (depósito) → ["2026T00037"]
+
+## DEF-F4-007 (F4-REC-015): historial de recepciones del día
+FromDate=2026-10-05&ToDate=2026-10-05 → {"n":26,"total":26}
+FromDate con -05:00 → 200 · {"n":10}
+FromDate=hoy → {"status":400,"description":"La fecha «fromDate» no es válida. Use AAAA-MM-DD o AAAA-MM-DDThh:mm:ss-05:00."}
+FromDate=2026-10-04&ToDate=2026-10-04 → {"n":0}
+
+## DEF-F4-008 (F4-INV-003): GET warehouse/inventory/movements
+sin all → {"n":20,"total":45} · all=true → {"n":45,"total":45,"usuario":"c_exterior","motivo":"Anulación del depósito 2026BA00013: Prueba QA S3"}
+
+## DEF-F7-012 (F7-TRZ-006): GET reports/statistics
+c_exterior → {"billing":null,"keys":["billing","foreignTrade","warehouse","weighbridge"]}
+capb90 → {"billing":"presente","keys":["billing","foreignTrade","warehouse","weighbridge"]}
+j_coral (Facturación + CE) → {"billing":null}
+
+## DEF-F7-010 (F7-TRZ-002/003)
+dateFilter=day, plate=qaa10 → ["QAA101","QAA102","QAA103"]
+dateFilter=all, plate=qaj4 → ["QAJ401","QAJ402"]
+dateFilter=all sin placa → {"status":400,"description":"Para consultar todo el historial digite una placa."}
+dateFilter=day: ingresos del 03/10 (QAJ101, 2026-10-03 09:30) → [] · con all → ["QAJ101"]
+F7-NOT-008: avisos de trazabilidad de hoy (título y mensaje): 
+F7-NOT-008: avisos de trazabilidad (título | mensaje):  · con título técnico «TraceabilityUpdated»: 0
+
+## DEF-F7-004 (F7-REP-001): GET reports/daily-incoming-goods?dateFrom=2026-10-05&dateTo=2026-10-05 (c_exterior)
+[{"warehouseStorageNumber":"2026BA00001","vehiclePlate":"QAA101, QAB201","weighbridgeTicketNumber":"2026T00001, 2026T00002","carrierCompanyName":"QA Transportes SAS","netWeightKg":38000.00},{"warehouseStorageNumber":"2026BA00002","vehiclePlate":"QAB202","weighbridgeTicketNumber":"2026T00005","carrierCompanyName":"QA Transportes SAS","netWeightKg":30000.00},{"warehouseStorageNumber":"2026BA00016","vehiclePlate":"QAJ201","weighbridgeTicketNumber":null,"carrierCompanyName":"QA Transportes SAS","netWeightKg":null},{"warehouseStorageNumber":"2026EXP00002","vehiclePlate":"QAJ301","weighbridgeTicketNumber":"2026T00035","carrierCompanyName":"QA Transportes SAS","netWeightKg":10000.00}]
+(2026BA00016 confirmado antes del pesaje: placa sin tiquete ni neto, criterio 2)
+
+## DEF-F7-003 (F7-REP-003): orden de inspección 2026OC00011 (2026INSP00001, 2 QA Repuestos, QAJ701)
+### DEF-F5-013: CE intenta emitir guía para la orden de inspección
+"description":"La fecha/hora de salida es requerida."
+"description":"Error de validación de datos"
+HTTP 400
+### Bodega ejecuta el cargue (2)
+"status":"Loaded","message":"Orden de cargue 2026OC00011 ejecutada exitosamente. 1 de 1 items cargados, total: 2 unidades."
+HTTP 200
+2026OC00011|Loaded
+guías: 0
+### GET reports/daily-outgoing-goods?dateFrom=2026-10-05&dateTo=2026-10-05 (c_exterior)
+[{"guideNumber":"2026S00001","loadingOrderNumber":"2026OC00001","hasGuide":true,"productName":"QA Cebolla","quantity":80.0000},{"guideNumber":"2026S00002","loadingOrderNumber":"2026OC00002","hasGuide":true,"productName":"QA Cebolla","quantity":100.0000},{"guideNumber":"2026S00003","loadingOrderNumber":"2026OC00004","hasGuide":true,"productName":"QA Cebolla","quantity":20.0000},{"guideNumber":"2026S00004","loadingOrderNumber":"2026OC00005","hasGuide":true,"productName":"QA Cebolla","quantity":50.0000},{"guideNumber":"2026S00005","loadingOrderNumber":"2026OC00007","hasGuide":true,"productName":"QA Cebolla","quantity":20.0000},{"guideNumber":"2026S00006","loadingOrderNumber":"2026OC00008","hasGuide":true,"productName":"QA Cebolla","quantity":10.0000},{"guideNumber":"2026S00006","loadingOrderNumber":"2026OC00008","hasGuide":true,"productName":"QA Cebolla","quantity":10.0000},{"guideNumber":"2026S00007","loadingOrderNumber":"2026OC00010","hasGuide":true,"productName":"QA Cebolla","quantity":20.0000}]
+### DEF-F5-013 (repetición con departureDatetime)
+"description":"Las órdenes de cargue de inspección no generan guía de salida."
+HTTP 400
+### QAJ701 ingresa (Cargue importación) e inicia la salida en báscula con 2026OC00011 (ya cargada)
+{"serviceRecordId":"e6db681f-26fe-4539-9e8e-13fbdc2b284b","totalAmount":29750.00}
+estado de la orden: Loaded
+### cobro, tara y repesaje
+{"weighbridgeCycleId":"2a1e6df8-2800-48ce-a1f4-ae032f0dbdf0","invoiceId":"812e91ef-d507-4cc5-aa70-b81a0b390b99","totalAmount":29750.00}
+{"status":"FirstWeightCaptured","ticket":"2026T00041","net":null}
+{"status":"Complete","ticket":"2026T00041","net":null}
+estado de la orden: Dispatched
+### Vigilancia registra la salida
+HTTP 200
+estado de la orden: Dispatched
+### reporte de salidas del 05/10 (filas de 2026OC00011)
+[{"guideNumber":null,"loadingOrderNumber":"2026OC00011","hasGuide":false,"productName":"QA Repuestos","quantity":2.0000}]
+PDF de salidas diarias: fila «05/10/2026 23:36 · Sin guía (2026OC00011) · 2026INSP00001 · QAJ701 · QA Repuestos · 2»
+Nota: la orden de inspección queda «Cargada» al ejecutar el cargue y pasa a «Despachada» con el repesaje de salida (la línea de reporte solo aparece desde ese momento).
+
+## DEF-F7-010 en pantalla (capb90): barra superior «qaa10» + Enter → /?plate=qaa10 con «Todo el historial» activo y QAA101, QAA102, QAA103 (captura S3-DEF-F7-010-busqueda-placa-todo-historial.jpg)
+F7-NOT-008: con el Admin en el tablero, el ingreso de QAJ901 por API produce el aviso «Trazabilidad — Camión QAJ901 cambió a estado: Ingreso registrado» (los avisos de trazabilidad no se guardan en la tabla notifications; 0 filas con el título técnico «TraceabilityUpdated»).

@@ -1,0 +1,28 @@
+# S3 · CHG-59 (hallazgo sin ficha, F7-AUD-004) — PATCH parciales · 2026-10-05 23:25 · BE 44bd80a
+## Unidad «Saco»: PATCH solo con el nombre
+HTTP 200
+Saco|t
+## Tipo de unidad de carga QA_ISOTANQUE: PATCH solo con el nombre
+HTTP 200
+QA Isotanque|t
+## Parámetro INVENTORY_ADJUSTMENT_ADMIN_EMAIL: PATCH solo con el valor
+HTTP 200
+qa-ajustes@bodegas-qa.test|Correo de avisos de ajuste de inventario (QA)|t
+## Ubicación A01-R01-N03: PATCH solo con nombre y capacidad
+HTTP 200
+A01-R01-N03|A|01|03|4000.00|t
+## Levante QA-LEV-F11-001 (FOB USD 30.000): PATCH solo con la observación (c_exterior)
+100.0000|30000.00|QA F11 S0 levante parcial
+"description":"El número de levante es requerido."
+"description":"La fecha de levante es requerida."
+"description":"El número de aceptación es requerido."
+"description":"La fecha de aceptación es requerida."
+"description":"La cantidad a levantar debe ser mayor a cero."
+"description":"El peso a levantar debe ser mayor a cero."
+"description":"Error de validación de datos"
+HTTP 400
+100.0000|30000.00|QA F11 S0 levante parcial
+## Repetición con todos los campos menos fobUsd (lo que exige el validador)
+HTTP 200
+100.0000|30000.00|QA F11 S3 PATCH sin fobUsd
+Resultado: PASA (los cinco PATCH conservan lo que no se envía).

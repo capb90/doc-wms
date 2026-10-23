@@ -1,0 +1,23 @@
+# S3 · CHG-03 (DEF-F7-005, DEF-F9-004, DEF-F9-005), CHG-05 (DEF-F2-002), CHG-26 (DEF-F6-015) · 2026-10-05 23:38 · BE 44bd80a
+## DEF-F9-005 (F9-API-021): códigos HTTP por rol
+endpoint                                                  vigilancia  bascula     bodega      c_exterior  facturacion capb90      
+GET stakeholder/e329015c-1131-456e-8351-5dd40420f26b/agreement/ba770f5f-b251-4896-8d1c-1e1b11aba0ae/services200         200         200         200         200         200         
+POST billing/preview                                      200         200         200         200         200         200         
+POST billing/formula-preview                              200         200         200         200         200         200         
+GET reports/general-inventory                             403         403         200         200         200         200         
+GET reports/general-inventory/locations                   403         403         200         200         200         200         
+GET warehouse/movements-report                            403         403         200         200         200         200         
+(alcance de DEF-F9-005 reducido el 3-oct por el usuario: la lectura de tarifas y las simulaciones se aceptan para todos los roles; el defecto queda en inventario general y kárdex → 403 para vigilancia y bascula, 200 para los demás)
+
+## DEF-F2-002 (F2-ING-010): Vigilancia crea por API el vehículo «AB#12» y «Q A»
+«AB#12» → "La placa 'AB#12' no es válida: use de 3 a 20 letras, números o guiones."
+«Q A» → "La placa 'Q A' no es válida: use de 3 a 20 letras, números o guiones."
+«xy» → "La placa 'xy' no es válida: use de 3 a 20 letras, números o guiones."
+vehículos con placa inválida en la base: 0
+
+## DEF-F6-015 (F6-FOR-013 preparación): PATCH del servicio de convenio PER_CARGO_UNIT de QA Aceite (QA-CONV-001) solo con los parámetros
+antes: {"productName":"QA Aceite","operationModalityName":"Importación","formulaTypeCode":"PER_CARGO_UNIT","taxIncluded":false,"linkedServiceId":null,"appliesToPerishable":null,"isActive":true,"params":["minimumPerCargoUnit=100000","cargoUnitTypeCode=TANQUERO","rate=70000"]}
+HTTP 200
+después: {"productName":"QA Aceite","operationModalityName":"Importación","formulaTypeCode":"PER_CARGO_UNIT","taxIncluded":false,"linkedServiceId":null,"appliesToPerishable":null,"isActive":true,"params":["minimumPerCargoUnit=100000","cargoUnitTypeCode=TANQUERO","rate=71000"]}
+HTTP 200
+restaurado: {"productName":"QA Aceite","operationModalityName":"Importación","formulaTypeCode":"PER_CARGO_UNIT","taxIncluded":false,"linkedServiceId":null,"appliesToPerishable":null,"isActive":true,"params":["cargoUnitTypeCode=TANQUERO","rate=70000","minimumPerCargoUnit=100000"]}

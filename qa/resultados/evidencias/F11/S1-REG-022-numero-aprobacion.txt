@@ -1,0 +1,10 @@
+límite del período (crudo UTC): 2026-11-05 05:00:00+00|2026-11-08
+## paso 6 / REG-022
+F6-ACC-006 aprobar sin N.º: Asigne el número de factura (SIIGO) antes de aprobar la factura.
+F6-ACC-004 N.º vacío: Error de validación de datos
+F6-ACC-004 N.º de 51 caracteres: Error de validación de datos
+F6-ACC-002 asignar QA-SIIGO-F11-S1-0001: 
+F6-ACC-003 mismo N.º en otra factura (BA00003): Ya existe una factura con el número 'QA-SIIGO-F11-S1-0001'.
+F6-ACC-007 aprobar: {"data":{"id":"edc9a371-1ac0-4a2c-a24e-9b3bcfccc89a","invoiceNumber":"QA-SIIGO-F11-S1-0001","isZeroValue":false,"customerId":"e329015c-1131-456e-8351-5dd40420f26b","customerName":"QA Cliente Uno SAS",
+estado: QA-SIIGO-F11-S1-0001 | Approved | 298002.17 | pagado 0 | vence 2026-11-04 (aprobada hoy 05/10; plazo 30 días → vence 04/11/2026)
+cambiar N.º tras aprobar: Solo se puede asignar o cambiar el número de factura en estado Borrador o Pendiente de aprobación.

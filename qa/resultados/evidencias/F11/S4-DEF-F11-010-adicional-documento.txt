@@ -1,0 +1,36 @@
+# S4 · DEF-F11-010 (F3-MUL-002) · preparación por API · 2026-10-06 09:08 · BE ea14548 / FE e41decf
+## POST vehicles QAK402 (vigilancia)
+HTTP 201
+{"id": "83581e24-46c1-4b26-a349-d88f3a1e77d0", "licensePlate": "QAK402", "carrierCompanyId": "0f89cd64-8519-4f50-b024-5c3a81a57437", "country": "Colombia", "vehicleType": "Tractomula", "isActive": true, "createdAt": "2026-10-06T14:08:44.997857+00:00", "updatedAt": null}
+## POST entry-logs QAK402, Descargue mercancia importacion, Pedro QA (vigilancia)
+HTTP 201
+{"id": "a0d22acc-e063-44f8-83ba-8dafe2cae342", "serviceRecordId": null, "vehicleId": "83581e24-46c1-4b26-a349-d88f3a1e77d0", "driverId": "28c2adbd-cffc-4698-b368-5988b2706751", "entryReasonId": "1e7a8f2b-9c4d-4a1e-b3f6-2d8e5c0a1b70", "entryAuthorizedById": "01a10e12-e058-7461-bf37-e0b785d011aa", "dateTimeEntry": "2026-10-06T14:08:51.136443+00:00", "status": "Registered", "departureAuthorizedById": null, "dateTimeDeparture": null, "observations": "QA F11 S4 DEF-F11-010", "createdAt": "2026-10-06T14:08:51.136505+00:00", "updatedAt": null, "isCorrected": false, "lastCorrectedAt": null, "lastCorrectedByName": null, "hasOperation": false, "hasDeposits": false, "vehicle": {"id": "83581e24-46c1-4b2
+## POST weighbridge/storage/register (bascula) · QA-CP-F11-S4-MULB, QA Cliente Uno, 8 QA Cebolla, primer peso Bruto
+HTTP 201
+{"entryLogUpdated": true, "serviceRecordId": "c79646a6-8316-4290-a652-88d663111f42", "entryLogId": "a0d22acc-e063-44f8-83ba-8dafe2cae342", "cargoManifestNumber": "QA-CP-F11-S4-MULB", "warehouseStorageId": "93098b0f-59bf-41e3-b585-f89c81907b87", "isFirstTruck": true, "customerId": "e329015c-1131-456e-8351-5dd40420f26b", "customerName": "QA Cliente Uno SAS", "weighingPrice": 25000, "taxAmount": 4750.0, "totalAmount": 29750.0, "observations": "QA F11 S4 DEF-F11-010 principal", "documentDate": "2026-10-06T05:00:00+00:00", "singleWeightOnly": false, "configuredFirstWeightType": "Gross", "isPerishable": false, "isAdditionalDeposit": false, "weighbridgeCycleId": null, "newWarehouseStorageEntryId": null, "warehouseStorageNumber": "2026BA00021", "createdProducts": []}
+## POST weighbridge/storage/process-payment (efectivo 29.750, cliente)
+HTTP 200
+{"weighbridgeCycleId": "7351f378-891a-49cc-9f91-7c9ef36688fa", "invoiceId": "36244b29-0e72-4054-acbf-b9dbaaa6537a", "invoiceNumber": null, "totalAmount": 29750, "amountReceived": 29750, "paymentMethod": "Cash", "readyForWeighing": true, "paymentDate": "2026-10-06T14:09:25.886384+00:00", "isZeroInvoice": false}
+entrada: 7b29701a-6cb3-4839-b452-bd2a4b8c4599
+## POST warehouse/receptions/register-arrival (bodega)
+HTTP 201
+{"receptionLogId": "cec12650-0704-4bfc-9d02-107b1ecef19c", "entryLogId": "a0d22acc-e063-44f8-83ba-8dafe2cae342", "warehouseStorageEntryId": "7b29701a-6cb3-4839-b452-bd2a4b8c4599", "warehouseStorageId": "93098b0f-59bf-41e3-b585-f89c81907b87", "status": "InProgress", "arrivalAt": "2026-10-06T14:09:26.056137+00:00"}
+## En pantalla (bascula, panel 1024×768, en-US)
+1. Cola → QAK402 (Por pesar) → primer peso BRUTO 30.000 kg → «Peso registrado. El ciclo queda abierto.» con «Agregar otro depósito».
+2. «Agregar otro depósito»: aviso «Depósito adicional · modalidad IMP y pesaje heredados … En el ciclo: 2026BA00021 ✓ 2026T00042». Carta Porte QA-CP-F11-S4-MULX («Documento nuevo: al guardar se crea un depósito.»), QA Cebolla 4 Bulto → «Guardar» → «Camión asociado al depósito 2026BA00022».
+   - Paso de cobro: encabezado «Registrado: depósito 2026BA00022 · Documento QA-CP-F11-S4-MULX».
+3. «Consumidor final» → «Confirmar y continuar» → «Depósito adicional agregado — Continúe con el pesaje intermedio…».
+   - **Encabezado tras confirmar (caso del defecto): «Registro: Registrado: depósito 2026BA00022 · Documento QA-CP-F11-S4-MULX» · «Cobro: Depósito adicional: factura en $0».** Antes (S3) mostraba el documento del principal. Captura S4-DEF-F11-010-encabezado-adicional.jpg.
+4. Pesaje intermedio 26.000 kg en pantalla: el encabezado sigue con 2026BA00022 · QA-CP-F11-S4-MULX.
+## Cierre del ciclo por API
+### register-arrival del adicional (bodega)
+HTTP 201
+{"receptionLogId": "f673f20d-f6bd-4708-a51c-0857eef4ea4f", "entryLogId": "a0d22acc-e063-44f8-83ba-8dafe2cae342", "warehouseStorageEntryId": "40d93e6f-873c-4f1c-8dca-ff56865017e0", "warehouseStorageId": "43d576d6-5205-497f-bd9c-14a1a6caae86", "status": "InProgress", "arrivalAt": "2026-10-06T14:12:50.904969+00:00"}
+### POST cycles/{id}/weighings Tare 14.000 (bascula)
+HTTP 200
+{"weighingId": "72dd8daf-18b9-4adc-a5c9-364db31a3702", "sequence": 2, "cycleStatus": "Complete", "ticketNumber": "2026T00043", "affectedWarehouseStorageEntryIds": ["7b29701a-6cb3-4839-b452-bd2a4b8c4599", "40d93e6f-873c-4f1c-8dca-ff56865017e0"], "cycleCompleted": true}
+## Base (solo lectura)
+2026BA00021|QA-CP-F11-S4-MULB|2026T00042
+2026BA00022|QA-CP-F11-S4-MULX|2026T00043
+ciclo 7351f378…: Complete
+Resultado: PASA (F3-MUL-002 en pantalla; F3-MUL-001/003/004 recorridos). DEF-F11-010 Verificado.

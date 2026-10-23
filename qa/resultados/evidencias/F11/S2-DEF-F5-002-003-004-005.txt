@@ -1,0 +1,27 @@
+# S2 · Comercio Exterior · DEF-F5-004, DEF-F5-003 (CHG-38), DEF-F5-002 (CHG-39), DEF-F5-005 (CHG-40) · BE 214f5f6 · 2026-10-05 20:37 · c_exterior
+## DEF-F5-004 / F5-AJU-005: CE-7 de 2026BA00001 (QA Cebolla recibido 160, levantes 100) a 90
+{"status":400,"description":"La cantidad recibida de «QA Cebolla» (90) no puede ser menor que la suma de sus levantes (100). Edite o retire primero el levante."}
+recibido después: 160.00 / stock 80.00
+## DEF-F5-003 / F5-AJU-004: el rechazo no envía correo — líneas del log del API con «mail|correo|smtp» durante el rechazo: 0
+## DEF-F5-002 / F5-AJU-001: CE-7 de 2026INSP00001 (QA Repuestos 40) a 39 con «Conteo físico»
+{"status":null,"description":null,"data":{"movementId":"da71b10d-236d-4d50-858b-a7e5cfcf7979","warehouseStorageProductId":"3bd02cbd-37dc-4d41-b7b2-3f2117a98d8a","warehouseStorageId":"f0ecb041-128b-4cf3-a3dd-cad280510208","productName":"QA Repuestos","movementType":"Out","sourceType":"Adjustment","quantity":1.00,"previousStock":40.00,"newStock":39.00,"reason":"Conteo físico","createdAt":"2026-10-06T01:37:29.741638+00:00","adminNotified":true}}
+kárdex: ver repetición abajo (la consulta se hizo con c_exterior, que recibe 403 en el endpoint de Bodega, como corresponde)
+## F5-PRD-001/002: corrección de producto en 2026BA00008 (Borrador, QA Cebolla 30 → 31)
+(primer intento sin unitMeasureId: 400 «La unidad de medida del producto es requerida.»; repetición abajo con el cuerpo que envía la pantalla)
+## Filtro sourceType=Adjustment (Bodega) y sourceType=MANUAL
+[{"Adjustment":1}]
+{"status":400,"errors":[],"description":"Parámetro no válido: sourceType. Valores de sourceType: ReceptionLog, LoadingOrder, Adjustment, Damage, Return, DeclaredEntry, LoadingOrderReversal, WeighingVoid, StorageCancellation, MigrationOpening, DepositProductEdit."}
+## Repetición · kárdex de QA Repuestos 2026INSP00001 (consulta de bodega)
+{"movementType":"Out","quantity":1.00,"sourceType":"Adjustment","previousStock":40.00,"newStock":39.00,"reason":"Conteo físico","authorizedByUser":"c_exterior"}
+{"movementType":"In","quantity":40.00,"sourceType":"DeclaredEntry","previousStock":0.00,"newStock":40.00,"reason":"Ingreso declarado en báscula - QAB203 - Documento QA-CP-F11-003","authorizedByUser":null}
+## Repetición · corrección de producto 2026BA00008 30 → 31 (con unidad Bulto y embalaje QA-CAJA)
+{"status":null,"description":null,"data":true}
+stock: 31.00 declarado · stock 31.00
+{"movementType":"In","quantity":1.00,"sourceType":"DepositProductEdit","previousStock":30.00,"newStock":31.00,"reason":"QA F11 S2 correccion de cantidad","authorizedByUser":"c_exterior"}
+{"movementType":"In","quantity":30.00,"sourceType":"DeclaredEntry","previousStock":0.00,"newStock":30.00,"reason":"Ingreso declarado en báscula - QAR101 - Documento QA-CP-F11-S1-R","authorizedByUser":null}
+## Reporte de movimientos (kárdex) como c_exterior: 200
+## DEF-F5-005 / F5-LEV-012, F5-ETI-006: 2026BA00004 (Anulado)
+POST imports/{id}/releases: {"status":400,"description":"No se pueden registrar levantes en un depósito anulado."}
+GET imports/{id}/label: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"No se puede imprimir la etiqueta de un depósito anulado.","traceId":"00-f4fde69a76244a672063526e5673cbd1-40c61a6fca1c7a9b-00"} HTTP 400
+GET imports/{id} (detalle del anulado, estado de nacionalización): {"warehouseStorageNumber":"2026BA00004","status":"SinNacionalizar","warehouseStorageStatus":"Cancelled","nationalizationStatus":null}
+levantes del anulado (base): 0

@@ -1,0 +1,155 @@
+# S1 · Cadena A — E2E-01 / REG-029 (QA-CP-F11-S1-A, IMP, QA Cliente Uno, USD 30.000) 17:52
+## paso 1: Vigilancia ingreso QAE101 Descargue importación
+cola: [{"vehiclePlate":"QAE101","state":"NotStarted"}]
+## paso 2: registro IMP 100 bultos + cobro inmediato + bruto 35.000
+{"serviceRecordId":"034bd735-c2ab-43ef-ab20-e8b715d9afef","warehouseStorageId":"5a8efb38-8a86-4baa-8d62-b8983a6a3407","warehouseStorageNumber":"2026BA00005","isFirstTruck":true,"totalAmount":29750.00}
+{"weighbridgeCycleId":"ac48e0fa-f4b9-40e2-bfee-956661ecc29d","invoiceId":"cc948377-a3da-4563-bb63-62c2ac94fce4","totalAmount":29750.00}
+{"status":"FirstWeightCaptured","ticket":"2026T00016","net":null}
+depósito 2026BA00005 Draft · stock 100.00 · mov DeclaredEntry In 100.00 · factura BASCULA - | Paid | 29750.00 | pagado 29750.00 | vence —
+aviso CE: 1
+## paso 3: llegada a Bodega + tara 15.000
+{"status":"Complete","ticket":"2026T00016","net":null}
+neto: ["2026T00016 neto 20000.00 Complete"]
+## REG-015 / F4-MON-003: montacargas Tractomula 100 → 102, pago inmediato SIN IVA (CHG-09 criterio 4: convenio 90.000)
+tarifa propuesta: {"ratePerHour":90000,"taxRatePercent":0,"vatRatePercent":19.00}
+uso null
+{"status":null,"totalAmount":null,"invoiceId":null,"subtotal":null,"tax":null}
+ERROR:  column f.invoice_id does not exist
+LINE 1: ...otal from forklift_uses f join invoices i on i.id=f.invoice_...
+                                                             ^
+factura: 
+## F4-MON-007: segundo uso, valor 100.001 con «Agregar IVA (19 %)»
+{"status":null}
+ERROR:  column f.invoice_id does not exist
+LINE 1: ...otal from forklift_uses f join invoices i on i.id=f.invoice_...
+                                                             ^
+factura: 
+uso activo 72437307-a3ef-4771-bb46-bd271cd2604c (InProgress init 100.00)
+vehicleType":"Tractomula","paymentMode":"Immediate","status":"Complete","message":"Uso de montacargas finalizado exitosamente. Total: $ 90.000 (Tractomula — Acuerdo). Factura  generada."}}
+HTTP 200
+
+factura uso 1 (sin IVA): Paid sub 90000.00 iva 0.00 total 90000.00
+## F4-MON-007: segundo uso, valor 100.001 con «Agregar IVA (19 %)»
+,"status":"Complete","message":"Uso de montacargas finalizado exitosamente. Total: $ 119.001 (Tractomula — Acuerdo). Factura  generada."}}
+HTTP 200
+
+factura uso 2 (con IVA): Paid sub 100001.00 iva 19000.19 total 119001.19
+## paso 4: recepción contando 100
+{"status":"Completed","id":null}
+stock 100.00 · avisos de diferencia: 0
+## F5-CNF-002 (requisitos, antes de completar nada se ve en INSP00001 más abajo); requisitos de BA00005: {"canConfirm":null,"missing":null}
+## paso 5: confirmar y cerrar ingreso
+{"data":{"warehouseStorageId":"5a8efb38-8a86-4baa-8d62-b8983a6a3407","status":"Confirmed"}}
+HTTP 200
+
+{"data":{"closedAt":"2026-10-05T22:52:51.9837+00:00","closedByName":"QA Comercio Exterior","truckCount":1}}
+HTTP 200
+
+TRM: 3273.4900 Dian 2026-10-05
+Open|2026-10-05 → 2026-11-05 límite 2026-11-07|Agreement|edc9a371-1ac0-4a2c-a24e-9b3bcfccc89a|Draft|250421.99|47580.18|298002.17
+líneas: Almacenamiento QA Cebolla 05/10/2026 - 05/11/2026 qty 1.00 unit 250421.99 total 298002.17
+## paso 7 / REG-018
+F5-LEV-003 levante de 150 con recibido 100: La cantidad a levantar (150) supera lo pendiente por nacionalizar del producto (100).
+F5-LEV-001 levante QA-LEV-F11-S1-A de 100: {"releaseNumber":null,"exchangeRate":null,"status":"Nacionalizado"}
+estado nacionalización: {"status":"Nacionalizado","nationalized":null,"available":null}
+levante adicional de 1 (nada pendiente): La cantidad a levantar (1) supera lo pendiente por nacionalizar del producto (0).
+## paso 8: salida QAE101 e ingreso QAE102 (Cargue importación)
+salida QAE101: HTTP 200
+ingreso QAE102 56fbefa9-a154-4ac7-8d37-c96aa351785e
+## REG-019
+F5-OC-005 (BA00003: stock 120, nacionalizado 0) pedir 10: El depósito de importación 2026BA00003 no está nacionalizado. Solo se pueden generar órdenes de cargue para depósitos de importación en estado 'Nacionalizado'.
+F5-OC-006 (EXP00001: stock 50) pedir 60: Stock disponible insuficiente para producto 'QA Cebolla' en depósito 2026EXP00001. Disponible: 50,00, Solicitado: 60
+F5-OC-001 OC de 100 sobre BA00005 para QAE102:
+{"orderNumber":"2026OC00002","id":"8e9c0281-0ae5-4045-ba91-f0ac61517fb7","status":"Pending","stakeholderName":"QA Cliente Uno SAS","items":[{"quantity":100,"availableStock":0.00}]}
+ERROR:  column "reserved_quantity" does not exist
+LINE 1: select 'stock '||current_stock||' reservado '||reserved_quan...
+                                                       ^
+HINT:  Perhaps you meant to reference the column "warehouse_storage_products.received_quantity".
+producto tras la OC:  · nacionalizado disponible: {"currentStock":100.00,"nationalizedAvailable":100.0000}
+F5-OC-005 (BA00001: stock 80, nacionalizado disponible 20) pedir 30: La cantidad solicitada de «QA Cebolla» en el depósito 2026BA00001 (30) supera lo nacionalizado disponible (20). Registre el levante antes de despachar.
+disponibilidad para OC de BA00005 tras reservar 100: []
+producto BA00005 tras la OC (base): stock 100.00 reservado 100.00 disponible 0.00
+## paso 10: báscula salida de mercancía con 2026OC00002
+OC por placa: [{"orderNumber":"2026OC00002","status":"Pending"}]
+{"serviceRecordId":"a8c9bae4-79da-41fb-a9d6-38676a8c2c18","loadingOrderNumber":"2026OC00002","totalAmount":29750.00}
+OC tras iniciar la salida: InProgress
+segunda salida con la misma OC (CHG-32) — ingreso de QAZ903:
+La orden 2026OC00002 ya tiene un servicio de salida en báscula.
+salida QAZ903: HTTP 200
+{"weighbridgeCycleId":"583b8a8c-dd8b-46e6-98d2-6c488971cbed","invoiceId":"d6a91a05-e7bd-4552-8d97-fb0e5812e3da","totalAmount":29750.00}
+{"status":"FirstWeightCaptured","ticket":"2026T00017","net":null}
+factura BASCULA salida: - | Paid | 29750.00 | pagado 29750.00 | vence —
+## paso 11 / REG-016 (F4-CAR-001, F4-CAR-011): Bodega ejecuta el cargue de 100
+sin firma (CHG-15): Error de validación de datos
+{"status":"Loaded","items":[{"loadingOrderItemId":"c4b979c7-dd06-4126-80e5-aeaa6b87d484","warehouseStorageProductId":"37fab538-b611-4753-8fa8-4beaeea761b1","warehouseStorageId":"5a8efb38-8a86-4baa-8d62-b8983a6a3407","warehouseStorageNumber":"2026BA00005","orderedQuantity":100.00,"loadedQuantity":100,"previousStock":100.00,"newStock":0.00,"reservedStockReleased":100.00,"inventoryMovementId":"1adc1ca4-9b34-4dcc-9540-71295d101a5c","releasedPlacements":[{"warehouseLocationId":"d4e5f678-90a1-b2c3-d4e
+OC: Loaded · producto: stock 0.00 reservado 0.00 · depósito: Closed · períodos: Closed
+movimientos: DeclaredEntry In 100.00 (-), LoadingOrder Out 100.00 (01a10e12-e10e-77f2-9b18-49aba98c5561)
+autor del cargue (token, CHG-15): 
+avisos desde 2026-10-05 22:54:13:
+admin | Cargue completado | Orden 2026OC00002 cargada. Cliente: QA Cliente Uno SAS, Vehículo: QAE102, Items cargados: 1 de 1.
+capb90 | Cargue completado | Orden 2026OC00002 cargada. Cliente: QA Cliente Uno SAS, Vehículo: QAE102, Items cargados: 1 de 1.
+v_montenegro | Cargue completado | Orden 2026OC00002 cargada. Cliente: QA Cliente Uno SAS, Vehículo: QAE102, Items cargados: 1 de 1.
+c_exterior | Guía de salida requerida | Orden 2026OC00002 cargada (Importación). Generar guía de salida.
+f_chosi | Guía de salida requerida | Orden 2026OC00002 cargada (Importación). Generar guía de salida.
+j_coral | Guía de salida requerida | Orden 2026OC00002 cargada (Importación). Generar guía de salida.
+## paso 12 / REG-020: guía de salida
+{"loadingOrderId":"8e9c0281-0ae5-4045-ba91-f0ac61517fb7","orderNumber":"2026OC00002","isMultiClient":false,"charges":[{"customerId":"e329015c-1131-456e-8351-5dd40420f26b","customerName":"QA Cliente Uno SAS","depositNumbers":["2026BA00005"],"depositCount":1,"unitPrice":30000,"subTotal":30000,"taxAmount":0,"total":30000}],"taxRate":0,"subTotal":30000,"taxAmount":0,"total":30000,"importers":["QA Importación Andina Ltda"],"forcesDriverSigner":false,"driverSignerName":"Pedro QA Conductor Colombia (1000000001)"}
+
+total propuesto: 30000
+{"guideNumber":"2026S00002","guideType":"Import","expirationDate":"2026-10-08T23:00:00+00:00","stakeholderName":"QA Cliente Uno SAS","quantity":100.0000}
+Guía de Salida No. 2026S00002
+                                   Deposit                                                    Unida Embalaj               Saldo      Cant.   Nvo.
+ No.     Producto      Doc / CPI              Manifiesto           Levante      Aceptacion                  Entrada
+                                     o                                                          d     e                   Ante.      Sale    Saldo
+                        QA-CP-     2026BA    MAN-QA-CP-          QA-LEV-F11-   ACE-QA-LEV-     BULT
+  1    QA CEBOLLA                                                                                     DE          100     100        100      0
+Guía de Salida No. 2026S00002 QAE102 (Colombia)
+                                   Deposit                                                    Unida Embalaj               Saldo      Cant.   Nvo.
+ No.     Producto      Doc / CPI              Manifiesto           Levante      Aceptacion                  Entrada
+                                     o                                                          d     e                   Ante.      Sale    Saldo
+                        QA-CP-     2026BA    MAN-QA-CP-          QA-LEV-F11-   ACE-QA-LEV-     BULT
+  1    QA CEBOLLA                                                                                     DE          100     100        100      0
+factura GUIA_SALIDA: Paid 30000.00 QA Cliente Uno SAS
+## paso 13: repesaje bruto 34.000
+{"status":"Complete","ticket":"2026T00017","net":null}
+neto: ["2026T00017 tara 14000.00 bruto 34000.00 neto 20000.00 Complete"] · OC: Dispatched · servicio: Completed
+## paso 14: salida QAE102: HTTP 200
+## paso 15: trazabilidad, movimientos (kárdex) y facturación por CPI
+trazabilidad QAE101: 
+trazabilidad QAE102: 
+kárdex BA00005: {"totals":{"receivedQuantity":100.00,"nationalizedQuantity":100.0000,"pendingToNationalize":0.0000,"dispatchedQuantity":100.00,"currentStock":0.00,"nationalizedAvailable":0},"mov":["In 100.00 DeclaredEntry guía null tiquete 2026T00016","Out 100.00 LoadingOrder guía 2026S00002 tiquete null"]}
+trazabilidad qae101 (Hoy): [{"licensePlate":"QAE101","serviceType":"Input","currentStage":"Completado","departureDate":"2026-10-05T22:53:36.037419+00:00"}]
+trazabilidad qae102 (Hoy): [{"licensePlate":"QAE102","serviceType":"OutputCargo","currentStage":"Completado","departureDate":"2026-10-05T22:54:43.599399+00:00"}]
+facturación por CPI 2026BA00005: {"invoices":[{"n":"QA-SIIGO-F11-S1-0001","t":null,"s":"Approved","total":298002.17}]}
+Resultado E2E-01 (REG-029): PASA — todos los puntos de control 1–15 conformes.
+## etiquetas: BA00005 (levante 100): MERCANCIA NACIONALIZADA DATOS DE NACIONALIZACION  · BA00003 (sin levante): MERCANCIA SIN NACIONALIZAR 
+tk.pdf: PDF document, version 1.4, 1 pages
+## F3-TIQ-002 contenido del tiquete 2026T00016:
+              Bodegas Asociadas Ltda
+                      NIT: 837.000.606-1
+          CALLE 3 ESTE No. 2-732 BARRIO EL TEJAR
+                   Tel: 7736748 - 7736522
+                    IPIALES - COLOMBIA
+                info@bodegasasociadas.com
+         ORDEN DE PESO No.: 2026T00016
+                      FECHA: 05/10/2026
+Cliente: QA Cliente Uno SAS
+Nit/C.C.: 900100001
+Dirección: Calle QA 1-23
+Teléfono: 3001000001
+PLACA                          CONDUCTOR
+QAE101                         Pedro QA Conductor Colombia
+                               INGRESO
+                               05/10/2026 17:52
+PRODUCTO: QA Cebolla
+ENTRADA                        SALIDA
+05/10/2026 17:52:12            05/10/2026 17:52
+Peso Bruto                     Peso Tara
+PESO                           PESO
+35.000 Kg                      15.000 Kg
+              PESO MERCANCÍA: 20.000
+              Kilogramos
+Descripción                                     Can         Total
+Servicio de Báscula                             1,00       29.750
+VALOR TOTAL $:                                         29.750,00
+        Numeración autorizada y/o habilitada por la DIAN

@@ -1,0 +1,10 @@
+# S2 · F11-REG-022 (F6-ACC-002..007) · BE 214f5f6 / FE 15a5028 · 2026-10-05 20:20 · facturacion · factura 23dac727 (almacenamiento 2026BA00003, Borrador 595.000, sin N.º)
+F6-ACC-006 aprobar sin N.º: Asigne el número de factura (SIIGO) antes de aprobar la factura.
+F6-ACC-004 N.º vacío: {"description":"Error de validación de datos","errors":[{"code":"InvoiceNumber","description":"El número de factura (SIIGO) es obligatorio."}]}
+F6-ACC-004 N.º de 51: {"description":"Error de validación de datos","errors":[{"code":"InvoiceNumber","description":"El número de factura no puede superar 50 caracteres."}]}
+F6-ACC-002 asignar QA-SIIGO-F11-S2-0001: 
+F6-ACC-003 mismo N.º en otra factura (montacargas 9457d5fe Borrador): Ya existe una factura con el número 'QA-SIIGO-F11-S2-0001'.
+F6-ACC-005 N.º en factura $0 (INSP00002, aprobada sin N.º): Una factura en cero no requiere número fiscal.
+F6-ACC-007 aprobar: QA-SIIGO-F11-S2-0001 | Approved | 595000.00 | vence 2026-11-05T01:20:35.199129+00:00
+F6-ACC-007 cambiar el N.º tras aprobar: Solo se puede asignar o cambiar el número de factura en estado Borrador o Pendiente de aprobación.
+Listado con el N.º: [{"invoiceNumber":"QA-SIIGO-F11-S2-0001","status":"Approved","total":595000.00}]

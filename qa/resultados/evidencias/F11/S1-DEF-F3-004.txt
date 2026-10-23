@@ -1,0 +1,23 @@
+# S1 · DEF-F3-004 / CHG-06 — descartar operación (17:50)
+## registro de QAA103 con documento nuevo QA-CP-F11-S1-DESC, sin cobrar
+{"serviceRecordId":"0609edd9-4222-4010-acfa-3bab6651da0c","warehouseStorageId":"261e2412-1651-40cb-ad18-6c230b790fd4","warehouseStorageNumber":"2026BA00004","isFirstTruck":true,"totalAmount":29750.00}
+cola de báscula (QAA103):
+[{"vehiclePlate":"QAA103","status":null,"serviceRecordId":"0609edd9-4222-4010-acfa-3bab6651da0c"}]
+## UI «Recuperar operaciones» → Descartar QAA103 → «Operación descartada · Vehículo QAA103»
+estado servicio/depósito: Discarded / 2026BA00004 Cancelled · vínculos con ingreso: 0
+cola (QAA103): [{"vehiclePlate":"QAA103","status":null,"stage":null,"serviceRecordId":null}]
+## F3-REC-008: process-payment sobre el servicio descartado
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"La operación fue descartada; registre el ingreso del camión de nuevo.","traceId":"00-256f6ec4aa2470a4aa6550f1b8166df1-ffe29674b79ddefb-00"}
+HTTP 409
+start-pending-billing sobre el descartado:
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"La operación fue descartada; registre el ingreso del camión de nuevo.","traceId":"00-ec20f4519b37b284f2975720cb62a566-6aefeb621e0f44aa-00"}
+HTTP 409
+ciclos/facturas creados sobre el servicio descartado: 0
+## Vigilancia corrige el motivo del camión descartado (Descargue importación → Solo báscula)
+cola tras descartar: QAA103 state=NotStarted, serviceRecordId=null (= «Sin iniciar»)
+## corrección de motivo por vigilancia (Descargue importación → Solo báscula)
+0-05T22:50:17.626116+00:00","updatedAt":null}],"departureAuthorizations":[]},"changes":[{"field":"Motivo","previousValue":"Descargue mercancia importacion","newValue":"Solo Bascula"}],"depositsNotUpdated":[],"deactivatedVehiclePlate":null}}
+HTTP 200
+## nuevo registro del camión descartado (Solo báscula, QA Cliente Uno, un pesaje Tara) → esperado 201
+{"data":{"serviceRecordId":"d1f41504-9331-432f-a0f5-d2ddd99ee8f6","entryLogId":"7f2a4f4a-c5ec-426b-a35b-3a5cda6249e8","customerId":"e329015c-1131-456e-8351-5dd40420f26b","customerName":"QA Cliente Uno SAS","weighingPrice":25000,"taxAmount":4750.00,"totalAmount":29750.00,"observations":"QA F11 S1 E2E-07","singleWeightOnly":true,"configuredFirstWeightType":"Tare"}}
+HTTP 201

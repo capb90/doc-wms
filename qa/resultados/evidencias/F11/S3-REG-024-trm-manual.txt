@@ -1,0 +1,60 @@
+# S3 · F11-REG-024 (F6-TRM-002/003/004) — API arrancado con DianTrm__BaseUrl=http://127.0.0.1:9 y SMTP 127.0.0.1:9 (variables de entorno del proceso)
+Fecha: 2026-10-05 23:05 · Depósito 2026BA00015 (IMP, USD 40.000, QA Cliente Uno, ingreso QAJ101 2026-10-03 09:30 por API; ningún depósito previo tenía TRM del 03/10)
+## TRM de hoy (DIAN caída)
+{"error":"DIAN_UNAVAILABLE","message":"No se pudo obtener la TRM para 2026-10-05 desde la API DIAN. Reintente."}
+HTTP 503
+## F6-TRM-002 confirmar (200 en 3,3 s) → estado del depósito
+2026BA00015|Confirmed|(pendiente)|-
+## Factura del período
+Draft|-|184000.00|34960.00|218960.00
+ALMACENAMIENTO DE: 50 BULTO QA Cebolla, CARTA PORTE:QA-CP-F11-S3-TRM, 2026BA00015, PERIODO: 03/10/2026 - 03/11/2026, AGENCIA:QA Agencia SIA Aduanas
+TRM PENDIENTE: el valor en pesos de la mercancía (40.000,00 USD) se calculará con la TRM del 03/10/2026. Mientras Facturación la registra, la línea usa el valor mínimo de Importación ($184.000,00 más IVA).
+## Aviso a Facturación
+Almacenamiento con TRM pendiente | El depósito 2026BA00015 quedó con TRM pendiente (no se obtuvo la TRM de la DIAN del 03/10/2026). Regístrela en la factura antes de asignar el número SIIGO.
+## API detalle (trmPending)
+{"status":"Draft","invoiceNumber":null,"total":218960.00,"isTrmPending":null,"trmPending":null,"hasPendingTrm":null,"trmPendingStorages":null}
+## N.º SIIGO con TRM pendiente
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Registre la TRM del depósito 2026BA00015 antes de asignar el número de factura.","traceId":"00-be4108aa2832fbef7ff92e18cbb17da5-0e4b89117234d1dc-00"}
+HTTP 400
+## Aprobar con TRM pendiente
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Registre la TRM del depósito 2026BA00015 antes de aprobar la factura.","traceId":"00-536a6b7624e43661e0348d99631ea1a6-d67776a897e60ebf-00"}
+HTTP 400
+## F6-TRM-004 TRM 0
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"Trm","description":"La TRM debe ser mayor que cero."}],"description":"Error de validación de datos","traceId":"00-94a246d30498b8dc877467c3c88e9609-a9ddc175e05b7255-00"}
+HTTP 400
+## F6-TRM-004 motivo de 9
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"Reason","description":"El motivo debe tener entre 10 y 500 caracteres."}],"description":"Error de validación de datos","traceId":"00-dd3b8b4b109c8416b4357c71075de6d1-f965097a6c30e0a9-00"}
+HTTP 400
+## F6-TRM-004 motivo de 501
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación.","status":400,"errors":[{"code":"Reason","description":"El motivo debe tener entre 10 y 500 caracteres."}],"description":"Error de validación de datos","traceId":"00-1c0a301a99c8202281986a71ac3115b5-79220e3e90a53ffd-00"}
+HTTP 400
+## Bodega (sin permiso) registra TRM
+
+HTTP 403
+## F6-TRM-003 TRM manual 4.000
+{"data":{"warehouseStorageId":"3f1efdcd-b58d-4e54-a900-11f269e60b51","warehouseStorageNumber":"2026BA00015","operationModalityName":"Importación","entryDate":"2026-10-03T14:30:00+00:00","currency":"USD","cargoValue":40000.00,"trm":4000,"trmSource":"Manual","trmDate":"2026-10-03","trmPending":false,"cargoValueCop":160000000.00}}
+HTTP 200
+## Depósito tras la TRM manual
+2026BA00015|4000.0000|Manual|2026-10-03
+## Factura recalculada (esperado 0,255 % × 40.000 × 4.000 = 408.000 + IVA 77.520 = 485.520)
+Draft|-|408000.00|77520.00|485520.00
+ALMACENAMIENTO DE: 50 BULTO QA Cebolla, CARTA PORTE:QA-CP-F11-S3-TRM, 2026BA00015, PERIODO: 03/10/2026 - 03/11/2026, AGENCIA:QA Agencia SIA Aduanas
+## Aviso de recálculo a Facturación
+Almacenamiento con TRM pendiente | El depósito 2026BA00015 quedó con TRM pendiente (no se obtuvo la TRM de la DIAN del 03/10/2026). Regístrela en la factura antes de asignar el número SIIGO.
+Nuevo depósito de importación | Se ha creado el depósito 2026BA00015
+## Segunda TRM manual (reemplazo)
+{"data":{"warehouseStorageId":"3f1efdcd-b58d-4e54-a900-11f269e60b51","warehouseStorageNumber":"2026BA00015","operationModalityName":"Importación","entryDate":"2026-10-03T14:30:00+00:00","currency":"USD","cargoValue":40000.00,"trm":4100,"trmSource":"Manual","trmDate":"2026-10-03","trmPending":false,"cargoValueCop":164000000.00}}
+HTTP 200
+## F6-TRM-005 depósito COP (2026EXP00001)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El depósito está en pesos (COP); no requiere TRM.","traceId":"00-177d66b1c64b8e3c26233d38a830ff10-43d0b149c6f63607-00"}
+HTTP 400
+## F6-TRM-006 depósito con TRM DIAN (2026BA00001)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"La TRM de este depósito ya fue consultada a la DIAN y no se puede reemplazar.","traceId":"00-055ad6d4731638f65fbef2df8da1a20c-7b117a3d8f1599ca-00"}
+HTTP 409
+## N.º SIIGO habilitado
+
+HTTP 204
+
+## Aprobar habilitado
+{"data":{"id":"08470a76-4fec-4712-9ca6-d23ddb294f21","invoiceNumber":"QA-SIIGO-F11-S3-TRM","isZeroValue":false,"customerId":"e329015c-1131-456e-8351-5dd40420f26b","customerName":"QA Cliente Uno SAS","customerIdNumber":"900100001","isUnregisteredRecipient":false,"recipientIdType":"Nit","recipientPhon
+Approved|QA-SIIGO-F11-S3-TRM|497658.00|2026-11-04

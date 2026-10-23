@@ -1,0 +1,16 @@
+# S6 · Texto extraído de los PDF (pdf.js en la página, sesión qa.comext) · 2026-10-07 00:25 (hora Colombia)
+# Se omiten nombres de empresas migradas. El manifiesto de BA0042/BA0558 es el número DIAN del legacy y coincide con el detalle del depósito.
+2026S00002 (BA0042): fila 1 · [PRODUCTO] · CPI EC0004054 · 2024BA00002 · Manifiesto 116575014058642 · levante/aceptación del legacy · UNIDAD · CAJAS · Entrada 648 · Saldo ant. 448 · Sale 50 · Nvo. saldo 398 · Total en esta salida 50 UNIDAD
+   Detalle del depósito (GET foreign-trade/imports/{id}): manifiesto 116575014058642 → DEF-MIG-007 verificado en staging
+2026S00003 (BA0558): fila 1 · PLATANO SECO · EC000104 · 2024BA00016 · Manifiesto 116575014212959 (= detalle) · QA-S6-LEV-0558 / QA-S6-ACE-0558 · UNIDAD · SACOS · 300 · 300 · 100 · 200
+2026S00001 (E2E-01): fila 1 · QA-S6 CEBOLLA · QA-S6-CP-001 · 2026BA00001 · Manifiesto QA-S6-MAN-001 (el de báscula) · QA-S6-LEV-001 / QA-S6-ACE-001 · BULTO · 100 · 100 · 100 · 0 · Tiquetes: 2026T00001
+Tiquete 2026T00001 (F3-TIQ-002): datos de la empresa del legacy; «ORDEN DE PESO No.: 2026T00001 FECHA: 06/10/2026»; Cliente QA-S6 Cliente Uno SAS, NIT 900666601; PLACA QSA101; CONDUCTOR QA-S6 Conductor Uno; INGRESO 06/10/2026 23:44; PRODUCTO QA-S6 CEBOLLA; ENTRADA 23:45:16 Peso Bruto 35.000 Kg; SALIDA 23:45 Peso Tara 15.000 Kg; PESO MERCANCÍA 20.000 Kilogramos; Servicio de Báscula 1.00 20.000; VALOR TOTAL $ 20.000,00
+Etiqueta 2026BA00001: Importador/Intermediario/Transportadora QA-S6; Fecha Ingreso 2026-10-06 23:44:54; Ampara 100 Saldo 0.00 BULTO QA-S6 CEBOLLA; Carta Porte QA-S6-CP-001; Manifiesto QA-S6-MAN-001; Placa QSA101; «MERCANCIA NACIONALIZADA»; Levantes QA-S6-LEV-001 (06/10/2026)
+
+# FA-MIG-009 CE (qa.comext)
+Ruta inicial «/», grupos Notificaciones, Dashboards, Comercio Exterior; 23 rutas sin 4xx/5xx; /billing → /access-denied
+Notificación «Nuevo depósito de importación: Se ha creado el depósito 2026BA00003» (aviso a CE, E2E-01 paso 2)
+Detalle BA0042: Confirmed, Nacionalizado, USD 34.248, manifiesto con fecha 09/01/2024, fecha de ingreso 10/01/2024, importador visible bajo «IMPORTADOR» («Sin asignar» solo en EXPORTADOR), «Ingreso de camiones cerrado · Camiones ingresados: 0»
+POST return-for-correction BA0042 → 409 «El depósito 2024BA00002 viene del legacy: corrija sus cantidades con un ajuste de inventario.»
+PATCH entry-date BA0042 → 400 «El depósito no tiene camiones registrados.»; después: Confirmed, fecha sin cambio
+Abandono: 67 «EnAbandono», todos migrados (2022–2024), ningún QA-S6. 67 es la cifra de la repetición de la fase 1 con el conjunto v3 (128 vivos); 66 era de la primera ejecución (127). BA0558 sigue con 200 por nacionalizar.

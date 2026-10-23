@@ -1,0 +1,1 @@
+## Hallazgo factura de almacenamiento $0 (INSP00002, Mora, Draft, sin N.º): aprobar sin número → Asigne el número de factura (SIIGO) antes de aprobar la factura. · GET: {"total":0.00,"isZeroValue":false,"invoiceNumber":null,"status":"Draft"}

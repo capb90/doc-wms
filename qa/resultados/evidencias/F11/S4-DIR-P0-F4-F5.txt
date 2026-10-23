@@ -1,0 +1,107 @@
+# S4 · DIR · P0 pendientes de F4 y F5 · 2026-10-06 09:36 · FE e41decf / BE ea14548 · rol c_exterior salvo indicación
+## F5-CNF-003 · requisitos por modalidad
+INSP 2026INSP00006 (sin importador ni agencia): canConfirm False | falta: ['moneda', 'valor de la mercancía', 'número de manifiesto del camión QAK604', 'peso del manifiesto del camión QAK604']
+EXP 2026EXP00004 (QAK608, «QA-CP-F11-S4-EXP2», registrado sin exportador): canConfirm False | falta: ['exportador', 'moneda', 'valor de la mercancía', 'número de manifiesto del camión QAK608', 'peso del manifiesto del camión QAK608']
+(Nota: PUT warehouse-storages/{id}/stakeholders es aditivo por rol: no sirve para quitar un tercero; por eso se usó un EXP nuevo.)
+confirmar 2026EXP00004 sin exportador:
+HTTP 400 | No se puede confirmar el depósito 2026EXP00004. Falta: exportador; moneda; valor de la mercancía; número de manifiesto del camión QAK608; peso del manifiesto del camión QAK608.
+## F5-ANU-001 · anular 2026EXP00004 (Borrador) con motivo
+HTTP 200 | {"warehouseStorageId": "2eb3c0c2-c09a-4944-a062-01323d4ce3ac", "status": "Cancelled", "removedOrderItems": 0, "cancelledOrders": [], "closedPeriods": 0, "cancelledInvoices": [], "invoicesToReview": []}
+base: Cancelled · servicio Discarded · movimientos In/DeclaredEntry 10.00, Out/StorageCancellation 10.00 · stock 0.00
+## F5-CNF-011 / F5-CNF-004 / F6-TRM-001 · completar y confirmar EXP00003 (COP) e INSP00006 (USD); ninguno tiene recepción de Bodega
+### 2026EXP00003
+PATCH draft (COP 20000000, fecha del documento 2026-10-06): HTTP 200
+PATCH manifiesto del camión: HTTP 200
+recepciones: 0 · confirmar: HTTP 200 | {"warehouseStorageNumber": null, "status": "Confirmed", "trm": null, "trmSource": null, "exchangeRate": null, "exchangeRateSource": null, "invoiceId": null}
+  base: Confirmed · TRM — · origen — · fecha TRM —
+### 2026INSP00006
+PATCH draft (USD 40000, fecha del documento 2026-10-06): HTTP 200
+PATCH manifiesto del camión: HTTP 200
+recepciones: 0 · confirmar: HTTP 200 | {"warehouseStorageNumber": null, "status": "Confirmed", "trm": null, "trmSource": null, "exchangeRate": null, "exchangeRateSource": null, "invoiceId": null}
+  base: Confirmed · TRM 3209.7800 · origen Dian · fecha TRM 2026-10-06
+Facturas de almacenamiento abiertas al confirmar: 2026EXP00003: Draft 178500.00 (Factura de almacenamiento - período 06/10/2026 - 06/11/2026) | 2026INSP00006: Draft 0.00 (Factura de almacenamiento - período 06/10/2026 - 06/11/2026)
+
+
+## F5-OC-011 · OC de exportación sobre 2026EXP00003 (confirmado, no exige nacionalización) · antes: stock 10.00 · reservado 0.00 · disponible 10.00
+HTTP 201 | 2026OC00013 Pending
+## F4-INV-004 · tras crear la OC: stock 10.00 · reservado 10.00 · disponible 0.00
+## F5-OC-016 · cancelar 2026OC00013 Pending con motivo
+HTTP 200
+tras cancelar: stock 10.00 · reservado 0.00 · disponible 10.00 · OC 2026OC00013 Cancelled
+OC del ciclo de salida (QAK609, 10): HTTP 201
+  2026OC00014 Pending · stock 10.00 · reservado 10.00 · disponible 0.00
+## F3-SAL-001 · báscula busca la orden por número: GET weighbridge/loading-orders/2026OC00014
+HTTP 200 | {'orderNumber': '2026OC00014', 'status': 'Pending', 'customerName': 'QA Cliente Uno SAS', producto QA Cebolla 10, depósito 0ad9adb6… (2026EXP00003), orden externa QA-OE-S4-2 de QA Agencia SIA Aduanas}
+## F5-INT-004 · ciclo de salida completo de 2026OC00014 (QAK609)
+initiate: HTTP 201 · OC InProgress
+cobro: HTTP 200 · ciclo c4ffe3c4-c2e0-40ae-98c1-1fd388844c21
+tara 15.000: HTTP 200 | ciclo FirstWeightCaptured | tiquete 2026T00047 
+OC tras iniciar y pesar: InProgress
+## F4-CAR-003 · cargue parcial de 2026OC00014: 6 de 10 (bodega)
+HTTP 200 | Dispatched
+tras el cargue: stock 4.00 · reservado 0.00 · disponible 4.00 · OC Dispatched
+## F5-GUI-015 · guía de exportación automática: 2026S00008 · tipo Export · salida 06/10/2026 09:39 · vence 09/10/2026 · factura sin cargo · anulada no
+Nota F4-CAR-003: la OC quedó «Dispatched» y no «Loaded» porque es de exportación: la guía se crea sola al cargar (F5-GUI-015) y, como en R-EXP (S3), la orden queda despachada; el repesaje cierra el ciclo.
+repesaje (Bruto 21.000):
+HTTP 200 | ciclo Complete | tiquete 2026T00047 
+Resultado F5-INT-004: OC Pending → InProgress (al iniciar la salida) → cargue → Dispatched con guía automática → repesaje cierra el ciclo. Stock 10 → 4; reserva liberada.
+## F5-INT-005 / F6-ALM-012 · despachar el saldo de 2026EXP00003 (4) con QAK610
+períodos antes: Open 06/10-06/11
+OC: HTTP 201
+  2026OC00015
+tara: HTTP 200 | ciclo FirstWeightCaptured 
+cargue 4 de 4: HTTP 200
+repesaje: HTTP 200 | ciclo Complete 
+depósito: Closed · stock 0.00 · OC Dispatched
+períodos después: Closed 06/10-06/11 · factura Draft 178500.00
+En Closed · PATCH draft: HTTP 400 | Solo se puede editar un depósito en estado Borrador. Estado actual: Cerrado.
+En Closed · PATCH shipping-form-number QA-S4-PLANILLA: HTTP 200 | ok
+En Closed · PDF del depósito: HTTP 200 application/pdf
+Resultado F4/F5 hasta aquí: PASA.
+
+## Cadena de importación sobre 2026BA00021 (QAK402, QA Cliente Uno, importador y agencia)
+PATCH draft (USD 30.000, fecha del documento 06/10): HTTP 200 | ok
+manifiesto del camión: HTTP 200 | ok
+confirmar: HTTP 200 | ok
+  estado Confirmed · TRM 3209.7800 Dian · facturas de almacenamiento: 1
+## F5-ETI-001 · etiqueta sin levantes: HTTP 200MERCANCIA SIN NACIONALIZAR
+## F5-OC-004 · OC sobre el IMP confirmado sin levante: HTTP 400 | El depósito de importación 2026BA00021 no está nacionalizado. Solo se pueden generar órdenes de cargue para depósitos de importación en estado 'Nacionalizado'.
+## F5-COR-002 · devolver a Borrador y reconfirmar
+return-for-correction: HTTP 200 | ok
+  estado Draft
+## F5-LEV-002 · levante en Borrador: HTTP 400 | No se pueden registrar levantes en un depósito en estado Borrador. Confirme primero el depósito.
+reconfirmar: HTTP 200 | ok
+  estado Confirmed · períodos con factura: 1 · facturas distintas 1 · facturas no anuladas del depósito: Draft 292202.32
+## F5-LEV-001 (preparación de ETI-002) · levante QA-LEV-S4-01 (8): HTTP 200 | ok
+## F5-ETI-002 · etiqueta tras el levante: HTTP 200MERCANCIA NACIONALIZADA | DATOS DE NACIONALIZACION
+
+## Salida de importación de 2026BA00021 (QAK611, OC de 2 QA Cebolla) · antes: stock 8.00 · reservado 0.00 · disponible 8.00
+OC: HTTP 201 | ok
+  2026OC00016 Pending
+## (F5-GUI-001 se verifica abajo, con la OC cargada y sin guía vigente)
+salida en báscula (tara 15.000): HTTP 200 | ok
+cargue 2 de 2: HTTP 200 | ok
+  OC Loaded · stock 6.00 · reservado 0.00 · disponible 6.00
+## F5-GUI-002 (preparación) · emitir guía: HTTP 201 | ok
+  guía 2026S00010 · factura Paid 35700.00
+## F5-GUI-013 · anular la guía 2026S00010 con motivo: HTTP 200 | {"dispatchGuideId": "ec34cc2d-8075-49e8-ac95-9644f32dc438", "guideNumber": "2026S00010", "cancelledAt": "2026-10-06T14:42:06.672021+00:00", "cancelledInvoices": [], "invoicesToReview": [{"invoiceId": "3aeb6ade-bf57-4b64-b449-cd3f538cb054", "invoiceNumber": null, "status": "Paid", "total": 35700.0}]}
+  guía: 2026S00010 anulada 06/10 09:42 · motivo QA S4 DIR anulacion de guia de prueba · factura Paid 35700.00 · OC Loaded
+  PDF de la guía anulada: HTTP 200 · ANULADA
+## F5-GUI-001 · OC 2026OC00016 (Loaded, sin guía vigente) en pendientes: pending = 1 · pending-orders = 1
+## F5-OC-017 · revertir la salida de 2026OC00016 (Loaded sin guía vigente): HTTP 200 | {"loadingOrderId": "ca117686-6802-4a5e-afa3-47e2a058c927", "orderNumber": "2026OC00016", "status": "Reverted", "returnedItems": [{"warehouseStorageProductId": "58b027d7-db91-476c-b006-8222de867de2", "warehouseStorageNumber": "2026BA00021", "productName": "QA Cebolla", "quantity": 2.0}], "reopenedDeposits": []}
+  OC Reverted · stock 8.00 · reservado 0.00 · disponible 8.00 · movimientos de reversión: Out/LoadingOrder 2.00, In/LoadingOrderReversal 2.00
+Anular el ciclo de salida abierto de QAK611 (limpieza): HTTP 200 | Output
+
+## F4-RSB-001 · QAK612 (motivo «Solo bodega») en GET warehouse/pending-direct-reception: presente = 1
+## F4-RSB-003 · recepción directa de QAK612: IMP «QA-CP-F11-S4-RSB», QA Cebolla declarado 20 y descargado 20 → HTTP 201 | {"warehouseStorageNumber": "2026BA00026", "status": "Completed", "receptionLogId": "d93f5502-3e37-4ff4-b89a-9ff750f4f817", "id": null}
+  base: 2026BA00026 Draft · stock 20.00 declarado / 20.00 stock
+
+## F4-MON-001 · iniciar montacargas para el servicio de 2026BA00023 (QAK601, depósito sin cliente), Tractomula, horómetro 100: HTTP 201 | {"id": null, "status": "InProgress", "vehicleType": "Tractomula", "initHourmeter": 100, "serviceRecordId": "7c23f613-928f-4c2b-bdc3-14d235fdaddc", "stakeholderName": null, "vehiclePlate": null}
+  uso c85f6290-0c94-466a-8ad5-28e929bb0128 en GET warehouse/forklift-uses/active: 1
+Cierre (horómetro 101,5; destinatario conductor, efectivo, sin IVA, 80.000): HTTP 400 | El destinatario de facturación 'driver' no es válido para este servicio.
+Reintento con «Persona no registrada» (el conductor no es destinatario válido para montacargas): HTTP 200
+  uso: Complete
+Resultado F4: PASA (RSB-001, RSB-003, MON-001, INV-004, CAR-003; REC-002 en S4-DEF-F11-010 y DIR).
+
+## Mapeo de IDs de esta evidencia
+- F4-REC-002 · `POST warehouse/receptions/register-arrival` de QAK402 (2026BA00021 y 2026BA00022) y de QAK601 (2026BA00023) → 201 con la recepción «InProgress». Después las recepciones se completaron (ver S4-DIR-delta-post-S3.txt).

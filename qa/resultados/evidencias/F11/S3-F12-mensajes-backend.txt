@@ -1,0 +1,16 @@
+# S3 · CHG-90 (mensajes del backend) — DEF-F1-008, DEF-F5-013, DEF-F6-020, DEF-F10-007 · 2026-10-05 23:39 · BE 44bd80a
+F5-CNF-009 confirmar 2026BA00001 (Confirmado): "errors":[] "description":"Solo se puede confirmar un depósito en estado Borrador. Estado actual: Confirmado." 
+F5-COR-003 devolver a corrección 2026BA00020 (Borrador): "errors":[] "description":"Solo se puede devolver para corrección un depósito en estado Confirmado. Estado actual: Borrador." 
+editar Borrador de 2026BA00001 (Confirmado): "errors":[] "description":"Solo se puede editar un depósito en estado Borrador. Estado actual: Confirmado." 
+F5-GUI-008 guía para orden de inspección: «Las órdenes de cargue de inspección no generan guía de salida.» (ver S3-F11-reportes-fechas.txt)
+tercero inexistente GET stakeholder/{id}: "errors":[] "description":"No existe el tercero con el id 00000000-0000-0000-0000-000000000009" 
+PATCH tercero inexistente: "errors":[{"code":"Request.Name","description":"El nombre debe tener mínimo 3 caracteres"}] "description":"Error de validación de datos" 
+F6-ACC-008 detalle de factura de 1.001 caracteres (Borrador 9233bb32): "errors":[{"code":"Detail","description":"El detalle no puede superar los 1000 caracteres."}] "description":"Error de validación de datos" 
+billing/preview sin servicio: "errors":[{"code":"ServiceId","description":"Indique el servicio."}] "description":"Error de validación de datos" 
+pesaje sobre un ciclo completo (2026T00037): "errors":[] "description":"El ciclo no permite capturar un pesaje en estado Completo." 
+completar de nuevo la recepción completada de QAJ601: "errors":[] "description":"Solo se puede completar una recepción en progreso. Estado actual: Completada." 
+finalizar de nuevo el montacargas finalizado: "errors":[] "description":"El uso de montacargas ya fue finalizado. Estado actual: Completado." 
+aprobar una factura pagada (4a5fd48c, Paid): "errors":[] "description":"Solo se pueden aprobar facturas en borrador o pendientes de aprobación." 
+cambiar destinatario de una factura pagada: "errors":[{"code":"","description":"Debe especificar exactamente uno: CustomerId o UnregisteredRecipient, no ambos ni ninguno."}] "description":"Error de validación de datos" 
+salida en báscula con una orden pendiente desde un camión con depósito (estado en inglés): "errors":[] "description":"Este ingreso ya tiene un servicio de báscula asignado. Actualice la cola." 
+Observación (sin ficha): PATCH billing/invoices/{id}/recipient con un cuerpo sin destinatario responde «Debe especificar exactamente uno: CustomerId o UnregisteredRecipient, no ambos ni ninguno.» (nombres técnicos; la pantalla siempre envía uno).

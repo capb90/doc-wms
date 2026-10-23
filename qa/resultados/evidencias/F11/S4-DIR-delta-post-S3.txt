@@ -1,0 +1,41 @@
+# S4 · DIR del delta posterior a S3 (FE d9783af..e41decf, BE 44bd80a..ea14548) · 2026-10-06 09:16
+## 1. Aviso de recepción de Bodega sin cambios (ReceptionDeclaredDifference, F4-REC-012) · bodega completa la recepción de 2026BA00022 (QAK402): QA Cebolla declarado 4, contado 3
+"previousStock":4.00,"newStock":4.00}],"quantityDiscrepancy":-1.00,"discrepancyPercentage":25.00,"hasDiscrepancy":true,"status":"Completed","createdAt":"2026-10-06T14:12:50.904969+00:00","arrivalAt":"2026-10-06T14:12:50.904969+00:00","unloadCompletedAt":"2026-10-06T14:16:06.928027+00:00"}}
+HTTP 200
+
+Diferencia en recepción de Bodega|Depósito 2026BA00022, camión QAK402: QA Cebolla: declarado 4,00, contado 3,00 (diferencia -1). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+stock de 2026BA00022: 4.00 declarado · 4.00 stock
+Recepción de 2026BA00021 (QA Cebolla 8 de 8, sin diferencia):
+"hasDiscrepancy":false HTTP 200 
+avisos nuevos de 2026BA00021: 0
+
+## 2. Pago con comprobante (REG-023 / CHG-29 tras DEF-F11-015) · facturacion
+factura QA-SIIGO-F11-S2-0001 (2026BA00003) antes: 23dac727-5ea3-49ea-b3e2-b165340635b2|595000.00|7000.00|PartiallyPaid
+comprobante: POST billing/payments/vouchers (72 KB) → voucherUrl /uploads/payment-vouchers/aa1b7883-d189-4808-8a3a-d657a3197bfe_voucher.pdf
+POST billing/invoices/{id}/payments 1.000 transferencia con el comprobante:
+HTTP 201 | {'amount': 1000, 'status': 'Verified', 'voucherUrl': '/uploads/payment-vouchers/aa1b7883-d189-4808-8a3a-d657a3197bfe_voucher.pdf', 'voucherFileName': 'comprobante-qa-s4.pdf'}
+factura después: 595000.00 total · 8000.00 pagado · PartiallyPaid
+
+## 3. Otros filtros del historial sin cambios (WeighbridgeHistoryFilters) · bascula
+?vehiclePlate=QAK402
+HTTP 200 | total 1 | [('2026T00042', 'QAK402', 'Input')]
+?cargoManifestNumber=QA-CP-F11-S4-MULX
+HTTP 200 | total 0 | []
+?vehiclePlate=QAJ3
+HTTP 200 | total 2 | [('2026T00036', 'QAJ302', 'OutputCargo'), ('2026T00035', 'QAJ301', 'Input')]
+?serviceType=OutputCargo&pageSize=3
+HTTP 200 | total 7 | [('2026T00041', 'QAJ701', 'OutputCargo'), ('2026T00036', 'QAJ302', 'OutputCargo'), ('2026T00029', 'QAG802', 'OutputCargo')]
+?cargoManifestNumber=QA-CP-F11-S4-MULB → 1 (ciclo 2026T00042 con ticketNumbers [T00042, T00043], hasAdditionalDeposits true)
+?ticketNumber=2026T00043 (tiquete del depósito adicional) → 1, el mismo ciclo
+Observación (sin ficha, previa al delta): el filtro por carta porte compara solo ServiceRecord.CargoManifestNumber del servicio ancla (WeighbridgeHistoryFilters.cs:71-78, sin cambios en ea14548); buscar la carta porte de un depósito adicional (QA-CP-F11-S4-MULX, o QA-CP-F11-S3-MULX de S3) devuelve 0. Por tiquete sí lo encuentra.
+
+## 4. Tarjeta del manifiesto refactorizada (DepositDetailManifestInfo.vue) en un no anulado · c_exterior en pantalla
+2026BA00003 (Confirmado) → «Editar» del Manifiesto DIAN abre el diálogo «Manifiesto DIAN» → N.º QA-S4-MAN-UI → «Guardar» → la tarjeta muestra «Nro. Manifiesto QA-S4-MAN-UI». Restaurado por API:
+HTTP 200 | manifestNumber None
+
+## 5. Resumen de la ficha de báscula de un depósito normal (registration-summary.ts)
+QAK402 antes de agregar el adicional: «Registrado: depósito 2026BA00021 · Documento QA-CP-F11-S4-MULB» (sin cambio frente a S3). Ver S4-DEF-F11-010-adicional-documento.txt.
+
+## 6. Detalle de importación (página refactorizada) en Anulado y Confirmado: ver S4-DEF-F11-012-manifiesto-anulado.txt.
+
+Resultado DIR del delta: PASA en los 6 puntos; sin regresiones.

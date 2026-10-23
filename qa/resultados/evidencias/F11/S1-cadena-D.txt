@@ -1,0 +1,11 @@
+# S1 · Cadena D (QA-CP-F11-S1-D, IMP, QA Multirol Comercial — sin convenio, ciclo semanal) 17:55
+estado financiero Multirol: Active
+{"serviceRecordId":"7a967082-8567-406a-8cae-893f0ae00b0e","warehouseStorageId":"8f013685-66a6-4387-9399-057107ce52bf","warehouseStorageNumber":"2026BA00006","isFirstTruck":true,"totalAmount":28560.0000}
+{"weighbridgeCycleId":"99687672-262f-4593-9fc1-4260c93391ac","invoiceId":"9b19a695-a41c-4e65-ad55-23ff988ae27a","totalAmount":28560.0000}
+{"status":"FirstWeightCaptured","ticket":"2026T00018","net":null}
+{"status":"Complete","ticket":"2026T00018","net":null}
+## CHG-07 criterio 3: mercancía suelta sin productos → Debe indicar al menos un producto con cantidad a descargar.
+{"status":"Completed","id":null}
+HTTP 200
+## REG-021 / F6-TAR-002 (nivel 2, tarifa base PER_UOM 1.500 × 110 = 165.000 + IVA = 196.350):
+Open|2026-10-05 → 2026-10-12|ServiceRule|9233bb32-606c-45c5-a3e3-6b451905a336|Draft|165000.00|31350.00|196350.00

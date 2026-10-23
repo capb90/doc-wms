@@ -1,0 +1,13 @@
+# S2 · DEF-F6-010 (CHG-29) · F6-PAG-008 · BE 214f5f6 · 2026-10-05 20:49 · facturacion
+## PDF de 72 KB: {"data":{"voucherUrl":"/uploads/payment-vouchers/69660600-6395-43ae-b4cb-0d37fb4f035e_voucher.pdf","voucherFileName":"comprobante-qa.pdf"}} HTTP 200
+## GIF: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El comprobante debe ser JPG, PNG, WEBP o PDF.","traceId":"00-f4e0aadb36784c674be0b0b7b84ca4e8-1a0bac105d5eef16-00"} HTTP 400
+## PDF de 6 MB: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Adjunte el comprobante del pago.","traceId":"00-4e762963709361fc82fd424f7eea9182-1691f63cf7f1cd05-00"} HTTP 400
+## .png con contenido de ejecutable: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El contenido del archivo no corresponde a su extensión.","traceId":"00-8feb7f445aa07f40cfcb97d989983cc3-e79577be5ea575a5-00"} HTTP 400
+## Pago de 1.000 en QA-SIIGO-F11-S2-0001 con el comprobante subido
+{"id":"4eb81012-e8cb-4a5b-b106-0ef9eec4466f","amount":1000,"status":"Verified","voucherUrl":"/uploads/payment-vouchers/69660600-6395-43ae-b4cb-0d37fb4f035e_voucher.pdf","voucherFileName":"comprobante-qa.pdf"}
+## Pago con voucherUrl como data-URL (lo que enviaba la pantalla antes)
+{"status":400,"errors":[{"code":"VoucherUrl","description":"El comprobante debe subirse como archivo (JPG, PNG, WEBP o PDF, máximo 5 MB)."}]}
+## El archivo guardado se puede descargar: GET /uploads/payment-vouchers/69660600-6395-43ae-b4cb-0d37fb4f035e_voucher.pdf → HTTP 200 application/pdf 72306 bytes
+Base: comprobantes como data-URL: 0
+## PDF de 5 MiB + 109 bytes (5,24 MB): {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El comprobante no puede superar 5 MB.",} HTTP 400
+## Observación: con 6 MB el API responde «Adjunte el comprobante del pago.» (el límite de la petición, 5,5 MB, descarta el archivo antes de validarlo); la pantalla valida el tamaño antes de enviar (se comprueba en la interfaz).

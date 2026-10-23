@@ -1,0 +1,36 @@
+# S2 · DEF-F6-007 (CHG-25) y DEF-F6-021 (CHG-24) · F6-FOR-013, F6-FOR-014, F6-ALM-010 · BE 214f5f6 · 2026-10-05 20:50
+## Facturación agrega a QA-CONV-001: ALMACENAMIENTO · QA Aceite · IMP · PER_CARGO_UNIT rate 70.000 · TANQUERO · minimumPerCargoUnit 100.000 (sin minimumIncludesVat → IVA incluido): {"id":"2b9283a8-6b52-4b0d-b1c4-54f2181f1605","productName":"QA Aceite"}
+## CE confirma 2026BA00002 (tanquero QAT001, USD 50.000): "Confirmed"
+## Factura de almacenamiento: {"status":"Draft","subTotal":84033.61,"taxAmount":15966.39,"total":100000.00,"items":[{"description":"Almacenamiento (mínimo aplicado) QA Aceite 05/10/2026 - 05/11/2026","quantity":1.00,"unitPrice":84033.61,"subTotal":84033.61,"taxAmount":15966.39,"total":100000.00}]}
+## Advertencias del detalle: 
+## ¿«magnitud … facturada más de una vez (D12)»? 0
+## Vista previa del motor con la regla tal como quedó (piso 100.000, IVA incluido): {"netAmount":84033.61,"taxAmount":15966.39,"total":100000.00,"source":null,"formula":"PER_CARGO_UNIT","notes":null}
+## Variante sin piso (PATCH solo parámetros: rate 70.000): "ok" → {"netAmount":70000,"taxAmount":13300.00,"total":83300.00,"source":null,"formula":"PER_CARGO_UNIT","notes":null}
+## Variante con piso y minimumIncludesVat=false: "ok" → {"netAmount":100000,"taxAmount":19000.00,"total":119000.00,"source":null,"formula":"PER_CARGO_UNIT","notes":null}
+## Parámetro inválido minimumIncludesVat=quizas: {"status":400,"description":"Parámetro inválido: 'minimumIncludesVat' debe ser true o false."}
+## (regla del tanquero restaurada: piso 100.000, IVA incluido)
+## Mínimos de ALMACENAMIENTO: [{"modality":"EXP001","amount":0.00,"includesVat":false,"isActive":true},{"modality":"IMP001","amount":184000.00,"includesVat":false,"isActive":true},{"modality":"INSP001","amount":0.00,"includesVat":false,"isActive":true}]
+## DEF-F6-021 / F6-ALM-010 · vista previa: QA Cliente Consolidado (sin convenio) · QA Repuestos (sin tarifa base IMP) · IMP · CIF COP 10.000.000 → mínimo de modalidad 184.000 configurado «Neto»: {"netAmount":null,"taxAmount":null,"total":null,"formula":null,"notes":null}
+Admin cambia el mínimo IMP a «Con IVA incluido»: {"amount":184000,"includesVat":true}
+→ misma vista previa: {"netAmount":null,"taxAmount":null,"total":null,"formula":null,"notes":null}
+## F6-ALM-010 crit. 1 · mínimo IMP 184.000 «Con IVA incluido» (ya cambiado arriba) · QAG901 · Consolidado · QA Repuestos 10 · COP 10.000.000:
+2026BA00011 confirmar: "Confirmed"
+   factura: {"subTotal":214621.85,"taxAmount":40778.15,"total":255400.00,"items":["Almacenamiento QA Cebolla 05/10/2026 - 19/10/2026","Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026"]}
+   advertencia: ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Importación ($184.000,00 IVA incluido). Valide y corrija el valor de la línea. Motivo: sin convenio, tarifa base ni precio base.
+Admin vuelve el mínimo IMP a «Neto (se suma el IVA)»: {"amount":184000,"includesVat":false}
+## crit. 2 · mismo mínimo «Neto» · QAG902:
+2026BA00012 confirmar: "Confirmed"
+   factura: {"subTotal":398621.85,"taxAmount":75738.15,"total":474360.00,"items":["Almacenamiento QA Cebolla 05/10/2026 - 19/10/2026","Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026","Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026"]}
+   advertencia: ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Importación ($184.000,00 IVA incluido). Valide y corrija el valor de la línea. Motivo: sin convenio, tarifa base ni precio base.
+## Líneas de la factura consolidada de QA Cliente Consolidado (15428832…, Draft):
+   · Almacenamiento QA Cebolla 05/10/2026 - 19/10/2026 | cantidad 40.00 | neto 60000.00 | IVA 11400.00 | total 71400.00 | 
+   · Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | cantidad 1.00 | neto 154621.85 | IVA 29378.15 | total 184000.00 | 
+   · Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | cantidad 1.00 | neto 184000.00 | IVA 34960.00 | total 218960.00 | 
+   detalle: ALMACENAMIENTO DE: 40 BULTO QA Cebolla, CARTA PORTE:QA-CP-F11-S2-ETQ, 2026BA00010, PERIODO: 05/10/2026 - 19/10/2026, AGENCIA:QA Agencia SIA Aduanas ¶ ALMACENAMIENTO DE: 10 UNIDAD QA Repuestos, CARTA PORTE:QA-CP-F11-S2-MIN1, 2026BA00011, PERIODO: 05/10/2026 - 19/10/2026, AGENCIA:QA Agencia SIA Aduanas ¶ ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Importación ($184.000,00 IVA incluido). Valide y corrija el valor de la línea. Motivo: sin convenio, tarifa base ni precio base. ¶ ALMACENAMIENTO DE: 10 UNIDAD QA Repuestos, CARTA PORTE:QA-CP-F11-S2-MIN2, 2026BA00012, PERIODO: 05/10/2026 - 19/10/2026, AGENCIA:QA Agencia SIA Aduanas ¶ ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Importación ($184.000,00 más IVA). Valide y corrija el valor de la línea
+## F6-FOR-014 · convenio QA-CONV-001 PERCENTAGE_OF_VALUE (0,255 %, mínimo 184.000, umbral 72.156.863), CIF COP 10.000.000 · parámetros actuales: ["minimum=184000","percentage=0.255","minimumThreshold=72156863"]
+sin minimumIncludesVat (por defecto IVA incluido): {"netAmount":null,"taxAmount":29378.15,"total":184000.00,"formula":"PERCENTAGE_OF_VALUE"}
+PATCH minimumIncludesVat=false: "ok" → {"netAmount":null,"taxAmount":34960.00,"total":218960.00,"formula":"PERCENTAGE_OF_VALUE"}
+PATCH minimumIncludesVat=true: "ok" → {"netAmount":null,"taxAmount":29378.15,"total":184000.00,"formula":"PERCENTAGE_OF_VALUE"}
+Restaurar los parámetros originales: "ok" → ["minimum=184000","percentage=0.255","minimumThreshold=72156863"]
+## Formularios (criterio 4): se revisan en la interfaz (columna «Base» de mínimos y texto del parámetro).
+## Criterio 4 (pantalla, capb90): /admin/services/{ALMACENAMIENTO} → «Valores mínimos por tipo de depósito» con columna «Base»: Exportación $ 0 «Neto (+ IVA)», Importación $ 184.000 «Neto (+ IVA)», Inspección $ 0 «Neto (+ IVA)». El esquema de PER_CARGO_UNIT y PERCENTAGE_OF_VALUE trae «El mínimo incluye IVA (desmarcado: es neto y se suma el IVA)» con valor por defecto «true».

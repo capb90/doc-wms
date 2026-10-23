@@ -1,0 +1,117 @@
+# S4 · DIR · P0 pendientes de F0, F1 y F9 · 2026-10-06 09:20 · BE ea14548 / FE e41decf
+## F0-DIS-002 / F1-AUT-003 / F0-LOG-003 · login inválido
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Credenciales inválidas","traceId":"00-675f89d820ce044df67987b0f6d1eb6f-b786f8eeb11de96b-00"} HTTP 400
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Credenciales inválidas","traceId":"00-2ebb2240816c82b58803355965176838-3556c6c1d54dc127-00"} HTTP 400
+## F1-AUT-001 · login Admin (capb90): access y refresh y roles
+accessToken: True refreshToken: True roles: ['Admin']
+## F0-API-001 · GET user/me
+capb90 [{'id': 'f445f1b5-6f6c-4813-8b74-f25f7786d5e6', 'code': 'Admin', 'name': 'Administrador'}]
+## F0-API-003 · GET administration/operation-modalities
+['EXP001', 'IMP001', 'INSP001', 'OTH001']
+## F0-API-004 / F1-MOT-001 · GET entry-reasons/list
+8 motivos:
+   Cargue mercancia exportacion | pesaje: True | activo: None
+   Cargue mercancia importacion | pesaje: True | activo: None
+   Descargue mercancia exportacion | pesaje: True | activo: None
+   Descargue mercancia importacion | pesaje: True | activo: None
+   Otro | pesaje: False | activo: None
+   QA Motivo pesaje F11 | pesaje: True | activo: None
+   Solo Bascula | pesaje: True | activo: None
+   Solo bodega | pesaje: False | activo: None
+## F0-API-005 · GET weighbridge/queue (bascula): HTTP 200
+## F0-API-006 · GET foreign-trade/deposits (c_exterior): HTTP 200
+## F0-API-007 · GET billing/invoices (facturacion): HTTP 200
+## F0-API-009 / F1-SRV-001 · GET service
+   ALMACENAMIENTO | activo: True | id: a9c0d1e2-f3a4-4567-c8d9-e0f1a2b3c4d6
+   MONTACARGAS | activo: True | id: b0d1e2f3-a4b5-4578-d9e0-f1a2b3c4d5e7
+   PAPELERIA | activo: True | id: c1e2f3a4-b5c6-4589-e0f1-a2b3c4d5e6f8
+   GUIA_SALIDA | activo: True | id: d2f3a4b5-c6d7-4590-f1a2-b3c4d5e6f7a9
+   BASCULA | activo: True | id: f8b9c0d1-e2f3-4456-b7c8-d9e0f1a2b3c5
+### BASCULA
+precios base: [(24000.0, 'inactivo', '2026-10-05'), (24000.0, 'activo', '2026-10-05')]
+reglas: []
+mínimos: []
+### GUIA_SALIDA
+precios base: [(35000.0, 'activo', '2026-10-05')]
+reglas: []
+mínimos: []
+### ALMACENAMIENTO
+precios base: []
+reglas: [('IMP001', 'PER_UOM', 'activa', {'rate': '1500', 'uom': 'BULTO'}), ('IMP001', 'PER_UOM', 'inactiva', {'uom': 'BULTO', 'rate': '1900'}), ('EXP001', 'FIXED', 'activa', {'rate': '150000'})]
+mínimos: [('EXP001', 0.0, 'neto'), ('IMP001', 184000.0, 'neto'), ('INSP001', 0.0, 'neto')]
+## F1-MTC-001 · GET forklift-rates
+[('Tractomula', 80000.0), ('DobleTroque', 65000.0), ('Sencillo', 45000.0), ('Turbo', 40000.0), ('GuacalEstiba', 25000.0)]
+## F1-PAR-002 · parámetros
+[('INVENTORY_ADJUSTMENT_ADMIN_EMAIL', 'con valor'), ('COMPANY_NAME', 'con valor'), ('COMPANY_NIT', 'con valor'), ('COMPANY_ADDRESS', 'con valor'), ('COMPANY_PHONE', 'con valor'), ('COMPANY_EMAIL', 'con valor'), ('COMPANY_CITY', 'con valor')]
+## F1-CNV-001 / F1-CNV-003 · convenio de QA Cliente Uno
+   QA-CONV-001 QA Convenio Cliente Uno (status Active, campo «status»; el script leyó isActive) id ba770f5f-b251-4896-8d1c-1e1b11aba0ae
+servicios: [('ALMACENAMIENTO', 'PER_CARGO_UNIT', 'activo'), ('BASCULA', 'FIXED', 'activo'), ('MONTACARGAS', 'PER_VEHICLE_TYPE', 'activo'), ('ALMACENAMIENTO', 'PERCENTAGE_OF_VALUE', 'activo'), ('GUIA_SALIDA', 'FIXED', 'activo')]
+## F6-CFG-001..003 · configuraciones de facturación
+   QA Cliente Consolidado SAS | Biweekly | plazo 15 | límite 10000000.0 | None
+   QA Cliente Mora SAS | Monthly | plazo 30 | límite 1000.0 | None
+   QA Cliente Uno SAS | Monthly | plazo 30 | límite None | None
+   QA Importadora Quito Cía | Days15 | plazo 5 | límite None | None
+   QA Multirol Comercial | Weekly | plazo 10 | límite 0.0 | None
+## F6-CAR-006 · estado financiero (solo lectura)
+QA Cliente Consolidado SAS|Active|0.00
+QA Cliente Mora SAS|Blocked|89250.00
+QA Cliente REG F11 SAS|Active|
+QA Cliente Uno SAS|OverdueWarning|246670.28
+## F0-ENV-001 · usuarios
+   admin activo None
+   capb90 activo None
+   vigilancia activo None
+   bascula activo None
+   facturacion activo None
+   bodega activo None
+   c_exterior activo None
+   v_montenegro activo None
+   j_coral activo None
+   f_chosi activo None
+   qa_inactivo INACTIVO None
+   qa_cambio activo None
+### Preferencia de facturación (invoicingPreference)
+   QA Cliente Consolidado SAS | Consolidated
+   QA Cliente Mora SAS | PerService
+   QA Cliente Uno SAS | PerService
+   QA Importadora Quito Cía | PerService
+   QA Multirol Comercial | PerService
+Nota F6-CAR-006: QA Cliente Uno (sin límite) está en OverdueWarning con deuda vencida, nunca Blocked (CHG-61). F0-ENV-001: roles por usuario verificados en S0 y S3; la lista no trae roleNames.
+## F9-API-001..009 · matriz de permisos (IDs ficticios; 403 = denegado; 400/404 = autorizado y rechazado por datos)
+Roles: capb90=Admin, bascula=Scale, bodega=Warehouse, vigilancia=Receiving, c_exterior=FT, facturacion=Billing
+F9-API-001 GET billing/invoices?pageSize=1 → capb90:200 bascula:403 bodega:403 vigilancia:403 c_exterior:403 facturacion:200
+F9-API-002 PATCH billing/invoices/00000000-0000-0000-0000-000000000001/approve → capb90:404 bascula:403 bodega:403 vigilancia:403 c_exterior:403 facturacion:404
+F9-API-003 PUT billing/warehouse-storages/00000000-0000-0000-0000-000000000001/trm → capb90:404 bascula:403 bodega:403 vigilancia:403 c_exterior:403 facturacion:404
+F9-API-004 POST foreign-trade/warehouse-storages/00000000-0000-0000-0000-000000000001/confirm → capb90:404 bascula:403 bodega:403 vigilancia:403 c_exterior:404 facturacion:403
+F9-API-005 POST foreign-trade/loading-orders → capb90:400 bascula:403 bodega:403 vigilancia:403 c_exterior:400 facturacion:403
+F9-API-006 POST warehouse/inventory/adjustments → capb90:400 bascula:403 bodega:403 vigilancia:403 c_exterior:400 facturacion:403
+F9-API-007a POST weighbridge/storage/register → capb90:400 bascula:400 bodega:403 vigilancia:403 c_exterior:403 facturacion:403
+F9-API-007b POST weighbridge/storage/process-payment → capb90:400 bascula:400 bodega:403 vigilancia:403 c_exterior:403 facturacion:403
+F9-API-009a POST user → capb90:400 bascula:403 bodega:403 vigilancia:403 c_exterior:403 facturacion:403
+F9-API-009b PATCH user/00000000-0000-0000-0000-000000000001 → capb90:404 bascula:403 bodega:403 vigilancia:403 c_exterior:403 facturacion:403
+F9-API-009c POST user/00000000-0000-0000-0000-000000000001/assign-roles → capb90:400 bascula:403 bodega:403 vigilancia:403 c_exterior:403 facturacion:403
+F9-API-009d POST user/00000000-0000-0000-0000-000000000001/manage-active → capb90:404 bascula:403 bodega:403 vigilancia:403 c_exterior:403 facturacion:403
+
+## En pantalla (panel 1024×768, en-US)
+- F0-LOG-004 · c_exterior en /foreign-trade/imports/bce8fdce… → recargar (F5) → sigue en la misma página con la sesión («QA Comercio Exterior»).
+- F0-DIS-001 / F0-LOG-006 · sin sesión: «/» y «/billing» llevan a /auth/login; la pantalla de login carga.
+- F0-DIS-003 · login inválido desde la pantalla: OPTIONS auth/login → 204 y POST → 400 (sin error CORS); aviso «No se pudo completar la acción · Credenciales inválidas».
+- F0-NAV-001 · capb90 (Admin): el menú tiene 70 enlaces (Administración, Vigilancia, Báscula, Bodega, Comercio Exterior, Reportes, Facturación).
+- F9-PAG-001 · capb90 recorre los 70 enlaces con el router de la app: 70 de 70 cargan, ninguno con «Ocurrió un error inesperado», «Acceso Denegado» ni «Página no encontrada», y ninguno redirige. La consola solo tiene los 401/400 de los intentos de login inválido.
+- F9-MEN-001 · grupos del menú por rol (inicio tras login): vigilancia → NOTIFICACIONES, VIGILANCIA (/operations/entries) · bascula → NOTIFICACIONES, BÁSCULA (/operations/weighbridge) · bodega → NOTIFICACIONES, BODEGA (/warehouse) · c_exterior → NOTIFICACIONES, DASHBOARDS, COMERCIO EXTERIOR (/) · facturacion → NOTIFICACIONES, FACTURACIÓN (/billing). Coincide con la matriz §2.1 (Vigilancia solo ve Vigilancia, decisión del 2-oct).
+- F9-MEN-002 / F9-PAG-007 · multirrol:
+  - j_coral (Facturación + CE): NOTIFICACIONES, DASHBOARDS, COMERCIO EXTERIOR, FACTURACIÓN; /billing/invoices y /foreign-trade/deposits abren; /admin/users → /access-denied.
+  - f_chosi (Báscula + CE): NOTIFICACIONES, DASHBOARDS, BÁSCULA, COMERCIO EXTERIOR; báscula y depósitos abren; /billing/invoices → /access-denied.
+  - v_montenegro (Admin + Facturación): todos los grupos; /admin/users, /billing/invoices, depósitos y báscula abren.
+- F9-NAV-001 · bascula abre /billing → /access-denied.
+Resultado: PASA en todos los P0 de F0, F1 y F9 de esta lista.
+
+## Mapeo de IDs de esta evidencia
+- F0-ENV-003 · BASCULA con precio base vigente 24.000 y convenio de QA Cliente Uno (25.000): el cobro de báscula no falla. Ver «### BASCULA».
+- F0-ENV-005 · la base local solo tiene datos QA (prefijo QA, placas QA…), creados en S0–S4; no hay datos de clientes reales.
+- F1-USR-002 · cubierto en S0 (10 usuarios creados con sus roles y cambio obligatorio de contraseña, F11-S0-02). Hoy GET user lista las 12 cuentas.
+- F1-TER-002 y F1-DAT-001 · cubiertos en S0 (dataset §5.2, F11-S0-03). Hoy se verifican los servicios, precios, reglas, mínimos, montacargas, parámetros, convenio, configuraciones y usuarios (arriba).
+- F1-SRV-006 · GUIA_SALIDA con precio base vigente 35.000.
+- F1-SRV-007 · ALMACENAMIENTO IMP001 PER_UOM activo, rate 1.500, uom BULTO.
+- F1-SRV-008 · ALMACENAMIENTO EXP001 FIXED activo, rate 150.000.
+- F1-SRV-011 · mínimos IMP001 184.000 neto; EXP001 0; INSP001 0.

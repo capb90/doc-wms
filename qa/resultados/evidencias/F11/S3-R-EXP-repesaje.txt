@@ -1,0 +1,28 @@
+# S3 · R-EXP — repesaje de salida con una orden de exportación sin cargar · 2026-10-05 23:14 · BE 44bd80a
+Orden 2026OC00010 (2026EXP00002, 20 QA Cebolla) · camión QAJ302 · salida iniciada en báscula (ver S3-DEF-F11-008-conductor.txt, flujo 3)
+## Estado de la orden tras iniciar la salida
+2026OC00010|InProgress
+## Cobro y tara
+{"weighbridgeCycleId":"800a8d4b-f1c6-4594-82cf-aab96c504f9b","invoiceId":"d0696cd0-815c-4ace-8e32-3f862ff7c480","totalAmount":29750.00}
+{"status":"FirstWeightCaptured","ticket":"2026T00036","net":null}
+## Repesaje bruto 35.000 SIN cargue
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"No se puede cerrar el pesaje de salida: la orden 2026OC00010 aún no está cargada (está en cargue). Bodega debe registrar el cargue antes del repesaje.","traceId":"00-12e4c94f681e71bd5df4d4373f0092da-0569887e2dc6a477-00"}
+HTTP 409
+FirstWeightCaptured
+2026OC00010|InProgress
+## Vigilancia intenta registrar la salida con el ciclo abierto
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"El camión QAJ302 tiene un pesaje de báscula sin terminar (por repesar). Termínelo o anúlelo en Báscula antes de registrar la salida.","traceId":"00-d0b08ee664e52126e9da91c84aab6c51-696b154c21222513-00"}
+HTTP 409
+## Bodega ejecuta el cargue (20, firma, sello)
+4a6f-42ac-bb2c-9d420d5ddc3c","releasedPlacements":[{"warehouseLocationId":"b2c3d4e5-f678-90a1-b2c3-d4e5f6789012","locationCode":"A01-R01-N02","quantity":20}]}],"status":"Dispatched","message":"Orden de cargue 2026OC00010 ejecutada exitosamente. 1 de 1 items cargados, total: 20 unidades."}}
+HTTP 200
+
+2026OC00010|Dispatched
+## Repesaje bruto 35.000 tras el cargue
+{"status":"Complete","ticket":"2026T00036","net":null}
+2026OC00010|Dispatched
+2026EXP00002|Closed
+2026S00007 · Export
+## Vigilancia registra la salida
+HTTP 200
+Resultado: PASA — 409 con la orden en cargue; tras el cargue, el repesaje cierra el ciclo y la orden se despacha.

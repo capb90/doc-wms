@@ -1,0 +1,20 @@
+# S1 · DEF-F6-001 / CHG-09 — tarifa por modalidad (17:58)
+{"serviceRecordId":"eb0fe27d-8c64-47ec-b6d5-d3ec1b31fb37","warehouseStorageId":"dcd9af37-d9b0-4f61-ba8a-b9b3ed02c911","warehouseStorageNumber":"2026INSP00002","isFirstTruck":true,"totalAmount":28560.0000}
+{"weighbridgeCycleId":"667faaa8-5d30-4167-9937-fb92b66e28cc","invoiceId":"b7e95e64-cfae-4841-806d-c58fcfc56433","totalAmount":28560.0000}
+{"status":"Complete","ticket":"2026T00020","net":null}
+## F5-CNF-002: requisitos con moneda y valor vacíos: {"canConfirm":false,"missing":[{"code":"CARGO_VALUE","message":"valor de la mercancía"}]}
+confirmar por API → No se puede confirmar el depósito 2026INSP00002. Falta: valor de la mercancía.
+PATCH draft (COP 5.000.000): HTTP 200
+## criterio 2: confirmar INSP de QA Cliente Mora (sin convenio; tarifa base FIXED solo EXP; mínimo INSP $0)
+HTTP 200
+MinimumValue|e894f3ef-33eb-4647-aaba-d11e8d4f49be|Draft|0.00|-
+detalle/advertencia: Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 05/11/2026 | 0.00 · notas: Factura de almacenamiento - período 05/10/2026 - 05/11/2026 ALMACENAMIENTO DE: 20 UNIDAD QA Repuestos, CARTA PORTE:QA-CP-F11-S1-INSP, 2026INSP00002, PERIODO: 05/10/2026 - 05/11/2026, AGENCIA:N/A
+ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Depósito por Inspección ($0,00 más IVA). Valide y corrija el valor de la línea. Motiv
+avisos a Facturación: Almacenamiento facturado con valor mínimo: El depósito 2026INSP00002 se facturó con valor mínimo: ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Depósito por Inspección ($0,00 m
+## INSP00001 (QA Cliente Uno, convenio ALMACENAMIENTO solo IMP001) — requisitos: {"canConfirm":true,"missing":[]}
+HTTP 200
+MinimumValue|eeb133f1-9a33-4391-98a0-590009bd9e65|Draft|0.00
+línea: Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 05/11/2026 | 0.00
+## F6-ACC-005 / F6-INV-011: N.º en factura $0 →  · isZeroValue: {"isZeroValue":false,"invoiceNumber":"QA-SIIGO-F11-S1-ZERO","status":"Draft"}
+## EXP00001 (criterio 1, preparado en S0): ServiceRule | 150000.00 + 28500.00 = 178500.00 | QA-SIIGO-F11-0002 · línea: Almacenamiento QA Cebolla 05/10/2026 - 05/11/2026
+Resultado DEF-F6-001: VERIFICADO (EXP → tarifa base EXP 178.500; INSP Uno y Mora → mínimo INSP $0 con advertencia; IMP Uno COP 200M → 606.900; montacargas convenio 90.000)

@@ -1,0 +1,27 @@
+# S2 · Facturación · DEF-F6-011 (CHG-28), DEF-F6-009 y DEF-F6-013 (CHG-22), DEF-F6-022 (CHG-23), DEF-F9-003 pago (CHG-15) · BE 214f5f6 · 2026-10-05 20:48 · facturacion
+## DEF-F6-011 / F6-INV-020: POST billing/invoices → HTTP 405 · facturas creadas en el último minuto: 0
+## DEF-F6-009 / F6-PAG-010: pago de 5.000 en la factura de montacargas 9457d5fe (Borrador)
+{"status":400,"description":"La factura está en borrador. Asigne el número SIIGO y apruébela antes de registrar un pago."}
+estado: - | Draft | 35700.00 | pagado 0 | vence 2026-10-03
+## DEF-F6-009 / F6-PAG-007: GET billing/invoices?statuses=Approved&statuses=PartiallyPaid → estados devueltos: {"Approved":3}
+## DEF-F9-003 / CHG-15: pago de 5.000 en QA-SIIGO-F11-S2-0001 (Aprobada) enviando receivedById y recordedById = capb90
+(primer intento con «Transfer»: 400 «El método de pago no es válido.»; el valor válido es BankTransfer)
+repetición: {"id":"5621fc54-fb54-4449-94d2-e88f66996073","amount":5000,"status":"Verified"}
+Base · autor del pago: Verified · recibido por facturacion · registrado por facturacion
+factura: QA-SIIGO-F11-S2-0001 | PartiallyPaid | 595000.00 | pagado 5000.00 | vence 2026-11-04
+## DEF-F6-013 / F6-ACC-018: anular QA-SIIGO-F11-S2-0001 con el pago de 5.000
+{"status":400,"description":"No se puede anular la factura porque tiene pagos recibidos o verificados. Gestione la devolución o el traslado del dinero antes de anularla."}
+estado: QA-SIIGO-F11-S2-0001 | PartiallyPaid | 595000.00 | pagado 5000.00 | vence 2026-11-04
+## CHG-22 crit. 4: anular una factura sin pagos (montacargas 9457d5fe, Borrador) con motivo de ≥ 10 caracteres: "Cancelled" · - | Cancelled | 35700.00 | pagado 0 | vence 2026-10-03
+## DEF-F6-022 / F6-ACC-017: factura de contado 4a5fd48c (BASCULA T00001, Paid, sin N.º): - | Paid | 29750.00 | pagado 29750.00 | vence —
+asignar QA-SIIGO-F11-S2-0100:  → QA-SIIGO-F11-S2-0100 | Paid | 29750.00 | pagado 29750.00 | vence —
+cambiarlo a QA-SIIGO-F11-S2-0101: {"status":400,"description":"La factura pagada ya tiene número de factura (SIIGO); no se puede cambiar."}
+mismo número en otra de contado pagada (04aa23fb): {"status":409,"description":"Ya existe una factura con el número 'QA-SIIGO-F11-S2-0100'."}
+
+## Pantalla (facturacion) · FE 15a5028
+- DEF-F10-001 / F10-UX-003 · «Rechazar» (✗) en un pago Recibido de la lista de Pagos → diálogo «Rechazar pago — ¿Rechazar el pago de $ 29.750 (ref. sin referencia) de la factura sin número? El saldo de la factura se recalcula. · Cancelar · Rechazar»; se canceló y no se envió nada (S2-DEF-F10-001-rechazar-pago-confirmacion.jpg).
+- DEF-F6-009 / F6-PAG-007 · Pagos → «Registrar Pago» → buscar «QA Cliente»: solo «QA-SIIGO-F11-S1-0002 — QA Cliente Mora SAS — $ 89.250», «QA-SIIGO-F11-S2-0001 — QA Cliente Uno SAS — $ 589.000», «QA-SIIGO-F11-0002 — QA Cliente Uno SAS — $ 178.500», «QA-SIIGO-F11-0001 — QA Cliente Uno SAS — $ 246.670,28» (Vencida, Pago parcial, Aprobada, Vencida, con saldo). Sin Borradores, sin pagadas, sin la de $0 aprobada y sin «null».
+- DEF-F6-010 / F6-PAG-008 · en el diálogo de pago: GIF → «El comprobante debe ser JPG, PNG, WEBP o PDF.» (mensaje del selector, sin enviar); PDF de 60 KB aceptado («comprobante-ui-qa.pdf»). En la lista, el pago con archivo muestra «Ver comprobante».
+- DEF-F10-001 / F10-ERR-007 · pago de $ 1.000 con referencia QAF10-COMPROBANTE y el PDF, «Registrar Pago» con DOBLE CLIC → red: 1 POST billing/payments/vouchers (200) y 1 POST billing/invoices/23dac727…/payments (201); base: 1 pago «Verified 1000 comprobante-ui-qa.pdf».
+- DEF-F6-013 / F6-ACC-018 · QA-SIIGO-F11-S2-0001 (con pagos) → Acciones: «Anular factura» deshabilitado con «Tiene pagos recibidos o verificados: gestione la devolución o el traslado del dinero antes de anular.».
+- DEF-F10-001 · N.º SIIGO con Enter dos veces seguidas (factura f6db57ba, Borrador 95.000, «QA-SIIGO-F11-S2-0002») → 1 PATCH …/number (204) y el aviso «Número asignado».

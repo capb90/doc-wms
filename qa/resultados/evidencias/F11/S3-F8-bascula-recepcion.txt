@@ -1,0 +1,44 @@
+# S3 · CHG-53/54/55/56 — DEF-F3-009, DEF-F3-019, DEF-F3-010, DEF-F4-009, DEF-F4-010 · 2026-10-05 23:23 · BE 44bd80a / FE d9783af
+## DEF-F3-009 (F3-REG-014): registro de QAJ601 sin transportadora
+"errors":[{"code":"CarrierCompanyId","description":"La transportadora es obligatoria."},{"code":"CarrierCompanyId","description":"El Id de la empresa de transporte no es válido."}]
+"description":"Error de validación de datos"
+HTTP 400
+## sin tipo de vehículo ni apellidos del conductor
+"errors":[{"code":"VehicleType","description":"El tipo de vehículo es obligatorio."},{"code":"DriverLastName","description":"Los apellidos del conductor son obligatorios."}]
+HTTP 400
+## valor 1500.555
+"errors":[{"code":"CargoValue","description":"El valor acepta máximo 2 decimales."}]
+"description":"Error de validación de datos"
+HTTP 400
+## valor sin moneda
+"errors":[{"code":"Currency","description":"La moneda es obligatoria cuando se informa el valor de la mercancía."}]
+"description":"Error de validación de datos"
+HTTP 400
+## valor y moneda vacíos (datos de CE no obligatorios) → registro válido con QA Cebolla 2 y QA Aceite 7
+{"warehouseStorageNumber":"2026BA00020","totalAmount":29750.00}
+## F3-COB-005: cobro a persona no registrada con nombre «QA»
+"errors":[{"code":"UnregisteredRecipient.Name","description":"El nombre debe tener al menos 3 caracteres."},{"code":"UnregisteredRecipient.IdNumber","description":"El número de identificación debe tener al menos 4 caracteres."},{"code":"UnregisteredRecipient.Phone","description":"Ingrese un número de teléfono válido."}]
+"description":"Error de validación de datos"
+HTTP 400
+## DEF-F3-019 (F3-COB-012): cobro en efectivo con cashReceived 50000
+{"weighbridgeCycleId":"9538c3a8-5470-47dd-a19a-6727a1e9783f","invoiceId":"a1cb9392-6905-47ba-a3a4-e0706d75bae3","invoiceNumber":null,"totalAmount":29750.00,"amountReceived":29750.00,"paymentMethod":"Cash","readyForWeighing":true,"paymentDate":"2026-10-06T04:23:34.211929+00:00","isZeroInvoice":false}
+pago guardado: cash_received=NULL change_given=NULL amount=29750.00
+claves de efectivo o cambio en el historial de báscula (API): []
+claves de efectivo o cambio en los pagos de la factura: []
+{"status":"FirstWeightCaptured","ticket":"2026T00040","net":null}
+recepción c2488ee8-e394-44c9-9e07-e6fab41e58a0
+## DEF-F4-009 (F4-REC-009): completar con 6 fotos
+{"status":400,"description":"Error de validación de datos","errors":[{"code":"Photos","description":"Se permiten máximo 5 fotos por recepción."}]}
+## foto que es un PDF con prefijo data:image/jpeg
+{"status":400,"description":"La foto debe ser una imagen JPG, PNG o WEBP.","errors":[]}
+## foto con data:application/pdf
+{"status":400,"description":"La foto debe ser una imagen JPG, PNG o WEBP.","errors":[]}
+## DEF-F4-010 (F4-REC-012): completar contando solo QA Cebolla 2 (QA Aceite 7 declarado, no contado), 1 foto
+{"status":"Completed","hasDiscrepancy":true,"discrepancyDetail":null}
+aviso a CE: Diferencia en recepción de Bodega | Depósito 2026BA00020, camión QAJ601: QA Aceite: declarado 7,00, contado 0,00 (diferencia -7). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+archivos en wwwroot/uploads/reception-photos de la recepción c2488ee8…: 1 (…_reception_c2488ee8-…_f23364f4-….png, la foto del cierre válido; los dos rechazos no dejaron archivos)
+detalle de la recepción (GET warehouse/receptions/{id}): [{"productName":"QA Aceite","countedQuantity":null,"difference":-7.00},{"productName":"QA Cebolla","countedQuantity":2.00,"difference":0.00}]
+
+## DEF-F3-010 (F3-MCA-008): báscula busca el documento QA-CP-F11-001 (2026BA00001, ingreso de camiones cerrado por c_exterior en S0)
+{"cargoManifestNumber":"QA-CP-F11-001","truckEntriesClosedAt":"2026-10-05T22:06:23.480081+00:00","truckEntriesClosedByName":"QA Comercio Exterior","id":"8061989b-8fba-46cc-84f6-7c9a68f0cf8c"}
+(parámetros: number, primaryDocumentTypeId; sin fecha)

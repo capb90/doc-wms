@@ -1,0 +1,14 @@
+# S4 · DEF-F11-013 · 2026-10-06 09:04 · BE ea14548 / FE e41decf · rol c_exterior
+## GET foreign-trade/exports/{id} · 2026EXP00001
+HTTP 200 | {'warehouseStorageNumber': '2026EXP00001', 'warehouseStorageStatus': None, 'status': 'Closed', 'currency': 'COP', 'cargoValue': 50000000.0}
+## GET foreign-trade/inspections/{id} · 2026INSP00001
+HTTP 200 | {'warehouseStorageNumber': '2026INSP00001', 'warehouseStorageStatus': None, 'status': 'Confirmed', 'currency': 'USD', 'cargoValue': 50000.0}
+## Base (solo lectura)
+2026INSP00001|USD|50000.00
+2026EXP00001|COP|50000000.00
+2026EXP00002|COP|10000000.00
+## En pantalla (c_exterior, navegador del panel en en-US)
+- 2026EXP00001 (Cerrado), tarjeta «Información General»: Moneda «COP», Valor Comercial «$ 50.000.000» (S4-DEF-F11-013-exportacion-moneda-valor.jpg).
+- 2026INSP00001 (Confirmado): Moneda «USD», Valor Comercial «US$ 50.000,00» (S4-DEF-F11-013-inspeccion-moneda-valor.jpg). «Editar» en un Confirmado solo abre la planilla de envío (como en importación).
+- 2026INSP00005 (Borrador, moneda COP sin valor guardado): «Editar» abre el formulario con «COP — Peso colombiano» precargado y el valor vacío, igual que lo guardado (S4-DEF-F11-013-insp-borrador-editar.jpg). Se canceló sin guardar.
+- No hay un Borrador de exportación en la base; la precarga en exportación queda cubierta por la misma tarjeta y las pruebas del implementador.

@@ -1,0 +1,8 @@
+# S1 · REG-003 (F1-TER-001/005) y REG-004 (F1-SRV-002, F1-CNV-002) 18:02
+F1-TER-001 capb90 crea QA Cliente REG F11 SAS con contacto y cuenta → {"id":"b776f377-d22f-4c7f-9d5f-44d0260d728c","name":"QA Cliente REG F11 SAS","financialStatus":"Active","contacts":0,"bankAccounts":0}
+F1-TER-005 mismo NIT → 409 Ya existe un tercero con número de identificación 900100121.
+F1-SRV-002 precio base BASCULA 24.000 vigente desde hoy → {"id":"804bffe5-2b3a-4412-992c-4962a15a9756","basePrice":24000,"validFrom":"2026-10-05T05:00:00+00:00","validTo":null,"isActive":true}
+precios BASCULA: [{"basePrice":24000.00,"validFrom":"2026-10-05T05:00:00+00:00","validTo":"2026-10-05T23:02:34.536612+00:00","isActive":false},{"basePrice":24000.00,"validFrom":"2026-10-05T05:00:00+00:00","validTo":null,"isActive":true}]
+F1-CNV-002 facturacion agrega ALMACENAMIENTO IMP PERCENTAGE_OF_VALUE al convenio QA-F11-FAC → {"id":"c5571667-ce20-41db-aa3b-d20d6dfc90b1","formula":"PERCENTAGE_OF_VALUE","modality":"Importación"}
+vista previa (CIF 100.000.000, IVA 19 %) → {"amount":300000.00,"taxAmount":57000.00,"total":357000.00,"minimumApplied":false,"explanation":"Se cobró 0,3 % del valor de la mercancía."}
+contactos en base: 1 · cuentas: 1 · API contactos: ["Rita QA"] · cuentas: ["Bancolombia"]

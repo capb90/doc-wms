@@ -1,0 +1,11 @@
+# S2 · DEF-F1-005 y DEF-F3-016 (CHG-05), DEF-F9-002 (CHG-03) · BE 214f5f6 · 2026-10-05 20:50
+## F1-VEH-002 POST vehicles «qaa101» (capb90): {"status":409,"description":"La placa QAA101 ya existe.","errors":[]}
+## F1-VEH-004 «QA A-1#»: {"status":400,"description":"La placa 'QA A-1#' no es válida: use de 3 a 20 letras, números o guiones.","errors":[]}
+## F1-VEH-004 «AB#12»: {"status":400,"description":"La placa 'AB#12' no es válida: use de 3 a 20 letras, números o guiones.","errors":[]}
+## F1-VEH-005 transportadora sin rol (QA Cliente Uno): {"status":400,"description":"El tercero 'QA Cliente Uno SAS' no tiene el rol de empresa de transporte.","errors":[]}
+## DEF-F3-016 / F3-SAL-011 GET weighbridge/vehicles/by-plate/qaa101 (bascula): {"licensePlate":"QAA101","isActive":true,"carrierCompanyId":"0f89cd64… (QA Transportes SAS)","country":"Colombia","vehicleType":"Tractomula"}
+## by-plate de QAZ902 (inactivo) sin includeInactive: 200 {"data":null} (no lo devuelve) / con includeInactive=true: {"licensePlate":"QAZ902","isActive":false}
+## Base: placas que solo difieren en mayúsculas: 0
+## DEF-F9-002 / F9-API-019 — vigilancia en el API de Bodega: receptions/without-weighbridge 403 · forklift-uses/start 403 · loading-orders/{id}/execute 403 · inventory/deposits 403
+## bodega en portería: POST entry-logs 403 · POST entry-logs/{id}/departure 403
+## vigilancia sigue registrando: GET entry-logs 200

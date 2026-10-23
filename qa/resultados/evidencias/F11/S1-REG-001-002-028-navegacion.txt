@@ -1,0 +1,35 @@
+# S1 · REG-001, REG-002, REG-028 y CHG-86/87/88 — navegación en el panel de navegador (2026-10-05, 18:05–18:20 hora Colombia)
+Navegador: panel de la app de escritorio, navigator.language = en-US (languages en-US, en-CO, es-CO), zona America/Bogota. FE ae36cb4 / BE c56cc86.
+
+## REG-001 (F0-LOG-001/002/005) — login por formulario y ruta inicial
+capb90 (Admin) → /  «Trazabilidad»
+facturacion (Billing) → /billing
+c_exterior (ForeignTrade) → /  «Trazabilidad»
+vigilancia (Receiving) → /operations/entries
+bascula (Scale) → /operations/weighbridge
+bodega (Warehouse) → /warehouse
+f_chosi (Scale + ForeignTrade) → /
+Cerrar sesión (bodega): diálogo «¿Está seguro que desea cerrar sesión del sistema?» → Aceptar → /auth/login; «Atrás» vuelve a /auth/login sin datos (sin token en localStorage).
+
+## REG-002 (F0-NAV-003) — 67 entradas del menú de Admin, navegación interna con 2,5 s por página
+65 páginas cargan sin avisos de error ni redirecciones.
+FALLA: /operations/weighbridge/history → «Ocurrió un error inesperado» al cargar directo; en navegación interna, página vacía bajo «Báscula». Consola: ReferenceError: useAuthStore is not defined (history.vue:175). → DEF-F11-004
+Además /operations/weighbridge/cycles/{id} (detalle del ciclo, fuera del menú) → «Ocurrió un error inesperado» (misma causa, cycles/[id].vue:82). → DEF-F11-004
+Consola, otros errores: «No PrimeVue Toast provided!» al guardar la firma de la recepción directa → DEF-F11-005. Errores de SignalR a las 17:59:50–57 = reinicio del API para la palanca (esperado).
+
+## REG-028 (F9-PAG-002..006) — páginas por rol (navegación directa por URL)
+Billing: menú /notifications, /billing/*, Clientes (/admin/stakeholders?rol=CUSTOMER), Facturación anual y por CPI, Inventario general, Movimientos por depósito; sin «Convenios». /reports/general-inventory carga sin avisos y con filtro «Ubicación». /admin/stakeholders?rol=CUSTOMER carga sin botón de crear. /warehouse, /operations/weighbridge, /foreign-trade, /admin/users → /access-denied. /operations/weighbridge/cycles/{id} (permitido) → error de DEF-F11-004.
+ForeignTrade: inicio /; menú con Terceros (listado y crear) y reportes; /reports/general-inventory sin avisos; /admin/stakeholders/create permitido; /billing, /warehouse/inventory, /admin/users → /access-denied.
+Receiving: menú solo /notifications y /operations/entries/*; /warehouse, /warehouse/inventory, /warehouse/receptions, /warehouse/loading-orders → /access-denied (CHG-03); /operations/entries/exits carga.
+Scale: menú /notifications y /operations/weighbridge/*; /warehouse, /operations/entries, /billing → /access-denied; «Acceso Denegado» ofrece «Ir a mi inicio» y «Cerrar sesión» (CHG-87). /operations/weighbridge/history (permitido) → error de DEF-F11-004.
+Warehouse: menú /notifications, /warehouse/*, Inventario general; /reports/warehouse-movements permitido; /operations/entries, /foreign-trade → /access-denied.
+
+## CHG-87 — página de error en español
+/ruta-que-no-existe-qa → título «Página no encontrada», «La dirección que abrió no existe o ya no está disponible.», botones «Volver» e «Ir a mi inicio».
+
+## CHG-86 — API detenido y reiniciado
+bodega en /warehouse/inventory; marca JS en window (para detectar recargas). API detenido (18:19) y navegación interna a Novedades y Órdenes de cargue: una sola franja superior «Sin conexión con el servidor. Reintentando… · Reintentar ahora», 0 avisos apilados. API reiniciado: la franja desaparece sola, la marca JS sigue (sin recarga) y Inventario carga datos.
+Observación: con el API caído, Órdenes de cargue muestra el estado vacío «No hay órdenes de cargue» (no un estado de error).
+
+## CHG-88 — formatos es-CO con el navegador en inglés
+Montos «$ 606.900», «$ 595.000», «$ 29.750»; desglose «Base $ 500.000 + IVA 19 %: $ 95.000»; pesos «25.000 kg»; fechas «05/10/2026 18:15».

@@ -1,0 +1,56 @@
+# S3 · CHG-49/50/51/52 — DEF-F1-007, DEF-F1-010, DEF-F1-011, DEF-F2-003 · 2026-10-05 23:22 · BE 44bd80a
+## F1-PRO-005: renombrar «QA F11 Producto S2» a «qa cebolla»
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"Ya existe un producto con el nombre 'qa cebolla'.","traceId":"00-4158e85cfd3101525e5baa59fb509d90-0cca6f4ba21d74f9-00"}
+HTTP 409
+## SKU duplicado QA-SKU-ACEITE
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"Ya existe un producto con el SKU 'QA-SKU-ACEITE'.","traceId":"00-deda5b330b09415bcb5cf22899297d39-39f8211505d383c8-00"}
+HTTP 409
+## Alta de producto con nombre «QA  CEBOLLA» (espacios y mayúsculas)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"Ya existe un producto con el nombre 'QA CEBOLLA'.","traceId":"00-4160b8bca9c5e8850cea13fce6b73789-6a6d155bd6c98a36-00"}
+HTTP 409
+producto sin cambios: QA F11 Producto S2 · QA-SKU-F11-S2
+
+## DEF-F1-010 (F1-USR-010/012/017)
+### capb90 se desactiva
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"No puede desactivar su propio usuario.","traceId":"00-5d8909ead0668c8cc571849d656ffe71-3cc0e3286ef5e43b-00"}
+HTTP 400
+### capb90 se quita el rol Admin
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El usuario debe conservar al menos un rol.","traceId":"00-dded9b6dcf9a48cb254783d37e817939-454060dfdc3c7ffe-00"}
+HTTP 400
+### quitar el único rol (Warehouse) a qa_inactivo
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El usuario debe conservar al menos un rol.","traceId":"00-f3341e8018a6cc1d8d092f9ea25b6dd1-629aeac88265a8bf-00"}
+HTTP 400
+## DEF-F1-007 (F1-TER-008): editar «QA F11 Tipo NIT Mayusculas» (900199904) con el NIT 900100001 de QA Cliente Uno (PATCH stakeholder/{id}; un primer intento con otro verbo dio 405)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"Ya existe un tercero con número de identificación 900100001.","traceId":"00-fe09293bc95aab4d8a776a283137a75b-d94d5b1c18beff0d-00"}
+HTTP 409
+tercero sin cambios: QA F11 Tipo NIT Mayusculas · Nit 900199904
+### con el tipo en minúsculas «nit» y su propio número (sin cambio real)
+HTTP 200
+### v_montenegro (Billing + Admin) se quita a sí mismo el rol Admin
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"No puede quitarse a sí mismo el rol de Administrador.","traceId":"00-9f6f9345c60df6b3b304e6a788dbb555-19e815e6ee8a4529-00"}
+HTTP 400
+roles de v_montenegro: Facturación,Administrador · de qa_inactivo: Operario bodega
+
+## DEF-F1-011 (F1-AUT-005): login
+qa_inactivo + contraseña incorrecta: Credenciales inválidas · 68 ms
+usuario inexistente qa_noexiste + contraseña incorrecta: Credenciales inválidas · 67 ms
+qa_inactivo + contraseña correcta (README): Usuario inactivo. Comuníquese con el administrador. · 64 ms
+bodega + contraseña incorrecta: Credenciales inválidas · 65 ms
+## F1-AUT-015: recuperación de contraseña
+bodega → 204
+qa_noexiste → 204
+qa_inactivo → 204
+
+## DEF-F2-003 (F2-ING-012): ingreso de QAJ501 con fecha de dentro de 3 días (2026-10-09T04:23:13Z)
+"description":"La fecha de ingreso no puede ser futura."
+HTTP 400
+## Ingreso de QAJ501 a las 2026-10-05 23:00 (pasado) y salida 22:59 (F2-SAL-009)
+ingreso: {"dateTimeEntry":"2026-10-06T04:00:00+00:00"}
+"description":"La fecha de salida no puede ser anterior al ingreso del camión (05/10/2026 23:00)."
+HTTP 400
+## salida futura (+3 días)
+"description":"La fecha de salida no puede ser futura."
+HTTP 400
+## salida sin fecha
+HTTP 200
+2026-10-05 23:00 → 2026-10-05 23:23

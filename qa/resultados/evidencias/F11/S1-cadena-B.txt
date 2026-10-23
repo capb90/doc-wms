@@ -1,0 +1,114 @@
+# S1 · Cadena B (QA-CP-F11-S1-B, IMP, QA Cliente Uno, COP 200.000.000) 17:48
+## F3-REG-001 / REG-007: registro QAB201 60 bultos
+{"serviceRecordId":"a075fec8-b15e-4e80-b7a0-7de7d055e857","warehouseStorageId":"32969bae-8017-4309-bec5-fe4cc3557206","warehouseStorageNumber":"2026BA00003","isFirstTruck":true,"totalAmount":29750.00}
+## avisos en base tras el registro:
+j_coral|Nuevo depósito de importación|Se ha creado el depósito 2026BA00003
+c_exterior|Nuevo depósito de importación|Se ha creado el depósito 2026BA00003
+f_chosi|Nuevo depósito de importación|Se ha creado el depósito 2026BA00003
+## F3-COB-001 / REG-008: cobro inmediato efectivo a QA Cliente Uno
+{"weighbridgeCycleId":"d3d3fa05-d265-4bca-bd72-1f89075d9185","invoiceId":"92749dd1-5276-47bb-9662-f1ffa2557011","totalAmount":29750.00}
+- | Paid | 29750.00 | pagado 29750.00 | vence —
+## F3-PES-001: primer pesaje bruto 30.000
+{"status":"FirstWeightCaptured","ticket":"2026T00011","net":null}
+## F3-MCA-001 / REG-011: segundo camión QAA101 al mismo documento (40 bultos)
+{"warehouseStorageNumber":null,"trucks":null,"closed":null}
+{"serviceRecordId":"a075fec8-b15e-4e80-b7a0-7de7d055e857","warehouseStorageId":"32969bae-8017-4309-bec5-fe4cc3557206","warehouseStorageNumber":"2026BA00003","isFirstTruck":false,"totalAmount":29750.00}
+{"weighbridgeCycleId":"6ca60890-9c85-4eb6-9639-2af88f800ce2","totalAmount":29750.00}
+{"status":"FirstWeightCaptured","ticket":"2026T00012","net":null}
+ERROR:  column "warehouse_storage_id" does not exist
+LINE 1: ...der by created_at) from inventory_movements where warehouse_...
+                                                             ^
+stock declarado del depósito: QA Cebolla recibido 100.00 stock 100.00 · entradas: 2 · movimientos: 
+## (CHG-36) segundo pesaje de QAB201 sin llegada a Bodega:
+{"status":409,"description":"El camión QAB201 no tiene registrada su llegada a Bodega (depósito 2026BA00003). Bodega debe registrar la llegada antes del segundo pesaje."}
+## llegada a Bodega QAB201 y QAA101
+recepciones {
+  "data": {
+    "receptionLogId": "6ab78782-b331-4b74-b016-894947441381",
+    "entryLogId": "e222dc7d-15dd-4253-afe7-d8e752a7a6a0",
+    "warehouseStorageEntryId": "6c1ed429-6e46-42bf-9d49-b9374498d173",
+    "warehouseStorageId": "32969bae-8017-4309-bec5-fe4cc3557206",
+    "status": "InProgress",
+    "arrivalAt": "2026-10-05T22:48:52.253354+00:00"
+  }
+} {
+  "data": {
+    "receptionLogId": "9d0d5aed-dfc0-429c-8f59-0f7d0fb144f8",
+    "entryLogId": "3f34182a-3d11-453c-8bbe-3b569276ebff",
+    "warehouseStorageEntryId": "43b01bdb-e460-4e51-a314-43258204c100",
+    "warehouseStorageId": "32969bae-8017-4309-bec5-fe4cc3557206",
+    "status": "InProgress",
+    "arrivalAt": "2026-10-05T22:48:52.366611+00:00"
+  }
+}
+## F3-PES-003/004: taras
+{"status":"Complete","ticket":"2026T00011","net":null}
+{"status":"Complete","ticket":"2026T00012","net":null}
+ERROR:  column c.net_weight does not exist
+LINE 1: select v.license_plate, c.status, c.net_weight from weighbri...
+                                          ^
+## Neto por ciclo (API weighbridge/cycles/{id})
+QAB201: {"status":"Complete","ticket":null,"gross":null,"tare":null,"net":null}
+QAA101: {"status":"Complete","ticket":null,"gross":null,"tare":null,"net":null}
+QAB201: {"status":"Complete","tickets":["2026T00011"],"pesos":["Gross 30000.00","Tare 12000.00"],"entries":[{"n":null,"gw":null,"tw":null}]}
+QAA101: {"status":"Complete","tickets":["2026T00012"],"pesos":["Gross 28000.00","Tare 16000.00"],"entries":[{"n":null,"gw":null,"tw":null}]}
+historial (weighbridge/history) neto:
+## F3-PES-004: neto en historial: ["QAA101 2026T00012 bruto 28000.00 tara 16000.00 neto 12000.00","QAB201 2026T00011 bruto 30000.00 tara 12000.00 neto 18000.00"]
+## F4-REC-005: stock antes de recibir: 100.00
+## F4-REC-004 / REG-014: recepción QAA101 contando 40 (igual a lo declarado)
+{"status":"Completed","id":null}
+## recepción QAB201 contando 58 (declarado 60 → diferencia)
+{"status":"Completed","id":null}
+stock después: 100.00 (recibido 100.00)
+## avisos de diferencia a CE (DEF-F3-001 criterio 3):
+c_exterior | Nuevo depósito de importación | Se ha creado el depósito 2026BA00003
+c_exterior | Diferencia en recepción de Bodega | Depósito 2026BA00003, camión QAB201: QA Cebolla: declarado 60,00, contado 58,00 (diferencia -2). El stock no cambió; si corresponde, ajuste 
+f_chosi | Nuevo depósito de importación | Se ha creado el depósito 2026BA00003
+f_chosi | Diferencia en recepción de Bodega | Depósito 2026BA00003, camión QAB201: QA Cebolla: declarado 60,00, contado 58,00 (diferencia -2). El stock no cambió; si corresponde, ajuste 
+j_coral | Nuevo depósito de importación | Se ha creado el depósito 2026BA00003
+j_coral | Diferencia en recepción de Bodega | Depósito 2026BA00003, camión QAB201: QA Cebolla: declarado 60,00, contado 58,00 (diferencia -2). El stock no cambió; si corresponde, ajuste 
+## F5-CNF: requisitos de confirmación BA00003
+{"warehouseStorageId":"32969bae-8017-4309-bec5-fe4cc3557206","warehouseStorageNumber":"2026BA00003","canConfirm":true,"missing":[]}
+## F5-CNF-001 / REG-017: confirmar
+{"data":{"warehouseStorageId":"32969bae-8017-4309-bec5-fe4cc3557206","status":"Confirmed"}}
+HTTP 200
+## Período y factura de almacenamiento (CHG-09 criterio 3: 510.000 + IVA 96.900 = 606.900)
+Open|2026-10-05 → 2026-11-05|Agreement|23dac727-5ea3-49ea-b3e2-b165340635b2|Draft|510000.00|96900.00|606900.00
+## F3-MCA-009: camión tardío QAA102 (20 bultos) en BA00003 confirmado
+{"serviceRecordId":"a075fec8-b15e-4e80-b7a0-7de7d055e857","warehouseStorageId":"32969bae-8017-4309-bec5-fe4cc3557206","warehouseStorageNumber":"2026BA00003","isFirstTruck":false,"totalAmount":29750.00}
+{"status":"FirstWeightCaptured","ticket":"2026T00013","net":null}
+stock: 120.00 (recibido 120.00) · estado depósito: Confirmed
+## avisos a CE (camión tardío / reimpresión de etiqueta):
+c_exterior | Diferencia en recepción de Bodega | Depósito 2026BA00003, camión QAB201: QA Cebolla: declarado 60,00, contado 58,00 (diferencia -2). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+c_exterior | Camión adicional en depósito confirmado | El depósito 2026BA00003 recibió el camión QAA102 con la carta porte QA-CP-F11-S1-B. Su cantidad declarada entró al stock; reimprima la etiqueta.
+f_chosi | Diferencia en recepción de Bodega | Depósito 2026BA00003, camión QAB201: QA Cebolla: declarado 60,00, contado 58,00 (diferencia -2). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+f_chosi | Camión adicional en depósito confirmado | El depósito 2026BA00003 recibió el camión QAA102 con la carta porte QA-CP-F11-S1-B. Su cantidad declarada entró al stock; reimprima la etiqueta.
+j_coral | Diferencia en recepción de Bodega | Depósito 2026BA00003, camión QAB201: QA Cebolla: declarado 60,00, contado 58,00 (diferencia -2). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+j_coral | Camión adicional en depósito confirmado | El depósito 2026BA00003 recibió el camión QAA102 con la carta porte QA-CP-F11-S1-B. Su cantidad declarada entró al stock; reimprima la etiqueta.
+## avisos a Facturación/Admin del mismo minuto:
+factura de almacenamiento tras el camión tardío: Draft 606900.00
+{"status":"Complete","ticket":"2026T00013","net":null}
+{"status":"Completed","id":null}
+## F5-CNF-010 / F3-MCA-007: CE cierra el ingreso de camiones de BA00003
+{"data":{"closedAt":"2026-10-05T22:49:53.046977+00:00","closedByName":"QA Comercio Exterior","truckCount":3}}
+HTTP 200
+## cuarto camión QAA103 con el mismo documento
+by-document: {"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"El número de documento es requerido.","traceId":"00-14a61c646040252d6cc1dd08e592c889-23d694040311e230-00"}
+{"serviceRecordId":null,"warehouseStorageId":null,"warehouseStorageNumber":null,"isFirstTruck":null,"totalAmount":null}
+respuesta del registro del cuarto camión:
+{"status":409,"description":"El ingreso de camiones del documento 'QA-CP-F11-S1-B' con fecha '05/10/2026' fue cerrado por QA Comercio Exterior el 05/10/2026 17:49. No se pueden asociar más camiones. Si es un documento nuevo, indique su fecha."}
+by-document (CHG-54): {"id":"a075fec8-b15e-4e80-b7a0-7de7d055e857","entryLogId":"e222dc7d-15dd-4253-afe7-d8e752a7a6a0","operationModalityId":"f1a2b3c4-d5e6-4789-a0b1-c2d3e4f5a6b7","operationModalityName":"Importación","operationModalityCode":"IMP001","serviceType":"Input","status":"Completed","cargoManifestNumber":"QA-CP-F11-S1-B","primaryDocumentTypeId":"c1a2b3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d","documentDate":"2026-10-05T05:00:00+00:00","singleWeightOnly":false,"configuredFirstWeightType":"Gross","loadingOrderId":null
+## F4-NOV-001: novedad de Bodega sobre BA00003 (Rutina, 120 = 118 buenas + 2 dañadas)
+Condition":"Good","trailerCondition":"Clean","photoRecord":null,"createdByName":"QA Operario Bodega","createdAt":"2026-10-05T22:50:08.881579+00:00","updatedAt":null,"isVoided":false,"voidedAt":null,"voidReason":null,"quantityWarning":null}}
+HTTP 201
+avisos a CE:
+c_exterior | Novedad en mercancía | Bodega registró una novedad (Rutina) en «QA Cebolla» del depósito 2026BA00003: dañada 2, faltante 0, sobrante 0.
+f_chosi | Novedad en mercancía | Bodega registró una novedad (Rutina) en «QA Cebolla» del depósito 2026BA00003: dañada 2, faltante 0, sobrante 0.
+j_coral | Novedad en mercancía | Bodega registró una novedad (Rutina) en «QA Cebolla» del depósito 2026BA00003: dañada 2, faltante 0, sobrante 0.
+QAB204: HTTP 200
+QAB201: HTTP 200
+QAA101: HTTP 200
+QAA102: HTTP 200
+QAD101: HTTP 200
+QAF101: HTTP 200
+QAM102: HTTP 200

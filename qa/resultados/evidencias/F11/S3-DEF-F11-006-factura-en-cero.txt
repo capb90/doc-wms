@@ -1,0 +1,5 @@
+# S3 · DEF-F11-006 (F6-INV-011) · 2026-10-05 23:21 · FE d9783af · usuario facturacion en pantalla
+Factura en cero del depósito adicional 2026BA00019 (1a4a21a0…, Consumidor final, Paid, total $ 0, sin N.º): título «Factura en cero», N° Factura «—» (captura S3-DEF-F11-006-factura-en-cero.jpg).
+Contraste: d0696cd0… (BASCULA de la salida de QAJ302, $ 29.750, sin N.º) → «Factura pendiente de número»; 08470a76… (almacenamiento de 2026BA00015) → «Factura QA-SIIGO-F11-S3-TRM».
+API de la factura en cero: {"invoiceNumber":null,"isZeroValue":true,"total":0.00,"status":"Paid"}
+Resultado: PASA.

@@ -1,0 +1,32 @@
+# S4 · DEF-F11-014 · 2026-10-06 09:05 · BE ea14548 / FE e41decf · rol c_exterior · 2026BA00020 (Borrador; QAJ601, tiquete 2026T00040)
+## Estado inicial (QA Aceite declarado y no contado; QA Cebolla contada 2 por Bodega)
+QA Aceite|7.00|7.00
+QA Cebolla|2.00|2.00
+## 1. PUT QA Aceite (no contado) 7 → 6
+{"data":true} HTTP 200 
+avisos:
+ERROR:  relation "asp_net_users" does not exist
+LINE 1: ...ame, n.title, n.message from notifications n join asp_net_us...
+                                                             ^
+## 2. PUT QA Cebolla (contada 2) 2 → 3
+{"data":true} HTTP 200 
+avisos:
+ERROR:  relation "asp_net_users" does not exist
+LINE 1: ...ame, n.title, n.message from notifications n join asp_net_us...
+                                                             ^
+## Estado tras la corrección
+QA Aceite|6.00|6.00
+QA Cebolla|3.00|3.00
+## Avisos tras los pasos 1 y 2 (consulta de solo lectura a notifications; 3 destinatarios de CE por aviso)
+09:05:35|c_exterior|Diferencia con lo contado por Bodega|Depósito 2026BA00020, corrección de Comercio Exterior: QA Aceite: declarado 6,00, contado por Bodega 0,00 (diferencia -6). El stock quedó con lo declarado; si corresponde, ajuste la cantidad (CE-7).
+09:05:35|j_coral|Diferencia con lo contado por Bodega|Depósito 2026BA00020, corrección de Comercio Exterior: QA Aceite: declarado 6,00, contado por Bodega 0,00 (diferencia -6). El stock quedó con lo declarado; si corresponde, ajuste la cantidad (CE-7).
+09:05:35|f_chosi|Diferencia con lo contado por Bodega|Depósito 2026BA00020, corrección de Comercio Exterior: QA Aceite: declarado 6,00, contado por Bodega 0,00 (diferencia -6). El stock quedó con lo declarado; si corresponde, ajuste la cantidad (CE-7).
+09:05:37|c_exterior|Diferencia con lo contado por Bodega|Depósito 2026BA00020, corrección de Comercio Exterior: QA Cebolla: declarado 3,00, contado por Bodega 2,00 (diferencia -1); QA Aceite: declarado 6,00, contado por Bodega 0,00 (diferencia -6). El stock quedó con lo declarado; si corresponde, ajuste la cantidad (CE-7).
+09:05:37|f_chosi|Diferencia con lo contado por Bodega|Depósito 2026BA00020, corrección de Comercio Exterior: QA Cebolla: declarado 3,00, contado por Bodega 2,00 (diferencia -1); QA Aceite: declarado 6,00, contado por Bodega 0,00 (diferencia -6). El stock quedó con lo declarado; si corresponde, ajuste la cantidad (CE-7).
+09:05:37|j_coral|Diferencia con lo contado por Bodega|Depósito 2026BA00020, corrección de Comercio Exterior: QA Cebolla: declarado 3,00, contado por Bodega 2,00 (diferencia -1); QA Aceite: declarado 6,00, contado por Bodega 0,00 (diferencia -6). El stock quedó con lo declarado; si corresponde, ajuste la cantidad (CE-7).
+## Restauración
+{"data":true} HTTP 200 
+{"data":true} HTTP 200 
+QA Aceite|7.00|7.00
+QA Cebolla|2.00|2.00
+Conclusión: un aviso por corrección, título «Diferencia con lo contado por Bodega», sin «camión sin placa» ni «El stock no cambió»; incluye el producto declarado y no contado (QA Aceite, contado por Bodega 0). Los productos van en el mismo cuerpo separados por «; ». Cantidades restauradas (7 / 2); las restauraciones generan sus propios avisos (Aceite 7 vs 0).

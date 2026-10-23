@@ -1,0 +1,60 @@
+# RT-S6 · Redespliegue de staging y re-test de DEF-F11-021, DEF-F11-020 y O-3 · 2026-10-07 01:00–01:15 (hora Colombia)
+Build anterior: BE b31ddb6 / FE 508b91b. Build nuevo: BE 84c712f (corrección en 57aef56 y 84c712f) / FE 8527144 (corrección en c46c1de).
+Contraseñas leídas de los archivos locales sin imprimirlas; los tokens solo vivieron en el scratchpad de la sesión. Sin SQL de escritura.
+
+## 1. Respaldo previo
+POST administration/backups/run → 202; corrida bed47779 Manual · Succeeded (4.456.629 B) → /opt/wms/backups/2026/10/wms_20261007_0103.dump (build anterior, nombre viejo)
+Línea base: billing/invoices 142 → Approved 2 = 758.683,61 · Draft 129 = 90.954.014,65 · Paid 11 = 244.500 (igual al cierre de S6)
+
+## 2. Artefactos
+staging.sql idempotente: 11 migraciones (20261001193201_InitialParityLegacy … 20261007030137_RemoveSampleSeedData), 209.545 B, ninguna nueva (11 .cs en Wms.Infrastructure/Migrations)
+Imagen wms-api:staging linux/amd64 138 MB (dotnet publish linux-x64 + Dockerfile.staging) · yarn generate con NUXT_PUBLIC_API_BASE=https://api.100-60-89-139.sslip.io/api/v1
+
+## 3. Despliegue
+config (compose, Caddyfile, .env) → backend (Loaded image: wms-api:staging) → frontend (rsync) → up (recrea solo wms-api) → docker compose restart caddy
+Caddy: try_files {path} {path}/index.html /200.html dentro del contenedor; certificados de caddy_data reutilizados (sin emisión nueva)
+postgres «Up 6 hours (healthy)» antes y después: pgdata no se tocó. Volúmenes: caddy_config, caddy_data, pgdata.
+API: «Application started», sin errores de arranque.
+
+## 4. DEF-F11-021
+curl sin sesión (código · location):
+  /auth/login 200 · —            /auth/login/ 200 · —
+  /auth/reset-password?token=abc 200 · — (sirve auth/reset-password/index.html, mismo md5 que en disco)
+  /auth/request-password-reset 200 · —     /auth/request-password-reset/ 200 · —
+  /ruta/que/no/existe 200 · — (mismo md5 que 200.html)     /billing/invoices 200 · —     / 200
+  /_nuxt/tpazN-iP.js 200 text/javascript
+Navegador integrado sin sesión: /auth/reset-password?token=abc → «Restablecer Contraseña» con el token, 0 redirecciones; /auth/request-password-reset → «Recuperar Contraseña».
+  Nota: ese navegador conservaba en caché el 308 permanente de S6 (redirectCount 1 hacia la ruta con «/», aunque fetch sin caché da 200); aun así la pantalla correcta se muestra porque el middleware normaliza la ruta.
+Recuperación del Admin desde la pantalla (01:11) → «Solicitud enviada»; log «Email de recuperación de contraseña enviado a capb.dev@gmail.com».
+  El usuario abrió el enlace del correo en Chrome: pantalla de nueva contraseña, cambio correcto. Guardó la contraseña nueva en .admin-staging.local (600, 01:12).
+  Login del admin con la contraseña nueva → 200, mustChangePassword false.
+F0-LOG-008 (carga completa, sesión iniciada por el usuario):
+  qa.bodega: /auth/login → /warehouse; /auth/login/ → /warehouse. /billing/ → /access-denied («Acceso Denegado», con «Ir a mi inicio»).
+  qa.facturacion (sesión que quedaba de S6): /auth/login y /auth/login/ → /billing; recargar /billing/invoices se queda en la página y el menú resalta «Facturas».
+
+## 5. DEF-F11-020 (FB-BAK-003)
+Dos POST backups/run en paralelo (06:05:37 UTC) → 202 (46a01ef6) y 409 «Recurso duplicado.» «Ya hay un respaldo en curso.»; backups/runs: una sola corrida nueva, Succeeded
+Dos corridas seguidas del mismo minuto (01:06:02 y 01:06:07) → 202 y 202, las dos Succeeded:
+  f50ba535 → wms_20261007_010602_f50ba535.dump (4.114.336 B) + uploads_20261007_010602_f50ba535.tar.gz
+  d374a8d6 → wms_20261007_010607_d374a8d6.dump (4.114.392 B) + uploads_20261007_010607_d374a8d6.tar.gz
+  (más 46a01ef6 → wms_20261007_010537_46a01ef6.*); cada location apunta a su archivo
+pg_restore --list de wms_20261007_010607_d374a8d6.dump → 705 líneas; tar -tzf del uploads → 2 entradas
+GET administration/backups/runs lista todas las corridas.
+
+## 6. O-3
+qa.vigilancia: POST vehicles QSR301 (COL) → 201; POST entry-logs «Solo Bascula», observación «QA-S6 re-test O-3» → 201 Registered
+qa.bascula: weighing-only/initiate (cliente QA-S6 Cliente Uno SAS) → 201: 16.806,72 + 3.193,28 = 20.000,00
+  weighing-only/start-pending-billing → 201 totalAmount 20000.00 (en S6 era 19999.9968); invoiceNumber null
+  Factura 8dc34187: Draft, 16.806,72 + 3.193,28 = 20.000,00, una línea «Servicio de Báscula»
+  Peso Gross 18.500 → Complete, tiquete 2026T00009
+qa.vigilancia: POST entry-logs/{id}/departure → 200 (QSR301 fuera de planta)
+
+## 7. Humo del redespliegue
+deploy-staging.sh smoke: frontend 200 · SPA 200 · login inválido 400 · CORS access-control-allow-origin https://app.100-60-89-139.sslip.io · Swagger 404
+Login de qa.vigilancia, qa.bascula, qa.bodega, qa.comext y qa.facturacion → 200, un rol cada una, sin cambio obligatorio
+BA0042 (2024BA00002) con qa.comext: listado Confirmed, manifiesto EC0004054, stock 398 Unidad; imports/{id} 200, USD, Nacionalizado
+Facturas después: 143 = las 142 de la línea base sin cambios de total ni de estado + la factura de O-3 (Draft 20.000). Draft 130 = 90.974.014,65.
+
+## 8. Respaldo final
+POST backups/run 01:14 → 202; corrida 5fa2939e Manual · Succeeded (4.459.859 B) → wms_20261007_011429_5fa2939e.dump
+Servidor: disco 7,1 G de 77 G (10 %); caddy, wms-api Up; postgres Up 6 hours (healthy)

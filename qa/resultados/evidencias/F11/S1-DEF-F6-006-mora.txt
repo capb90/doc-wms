@@ -1,0 +1,19 @@
+# S1 · DEF-F6-006 / CHG-13 criterio 3 + E2E-12 (desbloqueo) 17:59
+antes: Mora Blocked · QA-SIIGO-F11-0010 QA-SIIGO-F11-0010 | Overdue | 28560.00 | pagado 0 | vence 2026-10-03
+## F6-PAG-003 (excede saldo): El monto del pago excede el saldo pendiente.
+## pago total 28.560 → {"status":"Verified","amount":28560}
+después (misma operación, sin job): Mora Active · factura QA-SIIGO-F11-0010 | Paid | 28560.00 | pagado 28560.00 | vence 2026-10-03
+## las operaciones vuelven a permitirse:
+1. cobro de báscula a Mora: {"weighbridgeCycleId":"90e78dc8-f77f-4c9c-ae8c-4baee01cdd08","invoiceId":"c9e0e81e-c0f1-4415-9e5e-3fe8a8f92fb0","totalAmount":28560.0000}
+2. cierre de montacargas a Mora: Uso de montacargas finalizado exitosamente. Total: $ 45.000 (Sencillo — TarifaBase). Factura  generada.
+3. recepción sin báscula de Mora (QAF101): {"warehouseStorageNumber":"2026INSP00003","status":"Completed"}
+4. orden de cargue sobre BA00007 (Mora):
+{"orderNumber":"2026OC00003","status":"Pending"}
+## OC 2026OC00003 (Mora): salida QAM101 del descargue, nuevo ingreso Cargue importación, báscula salida, cargue
+HTTP 200
+{"loadingOrderNumber":"2026OC00003","totalAmount":28560.0000}
+{"weighbridgeCycleId":"339d8cb1-2a47-47b4-a2c6-ae7e57d7e259","invoiceId":"76f6ae43-03fa-4451-b109-cf490c86e9f5","totalAmount":28560.0000}
+{"status":"FirstWeightCaptured","ticket":"2026T00022","net":null}
+{"status":"Loaded"}
+OC: Loaded · depósito BA00007: Closed
+factura almacenamiento BA00007 (Mora): - | Draft | 89250.00 | pagado 0 | vence — → N.º  → aprobar Approved · QA-SIIGO-F11-S1-0002 | Approved | 89250.00 | pagado 0 | vence 2026-11-04

@@ -1,0 +1,25 @@
+# S3 · DEF-F5-003 / F5-AJU-004 — CE-7 con el servidor de correo caído (SMTP 127.0.0.1:9 por variable de entorno del proceso) · 2026-10-05 23:08 · c_exterior desde la pantalla
+Ajuste: 2026INSP00001 QA Repuestos 39 → 38, observación «QA F11 S3 conteo fisico con SMTP caido». Pantalla: aviso «Cantidad ajustada / El ajuste se aplicó, pero no se pudo enviar el correo al administrador.» (captura S3-DEF-F5-003-smtp-caido-aviso.jpg)
+## Producto tras el ajuste
+38.00|38.00
+## Kárdex (último movimiento)
+Out|Adjustment|1.00|39.00|38.00|QA F11 S3 conteo fisico con SMTP caido
+## Log del API (correo y respuesta)
+3394:         at Wms.Infrastructure.Services.EmailService.SendEmailToMultipleAsync(String[] toEmails, String subject, String htmlBody, CancellationToken cancellationToken) in /Volumes/Dock/Projects/bodegas_asociadas/code_workspace/Backend/wms-api/Wms.Infrastructure/Services/EmailService.cs:line 173
+3395:fail: Wms.Application.Warehouse.Commands.AdjustInventory.AdjustInventoryCommandHandler[0]
+3396:      El ajuste CE-7 del producto 3bd02cbd-37dc-4d41-b7b2-3f2117a98d8a se guardó, pero no se pudo enviar el correo al administrador.
+3397:      System.Net.Mail.SmtpException: Failure sending mail.
+3404:         at System.Net.Mail.SmtpConnection.InitializeConnectionAsync(String host, Int32 port)
+3405:         at System.Net.Mail.SmtpConnection.GetConnectionAsync[TIOAdapter](String host, Int32 port, CancellationToken cancellationToken)
+3406:         at System.Net.Mail.SmtpClient.SendAsyncInternal[TIOAdapter](MailMessage message, Boolean invokeSendCompleted, Object userToken, Boolean forceWrapExceptions, CancellationToken cancellationToken)
+3408:         at System.Net.Mail.SmtpClient.SendAsyncInternal[TIOAdapter](MailMessage message, Boolean invokeSendCompleted, Object userToken, Boolean forceWrapExceptions, CancellationToken cancellationToken)
+3417:         at System.Net.Mail.SmtpClient.<SendMailAsync>g__WaitAndRethrowIfNeeded|75_0(Task`1 task)
+3418:         at Wms.Infrastructure.Services.EmailService.SendEmailToMultipleAsync(String[] toEmails, String subject, String htmlBody, CancellationToken cancellationToken) in /Volumes/Dock/Projects/bodegas_asociadas/code_workspace/Backend/wms-api/Wms.Infrastructure/Services/EmailService.cs:line 173
+3419:         at Wms.Application.Warehouse.Commands.AdjustInventory.AdjustInventoryCommandHandler.Handle(AdjustInventoryCommand request, CancellationToken cancellationToken) in /Volumes/Dock/Projects/bodegas_asociadas/code_workspace/Backend/wms-api/Wms.Application/Warehouse/Commands/AdjustInventory/
+3666:      Depósito f0ecb041-128b-4cf3-a3dd-cad280510208: período recalculado por ajuste CE-7 de QA Repuestos. Factura eeb133f1-9a33-4391-98a0-590009bd9e65: 0.00 → 0.0000.
+## Respuesta del API para un segundo ajuste por API (38 → 38: misma cantidad)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"La nueva cantidad recibida es igual a la actual.","traceId":"00-b3c74415a158541a7c90fd8394838139-fdbc73b16666603a-00"}
+HTTP 400
+## Respuesta 200 del POST de la pantalla (panel de red)
+{"data":{"movementType":"Out","sourceType":"Adjustment","quantity":1.00,"previousStock":39.00,"newStock":38.00,"reason":"QA F11 S3 conteo fisico con SMTP caido","adminNotified":false}}
+Resultado: PASA — el ajuste se guarda con movimiento en el kárdex, 200 con adminNotified:false (no 500) y la pantalla avisa. El rechazo previo (misma cantidad) es 400 de negocio sin intento de correo.

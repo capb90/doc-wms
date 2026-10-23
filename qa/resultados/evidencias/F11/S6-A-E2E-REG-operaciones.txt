@@ -1,0 +1,59 @@
+# S6 · E2E-01, F11-REG-005 a 013, humo y B.2/B.3 (Admin por API; verificación con SQL de solo lectura) · 2026-10-06 23:44–23:53 (hora Colombia)
+
+## E2E-01 · QA-S6-CP-001 · QSA101 (ingreso) / QSA102 (salida) · depósito 2026BA00001
+1 POST entry-logs QSA101 Descargue importación → 201 Registered; cola: QSA101 NotStarted (F2-INT-001)
+  Duplicado → 409 «La placa ya tiene un ingreso abierto.» (F2-ING-004)
+2 POST weighbridge/storage/register IMP, 100 Bulto QA-S6 CEBOLLA, USD 30.000, cliente/importador/agencia QA-S6 → 201 en 1.147 ms; 2026BA00001, isFirstTruck true, BASCULA 16.806,72 + 3.193,28 = 20.000 (T3)
+  SQL: Draft, declared 100 = received 100 = stock 100, movimiento In/DeclaredEntry 100
+  Cola antes de cobrar: PendingPayment (F3-REI-004). process-payment Cash 20.000 → 200; factura BASCULA Paid
+  Peso Gross 35.000 → FirstWeightCaptured, tiquete 2026T00001; cola PendingSecondWeight, awaitingWarehouseArrival true
+3 Tara 15.000 rechazada hasta registrar la llegada en Bodega (regla del flujo); register-arrival 201; Tara → 200 Complete; GET cycle: [Gross 35000, Tare 15000], tiquete 2026T00001
+4 Recepción completa 100 en «Bodega 2 BA-[1][1]» → 200, stock 100 → 100, sin diferencia
+  Montacargas: start Tractomula horómetro 100 → 201; end 102 con applyVat → 404 «No hay tarifa de montacargas configurada para el tipo de vehículo 'Tractomula'…» (staging sin tarifas). Uso queda abierto.
+5 Manifiesto DIAN QA-S6-MAN-001 → 200; confirmation-requirements canConfirm true; confirm → 200 Confirmed en 650 ms
+  F6-TRM-001: TRM 3209.78, trm_source Dian, trm_date 2026-10-06 (= ingreso 23:44 Colombia). Log: «TRM consultada exitosamente para USD 10/06/2026: 3209.78»; HttpClient IDianTrmService «End processing HTTP request after 361.403ms - 200»
+  Factura almacenamiento Draft: 30.000 × 3.209,78 × 0,25 % = 240.733,50 + IVA 45.739,37 = 286.472,87 (convenio QA-S6, nivel 1); período 06/10/2026–06/11/2026
+  close-truck-entries → 200 truckCount 1
+6 N.º SIIGO QA-S6-0001 → 204; approve → 200 Approved
+7 Levante QA-S6-LEV-001 100 → 200 Nacionalizado; etiqueta PDF 200 (231.834 B)
+8 Salida QSA101 → 200 (dateTimeDeparture 23:47); ingreso QSA102 Cargue importación → 201
+9 OC 2026OC00001 por 100 → 201 Pending; stock 100 / reservado 100 / disponible 0 (emisor de la orden externa: agencia QA-S6; un cliente da 400 «El emisor de la orden externa debe ser una agencia de aduanas o un importador registrado.»)
+10 output/initiate → 201 (20.000); process-payment → 200; Tara 14.000 → tiquete 2026T00002
+11 execute 100 → 200 Loaded «… 1 de 1 items cargados, total: 100 unidades.»; depósito Closed, stock 0/0/0; período Closed
+12 Guía 2026S00001 → 201, cobro inmediato 15.000 (T4); dispatch_guide_lines: 100 / 100 / 100 / 0, levante QA-S6-LEV-001
+13 Repesaje Gross 34.000 → Complete; OC Dispatched; servicio Completed
+14 Salida QSA102 → 200
+15 reports/deposit-billing 2026BA00001: manifiesto QA-S6-MAN-001, TRM 3209.78, invoicesTotal 286.472,87 (reporte de almacenamiento), salida QSA102/2026T00002; movements-report 200; kárdex In/DeclaredEntry 100, Out/LoadingOrder 100
+   Facturas: BASCULA Paid 20.000, ALMACENAMIENTO Approved 286.472,87, BASCULA salida Paid 20.000, GUIA_SALIDA Paid 15.000
+   Notificaciones persistidas: «Cargue completado» (Admin) + correo «[Admin] Orden 2026OC00001 cargada» a 1 destinatario. Aviso a CE de depósito nuevo: sin usuarios CE en staging a esa hora.
+
+## F2-COR-011 · QSD401 «Otro» (fuera de la cola) → PUT correction motivo Descargue importación → 200, cambio Motivo Otro→Descargue; status Registered; entra a la cola NotStarted
+## F11-REG-013 · QSC301 Solo báscula → initiate 201 (20.000), cobro 200, un pesaje Gross 18.000 → Complete, tiquete 2026T00003, sin depósito
+## F11-REG-011 / REG-008 · QA-S6-CP-002
+QSB201 register 60 → 201 2026BA00002 isFirstTruck true; lookup QSB202 + documento → servicio existente; QSB202 register 40 → 201 mismo depósito y servicio, isFirstTruck false
+QSB201 start-pending-billing → 201 (factura BASCULA Draft, sin número ni pago, total 20.000; la respuesta trae totalAmount 19999.9968); QSB202 process-payment → 200
+QSB201 Gross 33.000 (2026T00004) + llegada + Tara 18.000 → Complete; QSB202 Gross 30.000 (2026T00005) → queda Por repesar (F3-REI-007 con qa.bascula)
+Recepción QSB201 en «Bodega 1 BA-[1][1]» → 409 «La ubicación Bodega 1 BA-[1][1] está deshabilitada.» (DEF-MIG-008); con 58 en «Patio 1 BA» → 200, hasDiscrepancy true (3,33 %), stock 100 → 100
+close-truck-entries → 200 truckCount 2; QSB203 al mismo documento → 409 «El ingreso de camiones del documento 'QA-S6-CP-002' con fecha '06/10/2026' fue cerrado por Administrador el 06/10/2026 23:50. No se pueden asociar más camiones…» (F3-MCA-007); salida QSB203
+confirm 2026BA00002 (COP) → 200 en 207 ms; factura Draft 125.000 + 23.750 = 148.750 (0,25 % de 50.000.000)
+## F6-REC-002 · CE-7 a 98 → 200 (Out/Adjustment 2, 100→98); factura recalculada: detalle «ALMACENAMIENTO DE: 98 BULTO…», total 148.750 (PERCENTAGE_OF_VALUE no depende de la cantidad); log «Email enviado a 1 destinatarios: Corrección de Cantidad Recibida — QA-S6 CEBOLLA»
+## F11-REG-012 · tiquetes 2026T00001 a 2026T00007 consecutivos, sin saltos
+## F3-RPT-001 · daily-billing 2026-10-06: 5 ciclos, totalInvoiced 100.000 = 5 facturas BASCULA del día (84.033,60 + 15.966,40); PDF 200 (40.129 B)
+## F3-CIC-001 · /operations/weighbridge/cycles/{2026T00001}: «2026BA00001 Cerrado», ingreso 06/10/2026 23:44, pesajes 23:45, neto 20.000 kg; historial con hora de Colombia
+
+## B.2 DEF-MIG-005 / DEF-MIG-007 en staging (operaciones sobre migrados)
+BA0042 (2024BA00002): ingreso QSA102 Cargue → OC 2026OC00002 por 50 (emisor: la agencia del depósito) → salida en báscula 2026T00006 (cobro al cliente QA-S6) → cargue Loaded → guía 2026S00002 (cobro 15.000 al cliente QA-S6) → repesaje Complete → salida
+  línea de guía: recibido 648 / anterior 448 / despachado 50 / nuevo 398; stock 398; kárdex In/MigrationOpening 648, Out/MigrationOpening 200, Out/LoadingOrder 50
+BA0558 (2024BA00016): levante QA-S6-LEV-0558 100 → Nacionalizado → ingreso QSB203 → OC 2026OC00003 por 100 → 2026T00007 → Loaded → guía 2026S00003 → repesaje → salida
+  línea de guía: 300 / 300 / 100 / 200; stock 200; kárdex In/MigrationOpening 300, Out/LoadingOrder 100
+Facturas de octubre de BA0042 y BA0558 sin cambios (cobro por adelantado).
+## B.3 Factura de BA0042: N.º SIIGO QA-S6-0042 → 204; approve → 200 Approved; total 472.210,74 (396.815,75 + 75.394,99); línea «… 01/10/2026 - 16/10/2026» (igual a la fase 3)
+
+## 2026-10-07 00:01 · Montacargas de E2E-01 (después de configurar tarifas de prueba, autorizado por el usuario)
+PUT forklift-rates: Tractomula 50.000, DobleTroque 40.000, Sencillo 30.000, Turbo 25.000, GuacalEstiba 20.000 → 200 (valores inventados, de prueba)
+POST forklift-uses/{id}/end horómetro 102, applyVat true, Inmediato, cliente QA-S6, 50.000 → 200 Complete: subTotal 50.000, taxAmount 9.500, total 59.500 (Tractomula — TarifaBase)
+  Mensaje del API: «Uso de montacargas finalizado exitosamente. Total: ¤59,500.00 (Tractomula — TarifaBase). Factura  generada.» (cultura invariante en el contenedor y doble espacio: observación cosmética)
+## Correo real
+POST auth/request-password-reset qa.vigilancia → 204; log «Recuperación de contraseña sin envío para qa.vigilancia: el usuario no es administrador.» (CHG-51: solo Admin recibe el correo)
+POST auth/request-password-reset admin → 204 (00:02:45); log «Email de recuperación de contraseña enviado a capb.dev@gmail.com»
+Aviso a CE: 2026BA00003 (QSE502, QA-S6-CP-003) → notificación «Nuevo depósito de importación» para qa.comext (00:02)

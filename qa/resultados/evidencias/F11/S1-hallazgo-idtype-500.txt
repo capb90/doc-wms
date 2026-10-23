@@ -1,0 +1,2 @@
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.6.1","title":"Error del servidor","status":500,"errors":[],"description":"[ArgumentException] Requested value 'NIT' was not found.","traceId":"00-e6729b7d6351dddee896baabee64807b-d79e83eab4fe2b33-00"}
+HTTP 500

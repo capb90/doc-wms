@@ -1,0 +1,32 @@
+# S1 · Palanca f11_palanca_s1.sql — estado previo (17:59)
+QA-SIIGO-F11-0001 | PartiallyPaid | total 496670.28 | pagado 250000.00 | vence 2026-11-04 22:10:10.097539+00 | QA Cliente Uno SAS Active
+9457d5fe | Draft | total 35700.00 | pagado 0 | vence NULL | QA Cliente Uno SAS Active
+QA-SIIGO-F11-0011 | PartiallyPaid | total 28560.00 | pagado 10000.00 | vence 2026-10-15 22:10:10.339107+00 | QA Multirol Comercial Active
+568d8ac9 | Draft | total 28560.00 | pagado 0 | vence NULL | QA Cliente Consolidado SAS Active
+QA-SIIGO-F11-S1-0002 | Approved | total 89250.00 | pagado 0 | vence 2026-11-04 22:59:29.218062+00 | QA Cliente Mora SAS Active
+## log de los jobs (una sola corrida tras reiniciar el API):
+      OverdueDetectionJob iniciado. Intervalo: 24h, delay inicial: 30s
+info: Wms.Api.BackgroundJobs.InvoicePaymentReconciliationBackgroundService[0]
+      InvoicePaymentReconciliationJob iniciado. Intervalo: 24h, delay inicial: 45s
+info: Wms.Api.BackgroundJobs.StoragePeriodAutoCloseBackgroundService[0]
+      StoragePeriodAutoCloseJob iniciado. Delay inicial: 30s. Scheduling dinámico activado.
+      OverdueDetectionJob: iniciando ejecución...
+info: Wms.Api.BackgroundJobs.StoragePeriodAutoCloseBackgroundService[0]
+      StoragePeriodAutoCloseJob: iniciando ejecución...
+      Facturas marcadas como vencidas: 3
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      OverdueDetectionJob completado en 233ms: 3 facturas vencidas, 3 stakeholders actualizados
+info: Wms.Api.BackgroundJobs.InvoicePaymentReconciliationBackgroundService[0]
+      InvoicePaymentReconciliationJob: iniciando ejecución...
+warn: Wms.Infrastructure.Services.NotificationService[0]
+      No se han configurado emails de administradores para notificaciones
+info: Wms.Api.BackgroundJobs.InvoicePaymentReconciliationBackgroundService[0]
+      InvoicePaymentReconciliationJob completado en 35ms: 2 facturas conciliadas, 2 clientes
+info: Wms.Api.BackgroundJobs.InvoiceDueNotificationBackgroundService[0]
+      InvoiceDueNotificationJob: iniciando ejecución...
+## estado posterior:
+568d8ac9 | Draft | total 28560.00 | pagado 0 | pendiente 28560.00 | QA Cliente Consolidado SAS → Active (deuda vencida 0.00)
+QA-SIIGO-F11-0011 | Overdue | total 28560.00 | pagado 10000.00 | pendiente 18560.00 | QA Multirol Comercial → Blocked (deuda vencida 18560.00)
+QA-SIIGO-F11-S1-0002 | Overdue | total 89250.00 | pagado 0 | pendiente 89250.00 | QA Cliente Mora SAS → Blocked (deuda vencida 89250.00)
+9457d5fe | Draft | total 35700.00 | pagado 0 | pendiente 35700.00 | QA Cliente Uno SAS → OverdueWarning (deuda vencida 246670.28)
+QA-SIIGO-F11-0001 | Overdue | total 496670.28 | pagado 250000.00 | pendiente 246670.28 | QA Cliente Uno SAS → OverdueWarning (deuda vencida 246670.28)

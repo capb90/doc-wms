@@ -1,0 +1,4 @@
+# S1 · REG-024 (F6-TRM-002/003)
+TRM DIAN hoy: {"date":"2026-10-05","currency":"USD","trm":3273.49,"fromCache":false}
+F6-TRM-003 TRM manual 4.000 sobre BA00001 (ya con TRM DIAN 3.273,49) → La TRM de este depósito ya fue consultada a la DIAN y no se puede reemplazar.
+motivo corto (5 caracteres) → {"description":"Error de validación de datos","errors":[{"code":"Reason","description":"El motivo debe tener entre 10 y 500 caracteres."}]}

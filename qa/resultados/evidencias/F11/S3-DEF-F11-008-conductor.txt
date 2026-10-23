@@ -1,0 +1,66 @@
+# S3 · DEF-F11-008 / DEF-F3-008 (F3-CAM-010, F3-CAM-011) — conductor por documento · 2026-10-05 23:12 · BE 44bd80a / FE d9783af
+## Conductores antes
+Pedro QA Conductor Colombia · Cc 1000000001 · Colombia · 3002000001
+Jorge QA Conductor Ecuador · Pasaporte 1700000001 · Ecuador · 0992000001
+Carlos QA Conductor CE · Cc 1000000903 · Colombia · 3002000903
+
+## Flujo 1 · Registro con depósito: QAJ201 ingresa con Pedro QA; báscula digita el documento de Jorge QA (Pasaporte 1700000001, existente) con otros nombres «Jorge Digitado Distinto»
+ingreso QAJ201: Pedro QA Conductor Colombia · Cc 1000000001 · 28c2adbd-cffc-4698-b368-5988b2706751
+{"warehouseStorageNumber":"2026BA00016","serviceRecordId":"45f5f0df-6f45-472b-81f9-693c685cff7e"}
+ingreso QAJ201 después: Jorge QA Conductor Ecuador · Pasaporte 1700000001 · 00dfc212-6b92-4970-96d9-ded59c18f906
+Pedro: Pedro QA Conductor Colombia · 1000000001 · Jorge: Jorge QA Conductor Ecuador · 1700000001 · 0992000001
+
+## Flujo 2 · Solo báscula: QAJ202 ingresa con Pedro QA
+ingreso: Pedro QA Conductor Colombia · Cc 1000000001 · 3002000001
+### 2a · sin documento y nombres distintos («Otro Nombre Sin Doc»)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Para cambiar el conductor del ingreso digite el tipo y el número de documento del nuevo conductor. El conductor actual no se modificó.","traceId":"00-7874513f9736313e90e7339d9a0058ea-1b0549da1a987047-00"}
+HTTP 400
+ingreso: Pedro QA Conductor Colombia · Cc 1000000001 · 3002000001
+### 2b · tipo de documento inexistente «Licencia»
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Tipo de identificación no válido. Valores permitidos: Nit, Rut, Cc, Pasaporte, Ruc","traceId":"00-b24f185a09b848335513bd09b41d1c0e-c54cacd2673602e2-00"}
+HTTP 400
+### 2c · tipo «99» (número)
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Tipo de identificación no válido. Valores permitidos: Nit, Rut, Cc, Pasaporte, Ruc","traceId":"00-8707f4dfea568fe74d417df0493962ec-f8180f92da843a6a-00"}
+HTTP 400
+### 2d · documento distinto NUEVO con el tipo en mayúsculas «PASAPORTE» 1700000931 (Luis QA Nuevo S3)
+{"serviceRecordId":"1e5c286d-3498-49d4-a44b-c21bdc9affe9","customerId":"e329015c-1131-456e-8351-5dd40420f26b","totalAmount":29750.00}
+ingreso: Luis QA Nuevo S3 · Pasaporte 1700000931 · 0990000931
+Pedro: Pedro QA Conductor Colombia · Cc 1000000001 · Colombia · 3002000001
+conductores: 4
+
+## Flujo 2 (bis) · regla 1, mismo documento: QAJ203 ingresa con Luis QA Nuevo S3; báscula digita «pasaporte» 1700000931 con apellido «Nuevo S3 Corregido» y teléfono 0990000932
+ingreso: Luis QA Nuevo S3 · Pasaporte 1700000931 · 0990000931
+{"serviceRecordId":"7e3134da-470a-48b8-949a-3db40dcc9db0"}
+ingreso: Luis QA Nuevo S3 Corregido · Pasaporte 1700000931 · 0990000932 · id igual: t
+conductores: 4
+
+## Flujo 2 (ter) · regla 3, excepción: QAJ204 ingresa con Pedro QA; báscula reenvía «Pedro QA / Conductor Colombia» sin documento
+{"serviceRecordId":"a1be99f1-e0da-4ec5-b99d-39392e33956e"}
+ingreso: Pedro QA Conductor Colombia · Cc 1000000001 · 3002000001
+Pedro: Pedro QA Conductor Colombia · Cc 1000000001 · Colombia · 3002000001 · updated 2026-10-05 20:52
+
+## Flujo 3 · Salida: orden 2026OC00010 (2026EXP00002, 20 QA Cebolla, QAJ302, conductor de la orden Pedro QA); QAJ302 ingresa con Pedro QA; báscula digita un conductor NUEVO «Mario QA Salida S3», CC 1000000941
+(el ingreso de QAJ302 con Pedro QA ya existía: se registró a las 23:13 en un primer intento, antes de que la orden quedara anotada)
+ingreso antes: Pedro QA Conductor Colombia · Cc 1000000001 · 3002000001
+{"serviceRecordId":"a01e8401-5436-443f-a435-6d6e9506fa04","totalAmount":29750.00}
+ingreso después: Mario QA Salida S3 · Cc 1000000941 · 3000000941
+conductor de la orden 2026OC00010: Pedro QA Conductor Colombia · 1000000001
+## Conductores después de los tres flujos (Pedro y Jorge sin cambios; nuevos Luis y Mario)
+Pedro QA Conductor Colombia · Cc 1000000001 · Colombia · 3002000001
+Jorge QA Conductor Ecuador · Pasaporte 1700000001 · Ecuador · 0992000001
+Carlos QA Conductor CE · Cc 1000000903 · Colombia · 3002000903
+Luis QA Nuevo S3 Corregido · Pasaporte 1700000931 · Ecuador · 0990000932
+Mario QA Salida S3 · Cc 1000000941 · Colombia · 3000000941
+## Auditoría de conductores desde el inicio de S3
+23:12:19 | Create | {"Id":"4d7a2132-51c6-41a6-bcc1-d59171b26f0e","Country":"Ecuador","CreatedAt":"2026-10-06T04:12:19.633638+00:00","FirstName":"Luis QA","IdNum
+23:12:33 | Update | {"LastName":"Nuevo S3 Corregido","PhoneNumber":"0990000932","UpdatedAt":"2026-10-06T04:12:33.006081+00:00"}
+23:13:51 | Create | {"Id":"4c756c8b-d26c-4ac9-bcee-2af80437645f","Country":"Colombia","CreatedAt":"2026-10-06T04:13:51.869107+00:00","FirstName":"Mario QA","IdN
+## Órdenes anteriores con Pedro QA
+2026OC00001 · Pedro QA Conductor Colombia · 1000000001
+2026OC00004 · Pedro QA Conductor Colombia · 1000000001
+2026OC00008 · Pedro QA Conductor Colombia · 1000000001
+## Reimpresión de 2026S00001 (S0, conductor Pedro QA) tras los tres flujos: GET dispatch-guides/{id}/pdf → 200
+12:Conductores: Pedro QA Conductor Colombia (1000000001)
+66:Conductores: Pedro QA Conductor Colombia (1000000001)
+PDF: S3-DEF-F11-008-guia-2026S00001-reimpresa.pdf
+Resultado: PASA en los tres flujos (registro con depósito, Solo báscula y Salida) y en las reglas por documento: mismo documento corrige; documento existente se asigna sin modificarlo; documento nuevo crea; sin documento y nombres distintos → 400; sin documento con los mismos nombres → sin cambios; tipo sin distinguir mayúsculas; tipo inexistente o numérico → 400.

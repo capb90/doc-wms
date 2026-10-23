@@ -1,0 +1,94 @@
+# S5 · Parte A · DEF-F11-017 · 2026-10-06 · FE bd729e5 / BE 00d6ac3 (API arrancado por QA a las 10:51 con autorización del usuario)
+## 1) Caso de la ficha sobre 2026BA00010 (QA Cliente Consolidado, tarifa base IMP PER_UOM 1.500/bulto, ciclo quincenal, factura consolidada)
+estado de partida: depósito ['Confirmed', '12c96a3a-3936-419c-94c4-489b00147896', '40.00', '40.00', '10.00', '0.00'] · recibido/declarado/stock/reservado
+movimientos:
+   2026-10-05 20:46:45.871258 | In | 40.00 | DeclaredEntry | 0.00 | 40.00
+   2026-10-05 20:47:06.511506 | Out | 20.00 | LoadingOrder | 40.00 | 20.00
+   2026-10-05 20:47:31.957343 | Out | 10.00 | LoadingOrder | 20.00 | 10.00
+   2026-10-06 09:44:39.323358 | In | 1.00 | Adjustment | 10.00 | 11.00
+   2026-10-06 09:45:54.406878 | Out | 1.00 | Adjustment | 11.00 | 10.00
+período: ['9d238b06-3a48-45f2-8de8-af500cb2e3ad | 2026-10-05 05:00:00+00 | 2026-10-19 05:00:00+00 | Open | 10.00 | 1500.00 | 15000.00 | PER_UOM | 15428832-8aaa-4b53-8ec7-93c1ca7e9d2a']
+factura antes: ['QA-SIIGO-F11-S4-0010 | Approved | 420810.00 |  | 420810.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 14:45:54.270214+00']
+   2026BA00011 | Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | 1.00 | 154621.85 | 184000.00 | f
+   2026BA00012 | Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | 1.00 | 184000.00 | 218960.00 | f
+   2026BA00010 | Almacenamiento QA Cebolla 05/10/2026 - 19/10/2026 | 10.00 | 1500.00 | 17850.00 | f
+CE-7 40 → 41 (c_exterior): 200 {"movementId": "09f8214e-1020-4cef-938b-6483d68746a6", "warehouseStorageProductId": "12c96a3a-3936-419c-94c4-489b00147896", "warehouseStorageId": "83205640-ff59-4184-9fc8-f87e149873a5", "productName": "QA Cebolla", "movementType": "In", "sourceType": "Adjustment", "quantity": 1.0, "previousStock": 1
+factura tras el 1.er recálculo: ['QA-SIIGO-F11-S4-0010 | Approved | 476145.00 |  | 476145.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 14:45:54.270214+00']
+   2026BA00011 | Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | 1.00 | 154621.85 | 184000.00 | f
+   2026BA00012 | Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | 1.00 | 184000.00 | 218960.00 | f
+   2026BA00010 | Almacenamiento QA Cebolla 05/10/2026 - 19/10/2026 | 41.00 | 1500.00 | 73185.00 | f
+período: ['109321ad-0e8b-49f9-a97a-6a08e9d23617 | 2026-10-05 05:00:00+00 | 2026-10-19 05:00:00+00 | Open | 41.00 | 1500.00 | 61500.00 | PER_UOM | 15428832-8aaa-4b53-8ec7-93c1ca7e9d2a']
+avisos a Facturación: ['Factura de almacenamiento actualizada | La factura QA-SIIGO-F11-S4-0010 del depósito 2026BA00010 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 420.810, total nuevo $ 476.145.']
+CE-7 41 → 40 (c_exterior): 200 {"movementId": "7391742e-ffab-4de7-b67c-fdb4bfc35402", "warehouseStorageProductId": "12c96a3a-3936-419c-94c4-489b00147896", "warehouseStorageId": "83205640-ff59-4184-9fc8-f87e149873a5", "productName": "QA Cebolla", "movementType": "Out", "sourceType": "Adjustment", "quantity": 1.0, "previousStock": 
+factura tras el 2.º recálculo: ['QA-SIIGO-F11-S4-0010 | Approved | 474360.00 |  | 474360.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 14:45:54.270214+00']
+   2026BA00011 | Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | 1.00 | 154621.85 | 184000.00 | f
+   2026BA00012 | Almacenamiento (valor mínimo) QA Repuestos 05/10/2026 - 19/10/2026 | 1.00 | 184000.00 | 218960.00 | f
+   2026BA00010 | Almacenamiento QA Cebolla 05/10/2026 - 19/10/2026 | 40.00 | 1500.00 | 71400.00 | f
+período: ['22a6192f-0e76-4cfc-b8ca-990f15eeb340 | 2026-10-05 05:00:00+00 | 2026-10-19 05:00:00+00 | Open | 40.00 | 1500.00 | 60000.00 | PER_UOM | 15428832-8aaa-4b53-8ec7-93c1ca7e9d2a']
+avisos a Facturación: ['Factura de almacenamiento actualizada | La factura QA-SIIGO-F11-S4-0010 del depósito 2026BA00010 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 476.145, total nuevo $ 474.360.']
+depósito: ['Confirmed', '12c96a3a-3936-419c-94c4-489b00147896', '40.00', '40.00', '10.00', '0.00']
+## 2) Depósito nuevo 2026BA00027 (QA Cliente REG F11 SAS sin convenio ni configuración: tarifa base IMP PER_UOM 1.500/bulto, ciclo mensual)
+ingreso QAL101 (Descargue importación) · registro en báscula 40 QA Cebolla · cobro inmediato 28.560 (precio base BASCULA 24.000 + IVA) · tiquete 2026T00050 (30.000 / 26.000) · confirmado por c_exterior
+período al confirmar: ['eb049539-8655-44a3-bb78-fdec5064f913 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 40.00 | 1500.00 | 60000.00 | PER_UOM | 1a09f752-03d8-4c62-b643-476f2904a6f5']
+TOTAL ANTES DEL DESPACHO: ['(sin N.º) | Draft | 71400.00 |  | 71400.00 | - | -']
+   2026BA00027 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 40.00 | 1500.00 | 71400.00 | f
+levante QA-LEV-F11-S5-R17A (40) · 2026OC00017 por 30 con QAL102: salida en báscula (tara 15.000, cobro 28.560), cargue de Bodega 30, guía 2026S00011 (35.000, precio base), repesaje 45.000 → OC Dispatched
+movimientos:
+   2026-10-06 10:56:48.361493 | In | 40.00 | DeclaredEntry | 0.00 | 40.00
+   2026-10-06 10:57:35.217644 | Out | 30.00 | LoadingOrder | 40.00 | 10.00
+TOTAL DESPUÉS DEL DESPACHO (sin recálculo): ['(sin N.º) | Draft | 71400.00 |  | 71400.00 | - | -']
+   2026BA00027 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 40.00 | 1500.00 | 71400.00 | f
+F6-REC-002/003 · CE-7 40 → 41 con la factura en Borrador: 200 ok
+TOTAL DESPUÉS DEL 1.er RECÁLCULO: ['(sin N.º) | Draft | 73185.00 |  | 73185.00 | - | -']
+   2026BA00027 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 41.00 | 1500.00 | 73185.00 | f
+período: ['7ced5464-2625-4147-8bcd-2f9ff56fbff6 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 41.00 | 1500.00 | 61500.00 | PER_UOM | 1a09f752-03d8-4c62-b643-476f2904a6f5']
+avisos a Facturación (Borrador, se espera ninguno): []
+asignar N.º QA-SIIGO-F11-S5-0001: 204 ok
+aprobar: 200 ok
+antes del 2.º CE-7: ['QA-SIIGO-F11-S5-0001 | Approved | 73185.00 |  | 73185.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 15:58:02.068211+00']
+F6-REC-004 · CE-7 41 → 40 con la factura aprobada: 200 ok
+TOTAL DESPUÉS DEL 2.º RECÁLCULO: ['QA-SIIGO-F11-S5-0001 | Approved | 71400.00 |  | 71400.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 15:58:02.068211+00']
+   2026BA00027 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 40.00 | 1500.00 | 71400.00 | f
+período: ['7e2a4804-e3fd-4a1e-834c-d7f0e4fdea80 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 40.00 | 1500.00 | 60000.00 | PER_UOM | 1a09f752-03d8-4c62-b643-476f2904a6f5']
+avisos: ['Factura de almacenamiento actualizada | La factura QA-SIIGO-F11-S5-0001 del depósito 2026BA00027 se actualizó por ajuste CE-7 de QA Cebolla. Total anterior $ 73.185, total nuevo $ 71.400.']
+depósito: [['8dbd2d72-dd45-4360-9bc3-da8c0090214d', 'Confirmed', '151002b3-129c-4492-98c1-627e8b254b89', '40.00', '40.00', '10.00', '0.00']]
+## 3) F6-REC-001 · camión tardío QAL103 (5 QA Cebolla) en 2026BA00027 confirmado, después del despacho parcial de 30
+registro: 201 {"warehouseStorageNumber": "2026BA00027", "isFirstTruck": false, "customerName": "QA Cliente REG F11 SAS", "totalAmount": 28560.0}
+cobro: 200 ok
+primer peso: 200 2026T00052
+depósito: [['8dbd2d72-dd45-4360-9bc3-da8c0090214d', 'Confirmed', '151002b3-129c-4492-98c1-627e8b254b89', '45.00', '45.00', '15.00', '0.00']]
+factura: ['QA-SIIGO-F11-S5-0001 | Approved | 80325.00 |  | 80325.00 | 01a10e12-e0d5-76e7-b41e-1c320f332ce0 | 2026-10-06 15:58:02.068211+00']
+   2026BA00027 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 45.00 | 1500.00 | 80325.00 | f
+período: ['311fa5e4-c6f7-4908-b965-f56859ebd612 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 45.00 | 1500.00 | 67500.00 | PER_UOM | 1a09f752-03d8-4c62-b643-476f2904a6f5']
+avisos:
+   Camión adicional en depósito confirmado | El depósito 2026BA00027 recibió el camión QAL103 con la carta porte QA-CP-F11-S5-R17. Su cantidad declarada entró al stock; reimprima la etiqueta.
+   Factura de almacenamiento actualizada | La factura QA-SIIGO-F11-S5-0001 del depósito 2026BA00027 se actualizó por camión adicional QAL103. Total anterior $ 71.400, total nuevo $ 80.325.
+## 4) F6-ALM-012 con recálculo · 2026BA00028 (REG F11): QA Cebolla 20 (PER_UOM) + QA Repuestos 10 (sin regla → valor mínimo IMP), ingreso QAL105
+al confirmar: ['(sin N.º) | Draft | 254660.00 |  | 254660.00 | - | -']
+   2026BA00028 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 20.00 | 1500.00 | 35700.00 | f
+   2026BA00028 | Almacenamiento (valor mínimo) QA Repuestos 06/10/2026 - 06/11/2026 | 1.00 | 184000.00 | 218960.00 | f
+levante QA-LEV-F11-S5-AG (20 QA Cebolla): 200
+2026OC00019 por 20 QA Cebolla con QAL106: cargue 200
+guía 2026S00013 · OC ['ec163363-ebc5-4cf2-8d55-b4ae342bac19', 'Dispatched']
+depósito (Cebolla agotada, Repuestos con stock): [['a79d7d74-0d51-43b6-b7a3-7536d51409f8', 'Confirmed', 'b2bb1306-e2f2-4deb-9d08-a52c9d5ad9f6', '10.00', '10.00', '10.00', '0.00'], ['a79d7d74-0d51-43b6-b7a3-7536d51409f8', 'Confirmed', '4f77fbd2-699d-422b-8cbe-be7e5a96e9cf', '20.00', '20.00', '0.00', '0.00']]
+períodos:
+   1d584318-95c9-4fef-91c3-8d5789e30de3 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 20.00 | 1500.00 | 30000.00 | PER_UOM | 48aaf424-51c7-42df-b774-ed6951ab13f7
+   bad177f6-eb32-4834-8574-fbf34af2dfb0 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 184000.00 | 184000.00 | MINIMUM_VALUE | 48aaf424-51c7-42df-b774-ed6951ab13f7
+factura tras el agotamiento de QA Cebolla: ['(sin N.º) | Draft | 254660.00 |  | 254660.00 | - | -']
+   2026BA00028 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 20.00 | 1500.00 | 35700.00 | f
+   2026BA00028 | Almacenamiento (valor mínimo) QA Repuestos 06/10/2026 - 06/11/2026 | 1.00 | 184000.00 | 218960.00 | f
+CE-7 QA Repuestos 10 → 11 (dispara el recálculo): 200 ok
+factura tras el recálculo: ['(sin N.º) | Draft | 254660.00 |  | 254660.00 | - | -']
+   2026BA00028 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 20.00 | 1500.00 | 35700.00 | f
+   2026BA00028 | Almacenamiento (valor mínimo) QA Repuestos 06/10/2026 - 06/11/2026 | 1.00 | 184000.00 | 218960.00 | f
+períodos:
+   1d584318-95c9-4fef-91c3-8d5789e30de3 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 20.00 | 1500.00 | 30000.00 | PER_UOM | 48aaf424-51c7-42df-b774-ed6951ab13f7
+   c01df90d-c00d-4908-90cf-ab2dd4203a01 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 184000.00 | 184000.00 | MINIMUM_VALUE | 48aaf424-51c7-42df-b774-ed6951ab13f7
+CE-7 QA Repuestos 11 → 10 (restaura): 200 ok
+factura final: ['(sin N.º) | Draft | 254660.00 |  | 254660.00 | - | -']
+   2026BA00028 | Almacenamiento QA Cebolla 06/10/2026 - 06/11/2026 | 20.00 | 1500.00 | 35700.00 | f
+   2026BA00028 | Almacenamiento (valor mínimo) QA Repuestos 06/10/2026 - 06/11/2026 | 1.00 | 184000.00 | 218960.00 | f
+períodos:
+   1d584318-95c9-4fef-91c3-8d5789e30de3 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Closed | 20.00 | 1500.00 | 30000.00 | PER_UOM | 48aaf424-51c7-42df-b774-ed6951ab13f7
+   6fc10ec3-3fc4-4acf-b776-789f6a515591 | 2026-10-06 05:00:00+00 | 2026-11-06 05:00:00+00 | Open | 1.00 | 184000.00 | 184000.00 | MINIMUM_VALUE | 48aaf424-51c7-42df-b774-ed6951ab13f7
+avisos: ['Almacenamiento facturado con valor mínimo | El depósito 2026BA00028 se facturó con valor mínimo: ADVERTENCIA: No existe un precio configurado ni acuerdo vigente para QA Repuestos. Se facturó el valor mínimo de Importación ($184.000,00 más IVA). Valide y corrija el valor de la línea. Motivo: sin convenio, tarifa base ni precio base.']

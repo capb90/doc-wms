@@ -1,0 +1,42 @@
+# S3 · Observaciones de S2 que pasan a S3 · 2026-10-05 23:58 · FE d9783af / BE 44bd80a
+
+## 1. «Editar» del manifiesto DIAN en el depósito anulado 2026BA00004 → DEFECTO (DEF-F11-012)
+Pantalla (c_exterior), /foreign-trade/imports/{id} de 2026BA00004 (estado Cancelado): la tarjeta «MANIFIESTO DIAN» muestra «Editar» habilitado.
+API: PATCH foreign-trade/imports/2a55a8f2…/manifest con {"manifestNumber":"QA-S3-MAN-ANULADO","manifestDate":"2026-10-05"} → 200 y la base guarda el manifiesto en el depósito anulado (warehouseStorageStatus «Cancelled» en la misma respuesta). Se restauró con otro PATCH a null (200; el manifiesto quedó vacío otra vez).
+
+## 2. «Moneda» y «Valor Comercial» vacíos en 2026EXP00001 → DEFECTO (DEF-F11-013)
+Base: 2026EXP00001 COP 50.000.000 · 2026EXP00002 COP 10.000.000 · 2026INSP00001 USD 50.000.
+GET foreign-trade/exports/{id}: {"warehouseStorageNumber":"2026EXP00001","currency":null,"cargoValue":null} (el DTO no trae currency ni cargoValue)
+GET foreign-trade/inspections/{id}: {"warehouseStorageNumber":"2026INSP00001","currency":null,"cargoValue":null}
+GET foreign-trade/imports/{id} (contraste): {"warehouseStorageNumber":"2026BA00001","currency":"USD","cargoValue":50000.00}
+La tarjeta «Información General» de exportación e inspección recibe esos campos vacíos y muestra «—»; en un Borrador, «Editar» abre el formulario sin la moneda ni el valor guardados.
+
+## 3. «camión sin placa» en el aviso de diferencia (reproducción con 2026BA00020, Borrador; QAJ601 declaró QA Aceite 7 y Bodega contó 0)
+CE corrige QA Aceite de 7 a 6 (PUT foreign-trade/deposits/{id}/products/{productId}, cuerpo de la pantalla):
+"data":true
+HTTP 200
+producto: 6.00 declarado · 6.00 cantidad del depósito · 6.00 stock
+aviso a CE: 
+Origen en el código: DepositProductEditing.cs:144 llama NotifyForeignTradeAsync(…, vehiclePlate: null, …) y ReceptionDeclaredDifference.cs:109 arma «camión {vehiclePlate ?? "sin placa"}» y «El stock no cambió…». El aviso lo provoca la propia corrección de CE, que sí cambió el stock (7 → 6).
+(sin aviso: DepositProductEditing solo recorre los productos con conteo; QA Aceite no tiene conteo. Nota: no aplica la regla de CHG-56 de «declarado y no contado = faltante» en este camino.)
+CE corrige QA Cebolla (contada 2) de 2 a 3:
+"data":true
+HTTP 200
+producto: 3.00 declarado · 3.00 stock
+aviso a CE: Diferencia en recepción de Bodega | Depósito 2026BA00020, camión sin placa: QA Cebolla: declarado 3,00, contado 2,00 (diferencia -1). El stock no cambió; si corresponde, ajuste la cantidad (CE-7).
+se devuelve QA Cebolla a 2:
+HTTP 200
+producto: 2.00 declarado · 2.00 stock
+QA Aceite restaurado: 7.00 / 7.00
+
+## 4. Comprobante de pago de 6 MB por API (POST billing/payments/vouchers, multipart)
+seis-mb.pdf (6291471 bytes) → "description":"Adjunte el comprobante del pago." HTTP 400 
+cinco3-mb.pdf (5542895 bytes) → "description":"Adjunte el comprobante del pago." HTTP 400 
+comprobante-qa.pdf (72306 bytes) → HTTP 200 
+Conclusión 4 → DEFECTO TRIVIAL (DEF-F11-015): el criterio 3 de CHG-29 pide «El comprobante no puede superar 5 MB.» para un archivo de 6 MB. La pantalla lo cumple (valida antes de enviar, S2), pero el API responde «Adjunte el comprobante del pago.» a todo archivo mayor que el límite de la petición (~5,3 MB): el límite descarta el archivo antes de la validación de tamaño.
+
+## 5. Título «Recurso duplicado.» en los 409 de negocio → SIN FICHA (observación)
+El API pone Title = «Recurso duplicado.» a toda ConflictException (GlobalExceptionHandler.cs:59), también a los conflictos de estado (p. ej. R-EXP: «No se puede cerrar el pesaje de salida: la orden 2026OC00010 aún no está cargada…»). La interfaz no usa ese título: el aviso global titula «Conflicto» (api-error.ts, summaryForStatus) y los componentes ponen el suyo; en báscula, el repesaje de QAM101 sin guía muestra «Error al registrar peso — No se puede cerrar el pesaje de salida: la orden 2026OC00003 es de importación y no tiene guía de salida vigente…». Solo lo ve quien consume el API; la descripción es correcta. Recomendación: título genérico «Conflicto con el estado actual.» o por tipo.
+
+## Conclusión 3 → DEFECTO TRIVIAL (DEF-F11-014)
+La corrección de productos de CE (DepositProductEditing) avisa la diferencia con «camión sin placa» y «El stock no cambió; si corresponde, ajuste la cantidad (CE-7).», justo después de que CE cambió la cantidad y el stock. Además ese camino ignora los productos declarados y no contados (QA Aceite).

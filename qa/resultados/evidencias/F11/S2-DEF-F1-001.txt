@@ -1,0 +1,17 @@
+# S2 · DEF-F1-001 (CHG-41) · F1-PRO-001/002/005/007 · BE 214f5f6 · 2026-10-05 20:22 · capb90
+## F1-PRO-001 POST product «QA F11 Producto S2» con unidad Saco
+{"status":null,"data":{"id":"a25d5f85-a162-4a19-81ed-028720f5f50a","name":"QA F11 Producto S2","sku":"QA-SKU-F11-S2","unitMeasure":"Saco"}}
+id=a25d5f85-a162-4a19-81ed-028720f5f50a
+## F1-PRO-002 GET product/{id}
+{"data":{"id":"a25d5f85-a162-4a19-81ed-028720f5f50a","name":"QA F11 Producto S2","sku":"QA-SKU-F11-S2","description":"Producto QA S2","packaging":null,"packagingTypeId":"ed24312f-ae75-4153-b41b-24ea44c1cb45","packagingTypeName":"QA Caja de cartón","unitMeasureId":"f1a2b3c4-d5e6-4701-8a9b-0c1d2e3f4a59","unitMeasureCode":"SACO","unitMeasureName":"Saco","isActive":true,"createdFromWeighbridge":false,"createdAt":"2026-10-06T01:22:20.395095+00:00","updatedAt":null}}
+HTTP 200
+
+## GET product/{id} de QA Cebolla (creado en S0)
+{"name":"QA Cebolla","sku":"QA-SKU-CEBOLLA","unitMeasureName":"Bulto","packagingTypeName":"QA Caja de cartón"}
+## F1-PRO-005 PATCH unidad → Kilogramo
+{"data":{"id":"a25d5f85-a162-4a19-81ed-028720f5f50a","name":"QA F11 Producto S2","sku":"QA-SKU-F11-S2","description":"Producto QA S2","packaging":null,"packagingTypeId":"ed24312f-ae75-4153-b41b-24ea44c1cb45","packagingTypeName":"QA Caja de cartón","unitMeasureId":"f1a2b3c4-d5e6-4701-8a9b-0c1d2e3f4a52","unitMeasureCode":"KG","unitMeasureName":"Kilogramo","isActive":true,"createdFromWeighbridge":false,"createdAt":"2026-10-06T01:22:20.395095+00:00","updatedAt":"2026-10-06T01:22:20.48512+00:00"}}
+HTTP 200
+
+## F1-PRO-007 GET product (listado)
+HTTP 200
+["Contenedor Vacío","Manteca (Importaciones)","Granos","Enlatados","Plátano Seco","QA Aceite","QA Repuestos","QA Cebolla","QA F11 Producto S2"]

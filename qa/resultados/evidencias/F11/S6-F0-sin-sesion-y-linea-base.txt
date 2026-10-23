@@ -1,0 +1,70 @@
+# S6 · F0 sin sesión y línea base de staging — 2026-10-06 23:26 (hora Colombia)
+## F0-DIS-001 / 005
+GET https://app.100-60-89-139.sslip.io/ -> 200 en 0.700317s
+## F0-DIS-002
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"Error de validación de negocio.","status":400,"errors":[],"description":"Credenciales inválidas","traceId":"00-45c871c589709fb98c8dffac482b5107-16d7bfb5ba01106b-00"}
+HTTP 400 en 0.393963s
+## F0-DIS-003 (preflight CORS desde el dominio de la app)
+HTTP/2 204 
+access-control-allow-credentials: true
+access-control-allow-headers: content-type
+access-control-allow-methods: POST
+access-control-allow-origin: https://app.100-60-89-139.sslip.io
+## F0-DIS-004 / Swagger apagado
+/ -> 404
+/swagger -> 404
+/swagger/index.html -> 404
+/swagger/v1/swagger.json -> 404
+## F0-API-002 (system-roles, anónimo)
+["Operario vigilancia","Operario báscula","Facturación","Operario bodega","Administrador","Comercio exterior"]
+## Línea base (SQL de solo lectura)
+  status   | count 
+-----------+-------
+ Confirmed |   128
+(1 row)
+
+ status | count |     sum     
+--------+-------+-------------
+ Draft  |   128 | 91257475.39
+(1 row)
+
+ usuarios 
+----------
+        1
+(1 row)
+
+ entry_logs | ciclos | oc | guias 
+------------+--------+----+-------
+          0 |      0 |  0 |     0
+(1 row)
+
+         code          | is_available 
+-----------------------+--------------
+ Bodega 1 BA-[1][1]    | f
+ Bodega 2 BA-[1][1]    | t
+ Bodega 3 BA-[1][1]    | t
+ Bodega 4 BA-[1][1]    | t
+ Bodega 5 BA-[1][1]    | t
+ Bodega Baja BA-[1][1] | t
+ Cobertizo             | t
+ Patio 1 BA            | t
+ Patio 2 BA            | t
+(9 rows)
+
+            migration_id             
+-------------------------------------
+ 20261007030137_RemoveSampleSeedData
+(1 row)
+
+## Respaldos programados
+ASPNETCORE_ENVIRONMENT=Production
+Backups__Enabled=true
+Backups__DailyTime=02:00
+      AbandonmentAlertJob iniciado. Hora de ejecución: 07:00 (Colombia), delay inicial: 60s
+      DatabaseBackupJob iniciado. Hora de ejecución: 02:00 (Colombia).
+      OverdueDetectionJob iniciado. Intervalo: 24h, delay inicial: 30s
+      InvoicePaymentReconciliationJob iniciado. Intervalo: 24h, delay inicial: 45s
+      StoragePeriodAutoCloseJob iniciado. Delay inicial: 30s. Scheduling dinámico activado.
+      AbandonmentAlertJob iniciado. Hora de ejecución: 07:00 (Colombia), delay inicial: 60s
+      InvoiceDueNotificationJob iniciado. Intervalo: 24h, delay inicial: 60s
+      DatabaseBackupJob iniciado. Hora de ejecución: 02:00 (Colombia).

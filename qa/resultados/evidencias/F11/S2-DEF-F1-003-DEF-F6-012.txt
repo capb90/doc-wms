@@ -1,0 +1,21 @@
+# S2 · DEF-F1-003 y DEF-F6-012 (CHG-26) · F1-SRV-019, F6-TAR-009 · BE 214f5f6 · 2026-10-05 20:24
+(primera corrida descartada: los parámetros se enviaron sin dataType y el API respondió 400 de esquema)
+## F1-SRV-019 Admin crea tarifa base ALMACENAMIENTO · QA Cebolla · IMP · perecedero PER_UOM 1.800 (ya existe la genérica 3fcbee77 de 1.500)
+{"status":null,"data":{"id":"126b8a07-4077-4bf5-b856-332ad5067aa6","productName":"QA Cebolla","operationModalityCode":"IMP001","appliesToPerishable":true,"params":["rate=1800","uom=BULTO"]},"description":null}
+## Detalle (GET pricing-rules)
+{"appliesToPerishable":true,"params":["rate=1800","uom=BULTO"]}
+## Editar la tarifa (PUT 1.900)
+{"status":null,"data":{"appliesToPerishable":true,"params":["rate=1900","uom=BULTO"]},"description":null}
+## Segunda tarifa perecedera igual → 409
+{"status":409,"description":"Ya existe una tarifa base activa para este servicio con el mismo producto, modalidad y tipo de carga (perecedero)."}
+## Desactivar la regla de prueba (no altera los re-tests): 200
+
+## F6-TAR-009 Facturación agrega a QA-CONV-001 ALMACENAMIENTO · QA Cebolla · IMP · perecedero PER_UOM 1.700
+{"status":null,"data":{"id":"123fe077-d6bc-4355-9ec8-85b33de7894d","productName":"QA Cebolla","operationModalityCode":"IMP001","appliesToPerishable":true},"description":null}
+## Segunda variante perecedera igual → 409
+{"status":409,"description":"Ya existe un servicio activo para este acuerdo con el mismo servicio, producto, modalidad y tipo de carga (perecedero)."}
+## PATCH solo con los parámetros (rate 1.650)
+{"status":null,"description":null,"data":{"productName":"QA Cebolla","operationModalityCode":"IMP001","appliesToPerishable":true}}
+## Estado tras el PATCH
+{"productName":"QA Cebolla","operationModalityCode":"IMP001","appliesToPerishable":true,"linkedServiceId":null,"isActive":true,"params":["rate=1650","uom=BULTO"]}
+## Desactivar el servicio de prueba: 204

@@ -1,0 +1,22 @@
+# S2 · DEF-F4-003 (CHG-36) y DEF-F3-005 (CHG-30) · F4-REC-001/017/019, F3-PES-016, F2-SAL-005 · BE 214f5f6 · 2026-10-05 20:35 · camión QAG201 (2026BA00009)
+## Primer pesaje (bruto 18.000): {"status":"FirstWeightCaptured","ticket":"2026T00024","net":null}
+## Cola de báscula (fila de QAG201)
+{"entryLogId":"13666dbe-1420-40b3-88cc-f3074f8b9207","vehiclePlate":"QAG201","driverName":"Pedro QA Conductor Colombia","entryReasonName":"Descargue mercancia importacion","dateTimeEntry":"2026-10-06T01:34:54.235293+00:00","waitingMinutes":0,"state":"PendingSecondWeight","serviceRecordId":"f37bcb8d-2e98-4358-a50b-4ecd59dd8d04","weighbridgeCycleId":"bdfd1c3f-07fc-4ed6-8cfe-cfb8fd060d0d","customerId":"e329015c-1131-456e-8351-5dd40420f26b","customerName":"QA Cliente Uno SAS","cargoManifestNumber":"QA-CP-F11-S2-IDEM","operationModalityName":"Importación","serviceType":"Input","operationType":"sto
+## Segundo pesaje (tara 12.000) SIN llegada a Bodega
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"El camión QAG201 no tiene registrada su llegada a Bodega (depósito 2026BA00009). Bodega debe registrar la llegada antes del segundo pesaje.","traceId":"00-14f2c8fee8141315346c0cbb5806d15e-e5ff912e364152b2-00"}
+HTTP 409
+
+## Vigilancia registra la salida de QAG201 con el ciclo abierto
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Recurso duplicado.","status":409,"errors":[],"description":"El camión QAG201 tiene un pesaje de báscula sin terminar (por repesar). Termínelo o anúlelo en Báscula antes de registrar la salida.","traceId":"00-11175008cef20a9472e2f5bc30286579-41887c565410e160-00"}
+HTTP 409
+
+## Bodega registra la llegada: 12b36528-d383-4091-8bad-cc8381ec3669
+## Segundo pesaje tras la llegada: {"status":"Complete","ticket":"2026T00024","net":null}
+## Cobro repetido con el ciclo completo
+{"status":409,"description":"Este camión ya tiene el cobro de báscula registrado."}
+## Pendientes de Bodega desde báscula (QAG201)
+[]
+## Bodega completa la recepción (6 = 6): {"status":"Completed","id":null}
+## Vigilancia registra la salida enviando en el cuerpo departureAuthorizedById = facturacion
+{"status":null,"description":null}
+Base: autor de la salida = vigilancia · salida 20:35

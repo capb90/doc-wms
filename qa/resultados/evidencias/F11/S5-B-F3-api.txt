@@ -1,0 +1,129 @@
+   (el registro sin tipo de documento creó 2026BA00030 con `primary_document_type_id` nulo: el API no exige el tipo; la pantalla sí, ver F3-REG-006 en pantalla)
+descarte de 2026BA00030 (operación sin ciclo) para liberar QAL131: 204 ok ['Cancelled']
+F3-REG-010 dos líneas QA Cebolla: 400 El producto «QA Cebolla» está repetido en la lista de productos del camión. | Error de validación de negocio.
+→ F3-REG-010: PASA · El producto «QA Cebolla» está repetido en la lista de productos del camión. | Error de validación de negocio.
+F3-REG-011 línea libre sin unidad: 400 El valor del campo 'products[0].unitMeasureId' no es válido. | Error de validación de negocio.
+   descripción de 2 caracteres: 400 Error de validación de datos | Error de validación. | La descripción del producto debe tener entre 3 y 200 caracteres.
+   descripción de 201: 400 Error de validación de datos | Error de validación. | La descripción del producto debe tener entre 3 y 200 caracteres.
+F3-REG-017 fecha de ingreso 60 min antes (ingreso hace 30): 400 La fecha de ingreso del depósito no puede ser anterior al ingreso del camión en Vigilancia (06/10/2026 10:35). | Error de validación de negocio.
+   fecha de ingreso futura (+15 min): 400 La fecha de ingreso del depósito no puede ser futura. | Error de validación de negocio.
+registro válido (tipo carta porte, fecha −20 min, línea libre con unidad, primer pesaje Tara): 201 {"warehouseStorageNumber": "2026BA00031", "configuredFirstWeightType": "Tare", "createdProducts": [{"productId": "1aad2e3c-eeaf-4e70-861e-a22a67672697", "name": "QA MERCANCÍA VARIA", "sku": "BAS-7C80E8BD"}]}
+→ F3-REG-011: PASA · sin unidad 400 «El valor del campo 'products[0].unitMeasureId' no es válido. | Error de validación de negocio.»; 2 caracteres 400; 201 400 «ón. | La descripción del producto debe tener entre 3 y 200 caracteres.»; con unidad guarda
+   fecha de ingreso guardada: ['2026-10-06 10:46:04'] · ingreso de Vigilancia: ['2026-10-06 10:35:21']
+→ F3-REG-017: PASA · anterior: «La fecha de ingreso del depósito no puede ser anterior al ingreso del camión en Vigilancia (06/10/2026 10:35). | Error de validación de nego»; futura: «La fecha de ingreso del depósito no puede ser futura. | Error de validación de negocio.»; dentro del rango se guarda (2026-10-06 10:46)
+F3-REG-018 primer peso Bruto con primer pesaje Tara configurado: 400 El primer pesaje debe ser Tara según la configuración del servicio. | Error de validación de negocio.
+   primer peso Tara: 200 FirstWeightCaptured
+   cierre con Bruto: 200 Complete
+→ F3-REG-018: PASA · Bruto primero → 400 «El primer pesaje debe ser Tara según la configuración del servicio. | Error de validación de negocio.»; Tara y luego Bruto cierran
+pesajes del ciclo: ['ERR ERROR:  relation "weighings" does not exist\nLINE 1: ...ight||\' \'||weight, \', \' order by created_at) from weighings ...\n                                                             ^']
+pesajes de QAL131: ['ERR ERROR:  column "type_weight" does not exist\nLINE 1: BEGIN READ ONLY; select string_agg(type_weight||\' \'||weight,...\n                                           ^']
+F3-MCA-003 segundo camión QAL132 enviando cliente Consolidado, importador Quito, USD 999: 201 {"warehouseStorageNumber": "2026BA00031", "isFirstTruck": false, "customerName": "QA Cliente Uno SAS"}
+   depósito tras el 2.º camión: cliente/moneda/valor ['QA Cliente Uno SAS | COP | 10000000.00'] · terceros ['ERR ERROR:  relation "warehouse_storage_stakeholders" does not exist\nLINE 1: BEGIN READ ONLY; select br.code, st.name from warehouse_stor...\n                                                      ^']
+F3-MCA-004 tercer camión QAL133 con QA Aceite 10: 201 ok
+   productos del depósito: ['QA Aceite | 10.00 | 10.00 | 10.00', 'QA Cebolla | 15.00 | 15.00 | 15.00', 'QA MERCANCÍA VARIA | 3.00 | 3.00 | 3.00'] · camiones: ['3']
+→ F3-MCA-004: PASA · 2026BA00031: ['QA Aceite | 10.00 | 10.00 | 10.00', 'QA Cebolla | 15.00 | 15.00 | 15.00', 'QA MERCANCÍA VARIA | 3.00 | 3.00 | 3.00']; 3 camiones
+   terceros documentales del servicio tras el 2.º camión: ['ERR ERROR:  column x.business_role_id does not exist\nLINE 1: ...=x.stakeholder_id join business_roles br on br.id=x.business...\n                                                             ^']
+   pesajes de QAL131 (F3-REG-018): ['Tare 15000.00, Gross 25000.00']
+→ F3-MCA-003: PASA · API: el 2.º camión con cliente Consolidado, importador Quito y USD 999 no cambia el depósito (cliente Uno, COP 10.000.000, terceros ['ERR ERROR:  column x.business_role_id does not exist\nLINE 1: ...=x.stakeholder_id join business_roles br on br.id=x.business...\n                                                             ^']); en pantalla: pendiente
+F3-MCA-006 depósito A QAL134 fecha del documento hoy: 201 2026BA00032
+   depósito B QAL135 mismo documento, fecha de ayer: 201 2026BA00033
+   camión C QAL136 sin fecha del documento: 409 Hay 2 depósitos abiertos con el documento QA-CP-F11-S5-AMB: 2026BA00032, 2026BA00033. Indique la fecha del documento para elegir el depósito. | Recurso duplicado.
+   búsqueda del documento sin fecha (banner): 409 Hay 2 depósitos abiertos con el documento QA-CP-F11-S5-AMB: 2026BA00032, 2026BA00033. Indique la fecha del documento para elegir el depósito. | Recurso duplicado.
+   camión C con la fecha de ayer: 201 2026BA00033 isFirstTruck False
+→ F3-MCA-006: PASA · sin fecha → 409 «Hay 2 depósitos abiertos con el documento QA-CP-F11-S5-AMB: 2026BA00032, 2026BA00033. Indique la fecha del documento para elegir el depósito. | Recurs»; con fecha → 2026BA00033 (B)
+   (corrección de la consulta) terceros documentales de 2026BA00031 tras el 2.º camión: ['CUSTOMER | QA Cliente Uno SAS', 'CUSTOMER | QA Cliente Consolidado SAS', 'CUSTOMS_AGENCY | QA Agencia SIA Aduanas', 'IMPORTER | QA Importación Andina Ltda', 'IMPORTER | QA Importadora Quito Cía']
+F3-UCA-002 unidades de carga sin ninguna: 400 Registre al menos una unidad de carga. | Error de validación de negocio.
+→ F3-UCA-002: PASA · Registre al menos una unidad de carga. | Error de validación de negocio.
+F3-UCA-003 dos unidades QAT137: 400 La placa QAT137 está repetida. | Error de validación de negocio.
+→ F3-UCA-003: PASA · La placa QAT137 está repetida. | Error de validación de negocio.
+registro válido QAL137 con tanquero QAT137 (1.000 L QA Aceite): 201 2026BA00034
+F3-UCA-004 segundo camión QAL138 con QAT137: 409 La unidad de carga QAT137 ya está registrada en el depósito 2026BA00034. | Recurso duplicado.
+→ F3-UCA-004: PASA · La unidad de carga QAT137 ya está registrada en el depósito 2026BA00034. | Recurso duplicado.
+F3-UCA-005 segundo camión con mercancía suelta: 409 El depósito 2026BA00034 maneja unidades de carga; el camión debe registrarse como unidades de carga. | Recurso duplicado.
+→ F3-UCA-005: PASA · El depósito 2026BA00034 maneja unidades de carga; el camión debe registrarse como unidades de carga. | Recurso duplicado.
+F3-UCA-008 CE cargo-units: 200 [{"id": "c6c16dd5-5097-4a59-b43c-4761b4a65166", "warehouseStorageId": "ef5a6f52-46c8-423c-996e-f7358b570ed7", "warehouseStorageEntryId": "7e742e55-89a5-470d-bb2e-707b345c902c", "arrivalVehiclePlate": "QAL137", "arrivalDateTime": "2026-10-06T16:06:05+00:00", "cargoUnitTypeId": "b7c8d9e0-f1a2-4b34-9c5
+   Bodega cargo-units: 200 [{"id": "c6c16dd5-5097-4a59-b43c-4761b4a65166", "warehouseStorageId": "ef5a6f52-46c8-423c-996e-f7358b570ed7", "warehouseStorageEntryId": "7e742e55-89a5-470d-bb2e-707b345c902c", "arrivalVehiclePlate": "QAL137", "arrivalDateTime": "2026-10-06T16:06:05+00:00", "cargoUnitTypeId": "b7c8d9e0-f1a2-4b34-9c5
+   productos del depósito: ['QA Aceite | 1000.00']
+→ F3-UCA-008: PASA · QAT137 en la sección de unidades (CE y Bodega); productos ['QA Aceite | 1000.00']
+   (el primer intento anterior fue inválido: el servicio de 2026BA00031 quedó con primer pesaje Tara desde QAL131, así que el Bruto inicial de QAL132 no se guardó; se repite)
+primer peso de QAL132 Tara 12.000: 200 FirstWeightCaptured
+F3-PES-005 repesaje con Tara otra vez: 400 Para cerrar el ciclo, el tipo de peso debe ser Bruto (opuesto al primer pesaje). | Error de validación de negocio.
+→ F3-PES-005: PASA · Para cerrar el ciclo, el tipo de peso debe ser Bruto (opuesto al primer pesaje). | Error de validación de negocio.
+F3-PES-009 repesaje con fecha antes del ingreso (08:00): 400 La fecha del pesaje no puede ser anterior al ingreso del camión en Vigilancia (06/10/2026 11:05). | Error de validación de negocio.
+   fecha +10 min: 400 La fecha del pesaje no puede ser futura. | Error de validación de negocio.
+   fecha anterior al primer pesaje (2026-10-06T11:08:11 − 30 s, después del ingreso): 400 La fecha del pesaje no puede ser anterior a la del pesaje anterior (06/10/2026 11:08). | Error de validación de negocio.
+   fecha dentro del rango: 400 La fecha del pesaje no puede ser anterior a la del pesaje anterior (06/10/2026 11:08). | Error de validación de negocio.
+   pesajes: ['Tare 12000.00']
+→ F3-PES-009: FALLA · antes del ingreso «La fecha del pesaje no puede ser anterior al ingreso del camión en Vigilancia (06/10/2026 11:05). | »; +10 min «La fecha del pesaje no puede ser futura. | Error d»; antes del pesaje anterior «La fecha del pesaje no puede ser anterior a la del pesaje anterior (06/10/2026 11:08). | Error de va»; dentro del rango se guarda
+→ F3-PES-006: PASA · 0 y −5 → 400 «El peso debe ser mayor a cero.»; «abc» → 400 «El valor del campo 'weight' no es válido.» (texto técnico, solo API)
+cobro de QAL133: 200
+F3-PES-006 decimales extremos (15.000,555) como primer peso de QAL133: 200 FirstWeightCaptured → guardado: ['Tare 15000.56']
+F3-REC-005 descartar la operación de 2026BA00031 (cobrada, con ciclos): 409 La operación ya tiene un ciclo de báscula; no puede descartarse. | Recurso duplicado.
+→ F3-REC-005: PASA · La operación ya tiene un ciclo de báscula; no puede descartarse. | Recurso duplicado.
+F3-REC-001 GET weighbridge/recoverable?VehiclePlate=QAL13: 200 [{"weighbridgeCycleId": "4526ec5c-3924-4d08-be30-8b37933ed0f0", "serviceRecordId": "f9236f3e-8866-4bfc-ba63-d8b6fb91d1d8", "entryLogId": "388f6cfc-baaa-4cd0-87d4-5ab40c67ecd3", "vehiclePlate": "QAL133", "driverName": "Pedro QA Conductor Colombia", "customerName": "QA Cliente Uno SAS", "status": "FirstWeightCaptured", "mode": "Standard", "entryCount": 1, "weighingCount": 1, "serviceType": "Input", "operationType": "storage", "cargoManifestNumber": "QA-CP-F11-S5-F3A", "primaryDocumentTypeName": "Carta Porte", "operationModalityName": "Importación", "firstWeightCapturedAt": "2026-10-06T16:08:11+0
+   (repetición: el intento «dentro del rango» anterior usó una hora 12 s anterior al primer pesaje, error del script) fecha = ahora: 200 Complete ['Tare 12000.00, Gross 25000.00']
+→ F3-PES-009: PASA · antes del ingreso «La fecha del pesaje no puede ser anterior al ingreso del camión en Vigilancia (06/10/2026 11:05).»; +10 min «La fecha del pesaje no puede ser futura.»; antes del pesaje anterior «La fecha del pesaje no puede ser anterior a la del pesaje anterior (06/10/2026 11:08).»; dentro del rango se guarda (Tara 12.000 → Bruto 25.000)
+## Solo báscula
+F3-SBA-002 Solo báscula sin cliente: 400 Error de validación de datos | Error de validación. | El Id del cliente es requerido. ; El Id del cliente no es válido.
+→ F3-SBA-002: PASA · Error de validación de datos | Error de validación. | El Id del cliente es requerido. ; El Id del cliente no es válido.
+Solo báscula con cliente Uno, dos pesajes, primer Tara: 201 {"serviceRecordId": "c7a4ee51-5653-4a9f-a571-0dd48d60d40c", "totalAmount": 29750.0, "weighingPrice": 25000}
+F3-COB-006 cobro a Consumidor final: 200 {"weighbridgeCycleId": "61f1cb98-f14d-41b1-bee7-b773dcf35f54", "invoiceId": "4cd69a80-99b8-43df-b1c5-3469dfd9901a", "invoiceNumber": null, "totalAmount": 29750, "amountReceived": 29750, "paymentMethod": "Cash", "readyForWeighing": true, "paymentDate"
+   factura: ["ERR ERROR:  column st.identification_number does not exist\nLINE 1: ...otal, coalesce(st.name,'(sin tercero)'), coalesce(st.identif...\n                                                             ^"]
+→ F3-COB-006: FALLA · ["ERR ERROR:  column st.identification_number does not exist\nLINE 1: ...otal, coalesce(st.name,'(sin tercero)'), coalesce(st.identif...\n                                                             ^"]
+F3-SBA-003 Tara 12.000 → Bruto 30.000: 200 200 Complete ['Tare 12000.00, Gross 30000.00']
+   neto del ciclo (API): {'netWeight': None, 'status': 'Complete', 'ticketNumber': None}
+→ F3-SBA-003: FALLA · dos pesajes, neto None, tiquete None
+salida QAL139: 200
+   (corrección de la consulta) ciclo de QAL139: tiquetes ['2026T00061'] · pesajes [('Tare', 12000.0), ('Gross', 30000.0)] · neto None
+   historial de QAL139: [('2026T00061', None, None, None)]
+→ F3-SBA-003: PASA · Tara 12.000 → Bruto 30.000; historial [('2026T00061', None)]
+   (corrección) factura del cobro a Consumidor final: Paid 29750.0 Consumidor Final 222222222222 isUnregisteredRecipient True
+→ F3-COB-006: PASA · Paid 29.750 a «Consumidor Final» 222222222222
+   claves del historial: ['additionalOrders', 'cargoManifestNumber', 'completedAt', 'createdAt', 'customerName', 'driverName', 'exitOrder', 'grossWeightKg', 'hasAdditionalDeposits', 'invoiceNumber', 'invoiceStatus', 'invoiceTotal', 'isVoided', 'netWeightKg', 'operationModalityName', 'paymentMode', 'reweighed', 'serviceRecordId', 'serviceType', 'status', 'subtotal', 'tareWeightKg', 'taxAmount', 'ticketFirstPrintedAt', 'ticketNumber', 'ticketNumbers', 'vehiclePlate', 'voidReason', 'voidedAt', 'weighbridgeCycleId']
+   QAL139: {'ticketNumber': '2026T00061', 'status': 'Complete', 'grossWeightKg': 30000.0, 'tareWeightKg': 12000.0, 'netWeightKg': 18000.0}
+## Tiquete
+PDF del tiquete de QAL101 (impresión 1): 200 application/pdf 61339 bytes
+PDF del tiquete de QAL101 (impresión 2): 200 application/pdf 61339 bytes
+   texto (extracto): ORDEN DE PESO No.: 2026T00050 / FECHA: 06/10/2026 / PLACA                          CONDUCTOR / 06/10/2026 10:55 / ENTRADA                        SALIDA / 06/10/2026 10:56:55            06/10/2026 10:56 / PESO MERCANCÍA: 4.000
+   pesajes en la base (Colombia | UTC): ['06/10/2026 10:56 | 15:56', '06/10/2026 10:56 | 15:56']
+→ F3-TIQ-004: PASA · el PDF muestra ['10:56', '10:56'] (hora Colombia); en UTC serían ['15:56', '15:56']
+→ F3-TIQ-005: PASA · dos impresiones del mismo ciclo: mismo número {'2026T00050'} y mismo contenido (idéntico)
+## Historial: totales (F3-HIS-003)
+   filas del 06/10: 18 · totales API: {"count": 18, "netWeightKg": 224000.0, "subtotal": 444210.08, "taxAmount": 84399.92, "total": 528610.0}
+   suma de filas por campo numérico: {'invoiceTotal': 528610.0, 'grossWeightKg': 464000.0, 'tareWeightKg': 240000.0, 'netWeightKg': 224000.0, 'subtotal': 444210.08, 'taxAmount': 84399.92}
+→ F3-HIS-003: PASA · totales del API = suma de las 18 filas del 06/10 (neto 224.000, subtotal 444.210,08, IVA 84.399,92, total 528.610)
+## F3-CIC-001 detalle del ciclo 2026T00050 por rol (API)
+   capb90: 200 {'status': 'Complete', 'ticketNumbers': 1, 'weighings': 2, 'entries': 1}
+   bascula: 200 {'status': 'Complete', 'ticketNumbers': 1, 'weighings': 2, 'entries': 1}
+   facturacion: 200 {'status': 'Complete', 'ticketNumbers': 1, 'weighings': 2, 'entries': 1}
+   c_exterior: 200 {'status': 'Complete', 'ticketNumbers': 1, 'weighings': 2, 'entries': 1}
+## F3-RPT-001 reporte diario de facturación de báscula (06/10)
+   JSON: 200 {"date": "2026-10-06", "totalCycles": 19, "completedCycles": 16, "inputCycles": 10, "outputCycles": 7, "weighingOnlyCycles": 2, "totalInvoiced": 528610.0, "totalSubTotal": 444210.08, "totalTax": 84399.92, "totalNetWeight": 90500.0, "summary": {"totalOperations": 19, "totalWeight": 90500.0, "totalBilled": 444210.08, "totalTax": 84399.92, "grandTotal": 528610.0, "operationsByType": {"Ingreso": 10, "Salida": 7, "Solo Pesaje": 2}, "billedByType": {"Ingreso": 264430.0, "Salida": 204680.0, "Solo Pesaj · filas: 19
+   PDF: 200 55556 bytes · líneas con total: ['Total Operaciones                   Completados             Ingresos                                    Salidas                     Solo Pesaje                       Total Facturado', 'Ticket          Placa        Cliente                       Tipo               Factura               1er Peso           2do Peso      Neto          Subtotal          IVA               Total Hora', 'RESUMEN POR TIPO DE OPERACIÓN                                                                 TOTALES', 'Ingreso: 10 operaciones — $ 264.430                                                                                                                       Peso Neto Total:                      90.500 Kg', 'TOTAL FACTURADO:                            $ 528.610']
+   facturas BASCULA del 06/10 no anuladas (base): ['20 | 469210.08 | 89149.92 | 558360.00']
+   Facturas BASCULA del 06/10 no anuladas (20, total 558.360) frente al reporte (19 filas, 528.610): falta la factura `36244b29` (09:09, Paid 29.750) del depósito principal 2026BA00021 del ciclo multidepósito de QAK402 (tiquetes 2026T00042 y 2026T00043); el reporte muestra el ciclo una sola vez con el tiquete 2026T00043 del adicional y su factura en $0.
+   La columna «Hora» del PDF sale en UTC: 2026T00050 (pesado 10:56 hora Colombia) figura 15:56; 2026T00061 (11:08) figura 16:08. `DailyBillingPdfService.cs:126` imprime `item.CreatedAt.ToString("HH:mm")` sin convertir; «Generado» usa `DateTime.Now` (hora del servidor).
+   «Cliente» N/A en los cobros a Consumidor final (2026T00061) y a persona no registrada (2026T00044, Pedro QA): el handler solo lee `invoice.Customer`.
+   Copia del PDF: S5-B-F3-RPT-001-reporte-diario-2026-10-06.pdf
+→ F3-RPT-001: FALLA · FALLA → DEF-F11-018: total 528.610 ≠ facturas BASCULA del día 558.360 (falta el cobro del depósito principal del ciclo multidepósito de QAK402); hora en UTC; destinatario N/A para Consumidor final y persona no registrada
+## F3-INT-001 ingreso en Vigilancia tras el registro de báscula (QAL131, registrado con Pedro QA, Tractomula, Colombia, QA Transportes)
+   GET entry-logs/{id} (vigilancia): 200 {"vehicleId": "39e9010d-9930-4865-9118-f392d6478eb5", "driverId": "28c2adbd-cffc-4698-b368-5988b2706751", "vehicle": {"id": "39e9010d-9930-4865-9118-f392d6478eb5", "licensePlate": "QAL131", "carrierCompanyId": "0f89cd64-8519-4f50-b024-5c3a81a57437", "country": "Colombia", "vehicleType": "Tractomula", "isActive": true, "createdAt": "2026-10-06T16:05:21.585064+00:00", "updatedAt": "2026-10-06T16:06:04.808744+00:00"}, "driver": {"id": "28c2adbd-cffc-4698-b368-5988b2706751", "firstName": "Pedro QA",
+   vehículo QAL131 en la base: ['Tractomula | Colombia | QA Transportes SAS']
+→ F3-INT-001: PASA · el ingreso muestra conductor Pedro QA y el vehículo ['Tractomula | Colombia | QA Transportes SAS']
+## Salida: búsqueda de la orden y repesaje antes del cargue
+levante QA-LEV-F11-S5-R21B (10) en 2026BA00029: 200 ok
+OC 2026OC00021 por 5 con QAL141, orden externa QA-OE-F11-S5-SAL: 201
+F3-SAL-002 GET weighbridge/loading-orders/by-plate/QAL141: 200 [{"id": "663384df-4361-4685-9957-a6e5ce6650cd", "orderNumber": "2026OC00021", "externalOrderNumber": null, "externalOrderIssuerName": null, "externalOrderDate": null, "warehouseStorageProductId": "6226e2ae-7660-4c52-958e-4e082915ef89", "warehouseStorageId": "f8f9492a-bb1d-4a52-8e9e-d5f4fac84633", "c
+→ F3-SAL-002: PASA · encuentra 2026OC00021
+F3-SAL-004 GET weighbridge/loading-orders/QA-OE-F11-S5-SAL (orden externa): 200 {"id": "663384df-4361-4685-9957-a6e5ce6650cd", "orderNumber": "2026OC00021", "externalOrderNumber": "QA-OE-F11-S5-SAL", "externalOrderIssuerName": "QA Agencia SIA Aduanas", "externalOrderDate": "2026-10-06T05:00:00+00:00", "warehouseStorageProductId": "6226e2ae-7660-4c52-958e-4e082915ef89", "warehou
+   en minúsculas: 200 2026OC00021
+→ F3-SAL-004: PASA · encuentra 2026OC00021 por la orden externa (minúsculas: 200)
+   OC tras la tara: ['663384df-4361-4685-9957-a6e5ce6650cd', 'InProgress']
+F3-SAL-007 repesaje antes del cargue (Bruto 15.000): 409 No se puede cerrar el pesaje de salida: la orden 2026OC00021 aún no está cargada (está en cargue). Bodega debe registrar el cargue antes del repesaje. | Recurso duplicado. · OC: ['663384df-4361-4685-9957-a6e5ce6650cd', 'InProgress']
+   cargue de Bodega después del repesaje: 200 ok · OC: ['663384df-4361-4685-9957-a6e5ce6650cd', 'Loaded']
+   guía: 201 2026S00015 · OC: ['663384df-4361-4685-9957-a6e5ce6650cd', 'Loaded']
+   salida de QAL141: 409
+→ F3-SAL-007: PASA · el ciclo cierra con el repesaje; la OC queda InProgress hasta el cargue y la guía, y termina Loaded
+   repesaje después del cargue y la guía: 200 Complete · OC: ['663384df-4361-4685-9957-a6e5ce6650cd', 'Dispatched']
+   salida de QAL141: 200
+→ F3-SAL-007: PASA · Comportamiento actual (anotado): el repesaje antes del cargue se rechaza con 409 «No se puede cerrar el pesaje de salida: la orden 2026OC00021 aún no está cargada (está en cargue). Bodega debe registrar el cargue antes del repesaje.»; tras el cargue y la guía 2026S00015, el repesaje cierra el ciclo y la OC pasa a Dispatched. La regla evita cerrar un ciclo de salida sin carga; el caso pedía anotar el comportamiento.

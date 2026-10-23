@@ -1,0 +1,8 @@
+# S1 · REG-010 (F3-REI-004..007) 18:14
+{"serviceRecordId":"28e11ebe-49d6-4d92-88af-8d64ca7310ad","warehouseStorageId":"fa556183-aa08-4373-b6fc-22e9b8c18d4a","warehouseStorageNumber":"2026BA00008","isFirstTruck":true,"totalAmount":29750.00}
+QAR101 registrado (sin cobrar) → en la cola: [{"state":"PendingPayment","serviceRecordId":"28e11ebe-49d6-4d92-88af-8d64ca7310ad"}]
+## REG-010 en pantalla: REI-004/005 (registro guardado, página recargada) abre en Cobro con «Registro: Registrado: depósito 2026BA00008 · Documento QA-CP-F11-S1-R» y QA Cliente Uno preseleccionado; REI-006 (cobrado, soltar camión, salir y volver) abre en Peso con «Cobro: Cobrado: $ 29.750 · Efectivo»; REI-007 (primer peso 25.000 kg por bascula, cierre de sesión, f_chosi abre QAR101) abre en repesaje con «Pesaje 1 · BRUTO (Cargado) 25.000 kg» y tipo TARA.
+## cierre de QAR101 (REG-010): llegada, tara, recepción y salida
+Complete
+{"status":"Completed","id":null}
+salida: HTTP 200

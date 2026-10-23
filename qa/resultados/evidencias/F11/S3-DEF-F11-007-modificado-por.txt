@@ -1,0 +1,9 @@
+# S3 · DEF-F11-007 (F3-COR-002, F3-COR-003) · 2026-10-05 23:20 · FE d9783af / BE 44bd80a
+Pantalla, usuario bascula: Báscula → Historial → «Ver detalle» de 2026T00037 (QAJ401): «Editar» visible en el peso y en la fecha de los dos pesajes (F3-COR-002).
+«Editar» del pesaje 2 (Tara) 18.000 → 17.500, razón «QA F11 S3 correccion de la tara (DEF-F11-007)» → «Modificación exitosa — Peso actualizado a 17.500 kg»; neto 12.000 → 12.500 (F3-COR-003).
+Recuadro: «Peso modificado. Original: 18.000 kg · Modificado por: QA Operario Bascula el 05/10/2026 23:20 · Razón: QA F11 S3 correccion de la tara (DEF-F11-007)» (captura S3-DEF-F11-007-modificado-por.jpg).
+## GET weighbridge/cycles/{id} (2026T00037)
+[{"sequence":0,"weightType":"Gross","weight":30000.00,"originalWeight":null,"weightModifiedAt":null,"weightModifiedByName":null,"weightModificationReason":null},{"sequence":1,"weightType":"Tare","weight":17500.00,"originalWeight":18000.00,"weightModifiedAt":"2026-10-06T04:20:16.183108+00:00","weightModifiedByName":"QA Operario Bascula","weightModificationReason":"QA F11 S3 correccion de la tara (DEF-F11-007)"}]
+## Ciclo 2026T00023 (corregido en S2, antes de la corrección; ahora también muestra el autor)
+[{"sequence":0,"weight":25500.00,"originalWeight":25000.00,"weightModifiedAt":"2026-10-06T01:26:22.748304+00:00","weightModifiedByName":"QA Operario Bascula","weightModificationReason":"QA F11 S2 correccion del primer peso (CHG-37)"},{"sequence":1,"weight":16000.00,"originalWeight":25500.00,"weightModifiedAt":"2026-10-06T01:27:22.893742+00:00","weightModifiedByName":"QA Operario Bascula","weightModificationReason":"QA F11 S2 restaurar tara original"}]
+Resultado: PASA.

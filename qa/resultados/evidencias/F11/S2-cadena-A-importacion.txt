@@ -1,0 +1,37 @@
+# S2 · Cadena A — importación 2026BA00001 · DEF-F8-004 (CHG-35), DEF-F5-014 (CHG-33), DEF-F8-008/DEF-F3-012 (CHG-32), DEF-F3-008 salida (CHG-46), DEF-F9-003/DEF-F4-012 (CHG-15) · BE 214f5f6 / FE 15a5028 · 2026-10-05 20:39
+Guía 2026S00001 antes (PDF): levante QA-LEV-… (QA-LEV-F11-001), saldos entrada 160 · anterior 160 · sale 80 · nuevo 80 (S00001_antes.pdf en el scratchpad).
+## Segundo levante QA-LEV-F11-S2-002 (30) en 2026BA00001: {"id":"a5747e47-9c1c-4336-bc83-f095ec9ee343","releaseNumber":null,"releasedQuantity":null}
+vehículo QAG601: 6ab17dfb-0bff-4bea-bc8e-e65bd99efea4
+## OC por 20 (vehículo QAG601): {"id":"1c7bf9f7-60c7-4ef9-b0bc-d20d99d13605","orderNumber":"2026OC00004","status":"Pending"}
+## Ingreso QAG601 (Cargue importación): 3111146c-e161-4462-9785-d43a4fa13191
+## output/initiate con 2026OC00004, conductor NUEVO Mario QA Salida Nuevo (CC 1000000921), Turbo, QA Compañía Ñandú: {"serviceRecordId":"1edc1a81-1d32-42bf-a6f2-024d40c4ffd1","customerId":"e329015c-1131-456e-8351-5dd40420f26b","totalAmount":29750.00}
+estado de la OC tras iniciar la salida (DEF-F8-008): InProgress
+Base · ingreso: Mario QA Salida Nuevo 1000000921 · vehículo: QAG601 Turbo Colombia QA Compañía Ñandú Transportes
+## Cobro de la salida: {"weighbridgeCycleId":"dce70a7a-138e-4237-8158-d62a4d3b8115","invoiceId":"af8316d6-14f1-4208-af6a-71c81fca9e58","totalAmount":29750.00}
+## Primer pesaje (tara 14.000): {"status":"FirstWeightCaptured","ticket":"2026T00026","net":null}
+estado de la OC: InProgress
+## DEF-F3-012 / F3-SAL-009: otro camión (QAG602, ingreso 6a1650a7-9f8e-4567-8371-7a1f3f9b13d8) inicia salida con la misma 2026OC00004
+{"status":409,"description":"La orden 2026OC00004 ya tiene un servicio de salida en báscula."}
+## DEF-F3-012 / F3-SAL-008: salida con 2026OC00001 (ya despachada)
+{"status":409,"description":"La orden 2026OC00001 está despachada; no se puede iniciar la salida en báscula."}
+## DEF-F9-003 / F4-CAR-010: Bodega ejecuta el cargue de 2026OC00004 por API SIN firma (con completedBy de facturacion en el cuerpo)
+{"status":400,"errors":[{"code":"Items[0].LoadingOrderItemId","description":"El ID del item es requerido."},{"code":"Items[0].LoadingOrderItemId","description":"El ID del item no es un GUID válido."},{"code":"SignatureDriver","description":"La firma del conductor es requerida."}],"description":"Error de validación de datos"}
+estado de la OC: InProgress
+## Bodega ejecuta el cargue de 2026OC00004 DESDE LA PANTALLA: «Capturar Firma» → «Firma capturada exitosamente»; «Ejecutar Cargue» → confirmación «¿Confirmar ejecución del cargue para la orden 2026OC00004?» → «Cargue ejecutado exitosamente»; 1 POST execute → 200; consola sin errores ni «No PrimeVue Toast provided!» (DEF-F11-005).
+Base: OC Loaded · completada por bodega · firma guardada: true
+## DEF-F5-014 / F5-GUI-003: báscula intenta el repesaje (bruto 34.000) con la OC cargada y SIN guía
+{"status":409,"description":"No se puede cerrar el pesaje de salida: la orden 2026OC00004 es de importación y no tiene guía de salida vigente. Comercio Exterior debe emitir la guía antes de cerrar el pesaje."}
+ciclo: FirstWeightCaptured · OC: Loaded
+## Vigilancia intenta la salida de QAG601 sin guía
+{"status":409,"description":"El camión QAG601 tiene un pesaje de báscula sin terminar (por repesar). Termínelo o anúlelo en Báscula antes de registrar la salida."}
+## Avisos «Guía de salida requerida» a CE (últimos 10 min): 3 · títulos: Diferencia en recepción de Bodega | Guía de salida requerida | Nuevo depósito de importación
+## Vista previa del cobro de la guía: {"total":30000,"charges":[{"customerName":"QA Cliente Uno SAS","total":30000}]}
+## CE emite la guía (firmante Importador, QA Cliente Uno, contado): guía 2026S00003 (id 35f87814…), factura GUIA_SALIDA de contado 30.000 (convenio)
+OC tras la guía: Loaded
+## Repesaje (bruto 34.000) con la guía vigente: {"status":"Complete","ticket":"2026T00026","net":null}
+OC: Dispatched · stock BA00001: 60.00 (reservado 0.00)
+## Vigilancia registra la salida: {"status":null,"description":null}
+## DEF-F8-004 / E2E-02 paso 5: reimpresión de 2026S00001 después del levante QA-LEV-F11-S2-002, la OC 2026OC00004 y la guía 2026S00003
+- 2026S00001 reimpresa: levante QA-LEV-F11-001 · aceptación QA-ACE-F11-001 · saldos 160 / 160 / 80 / 80 → igual que la original (S00001_antes.pdf). PDF: S2-DEF-F8-004-guia-2026S00001-reimpresa.pdf
+- 2026S00003: levante QA-LEV-F11-S2-002 · aceptación QA-ACE-F11-S2-002 (el vigente al emitir). PDF: S2-DEF-F8-004-guia-2026S00003.pdf
+- Hallazgo al comparar: el campo «Conductores» de la guía se toma en vivo del registro del conductor de la OC, y ese registro fue reescrito por báscula (ver DEF-F11-008): S00001 impresa a las 20:38 decía «Luis QA Nuevo Ecuador (1700000911)», a las 20:42 «Mario QA Salida Nuevo (1000000921)», y tras la restauración por Admin vuelve a «Pedro QA Conductor Colombia (1000000001)». La salida real de S00001 fue con Pedro QA.

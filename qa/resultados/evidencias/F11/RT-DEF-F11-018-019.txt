@@ -1,0 +1,43 @@
+Re-test posterior a S5 · DEF-F11-018 y DEF-F11-019 · 2026-10-06 13:30 (hora Colombia)
+Build: FE 24d742d / BE f6f1828 · Local (API http://localhost:5281/api/v1 levantada con `dotnet run --launch-profile http`, frontend `wms-dev` en :3000). Base local sin recrear; sin palancas.
+
+== DEF-F11-018 · F3-RPT-001 (rol bascula) ==
+GET weighbridge/reports/daily-billing?date=2026-10-06
+  totalCycles 29 · items 30 · totalInvoiced 843.980 · totalSubTotal 709.226,88 · totalTax 134.753,12
+  operationsByType: Ingreso 15, Salida 11, Solo Pesaje 3 (conteos por ciclo)
+  Suma de la columna total de las 30 filas: 843.980
+
+Consulta de solo lectura (la misma de la ficha):
+  SELECT count(*), sum(i.total) FROM invoices i
+  JOIN invoice_items it ON it.invoice_id = i.id JOIN services sv ON sv.id = it.service_id
+  WHERE sv.code = 'BASCULA' AND i.status <> 'Cancelled'
+    AND (i.created_at AT TIME ZONE 'America/Bogota')::date = '2026-10-06';
+  → 30 | 843.980,00   ⇒ total del reporte = suma de facturas BASCULA del día.
+  (El día tiene más operaciones que en la medición de S5 —20 facturas, 558.360— por los datos que S5 creó después; el cruce se rehízo con el estado actual.)
+
+Filas relevantes (API):
+  2026T00042 QAK402 QA Cliente Uno SAS (900100001)          Ingreso  neto 4.000   total 29.750  14:09Z
+  2026T00043 QAK402 Consumidor Final (222222222222)         Ingreso  neto 12.000  total 0       14:09Z
+  2026T00044 QAK601 Pedro QA Conductor Colombia (1000000001) Ingreso  total 30.000             14:29Z
+  2026T00050 QAL101 QA Cliente REG F11 SAS (900100121)      Ingreso  total 28.560               15:56Z
+  2026T00061 QAL139 Consumidor Final (222222222222)         Solo Pesaje total 29.750            16:08Z
+
+PDF: GET weighbridge/reports/daily-billing/pdf?date=2026-10-06 → 200 application/pdf
+  Archivo: RT-DEF-F11-018-reporte-diario-2026-10-06.pdf (pdftotext -layout):
+  Generado: 06/10/2026 13:29
+  2026T00042  QAK402  QA Cliente Uno SAS          Ingreso  ... 29.750  09:09
+  2026T00043  QAK402  Consumidor Final            Ingreso  ...      0  09:09
+  2026T00044  QAK601  Pedro QA Conductor Colo..   Ingreso  ... 30.000  09:29
+  2026T00050  QAL101  QA Cliente REG F11 SAS      Ingreso  ... 28.560  10:56
+  2026T00061  QAL139  Consumidor Final            Solo Pesaje ... 29.750  11:08
+  TOTAL FACTURADO: $ 843.980
+Resultado: PASA (dos filas para el multidepósito con el cobro del principal en el total; total = suma de facturas; destinatario resuelto; hora de Colombia).
+
+== DEF-F11-019 · F3-CIC-001 (rol facturacion; la sesión abierta del navegador; misma pantalla que bascula) ==
+/operations/weighbridge/cycles/6f8084c3-4b54-47dc-b0e5-0d3828599af9 (QAL101, 2026T00050)
+  Tarjeta «Depósitos del Ciclo»: 2026BA00027 «Cerrado».
+  Tabla «Tickets del Ciclo», filtro Todos:  2026T00050 2026BA00027 QA Cliente REG F11 SAS · $ 28.560 · Facturada · Cerrado
+  Filtro «Cerrado»: la misma fila.
+  Filtro «Abierto»: «No hay tickets con el filtro seleccionado.»
+Capturas: RT-DEF-F11-019-detalle-ciclo-cerrado.jpg, RT-DEF-F11-019-filtro-cerrado.jpg
+Resultado: PASA.

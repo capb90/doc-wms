@@ -1,0 +1,26 @@
+# S1 · REG-025 / F6-CAR-009 / E2E-12 — QA Cliente Mora bloqueado (17:57)
+ERROR:  relation "billing_configurations" does not exist
+LINE 1: ...it_limit::text,'-') from stakeholders s left join billing_co...
+                                                             ^
+estado Mora: 
+{"serviceRecordId":"3da76c6d-4d4c-4c26-9d67-4f848c0f6b90","warehouseStorageId":"95227691-e8a4-4363-b690-f4180459d3b1","warehouseStorageNumber":"2026BA00007","isFirstTruck":true,"totalAmount":28560.0000}
+## bloqueo 1 (F3-COB-009): cobro de báscula a QA Cliente Mora → El cliente 'QA Cliente Mora SAS' está bloqueado por deuda pendiente. No se puede proceder con la operación.
+   cobro por facturar a Mora → El cliente 'QA Cliente Mora SAS' está bloqueado por deuda pendiente. No se puede proceder con la operación.
+   cobro al conductor (persona no registrada):
+{"weighbridgeCycleId":"ee8852b2-3f3a-4635-b9bb-62c6120f20f9","invoiceId":"21e6ceb7-5f11-4134-9a32-5d8a3ef979bb","totalAmount":28560.0000}
+{"status":"FirstWeightCaptured","ticket":"2026T00019","net":null}
+{"status":"Complete","ticket":"2026T00019","net":null}
+{"status":"Completed","id":null}
+## bloqueo 2 (F4-MON-010): cierre de montacargas facturado a Mora
+inicio aceptado (§10: la mora bloquea el cierre, no el inicio)
+   cierre → El cliente 'QA Cliente Mora SAS' está bloqueado por deuda pendiente. No se puede proceder con la operación.
+HTTP 200
+levante: Nacionalizado
+## bloqueo 4 (F5-OC-007): orden de cargue sobre el depósito de Mora → El cliente 'QA Cliente Mora SAS' está bloqueado por deuda pendiente. No se puede proceder con la operación.
+ingreso Solo bodega QAF101 06f14e0b-8eb0-4d3c-bfc9-3d67c2279c92
+## bloqueo 3 (F4-RSB-006): recepción sin báscula con cliente Mora → El cliente 'QA Cliente Mora SAS' está bloqueado por deuda pendiente. No se puede proceder con la operación.
+ingresos abiertos de QAF101: 1
+## REG-025 bloqueo 5 (F5-GUI-011): guía de 2026OC00003 con Mora bloqueada de nuevo
+{"total":35000.00,"charges":[{"customerName":"QA Cliente Mora SAS","total":35000.00}]}
+emitir guía → El cliente 'QA Cliente Mora SAS' está bloqueado por deuda pendiente. No se puede proceder con la operación.
+Resultado REG-025: los cinco bloqueos (cobro báscula, cierre montacargas, recepción sin báscula, OC, guía) responden «El cliente 'QA Cliente Mora SAS' está bloqueado por deuda pendiente…»; Mora quedó Blocked en la PRIMERA corrida (F6-CAR-001/003).
