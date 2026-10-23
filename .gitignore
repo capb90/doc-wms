@@ -1,0 +1,8 @@
+# Secretos: nunca entran al hub (plan de organización, D8)
+*.local.*
+.env
+.env.*
+credenciales*
+
+# Sistema
+.DS_Store

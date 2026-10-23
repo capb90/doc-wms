@@ -1,0 +1,68 @@
+---
+config:
+  look: neo
+  theme: redux-color
+---
+sequenceDiagram
+  participant Cliente as Cliente
+  participant deposito as Deposito
+  participant ModuloFacturacion as Facturación
+  participant PersonalFact as Personal Facturación
+  participant BaseDatos as Base de Datos
+  participant ModuloBascula as Báscula
+  participant ComercioExt as Comercio Exterior
+  participant ModuloMontacargas as Montacargas
+  Note over Cliente, ModuloMontacargas: Proceso de Facturación wms
+  Cliente ->> deposito: Ingresa Mercancía
+  deposito ->> ModuloFacturacion: Notifica Ingreso (datos cliente, mercancía)
+  ModuloFacturacion ->> BaseDatos: Consulta Convenio Cliente
+  BaseDatos -->> ModuloFacturacion: Retorna Datos Convenio/Tarifas
+  alt tarifa convenio
+    ModuloFacturacion ->> ModuloFacturacion: Calcula Primera Factura (Valor Total)
+  else tarifa estandar
+    ModuloFacturacion ->> ModuloFacturacion: Calcula Primera Factura (Valor Total)
+  end
+  alt credito
+    par Monitoreo Pagos
+      ModuloFacturacion ->> PersonalFact: Emite Factura Inicial
+      PersonalFact ->> Cliente: Remite factura
+      Cliente -->> PersonalFact: Confirma Pago
+      PersonalFact ->> ModuloFacturacion: Registra el pago
+      ModuloFacturacion ->> BaseDatos: Cambia estado "Pagada"
+      loop Emision de facturas periodicas
+        ModuloFacturacion ->> PersonalFact: Emite Factura periodicas
+        PersonalFact ->> Cliente: Remite factura
+        Cliente -->> PersonalFact: Confirma Pago
+        PersonalFact ->> ModuloFacturacion: Registra el pago
+        ModuloFacturacion ->> BaseDatos: Cambia estado "Pagada"
+        ModuloFacturacion ->> BaseDatos: Consultar saldo deposito
+        BaseDatos -->> ModuloFacturacion: Retorna saldo deposito
+        break No hay saldo
+          ModuloFacturacion ->> ModuloFacturacion: Detiene emisión de facturas
+          ModuloFacturacion ->> BaseDatos: Cambia estado "Cerrado"
+        end
+      end
+      opt Si no hay pago
+        ModuloFacturacion -->> PersonalFact: Genera alerta
+      end
+    end
+  else contado
+    ModuloBascula ->> ModuloFacturacion: Reporte de Facturación
+    ComercioExt ->> ModuloFacturacion: Generación de guías
+    opt Si hay reporte
+      ModuloMontacargas ->> ModuloFacturacion: Reporte de Facturación
+    end
+    alt Consolidar facturas
+      ModuloFacturacion ->> ModuloFacturacion: Consolidar facturas
+      ModuloFacturacion ->> PersonalFact: Emite factura consolidada
+    else Factura individual
+      ModuloFacturacion ->> PersonalFact: Emite facturas por servicío
+    end
+    opt Si hay servicio adicional
+      PersonalFact ->> ModuloFacturacion: Adicionar servicio
+    end
+    PersonalFact ->> Cliente: Remite factura
+    Cliente -->> PersonalFact: Confirma Pago
+    PersonalFact ->> ModuloFacturacion: Registra el pago
+    ModuloFacturacion ->> BaseDatos: Cambia estado "Cerrado"
+  end
