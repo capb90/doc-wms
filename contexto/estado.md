@@ -28,7 +28,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 2026-10-08 | **Selector de conductor**, verificado en staging | `044be08` / `4ca4e0a` |
 | 2026-10-08 → 09 | Fixes tras el despliegue, producción de videos (F1–F7) y centro de ayuda | `74e16f3` / `146e26d` |
 | 2026-10-23 | Hub de documentación (`docs/`, repo propio) y `AGENTS.md`/`CLAUDE.md` en cada repo | `b27c9bf` / `31da26c` |
-| 2026-10-24 | **Plan de brechas P1** (fases 1 a 12; fase 13 pendiente): 20 brechas de la auditoría de paridad más 5 colaterales y el QR de verificación de la guía (`DEC-060`); 4 migraciones; QA local en `qa/resultados/P1-informe-2026-10-24.md` (GO con condiciones; abierto DEF-F11-028) | BE `560f558` / FE `e2e11e6` (fases 1 a 11; la 12 es solo de documentación) |
+| 2026-10-24 | **Plan de brechas P1** (fases 1 a 12; fase 13 pendiente): 20 brechas de la auditoría de paridad más 5 colaterales y el QR de verificación de la guía (`DEC-060`); 4 migraciones; QA local en `qa/resultados/P1-informe-2026-10-24.md` (GO con condiciones; DEF-F11-028 corregido y verificado en local, BE `9e399de`) | BE `560f558` / FE `e2e11e6` (fases 1 a 11; la 12 es solo de documentación) |
 
 ## 3. Staging
 
@@ -60,7 +60,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | # | Pendiente | Dónde está documentado | Notas |
 | --- | --- | --- | --- |
 | 1 | **PRF-002:** cronometrar la báscula con un operario (≤ 30 s), junto con F3-REG-024 y F3-PES-015. Es también el F1-09 del plan frontend de paridad | `qa/resultados/informe-final.md` («Condición para pasar a GO»); `qa/resultados/SEL-informe-2026-10-08.md` | Única condición para el GO. Debe medirse con el build desplegado, que incluya el selector de conductor |
-| 2 | Desplegar en staging los commits del §3 (incluye 5 migraciones con las del plan de brechas P1, el QR de la guía y el centro de ayuda). **Antes:** corregir DEF-F11-028 y re-ejecutar F6-ALM-018, F6-REF-005 y F6-REF-006 | §3; `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` §16; `qa/resultados/P1-informe-2026-10-24.md` | Fase 13 del plan P1, con aprobación paso a paso. Ver «Por confirmar» |
+| 2 | Desplegar en staging los commits del §3 (incluye 5 migraciones con las del plan de brechas P1, el QR de la guía y el centro de ayuda). DEF-F11-028 ya corregido y verificado en local (BE `9e399de`) | §3; `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` §16; `qa/resultados/P1-informe-2026-10-24.md` | Fase 13 del plan P1, con aprobación paso a paso. Ver «Por confirmar» |
 | 3 | DEF-F11-023, 024 y 026 (MINOR, «Nuevo») del selector de conductor | `qa/resultados/defectos/INDICE.md` | Se desplegaron con ellos por decisión del usuario |
 | 4 | Guía de operarios: falta el canal de reporte y los avisos del selector (QA-SEL, DEF-F11-023/024) | `planes/migracion-staging/resultados/guia-pruebas-operarios.md`; `informe-fase-5.md`; `SEL-informe` §S.8 | |
 | 5 | Decidir si se desactivan las cuentas `qa.*` en staging | `planes/migracion-staging/resultados/informe-fase-5.md` | |
@@ -77,10 +77,10 @@ Los documentos con estado atrasado se pusieron al día el 2026-10-23: la fase 6 
 
 | Origen | Total | Estado |
 | --- | --- | --- |
-| Campaña QA (`DEF-F*`) | 154 fichas: CRITICAL 16, MAJOR 53, MINOR 77, TRIVIAL 7, 1 duplicada | 150 verificadas, 4 nuevas (DEF-F11-023, 024, 026 y 028) |
+| Campaña QA (`DEF-F*`) | 154 fichas: CRITICAL 16, MAJOR 53, MINOR 77, TRIVIAL 7, 1 duplicada | 151 verificadas, 3 nuevas (DEF-F11-023, 024 y 026) |
 | Migración (`DEF-MIG-*`) | 8 | 8 verificadas |
 
-**DEF-F11-028** (MAJOR, «Depósitos pendientes» omite el depósito agotado con factura por numerar) la encontró el QA local del plan P1 y sigue abierta. Los defectos nuevos siguen en `DEF-F11-029` y `DEF-MIG-009` (`procesos/qa-y-defectos.md`).
+**DEF-F11-028** (MAJOR, «Depósitos pendientes» omite el depósito agotado con factura por numerar) la encontró el QA local del plan P1; se corrigió en BE `9e399de` y quedó verificada en re-test local el 2026-10-24. Los defectos nuevos siguen en `DEF-F11-029` y `DEF-MIG-009` (`procesos/qa-y-defectos.md`).
 
 ## 6. Decisiones de negocio abiertas
 

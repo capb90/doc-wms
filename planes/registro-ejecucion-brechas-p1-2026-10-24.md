@@ -353,3 +353,12 @@ Todas aplicadas solo en Postgres desechables o de Testcontainers. La base de Dev
 - **PRF-002:** lo mide un operario real con este build, si el usuario lo programa.
 - Aviso a Facturación por BR-06-005: las renovaciones abiertas pueden subir en su próximo recálculo.
 
+
+## Fase 12b — Corrección de DEF-F11-028 (2026-10-24)
+
+- **Pedido del usuario:** «corrige DEF-F11-028 en una fase aparte antes de la fase 13 y re-ejecuta F6-ALM-018, F6-REF-005 y F6-REF-006». Lo hizo el orquestador directamente (cambio de 4 archivos, con la corrección que sugería la ficha).
+- **Commits:** BE `9e399de` (sobre `2f18fee`) · docs: el de esta anotación. Sin cambios de FE.
+- **Cambio:** `PendingDepositCriteria.Qualifies` y el filtro de `GetPendingDepositsHandler` exigen `IsActive` solo al depósito Confirmado; el Cerrado entra por su trabajo pendiente aunque `WarehouseStorage.Close()` lo deje inactivo. `PendingDepositCriteriaTests` suma dos casos (Cerrado e inactivo, con y sin trabajo pendiente); `PendingDepositsListTests.CloseDepositAsync` deja `IsActive = false`, como el dominio.
+- **Compuertas:** build sin errores · Wms.Tests 1971 → 1973 · Wms.IntegrationTests 405/407 (las 2 de la línea base) · `has-pending-model-changes` limpio · sin migración.
+- **Re-test local** (PostgreSQL 18 desechable con toda la cadena de migraciones, API 5292 con BE `9e399de`, siembra de los videos; ya detenidos y borrados): depósito `2026BA00003` agotado por cargue total → `Closed`, `is_active = false`. **F6-ALM-018, F6-REF-005 y F6-REF-006: PASA** (sigue en la lista «Por numerar» con y sin el interruptor; al numerar sale; al anular vuelve «Por refacturar»). Informe §10 y ficha actualizados; DEF-F11-028 queda «Verificado».
+- **Para la fase 13:** el pendiente de DEF-F11-028 queda resuelto; siguen los demás del resumen final.

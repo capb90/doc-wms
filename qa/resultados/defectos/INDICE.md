@@ -17,6 +17,7 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 > Actualizado el 2026-10-08 (FE `7d7516a` con cambios sin commit): DEF-F11-025 se reclasifica a CRITICAL (decisión del usuario) y pasa a «Corregido»; se agrega DEF-F11-027 (MAJOR, filtro por nombre de Administración → Conductores), ya «Corregido». Quedan 147 Verificadas, 3 Corregidas y 3 Nuevas.
 > Actualizado el 2026-10-08 en la Fase 4 del selector de conductor (staging, FE `4ca4e0a` / BE `044be08`, sin recrear la base): DEF-F11-022, DEF-F11-025 y DEF-F11-027 pasan a «Verificado»; DEF-F11-023 y DEF-F11-024 vistos en staging, siguen «Nuevo» con DEF-F11-026 (MINOR conocidos, desplegados por decisión del usuario). Sin fichas nuevas. Quedan 150 Verificadas y 3 Nuevas.
 > Actualizado el 2026-10-24 en la fase 12 del plan de brechas P1 (local, FE `e2e11e6` / BE `560f558`): se agrega DEF-F11-028 (MAJOR, «Depósitos pendientes» omite el depósito agotado con factura por numerar), estado «Nuevo». Informe: `P1-informe-2026-10-24.md`.
+> Actualizado el 2026-10-24, antes de la fase 13 del plan de brechas P1 (local, BE `9e399de`): DEF-F11-028 corregido y verificado en re-test local (F6-ALM-018, F6-REF-005 y F6-REF-006 PASA). Quedan 151 Verificadas y 3 Nuevas (DEF-F11-023, 024 y 026).
 
 | ID | Severidad | Estado | Módulo | Título |
 |---|---|---|---|---|
@@ -173,4 +174,4 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 | [DEF-F11-025](DEF-F11-025.md) | CRITICAL | Verificado | Báscula / Bodega | «Usar este conductor» guarda en el conductor el país del vehículo sin que el operario lo cambie |
 | [DEF-F11-026](DEF-F11-026.md) | MINOR | Nuevo | Báscula / Bodega | Enter antes de que llegue la búsqueda cierra el selector sin elegir y borra lo escrito |
 | [DEF-F11-027](DEF-F11-027.md) | MAJOR | Verificado | Administración | El filtro por nombre de Administración → Conductores no filtra |
-| [DEF-F11-028](DEF-F11-028.md) | MAJOR | Nuevo | Facturación | «Depósitos pendientes» omite el depósito cerrado por agotamiento aunque tenga factura por numerar |
+| [DEF-F11-028](DEF-F11-028.md) | MAJOR | Verificado | Facturación | «Depósitos pendientes» omite el depósito cerrado por agotamiento aunque tenga factura por numerar |
