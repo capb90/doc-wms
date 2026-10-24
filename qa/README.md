@@ -12,6 +12,7 @@
 | `resultados/defectos/INDICE.md` | Inventario de fichas con severidad y estado. La ficha es la fuente de verdad |
 | `resultados/F*-informe-*.md` | Informes por fase y sesión (F11: S0…S6) |
 | `resultados/SEL-informe-2026-10-08.md` | QA del selector de conductor |
+| `resultados/P1-informe-2026-10-24.md` | QA local del plan de brechas P1 (fases 1 a 11): casos nuevos y de regresión, DEF-F11-028 y condiciones para la fase 13 |
 | `resultados/evidencias/`, `resultados/muestras-f*/` | Evidencias y muestras (capturas, PDF, respuestas del API) |
 | `resultados/registro-datos-qa*.md` | Datos de prueba creados en cada fase |
 | `resultados/*.sql` | Consultas de «palanca» usadas en pruebas locales (solo base local) |

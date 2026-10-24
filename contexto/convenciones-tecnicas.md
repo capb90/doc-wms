@@ -45,7 +45,7 @@
   - Los roles se leen con `usePermissions` y `ROLES` **con import explícito** (`import { usePermissions, ROLES } from "~/composables/usePermissions"`), no con auto-import.
 - Tras cada mutación, invalida el prefijo de la consulta (`['billing']`, `['foreign-trade']`…).
 - Búsquedas con `watchDebounced`.
-- Textos en español. Números, monedas y fechas solo con las utilidades de `app/shared/utils/format.ts` (`formatNumber`, `formatKg`, `formatCurrency`, `formatColombiaTime`, `formatColombiaDate`). `<InputNumber>` siempre con `locale="es-CO"`.
+- Textos en español. Números y monedas solo con las utilidades de `app/shared/utils/format.ts` (`formatNumber`, `formatKg`, `formatCurrency`), y las fechas con las de `app/utils/colombia-date.ts` (`formatColombiaDate`, `formatColombiaTime`, `formatColombiaDateTime`). `<InputNumber>` siempre con `locale="es-CO"`.
 - **Guardias de código fuente** en `test/unit/guards/`: prohíben `toLocale*`, `es-ES`, `new Intl.*` fuera de las utilidades y botones sin `label`, `aria-label` o `title`. Un `yarn test` en rojo por una guardia es un defecto real.
 - Errores del API: `app/utils/api-error.ts` y `api-error-notifier.ts`. Envíos dobles: `useSubmitGuard`.
 
@@ -66,6 +66,7 @@
 | `OperationalAccess` | Admin, Warehouse, Receiving, Scale |
 | `EntryCorrectionAccess` | Admin, Receiving |
 | `DepositEntryDateAccess` | Admin, Scale, ForeignTrade |
+| `ExitBlockAccess` | Admin, ForeignTrade, Billing (marca «sin salidas» del tercero, `PATCH stakeholder/{id}/exit-block`) |
 | `GateAccess` | Admin, Receiving |
 | `StakeholderAccess` | Admin, ForeignTrade |
 | `TransportCatalogAccess` | Admin, Receiving, Scale, ForeignTrade |
@@ -96,7 +97,7 @@ Los `[Authorize]` de ASP.NET se suman (AND): para aflojar una acción de un cont
 
 - Las genera y aplica **el agente**, solo con `dotnet ef`, solo en la base local (`DEC-004`). Comandos en `procesos/verificacion-local.md` §4.
 - **Nunca se editan a mano** los archivos generados de `Wms.Infrastructure/Migrations/`. Tampoco hay SQL manual contra ninguna base.
-- **El historial se consolidó** el 2026-10-01 en `20261001193201_InitialParityLegacy`: las bases con la cadena anterior se recrean, no se actualizan. Desde entonces hay 10 migraciones más; la última es `20261008230241_AddForkliftUseEntryLog`.
+- **El historial se consolidó** el 2026-10-01 en `20261001193201_InitialParityLegacy`: las bases con la cadena anterior se recrean, no se actualizan. Desde entonces hay 14 migraciones más; la última es `20261024170332_AddGuideCodeTypeParameter` (las cuatro del plan de brechas P1: `AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear` y esa).
 - Staging se actualiza con un script idempotente (`dotnet ef migrations script --idempotent`) que aplica `deploy-staging.sh migrate`, con aprobación del usuario.
 - `Directory.Build.props` fija `BaseOutputPath` por un fallo de `dotnet ef` en macOS. `dotnet-ef` se instala global.
 - Una columna nueva `NOT NULL` en una tabla con `HasData` **no lleva** `HasDefaultValue`.
@@ -110,7 +111,8 @@ Los `[Authorize]` de ASP.NET se suman (AND): para aflojar una acción de un cont
 | `StoragePeriodAutoCloseBackgroundService` | Cierra períodos de almacenamiento vencidos y renueva los de depósitos con stock (programación dinámica) |
 | `InvoiceDueNotificationBackgroundService` | Avisa de facturas próximas a vencer |
 | `AbandonmentAlertBackgroundService` | Alerta de depósitos próximos al abandono (07:00 Colombia) |
-| `DatabaseBackupBackgroundService` | Respaldo diario de base y archivos (02:00 Colombia, si `Backups:Enabled`); el primero exitoso del mes queda como mensual |
+| `DatabaseBackupBackgroundService` | Respaldo diario de base y archivos (02:00 Colombia, si `Backups:Enabled`); el primero exitoso del mes queda como mensual. Si falla, envía el correo de fallo a los Admin activos y a `Notifications:AdminEmails` |
+| `AgreementActivationBackgroundService` | Activa los convenios «Programados» cuya fecha llegó (a los 30 s del arranque y cada día a las 00:00:30 Colombia) y archiva el activo anterior |
 
 `Wms.IntegrationTests` retira los jobs y sustituye por dobles el correo, la TRM y los respaldos.
 

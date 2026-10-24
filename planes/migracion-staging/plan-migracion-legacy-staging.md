@@ -45,6 +45,7 @@
    - El SQL de lectura se permite en local para verificar.
    - En staging no hay SQL directo; todo va por el API y la pantalla. La única excepción es el script `migrate` de despliegue, que aplica las migraciones de EF.
 4. **Orden de carga del corte** (`docs/planes/paridad-legacy/plan-backend-paridad-legacy.md` §C.6.1):
+   0. **Congelamiento y conteo** (solo en el corte real): se congela la operación del legacy en T0, se cuentan las operaciones abiertas (C1 a C9) y se terminan, se anulan o se rehacen en V2 hasta que la diferencia sea 0. Procedimiento: `procedimiento-corte-operaciones-abiertas.md`
    1. ciudades
    2. embalajes
    3. cuadrillas

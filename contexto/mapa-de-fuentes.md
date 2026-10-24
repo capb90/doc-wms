@@ -27,7 +27,7 @@
 | `procesos/` | Cómo trabajar: plan cerrado, QA y defectos, verificación local, despliegue a staging |
 | `planes/` | Planes cerrados con su estado. Índice en `planes/README.md` |
 | `planes/paridad-legacy/` | Plan backend, plan frontend y contrato API de la paridad con el legacy (fases 1–6) |
-| `planes/migracion-staging/` | Plan de migración del legacy a staging y sus resultados (informes, `DEF-MIG-*`, guía de operarios) |
+| `planes/migracion-staging/` | Plan de migración del legacy a staging y sus resultados (informes, `DEF-MIG-*`, guía de operarios) y el procedimiento de congelamiento del corte real (`procedimiento-corte-operaciones-abiertas.md`) |
 | `analisis/` | Análisis previos a una decisión (motor de acuerdos, permisos granulares, FOB/CIF) |
 | `qa/` | Campaña QA de octubre: plan maestro, fases F0–F11, plan de corrección, plantillas, informes, fichas `DEF-*` y evidencias |
 | `videos/` | Guiones de los video tutoriales, plan de producción y PDF de guiones |

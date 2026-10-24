@@ -208,3 +208,27 @@
 | H8 | El Dashboard de báscula tiene la tarjeta «Acerca del Módulo» con flujos obsoletos; los placeholders de Inventario y Movimientos dicen «DEP-…». | Encuadrar sin esa tarjeta; escribir el número `2026BA…` real. |
 | H9 | Varias acciones no tienen toast de éxito (servicios, tarifas base, activar acuerdo, crear producto, override). | El resultado esperado del guion es el cambio en pantalla, no un mensaje. |
 | H10 | No se pudo entrar a staging: el uso de contraseñas en un sitio que no es local no está permitido para el agente. | Los textos no confirmados en el código van con `[verificar en pantalla]`. |
+
+## 7. Videos que el plan de brechas P1 deja desactualizados (2026-10-24)
+
+> **Origen:** `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` §15.4. **Solo se anota; no se graba** (se regraban fuera de ese plan, después del despliegue de la fase 13). Código de referencia: Backend `560f558` / Frontend `e2e11e6`. La numeración es la de `guiones-video-tutoriales.md` (v2).
+
+| Video | Qué cambió en pantalla o en reglas | Plan P1 |
+|---|---|---|
+| 1.3 Cómo registrar un tercero | El detalle del tercero tiene el botón «Bloquear salidas» / «Desbloquear salidas» (con motivo de 10 a 500 caracteres) y la etiqueta «Salidas bloqueadas» con motivo, fecha y autor. Lo ven Administración, Comercio Exterior y Facturación. La lista tiene el filtro «Salidas bloqueadas» | Fase 3, DEC-052 |
+| 1.13 Auditoría y parámetros del sistema | Parámetro nuevo `GUIDE_CODE_TYPE` (`QR` o `BARCODE`, valor inicial `QR`), que solo edita el Admin; cualquier otro valor da error | Fase 11, DEC-060 |
+| 2.2 y 2.8 Acuerdos: crear, activar y editar | El convenio «Programado» exige la fecha de activación (sin hora, sin «(Opcional)») y se activa solo a las 00:00 de ese día, archivando al activo del cliente; Facturación recibe el aviso | Fase 7, D20 |
+| 2.10 Convenio de montacargas y servicio complementario | Un servicio complementario sin tarifa ya no impide confirmar el depósito: la línea sale en $0 (o con el mínimo del propio servicio) con advertencia en la factura | Fase 6, D17 |
+| 3.5 La factura de almacenamiento y los depósitos pendientes | «Depósitos pendientes» tiene la columna «Pendiente» («Por numerar» / «Por refacturar») y el interruptor «Solo con facturas por numerar o refacturar»; las renovaciones cobran el saldo al inicio del período | Fases 6 y 7, DEC-053 |
+| 5.2 Solo báscula de principio a fin | El cliente es opcional («Cliente (opcional)»: sin cliente, el cobro va al conductor o al consumidor final); el tiquete y el historial muestran al destinatario | Fase 4, DEC-050 |
+| 5.5 Primer peso, llegada a Bodega, segundo peso y tiquete | El pie del tiquete dice «Documento interno de control de pesaje. No es una factura de venta.» (ya no menciona la DIAN) | Fase 1, D4 |
+| 5.8 Multidepósito: agregar otro depósito | Con varios documentos el operario elige el segundo pesaje: «Tara — un solo pesaje para todos los depósitos» (predeterminado, neto repartido por el peso de manifiesto) o «Intermedio — el camión descarga en otro punto». Un tiquete por depósito, con «Pesaje compartido por N depósitos». Se imprimen todos los tiquetes | Fase 5, DEC-050 |
+| 5.11 Historial de báscula: corregir, anular y reimprimir | La corrección de un pesaje que no es el primero actúa sobre el pesaje elegido y recalcula el neto de las entradas afectadas | Fase 4 |
+| 6.6 Cómo ejecutar una orden de cargue | Bodega no puede cargar con un dueño marcado «sin salidas»; si lo cargado difiere de la guía vigente, Comercio Exterior recibe el aviso y el mensaje de resultado lo dice | Fase 3, DEC-052 |
+| 7.10 y 7.11 Crear, modificar, cancelar y revertir una orden de cargue | Con una guía vigente, «Cancelar orden» y «Modificar ítems» quedan deshabilitados («anule primero la guía»); también en Bodega. La marca «sin salidas» impide crear la orden | Fases 2 y 3, D6, D9 |
+| 7.12 y 7.13 Guía de salida, guías pendientes e historial | El PDF trae un código QR con «Escanee para verificar esta guía» (o el código de barras, según el parámetro) y se verifica en una página pública. El historial marca «No coincide con lo cargado» cuando el cargue difiere de la guía | Fases 3 y 11 |
+| 7.15 Reportes de Comercio Exterior | «Mercancías ingresadas (diario)» es nuevo: filtro de modalidad, un bloque por depósito con agencia, importador y manifiesto DIAN, una fila por camión, total de vehículos y firmas; con PDF y «Exportar Excel». «Salida de mercancía (diario)» tiene «Exportar Excel». El kárdex y los listados usan la fecha de ingreso del depósito | Fase 8, DEC-054 |
+
+**Video nuevo sugerido:** «Verificar una guía con el celular» (página pública `/verificar/guia/…`), para Comercio Exterior y para quien recibe la guía en papel.
+
+**Guía de operarios** (`planes/migracion-staging/resultados/guia-pruebas-operarios.md`): se anotan los mismos puntos en su §12, para que rijan desde el despliegue de la fase 13.

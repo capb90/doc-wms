@@ -2,7 +2,7 @@
 
 Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6` / BE `191d4b1`). La ficha es la fuente de verdad; este índice es solo un inventario.
 
-**Total: 153 fichas** · CRITICAL 16 · MAJOR 52 · MINOR 77 · TRIVIAL 7 · Duplicado 1 (126 de la campaña + 27 de la fase 11)
+**Total: 154 fichas** · CRITICAL 16 · MAJOR 53 · MINOR 77 · TRIVIAL 7 · Duplicado 1 (126 de la campaña + 28 de la fase 11)
 
 > Actualizado en F11-S1 (2026-10-05, FE `ae36cb4` / BE `c56cc86`): los 13 CRITICAL pasan a «Verificado»; se agregan DEF-F11-001 (S0) a DEF-F11-005 (S1).
 > Actualizado en F11-S2 (2026-10-05, FE `15a5028` / BE `214f5f6`): re-test de los 46 MAJOR (44 Verificados, DEF-F3-008 Reabierto, DEF-F5-003 parcial) y de DEF-F11-001 a DEF-F11-005 (Verificados); se agregan DEF-F11-006 a DEF-F11-009.
@@ -16,6 +16,7 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 > Actualizado el 2026-10-08 en la Fase 3 del selector de conductor (local `wms_migracion`, FE `7d7516a` / BE `3748ec6`): se agregan DEF-F11-023 a DEF-F11-026 (MINOR, selector y modal del conductor). Quedan 147 Verificadas, 1 Corregida y 4 Nuevas.
 > Actualizado el 2026-10-08 (FE `7d7516a` con cambios sin commit): DEF-F11-025 se reclasifica a CRITICAL (decisión del usuario) y pasa a «Corregido»; se agrega DEF-F11-027 (MAJOR, filtro por nombre de Administración → Conductores), ya «Corregido». Quedan 147 Verificadas, 3 Corregidas y 3 Nuevas.
 > Actualizado el 2026-10-08 en la Fase 4 del selector de conductor (staging, FE `4ca4e0a` / BE `044be08`, sin recrear la base): DEF-F11-022, DEF-F11-025 y DEF-F11-027 pasan a «Verificado»; DEF-F11-023 y DEF-F11-024 vistos en staging, siguen «Nuevo» con DEF-F11-026 (MINOR conocidos, desplegados por decisión del usuario). Sin fichas nuevas. Quedan 150 Verificadas y 3 Nuevas.
+> Actualizado el 2026-10-24 en la fase 12 del plan de brechas P1 (local, FE `e2e11e6` / BE `560f558`): se agrega DEF-F11-028 (MAJOR, «Depósitos pendientes» omite el depósito agotado con factura por numerar), estado «Nuevo». Informe: `P1-informe-2026-10-24.md`.
 
 | ID | Severidad | Estado | Módulo | Título |
 |---|---|---|---|---|
@@ -172,3 +173,4 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 | [DEF-F11-025](DEF-F11-025.md) | CRITICAL | Verificado | Báscula / Bodega | «Usar este conductor» guarda en el conductor el país del vehículo sin que el operario lo cambie |
 | [DEF-F11-026](DEF-F11-026.md) | MINOR | Nuevo | Báscula / Bodega | Enter antes de que llegue la búsqueda cierra el selector sin elegir y borra lo escrito |
 | [DEF-F11-027](DEF-F11-027.md) | MAJOR | Verificado | Administración | El filtro por nombre de Administración → Conductores no filtra |
+| [DEF-F11-028](DEF-F11-028.md) | MAJOR | Nuevo | Facturación | «Depósitos pendientes» omite el depósito cerrado por agotamiento aunque tenga factura por numerar |

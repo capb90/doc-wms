@@ -269,3 +269,17 @@
   - escanear la guía en papel con Android e iPhone.
 - **Visto fuera de alcance:** `GlobalExceptionHandler` registra cada 404 público como error (ruido en el log); el aviso «Falta la clave…» se repite en cada descarga y por depósito en el ZIP; NU1903 de `Newtonsoft.Json` 9.0.1.
 
+### Fase 12 — Documentación: procedimiento de corte, QA y estado (§15)
+
+- **Subagente:** Sonnet. Partida BE `560f558` / FE `e2e11e6` / docs `7efd72c`. Una ronda. Solo documentación y QA; sin cambios de código.
+- **Commits (2026-10-24):** BE `2f18fee` (`Wms.Application/Warehouse/README.md` y `GUIA_USUARIO.md`: la recepción no mueve stock, DEC-010) · docs: el de esta anotación.
+- **Documentos:** nuevo `planes/migracion-staging/procedimiento-corte-operaciones-abiertas.md` (T0, C1–C9, tratamiento, conciliación, reversa, plantilla); paso 0 en `plan-migracion-legacy-staging.md`; casos QA nuevos y actualizados en las fases 01, 03, 05, 06, 07, 09 y 11 de `qa/`; estado de las brechas en `06-brechas-priorizadas.md`; `contexto/estado.md`, `convenciones-tecnicas.md`, `mapa-de-fuentes.md`, `procesos/qa-y-defectos.md`, la guía de operarios (§12) y el inventario de guiones (§7, videos desactualizados, sin regrabar).
+- **Pruebas** (sin cambios de código): Wms.Tests 1971/1971 · Wms.IntegrationTests 405/407 (las 2 de la línea base) · Vitest 481/481. Toda la cadena de migraciones, con las 4 del plan, se aplicó sin errores a un Postgres desechable.
+- **QA local** (`qa/resultados/P1-informe-2026-10-24.md`): Postgres desechable, API en 5292 y `yarn dev` en 3092, ya detenidos; datos de la siembra de los videos. 90 casos: **53 PASA, 3 FALLA, 31 NO EJECUTADO, 3 OBSERVACIÓN**. El QR del PDF se decodificó a la URL de verificación; token alterado y basura → 404; 429 desde la consulta 31; el correo de fallo de respaldo llegó a los 2 Admin y a `Notifications:AdminEmails`, sin repetir.
+  - No se cumple el 100 % de P0 ni el 95 % de P1 ejecutados a mano: 31 casos sin ejecutar (sobre todo regresión de facturación, cubierta por la suite de `Billing`).
+  - Observaciones para la fase 13: F5-GUI-020 (escaneo en papel con Android e iPhone), FB-BAK-007 (bucket externo) y F7-REP-024 (selector de fecha del diario no accionable con el navegador automático; PDF y JSON verificados).
+- **Veredicto local:** continuar con condiciones.
+- **Defecto nuevo — DEF-F11-028 (MAJOR, abierto):** «Depósitos pendientes» no lista un depósito agotado (`Closed`) con factura en Borrador sin N.º o anulada sin refacturar, el caso de DEC-053 (fase 7). `WarehouseStorage.Close()` pone `IsActive = false` y `GetPendingDepositsHandler.cs:30` / `PendingDepositCriteria.Qualifies` exigen `IsActive`; la prueba de la fase 7 dejaba el depósito `Closed` con `IsActive = true`. Recomendación: corregirlo antes de la fase 13 y re-ejecutar F6-ALM-018, F6-REF-005 y F6-REF-006.
+- **Desviaciones:** el informe se llama `P1-informe-2026-10-24.md` (el plan decía `…-2026-10-XX`); `commands/Reception/README.md` sigue diciendo «crea InventoryMovement IN» (el plan solo pedía los otros dos).
+- **Observación sobre C5:** `POST service/{id}/prices` rechaza vigencias futuras («La fecha de inicio de vigencia no puede ser futura.»), así que el arreglo de `Service.SetPrice` (fase 6) solo se ejerce en el dominio. Programar precios exigiría relajar ese validador (fuera del plan).
+

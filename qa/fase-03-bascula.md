@@ -168,7 +168,7 @@ Validar el banco de trabajo de báscula de punta a punta: cola, tipos de operaci
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
 | F3-TIQ-001 | Imprimir tiquete | Paso 4 → Imprimir. | Abre el PDF térmico (80 mm) y el diálogo de impresión. | P0 | FUN |
-| F3-TIQ-002 | Contenido | Revisar el PDF. | Empresa, «ORDEN DE PESO No. 2026T…», cliente o «CONSUMIDOR FINAL», placa, conductor, producto, ENTRADA/SALIDA con hora y tipo, PESO MERCANCÍA (neto), ítems de la factura y VALOR TOTAL. Valores = los registrados. | P0 | FUN |
+| F3-TIQ-002 | Contenido | Revisar el PDF. | Empresa, «ORDEN DE PESO No. 2026T…», cliente (o el destinatario no registrado, o «CONSUMIDOR FINAL»), placa, conductor, producto, ENTRADA/SALIDA con hora y tipo, PESO MERCANCÍA (neto), ítems de la factura y VALOR TOTAL. Valores = los registrados. Pie: «Documento interno de control de pesaje. No es una factura de venta.» (sin «DIAN»; BR-02-005). | P0 | FUN |
 | F3-TIQ-003 | Observación en el tiquete | Agregar observación (≤ 1000) y reimprimir. | Aparece en el PDF. | P2 | FUN |
 | F3-TIQ-004 | Fecha y hora | Comparar la FECHA del tiquete con la hora Colombia. | Esperado: hora Colombia. Riesgo R-BAS-15: sale en UTC (+5 h). | P1 | RN |
 | F3-TIQ-005 | Reimprimir | Reimprimir desde el historial. | Mismo número y datos. | P1 | FUN |
@@ -245,7 +245,8 @@ Foco pedido explícitamente: registrar → guardar → abandonar → volver → 
 | F3-MUL-001 | Agregar otro depósito | Tras el primer peso de un ingreso, buscar «Agregar otro depósito». | Esperado: disponible para registrar un segundo documento en el mismo camión (cobro en $0, pesaje intermedio). Riesgo R-BAS-01: no aparece (modo Standard). Si no aparece, marcar los casos MUL-002..004 `BLOQUEADO`. | P1 | FUN |
 | F3-MUL-002 | Depósito adicional independiente | Registrar el segundo depósito con otro cliente, moneda y valor. | Cada depósito con sus propios terceros y valores; comparten vehículo, ciclo y modalidad. | P1 | RN |
 | F3-MUL-003 | Cobro en cero | Paso de cobro del adicional. | «Confirmar y continuar» con factura $0; por API, `AmountReceived` ≠ 0 rechazado. | P1 | RN |
-| F3-MUL-004 | Pesaje intermedio | Pesar con 2 depósitos. | Pesaje `Intermediate`; tiquete propio por depósito; cierre con el opuesto. | P1 | RN |
+| F3-MUL-004 | Pesaje intermedio | Pesar con 2 depósitos eligiendo «Intermedio — el camión descarga en otro punto». | **Reescrito (DEC-050, D13):** el operario elige. Con «Intermedio»: pesaje `Intermediate`, neto por depósito = \|entrada − salida\| y tiquete propio por depósito; cierre con el opuesto. Después de un intermedio no hay modo mixto: una Tara antes del último depósito responde 400. La Tara antes de la llegada a Bodega del segundo depósito responde 409. | P1 | RN |
+| F3-MUL-005 | Un solo pesaje para varios documentos | Camión con 2 depósitos (el segundo, adicional): Bruto → llegada a Bodega de los dos → «Tara — un solo pesaje para todos los depósitos» (predeterminado). Probar con un manifiesto sin peso y completarlo después. | **Nuevo (DEC-050, D13 a D15):** el ciclo cierra con dos pesajes; la Tara asigna la salida a cada entrada. Con un manifiesto sin peso, los netos quedan nulos; al completarlo se reparte el neto del camión **en proporción al peso de manifiesto** (ej. neto 20.000 con 20.000 y 10.000 → 13.333,33 y 6.666,67; el último absorbe el residuo). Hay **un tiquete por depósito** (`2026T…` consecutivos) con «Pesaje compartido por 2 depósitos · neto del camión X kg». El primero cobra y el adicional va en $0. Al repartir de nuevo en un depósito ya validado, la observación de la validación conserva su valor (D14). | P1 | RN |
 
 ### 6.12 Salida de mercancía (SAL)
 
@@ -272,7 +273,7 @@ Requiere la preparación del §5.
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
 | F3-SBA-001 | Un pesaje | `QAA103`: Solo báscula, cliente `QA Cliente Uno`, sin segundo pesaje → Guardar → Cobrar → Peso 18.000. | Ciclo `Complete` con un pesaje; tiquete en el ciclo; sin depósito. | P0 | FUN |
-| F3-SBA-002 | Cliente obligatorio | Sin cliente. | «Debe seleccionar un cliente». | P1 | VAL |
+| F3-SBA-002 | Sin cliente es válido | Con `QAA103`, sin cliente: guardar → cobrar al conductor (destinatario no registrado) → peso. Repetir con «Por facturar» y destinatario «Consumidor final». | **Reescrito (DEC-050, BR-02-002):** se registra sin cliente («Cliente (opcional)»; «Sin cliente, el cobro va al conductor o al consumidor final»). El cobro va al conductor o al consumidor final (por defecto). El tiquete y el historial muestran al destinatario y el filtro por cliente lo encuentra. No se crea depósito. | P1 | RN |
 | F3-SBA-003 | Dos pesajes | Otro camión con «Tiene segundo pesaje», primer Tara. | Dos pesajes; neto correcto. | P1 | FUN |
 | F3-SBA-004 | Tipo libre | Sin segundo pesaje: elegir Tara o Bruto libremente. | Ambos permitidos (AB-5). | P2 | RN |
 | F3-SBA-005 | Peso esperado | Peso esperado 0 o negativo. | Rechazado (> 0). | P3 | VAL |
@@ -301,10 +302,12 @@ Requiere la preparación del §5.
 | F3-COR-003 | Modificar segundo peso | «Modificar #2». | Neto recalculado. | P1 | RN |
 | F3-COR-004 | Razón corta | 9 caracteres. | «La razón debe tener al menos 10 caracteres». | P2 | VAL |
 | F3-COR-005 | Facturación corrige peso | Con `facturacion`, abrir `cycles/[id]` y modificar. | Permitido. Fecha del pesaje: no permitido para Billing (ScaleAccess). | P2 | ROL |
-| F3-COR-006 | Ciclo con 3+ pesajes | (Si F3-MUL funciona) modificar el pesaje #3. | Esperado: cambia el #3. Riesgo R-BAS-09: cambia el #2 y el neto solo se recalcula en la primera entrada. | P2 | RN |
+| F3-COR-006 | Ciclo con 3+ pesajes | (Si F3-MUL funciona) modificar el pesaje #3. | Cambia el #3 y se recalcula el neto de las entradas afectadas. R-BAS-09 corregido en el plan P1 (fase 4, BR-02-006): ver F3-COR-010. | P2 | RN |
 | F3-COR-007 | Anular pesaje | Historial → «Anular pesaje» con motivo 10–500 en una operación completa sin salida asociada. | Ciclo `Canceled`; diálogo de resultado; efectos: anotar qué pasa con el depósito, el stock y la factura (recalcula almacenamiento si el depósito está confirmado). | P0 | RN |
 | F3-COR-008 | Anular con tiquete usado en salida | Anular un tiquete usado en una salida con tiquete de ingreso. | «El tiquete … se usó para la salida de la orden …; revierta o cancele primero esa orden.». | P2 | RN |
 | F3-COR-009 | Anular dos veces | Anular otra vez. | «El pesaje ya está anulado.». | P2 | RN |
+| F3-COR-010 | Corregir el pesaje elegido (por `weighingId`) | Ciclo de 3 pesajes con 2 depósitos (Bruto 33.000 → Intermedio 26.000 → Tara 13.000; netos 7.000 y 13.000). Detalle del ciclo → «Modificar» sobre la **Tara** y luego sobre el **Intermedio**, con motivo. Probar un pesaje de otro ciclo y el pesaje #1. | **Nuevo (BR-02-006, D11):** corregir la Tara cambia solo la última entrada; corregir el Intermedio cambia las dos; corregir el Bruto cambia solo la primera. Sin `weighingId` se corrige la secuencia 1 (como antes). Un pesaje de otro ciclo responde 404 «El pesaje no existe en este ciclo.»; el pesaje inicial por esta ruta, 400 «Use la corrección del primer pesaje.». Con un solo pesaje el neto queda nulo. | P0 | RN |
+| F3-COR-011 | Corregir la tara de un pesaje compartido | Ciclo de F3-MUL-005 con netos repartidos. Corregir la Tara (13.000 → 14.000) con motivo. | **Nuevo (D14):** el neto del camión pasa a 19.000 y se reparte otra vez (12.666,67 y 6.333,33); los tiquetes reimpresos muestran el neto nuevo. | P1 | RN |
 | F3-CIC-001 | Detalle del ciclo | Abrir `cycles/[id]` con Admin, Scale, Billing, CE. | Encabezado, línea de tiempo, tarjetas de depósitos, tiquetes; acciones según rol. | P1 | FUN |
 | F3-CIC-002 | Editar fecha de ingreso del depósito | Con Admin/Scale/CE desde la tarjeta del depósito. | Se guarda dentro de límites con motivo; con depósito confirmado recalcula período (fase 6). | P2 | RN |
 | F3-CIC-003 | Volver | «Volver» desde el ciclo. | Lleva a `?cola=por-repesar` (o al depósito con `?from=deposit`). | P3 | UX |

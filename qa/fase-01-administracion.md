@@ -119,6 +119,7 @@ Validar a fondo la autenticación y la sesión, la gestión de usuarios y roles,
 | F1-TER-016 | Atajos del menú (UI-23) | Menú → Clientes / Transportadoras / Agencias de aduanas. | Abren la lista con `?rol=` y el filtro de rol visible coincide con la URL. | P1 | UX |
 | F1-TER-017 | Tercero ecuatoriano | Crear con RUC y contacto con país Ecuador. | Se guarda; aparece con tipo RUC en listados. | P2 | FUN |
 | F1-TER-018 | Paginación | Con > 10 terceros, recorrer páginas y cambiar tamaño. | Sin duplicados ni saltos; el total coincide. | P2 | FUN |
+| F1-TER-019 | Bloquear y desbloquear salidas | Con `c_exterior` (o Facturación o Admin), en el detalle del tercero → «Bloquear salidas» con un motivo de 10 a 500 caracteres. Intentar crear una orden de cargue, agregar ítems a una orden, emitir la guía y ejecutar el cargue (Bodega) con un depósito de ese cliente. Después «Desbloquear salidas» con motivo y repetir. | El tercero muestra la etiqueta «Salidas bloqueadas» con motivo, fecha y autor. Las cuatro operaciones responden 400 «El cliente '…' tiene las salidas bloqueadas: …». Los ingresos, la báscula y los cobros siguen. Al desbloquear, pasan. Bloquear dos veces o con motivo corto responde 400; quedan dos filas en auditoría (con el motivo). Receiving, Scale y Warehouse no ven el botón y el API responde 403 (DEC-052, D8, D9). | P1 | RN |
 
 ### 5.4 Convenios (CNV)
 
@@ -132,10 +133,12 @@ Validar a fondo la autenticación y la sesión, la gestión de usuarios y roles,
 | F1-CNV-006 | Porcentaje fuera de rango | `PERCENTAGE_OF_VALUE` con `percentage` 150. | Esperado: rechazo (0–100). Riesgo R-FAC-15 (MAF-07): puede guardarse y caer al mínimo al facturar. | P1 | VAL |
 | F1-CNV-007 | Fórmula prohibida | ALMACENAMIENTO con `PER_VEHICLE_TYPE`. | Rechazado. | P1 | RN |
 | F1-CNV-008 | Producto o modalidad inactivos | Asociar un producto inactivo. | Rechazado. | P2 | VAL |
-| F1-CNV-009 | Activación programada pasada | Fecha de activación ayer. | Rechazado. | P2 | VAL |
+| F1-CNV-009 | Activación programada pasada | Fecha de activación ayer. | Rechazado. «Hoy» sí es válido: la fecha es de día, sin hora, en hora de Colombia (plan P1, fase 7). | P2 | VAL |
 | F1-CNV-010 | Desactivar / quitar servicio del convenio | Desactivar MONTACARGAS del convenio; luego reactivar. | Cambia el estado. (El efecto en la tarifa se prueba en fase 6.) | P1 | FUN |
 | F1-CNV-011 | Servicio complementario | Agregar a ALMACENAMIENTO un servicio complementario (p. ej. PAPELERIA) **sin** tarifa configurada. | Se guarda. Anotar: prepara la prueba de R-FAC-08 en fase 6 (dejar desactivado tras anotar, para no bloquear otras fases). | P2 | INT |
 | F1-CNV-012 | Acceso por menú Convenios / Tarifas | Menú Terceros → Convenios / Tarifas. | Abren la vista correspondiente. | P2 | UX |
+| F1-CNV-013 | Programado se activa en su fecha y archiva el anterior | Convenio activo en un cliente. Crear otro «Programado» con la fecha de hoy (o llevar su fecha a hoy). Reiniciar el API (el job corre a los 30 s del arranque y a las 00:00:30 de Colombia). | El programado queda `Active` y el anterior `Archived`; Facturación recibe el aviso «Convenio programado activado» y las facturas existentes **no** se recalculan. Antes de que corra el job, el resolutor ya aplica la tarifa del programado desde las 00:00 de su fecha. Dos activos del mismo cliente son imposibles (índice único corregido). Sin vigencia final (D20, D21). | P1 | RN |
+| F1-CNV-014 | Programado sin fecha | Crear un convenio con estado «Programado» sin fecha de activación. | 400 «Un convenio programado necesita la fecha de activación.». En el formulario, la fecha ya no dice «(Opcional)». | P2 | VAL |
 
 ### 5.5 Productos (PRO)
 

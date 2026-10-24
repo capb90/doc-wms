@@ -33,7 +33,7 @@ Para cada reporte: (a) ejecutar con un filtro que incluya datos QA conocidos; (b
 
 | ID | Reporte | Pasos y verificación | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F7-REP-001 | Ingresos diarios | Rango con las fechas de la fase 3. | Lista los depósitos ingresados con cantidades declaradas; PDF igual a pantalla. | P1 | RN |
+| F7-REP-001 | Ingresos diarios | Rango con las fechas de la fase 3. | **Actualizado (DEC-054):** formato legacy, con IMP por defecto; ver F7-REP-024. PDF igual a pantalla. | P1 | RN |
 | F7-REP-002 | Ingresos diarios — validación | Sin fechas; desde > hasta. | Rechazados. El PDF solo se descarga con el informe vigente. | P2 | VAL |
 | F7-REP-003 | Salidas diarias | Rango con las salidas de la fase 5; filtro por cliente y mercancía (≥ 2 caracteres). | Cuadra con las guías/cargues; PDF. | P1 | RN |
 | F7-REP-004 | Estadísticas | Semana, mes, año. | Cifras coherentes con las operaciones del período. | P2 | RN |
@@ -55,6 +55,9 @@ Para cada reporte: (a) ejecutar con un filtro que incluya datos QA conocidos; (b
 | F7-REP-020 | Reporte vacío | Filtro sin resultados. | Mensaje «sin datos» sin error; exportar no falla. | P3 | ERR |
 | F7-REP-021 | Rendimiento | Reporte de rango amplio. | Responde en < 10 s; anotar tiempo. | P3 | UX |
 | F7-REP-022 | CPI tras refacturar | Depósito con factura anulada y refacturada (F6-REF-001). | Esperado: muestra ambas (o la trazabilidad). Riesgo R-FAC-10: la anulada desaparece. | P2 | RN |
+| F7-REP-023 | Fecha de ingreso corregida en informes | Corregir la fecha de ingreso de un depósito dentro de la estadía de su primer camión (Báscula, Comercio Exterior o Admin) y abrir el kárdex, el listado y el Excel de importaciones, exportaciones e inspecciones, y el diario de ingresos. | **Nuevo (DEC-012, BR-07-003):** todos muestran `EntryDate` (la corregida), no la fecha de creación. En el diario, el primer camión del depósito entra con la fecha de ingreso del depósito y los siguientes con su ingreso en Vigilancia. | P1 | RN |
+| F7-REP-024 | Diario con formato legacy | Reportes → Mercancías ingresadas (diario) con un rango y la modalidad (IMP por defecto, EXP, INSP). Pantalla, PDF y Excel. Probar `operationModalityCode=XX`. | **Nuevo (DEC-054, D24 a D26):** un bloque por depósito (solo Confirmado y Cerrado) con agencia, importador (o exportador/cliente), manifiesto DIAN y CPI, y una fila por camión con manifiesto preimpreso, placa, fecha y hora, tiquete, planilla, transportadora, embalaje, cantidad, **peso de manifiesto y neto de báscula** (el neto del pesaje compartido, prorrateado) y mercancía; subtotales por depósito, «Total vehículos: N» y las firmas «Jefe de Bodega», «Recibí conforme DIAN» y «Firma Funcionario». El Excel es plano (Depósito, Agencia e Importador se repiten) con totales y las tres firmas. `XX` responde 400 «La modalidad debe ser IMP, EXP o INSP.». | P1 | RN |
+| F7-REP-025 | Diario de salidas a Excel | Reportes → Salida de mercancía (diario) → «Exportar Excel» con resultados. | **Nuevo (BR-07-001, D27):** el archivo trae las columnas de la pantalla y la fila de totales; el manifiesto es el DIAN del depósito (nulo fuera de importación). El kárdex trae la agencia y el manifiesto DIAN (BR-07-004). | P2 | FUN |
 
 ### 4.2 Documentos impresos (PDF)
 

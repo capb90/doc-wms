@@ -269,3 +269,28 @@ Pasos, por SSH en el servidor, siguiendo `deploy/staging/README.md` («Restaurac
 6. **Contraseña del Admin:** vuelve a la que tenía al momento del respaldo. Si no la tiene, use **«¿Olvidó su contraseña?»** con el usuario `admin`: el enlace llega al correo del administrador.
 
 **Una contraseña olvidada sin restaurar nada:** Administración → Usuarios → el usuario → **restablecer contraseña**. El operario la cambia en su siguiente ingreso.
+
+## 12. Cambios que llegan con el próximo despliegue (plan de brechas P1)
+
+> **Estado:** estos cambios están en el código (backend `560f558` / frontend `e2e11e6`, 2026-10-24) pero **no están en staging** hasta el despliegue de la fase 13 del plan `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md`. Esta sección no cambia los pasos de arriba: avise a los operarios cuando se despliegue y entréguesela. Los videos afectados se anotan en `videos/guiones/inventario-cambios-guiones.md` §7 (no se graban todavía).
+
+**Báscula (`operario.bascula`)**
+- **Un solo pesaje para varios documentos.** Si un camión trae dos o más documentos, después del Bruto el segundo pesaje es, por defecto, **«Tara — un solo pesaje para todos los depósitos»**. Si el camión descarga en puntos distintos, elija **«Intermedio — el camión descarga en otro punto»** y pese una vez por depósito, como hasta ahora. Con un solo pesaje, el neto del camión se reparte entre los depósitos **en proporción al peso de manifiesto** de cada uno: si a un depósito le falta el peso de manifiesto, su neto queda en blanco hasta que Comercio Exterior lo complete.
+- **Un tiquete por depósito.** Cada depósito del camión imprime su tiquete, con la línea «Pesaje compartido por N depósitos · neto del camión X kg». Al final del proceso se imprimen todos.
+- **«Solo báscula» sin cliente.** El cliente es opcional. Sin cliente, el cobro va al **conductor** o al **consumidor final**, y el tiquete muestra a quien se cobró.
+- **Corregir un pesaje.** En un ciclo con tres pesajes (Bruto, Intermedio, Tara), la corrección cambia **el pesaje que usted elige** y recalcula el neto de los depósitos afectados. Siempre con motivo.
+- **El tiquete ya no menciona a la DIAN.** El pie dice «Documento interno de control de pesaje. No es una factura de venta.».
+
+**Comercio Exterior (`operario.comext`)**
+- **Marca «sin salidas» del cliente.** En el detalle del tercero, **«Bloquear salidas»** (con motivo de 10 a 500 caracteres) impide crear órdenes de cargue, agregar ítems, emitir guías y que Bodega cargue. No frena los ingresos, la báscula ni los cobros. **«Desbloquear salidas»** la quita, también con motivo. Es aparte del bloqueo por mora.
+- **Orden con guía vigente.** Mientras la orden tenga una guía vigente no se puede cancelar ni modificar: **anule primero la guía**. La pantalla lo dice y enlaza a las guías de salida.
+- **Guía distinta a lo cargado.** Si emite la guía antes del cargue y Bodega carga una cantidad distinta, le llega el aviso «Guía con cantidades distintas a lo cargado» y el historial de guías marca **«No coincide con lo cargado»**: anule la guía y emítala de nuevo.
+- **Guía con código QR.** La guía impresa trae un **código QR** y la leyenda «Escanee para verificar esta guía». Al escanearlo con la cámara del celular se abre una página pública (sin iniciar sesión) que dice **«GUÍA VIGENTE»** o **«GUÍA ANULADA»** y muestra los datos básicos (número, fechas, depósito, destino, productos y cantidades, y la placa con los últimos caracteres ocultos) para compararlos con el papel. Si la página dice que el código no es válido, la guía no lo es. El administrador puede cambiar el parámetro `GUIDE_CODE_TYPE` a `BARCODE` para volver al código de barras.
+- **Diario de mercancías ingresadas.** Reportes → «Mercancías ingresadas (diario)» tiene el formato del sistema anterior: un bloque por depósito (agencia, importador, manifiesto DIAN), una fila por camión, total de vehículos y las firmas. Elija la modalidad (Importación por defecto). Se descarga en PDF y en Excel; el diario de salidas también tiene «Exportar Excel».
+- **Fecha de ingreso.** El kárdex, los listados y los Excel de importaciones, exportaciones e inspecciones muestran la **fecha de ingreso** del depósito (la corregida, si se corrigió).
+
+**Facturación (`operario.facturacion`)**
+- **Depósitos pendientes.** Hay una columna **«Pendiente»** («Por numerar» o «Por refacturar») y el interruptor **«Solo con facturas por numerar o refacturar»**. Un depósito agotado sigue en la lista mientras tenga una factura en Borrador sin N.º SIIGO o una anulada sin refacturar. (Se confirma al desplegar: ver `qa/resultados/defectos/DEF-F11-028.md`.)
+- **Convenios programados.** Un convenio «Programado» exige la fecha de activación (sin hora) y se activa solo a las 00:00 de ese día, archivando el convenio activo del cliente. Usted recibe el aviso.
+- **Servicio complementario sin tarifa.** Ya no impide confirmar el depósito: la línea sale en $0 (o con el mínimo del propio servicio) y la factura trae la advertencia para que corrija el valor.
+- **Renovaciones.** El período renovado cobra la cantidad que había al cierre del día en que empieza. Las facturas abiertas pueden subir en su próximo recálculo (se notifica el total anterior y el nuevo).

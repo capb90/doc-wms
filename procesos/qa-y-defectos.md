@@ -22,7 +22,7 @@
 
 | Prefijo | Significado |
 | --- | --- |
-| `DEF-F{N}-{nnn}` | Defecto de producto hallado en la fase N de QA. Los nuevos de cualquier origen siguen en `DEF-F11-028` en adelante |
+| `DEF-F{N}-{nnn}` | Defecto de producto hallado en la fase N de QA. Los nuevos de cualquier origen siguen en `DEF-F11-029` en adelante (`DEF-F11-028` ya existe) |
 | `DEF-MIG-{nnn}` | Defecto de la migración del legacy. El siguiente es `DEF-MIG-009` |
 | `F{N}-{ÁREA}-{nnn}` | Caso de prueba (p. ej. `F3-CAM-013`) |
 | `CHG-nn` | Cambio del plan de corrección |

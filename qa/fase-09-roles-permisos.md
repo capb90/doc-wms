@@ -41,6 +41,7 @@ Leyenda: ✔ acceso · ✘ sin acceso (access-denied / 403) · M = aparece en el
 | WeighingCorrectionAccess | Admin, Scale, Billing |
 | EntryCorrectionAccess | Admin, Receiving |
 | DepositEntryDateAccess | Admin, Scale, FT |
+| ExitBlockAccess | Admin, FT, Billing (marca «sin salidas»; plan P1, fase 3) |
 | ActiveUser | cualquier autenticado |
 
 ## 3. Criterios de entrada
@@ -121,6 +122,10 @@ Cada caso: llamar al endpoint con el token del rol indicado y verificar el códi
 | F9-API-023 | `POST /vehicles` (sigue en `TransportCatalogAccess`) | Warehouse | 403. | P1 | SEG |
 | F9-API-024 | `POST /drivers` | Billing | 403. | P1 | SEG |
 | F9-API-025 | `GET /drivers?search=…` | Sin sesión (sin token) | 401. | P2 | SEG |
+| F9-API-026 | `PATCH /stakeholder/{id}/exit-block` (política `ExitBlockAccess`) | Receiving, Scale, Warehouse | 403. Admin, FT y Billing pueden (200). Sin motivo o con motivo de menos de 10 caracteres: 400. Quedan dos filas en auditoría por bloqueo y desbloqueo. | P0 | SEG |
+| F9-API-027 | `PATCH /entry-logs/{id}` y `POST /warehouse/loading-orders` | Cualquier rol (incluido Admin) | Retirados (BR-03-001 y BR-03-002): 404 o 405. Siguen vigentes `PUT entry-logs/{id}/correction`, `weighbridge/entry-log/{id}/info` y `PATCH warehouse/loading-orders/{id}/cancel`. | P1 | SEG |
+| F9-API-028 | `GET /public/dispatch-guides/verify/{token}` (sin sesión) | Sin token de sesión | **Debe** responder 200 con un token válido: número, empresa, fechas, estado, depósito(s), destino, productos y placa parcialmente oculta. **Nunca** conductor, destinatario, cliente, documentos, teléfonos ni valores. Token alterado o inexistente: 404 con el mismo mensaje. Desde la consulta 31 del minuto por IP: 429. | P0 | SEG |
+| F9-API-029 | `PATCH /administration/system-parameters/{id}` de `GUIDE_CODE_TYPE` | Todos salvo Admin | 403. Admin: `QR` y `BARCODE` 200; otro valor 400 «El parámetro GUIDE_CODE_TYPE solo admite QR o BARCODE.». Queda auditado. | P1 | SEG |
 
 > Casos 022-025 agregados el 2026-10-08 por el selector de conductor (plan `docs/planes/plan-cerrado-selector-conductor-2026-10-08.md`).
 
