@@ -362,3 +362,18 @@ Todas aplicadas solo en Postgres desechables o de Testcontainers. La base de Dev
 - **Compuertas:** build sin errores · Wms.Tests 1971 → 1973 · Wms.IntegrationTests 405/407 (las 2 de la línea base) · `has-pending-model-changes` limpio · sin migración.
 - **Re-test local** (PostgreSQL 18 desechable con toda la cadena de migraciones, API 5292 con BE `9e399de`, siembra de los videos; ya detenidos y borrados): depósito `2026BA00003` agotado por cargue total → `Closed`, `is_active = false`. **F6-ALM-018, F6-REF-005 y F6-REF-006: PASA** (sigue en la lista «Por numerar» con y sin el interruptor; al numerar sale; al anular vuelve «Por refacturar»). Informe §10 y ficha actualizados; DEF-F11-028 queda «Verificado».
 - **Para la fase 13:** el pendiente de DEF-F11-028 queda resuelto; siguen los demás del resumen final.
+
+## Decisiones del usuario sobre las observaciones (2026-10-24)
+
+| # | Observación | Decisión | Efecto |
+| --- | --- | --- | --- |
+| 1 | DEF-F11-028 | Corregido en la fase 12b | Verificado |
+| 2 | Auditoría de jobs (fase 7) | No se audita: bastan fechas, avisos y logs | Sin cambio (`DEC-055`) |
+| 3 | Orden de bloqueo en las guías (fase 2) | Se ajusta: las guías de importación y de exportación toman el consecutivo `S` después de bloquear los productos (D5), con prueba de concurrencia | Pendiente de construir (decisión técnica del plan) |
+| 4 | Tiquete a consumidor final (fase 4) | Se acepta: el tiquete nombra a quien se facturó | Sin cambio (`DEC-055`) |
+| 5 | Depósito agotado en la gracia (fase 6) | Se cobra el período que empezó el día S si había mercancía al cierre de ese día | Pendiente de construir (`DEC-055`) |
+| 6 | Precios futuros (fases 6 y 12) | Se permiten precios programados; la lista los muestra «Programado» | Pendiente de construir (`DEC-055`) |
+| 7 | Base de Development `wmsdb` | Sin decisión en esta ronda | — |
+| 8 | Rama de `docs` | Sin decisión en esta ronda (el orquestador usó `main`, la única rama del hub) | — |
+
+Los tres puntos «Pendiente de construir» quedaron en la **fase 12c** del plan (§15C, D43–D46), agregada el 2026-10-24, antes de la fase 13.

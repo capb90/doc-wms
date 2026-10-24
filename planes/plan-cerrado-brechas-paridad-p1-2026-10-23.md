@@ -6,6 +6,7 @@
 > - Las fichas de cada brecha, en `analisis/auditoria-paridad-integral-2026-10-23/modulos/<NN>-<modulo>/08-brechas.md`.
 > - Las respuestas del usuario del 2026-10-23: 13 preguntas al negocio (DEC-050…054) y 15 de diseño (§2).
 > - Agregado el 2026-10-23, con el plan ya aprobado: el pedido del cliente de un **código QR de verificación en la guía de salida** (fase 11, D35–D42, `DEC-060`), con 4 respuestas del usuario.
+> - Agregado el 2026-10-24, después de ejecutar las fases 1 a 12: la **fase 12c** (§15C, D43–D46), con los tres cambios de `DEC-055` y el ajuste del orden de bloqueo de las guías.
 >
 > **Base (según `contexto/estado.md` §2):** backend `wms-api` `develop` `b27c9bf` · frontend `wms` `develop` `31da26c`.
 > **Staging (último despliegue registrado):** BE `044be08` / FE `4ca4e0a`, con datos migrados.
@@ -62,6 +63,7 @@
 | Respaldos | BR-08-001 (código y procedimiento) | 10 |
 | Guía de salida con código QR (funcionalidad nueva, pedido del cliente) | QR de verificación seleccionable por parámetro; el código de barras se conserva | 11 |
 | Documentación y QA | BR-08-004 (procedimiento de corte), casos QA, fichas, estado | 12 |
+| Ajustes tras la ejecución (`DEC-055`) | Depósito agotado en la gracia, orden de bloqueo de las guías, precios de servicio programados | 12c |
 | Staging | Despliegue y QA en staging, con aprobación | 13 |
 
 **Defectos colaterales incluidos** (D1). Los encontró la investigación del 2026-10-23 y no estaban en el registro:
@@ -131,6 +133,10 @@
 | D40 | **Verificación pública:** endpoint sin sesión `GET api/v1/public/dispatch-guides/verify/{token}`, en un controlador propio, con un limitador de 30 peticiones por minuto y por IP, y una página pública `/verificar/guia/[token]` en el frontend. Un token inválido o alterado responde 404, con el mismo mensaje que una guía inexistente | Usuario, 2026-10-23; convenciones §4 (los `[Authorize]` se suman) |
 | D41 | **Datos públicos mínimos:** número, empresa, fecha y hora de emisión y de salida, estado (vigente o anulada, con la fecha de anulación), depósito(s), destino, productos con cantidad y unidad, y la placa parcialmente oculta (3 caracteres y el resto con `•`). **Nunca** conductor, destinatario, cliente, documentos, teléfonos ni valores | Usuario, 2026-10-23; DEC-007 |
 | D42 | La clave de verificación se genera por ambiente, la guarda el usuario fuera de git y no se rota salvo compromiso: rotarla invalida los QR ya impresos. `Frontend:BaseUrl` debe ser la URL pública real, porque queda impresa | DEC-007; `compose.staging.yaml:51` |
+| D43 | **Depósito agotado en la gracia:** el cierre por agotamiento no cierra un período cuyo fin ya pasó. Lo deja abierto para que el job, o el cierre manual, lo renueve con la cantidad al cierre del día S (D19), y lo cierre por agotamiento en la misma transacción. No se renueva dentro de la transacción del cargue | Usuario, 2026-10-24 (`DEC-055`, precisa `DEC-053`); evita facturar dentro del cargue |
+| D44 | **Orden de bloqueo de las guías:** las guías de importación y de exportación bloquean la orden y sus productos **antes** de tomar el consecutivo `S`, como manda D5. La de exportación pasa a bloquear también la orden | Usuario, 2026-10-24; D5 |
+| D45 | **Precios programados:** `POST service/{id}/prices` acepta una vigencia futura, normalizada a las 00:00 de Colombia de ese día. El vigente rige hasta la víspera. La lista los muestra «Programado» (`IsScheduled`). Reemplaza la regla ALM-20/D20 del validador | Usuario, 2026-10-24 (`DEC-055`); `Service.SetPrice` (fase 6) |
+| D46 | Registrar un precio deja inactivos los precios programados que empiezan después de él: es el comportamiento actual de `SetPrice` y `Expire`, y solo se documenta | Fase 6 (`ServicePrice.Expire`); registro de ejecución |
 
 ---
 
@@ -150,7 +156,8 @@
 | 10 | Respaldos: correo y destino externo | BE, deploy, docs | — | S | — |
 | 11 | Guía de salida con código QR de verificación | BE, FE, deploy | `AddGuideCodeTypeParameter` | M | 2 y 3 (mismos handlers de guía) |
 | 12 | Documentación: procedimiento de corte, QA y estado | docs | — | M | 1–11 |
-| 13 | QA local, despliegue y QA en staging | todos | aplica 4 | M | 12, y aprobación del usuario |
+| 12c | Ajustes de `DEC-055` y orden de bloqueo de las guías | BE, FE | — | M | 12 y 12b |
+| 13 | QA local, despliegue y QA en staging | todos | aplica 4 | M | 12c, y aprobación del usuario |
 
 Las fases van en secuencia (DF13 del plan frontend de paridad): varias tocan los mismos handlers y pantallas. Las fases 6, 9, 10 y 11 no dependen de otras fases salvo lo indicado, pero se mantienen en orden para que cada commit parta del anterior.
 
@@ -1190,6 +1197,109 @@ Se agregan o actualizan en `D/qa/fase-*.md`, siguiendo la numeración de cada bl
 
 ---
 
+## 15C. Fase 12c — Ajustes de DEC-055 y orden de bloqueo de las guías (D43 a D46)
+
+> Agregada el 2026-10-24, después de la ejecución de las fases 1 a 12 y de la fase 12b (corrección de DEF-F11-028, `planes/registro-ejecucion-brechas-p1-2026-10-24.md`). Va **antes de la fase 13**, para desplegar todo junto.
+>
+> **Partida:** BE `9e399de` · FE `e2e11e6`. Sin migración.
+
+### 15C.1 Depósito agotado en la gracia (D43, `DEC-055`, precisa `DEC-053`)
+
+- **Estado:**
+  - Al ejecutar un cargue que deja en cero todos los productos de un período, `ExecuteLoadingOrderCommandHandler` (`B/Wms.Application/Warehouse/Commands/LoadingOrder/ExecuteLoadingOrderCommandHandler.cs:275-293`, dentro de la transacción del cargue) llama a `StorageBillingService.CloseDepletedProductPeriodsAsync` (`B/Wms.Application/Billing/Common/Services/StorageBillingService.cs:1037`).
+  - Ese método cierra el período `Open` aunque su fin ya haya pasado, es decir, en los días de gracia. El job (`B/Wms.Application/Billing/Jobs/BillingJobService.cs:154-282`) nunca lo ve vencido y **no lo renueva**: el período que empezaba el día S (`fin + 1`) no se abre ni se cobra.
+- **Cambio** (se reutiliza la renovación del job; **no** se renueva dentro de la transacción del cargue):
+  1. **`CloseDepletedProductPeriodsAsync`** deja de cerrar un período agotado cuyo `PeriodEnd`, en hora de Colombia, ya pasó (`ColombiaTime.DateOf(PeriodEnd) < ColombiaTime.Today`). Lo deja `Open` para que lo renueve el job, y lo registra con `LogInformation`: «Período {Id} agotado en la gracia: queda para la renovación (DEC-055).». La regla va en una función pura **nueva**, `StorageDepletionRules.ShouldCloseOnDepletion(periodEnd, today)`. Los períodos que todavía están en curso se cierran como hoy.
+  2. **`BillingJobService.AutoCloseExpiredStoragePeriodsAsync`:** después del paso 3 (`OpenPeriodWithInvoiceAsync`, `:238-242`) y antes del commit, llama `scopedStorageBilling.CloseDepletedProductPeriodsAsync(deposit.WarehouseStorageId, ct)`. El período renovado, con la cantidad al cierre del día S (D19), queda facturado y cerrado por agotamiento en la misma transacción.
+     - Si la cantidad al cierre del día S es cero (todo salió el día S o antes), `ResolveStorageChargesAsync` no devuelve cargos, «no se abre período» (`StorageBillingService.cs:477-480`) y queda solo el cierre del período viejo, como hoy.
+  3. **`CloseStoragePeriodsHandler`** (`B/Wms.Application/Billing/Commands/CloseStoragePeriods/CloseStoragePeriodsHandler.cs:61-65`, cierre manual) hace lo mismo después de abrir la renovación.
+  4. **Avisos:** la renovación avisa a Facturación con lo que ya existe (`StorageBillingNotifier.NotifyPeriodRenewedAsync` y las advertencias). No hay aviso nuevo.
+- **Qué no cambia:**
+  - El estado del depósito: sigue `Closed` al agotarse (`ExecuteLoadingOrderCommandHandler.cs:275-281`).
+  - El cálculo, que sigue siendo uno solo (DEC-027).
+  - Los períodos en curso.
+  - Lo que sale el día S, que no se cobra (D19).
+- **Efecto visible:** durante los días de gracia, un depósito agotado sigue con su período abierto hasta que corre el job. Aparece en «Depósitos pendientes» con período abierto (D22).
+- **Pruebas:**
+  - **`Wms.Tests`:** **Nuevo** `B/Wms.Tests/Billing/StorageDepletionRulesTests.cs`:
+    - período en curso → se cierra;
+    - fin ayer → no se cierra;
+    - fin hoy → se cierra.
+  - **`Wms.IntegrationTests`:** **Nuevo** `B/Wms.IntegrationTests/Billing/DepletedInGraceRenewalTests.cs`, con fechas hacia atrás vía `ExecuteUpdateAsync`, como en `StorageRenewalAtPeriodStartTests`:
+    1. `PER_UOM` de 10 con fin = hoy − 2; se cargan las 10 hoy, es decir `fin + 2`:
+       - el período viejo sigue `Open` después del cargue;
+       - se fecha el límite hacia atrás y se ejecuta el job;
+       - hay una factura nueva por 10, con `StockAtBilling = 10`, y el período renovado queda `Closed`;
+       - no hay aviso de fallo.
+    2. Lo mismo, pero con el movimiento fechado en el día S: el job no abre período y el viejo queda cerrado.
+    3. Agotamiento dentro del período (fin = mañana): se cierra al cargar, como hoy.
+    4. Siguen en verde `StorageRenewalAtPeriodStartTests`, `ManualPeriodCloseTests`, `PendingDepositsListTests` y `StorageRecalculationDispatchTests`.
+  - **QA:** proponer **F6-ALM-0xx** «Depósito agotado en la gracia: se cobra el período del día S»; re-ejecutar F6-ALM-009 y F6-ALM-018.
+
+### 15C.2 Orden de bloqueo de las guías (D44)
+
+- **Estado:**
+  - **Importación** (`FT/Commands/CreateDispatchGuide/CreateDispatchGuideCommandHandler.cs`): bloquea la orden (`:60`), toma el consecutivo `S` (`foreignTradeService.GenerateGuideNumberAsync`, `:229`, que bloquea `document_sequences`) y **después** bloquea los productos en `FreezeLinesAsync` (`:249`).
+  - **Exportación** (`FT/Commands/CreateExportDispatchGuide/CreateExportDispatchGuideCommandHandler.cs`, que el cargue lanza **después** de su commit, `ExecuteLoadingOrderCommandHandler.cs:408`): abre su propia transacción (`:102`), toma `S` (`:122`) y bloquea los productos en `FreezeLinesAsync` (`:142`). **No** bloquea la orden.
+  - Las dos van contra el orden global de D5 (orden → productos → consecutivos).
+- **Cambio:**
+  - **Importación:** después de `LockLoadingOrderAsync` (`:60`) y antes de tomar el consecutivo, `StockRowLock.LockStorageProductsAsync(context, await StockRowLock.OrderProductIdsAsync(context, loadingOrderId, ct), ct)`.
+  - **Exportación:** al abrir la transacción (`:102`), `StockRowLock.LockLoadingOrderAsync`, y luego `LockStorageProductsAsync` con los productos de la orden. Después se vuelve a leer «ya existe guía vigente» bajo el bloqueo, como en la de importación.
+  - `FreezeLinesAsync` sigue con su `FOR UPDATE … ORDER BY id` (`FT/Common/Services/DispatchGuideBalanceService.cs:29-30`). Reentrar un bloqueo propio en la misma transacción no espera.
+  - El comentario de `StockRowLock` deja escrito que las guías siguen el mismo orden.
+  - La numeración sigue sin saltos (DEC-012): el consecutivo se toma dentro de la misma transacción, solo que más tarde.
+- **Pruebas:** en `B/Wms.IntegrationTests/ForeignTrade/LoadingOrderConcurrencyTests.cs`:
+  - **Nuevo, determinista:** con `FOR UPDATE` de un producto de la orden tomado desde un `CreateStandaloneDbContext`, `POST foreign-trade/dispatch-guides` espera y **no** tiene tomado el consecutivo mientras espera. Comprobación: con la petición bloqueada, otra transacción toma y libera la fila de `document_sequences` de `S` sin esperar.
+  - **Nuevo:** dos emisiones de guía de importación simultáneas para la misma orden → una 201 y la otra 409 «ya existe guía vigente»; consecutivos sin saltos.
+  - **Nuevo:** guía de exportación automática después de un cargue, sin cambio funcional (regresión de `CreateExportDispatchGuide`).
+
+### 15C.3 Precios de servicio programados (D45, D46, `DEC-055`)
+
+- **Estado:**
+  - `B/Wms.Application/Services/Commands/SetServicePrice/SetServicePriceValidator.cs:16-19` rechaza una vigencia futura: «La fecha de inicio de vigencia no puede ser futura.». El comentario cita «ALM-20/D20», de una fuente que ya no existe (`D/contexto/mapa-de-fuentes.md` §7).
+  - El dominio ya lo soporta desde la fase 6: `Service.SetPrice` (`B/Wms.Domain/Entities/Service/Service.cs:56-65`) vence los activos en `max(ahora, validFrom) − 1 tick`.
+  - El precio vigente ya filtra `ValidFrom <= ahora`, tanto en `Service.CurrentPrice` (`:19`, `IsCurrentlyActive`) como en `GetAllServicesHandler.cs:46-48` y en el resolutor de tarifas.
+  - La lista (`F/features/services/components/ServicePricesList.vue:33-35`) marca «Vigente» todo precio con `isActive`, incluido uno futuro.
+- **Cambio:**
+  - **Backend:**
+    - el validador deja de rechazar las fechas futuras; conserva el resto (precio ≥ 0, vencimiento posterior al inicio);
+    - el comentario cita `DEC-055`, que reemplaza a ALM-20/D20;
+    - el handler de `SetServicePrice` normaliza `ValidFrom` a `ColombiaTime.StartOfDayUtc(ColombiaTime.DateOf(validFrom))` cuando es futura: el precio entra a las 00:00 de Colombia de ese día. Una fecha de hoy o pasada se guarda como hoy (sin cambio).
+  - **Regla de reemplazo (D46):** registrar un precio nuevo deja inactivos los precios programados que empiezan después de él. Es lo que ya hace `SetPrice`: los vence en `validFrom − 1` y `Expire` los desactiva si el vencimiento cae antes de su inicio. Solo se documenta en el comentario de `Service.SetPrice`.
+  - **DTO:** `ServicePriceDto` suma `IsScheduled`, calculado como `IsActive && ValidFrom > ahora`, en el mapper (`B/Wms.Application/Services/Common/Mappers/ServiceMapper.cs`) y en las proyecciones que listan precios.
+  - **Frontend:**
+    - `F/features/services/components/ServicePricesList.vue`:
+      - `Tag`: «Programado» (`info`) si `isScheduled`, «Vigente» (`success`) si está activo y vigente, «Histórico» (`secondary`) si no;
+      - el `DatePicker` «Vigente desde» acepta fechas futuras y muestra la ayuda «Una fecha futura programa el precio: el vigente rige hasta la víspera.»;
+      - la fecha se envía como el día elegido en Colombia (`yyyy-MM-ddT00:00:00-05:00`, como los convenios en la fase 7).
+    - Tipo `isScheduled?: boolean` en `F/features/services/types/service.ts`.
+    - **Nuevo** `F/features/services/utils/service-price-status.ts`, puro, con la etiqueta y la severidad.
+- **Permisos:** sin cambio. `POST service/{id}/prices` sigue con su política actual (Admin y Billing, `BillingAccess`); la pantalla, igual.
+- **Pruebas:**
+  - **`Wms.Tests`:**
+    - **Nuevo** `B/Wms.Tests/Services/SetServicePriceValidatorTests.cs`: una fecha futura es válida; un precio negativo y un vencimiento anterior al inicio no lo son;
+    - `ServiceSetPriceTests` (fase 6) suma un caso: un precio programado más tarde queda inactivo al registrar uno anterior.
+  - **`Wms.IntegrationTests`:** **Nuevo** `B/Wms.IntegrationTests/Services/ScheduledServicePriceTests.cs`:
+    1. `POST service/{id}/prices` con un precio para mañana → 201, `isScheduled = true`, y el precio vigente sigue siendo el anterior.
+    2. La tarifa de un cobro de hoy usa el anterior. Con `ValidFrom` fechado hacia atrás con `ExecuteUpdateAsync`, el cobro usa el nuevo, sin hueco: el anterior vence la víspera.
+    3. Un precio inmediato después de uno programado deja inactivo al programado.
+  - **Vitest:** **Nuevo** `T/unit/services/service-price-status.spec.ts`.
+  - **QA:** proponer **F1-SRV-0xx** «Programar un precio y verlo entrar en su fecha» y re-ejecutar los casos de tarifas F6-TAR-* y F3-COB.
+
+### 15C.4 Documentación de la fase
+
+- `D/qa/fase-01-administracion.md` y `fase-06-facturacion.md`: los casos nuevos.
+- `D/planes/registro-ejecucion-brechas-p1-2026-10-24.md`: la fase 12c.
+- §17 de este plan: el estado de la fase 12c.
+
+### 15C.5 Criterio de salida de la fase 12c
+
+- Compuertas del §18.
+- Sin migración: `has-pending-model-changes` limpio.
+- Las pruebas nuevas de los tres cambios en verde.
+
+---
+
 ## 16. Fase 13 — Despliegue a staging y QA en staging (con aprobación)
 
 Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: `B/deploy/staging/README.md` y `D/procesos/despliegue-staging.md`.
@@ -1241,6 +1351,7 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 | 11 | BE, FE, deploy | §14 y la migración `AddGuideCodeTypeParameter` | `feat(guias): código QR de verificación en la guía de salida, seleccionable por parámetro` | Commiteada: BE `560f558` / FE `e2e11e6` / docs (este commit), con la migración `20261024170332_AddGuideCodeTypeParameter` y `QRCoder` fijado en `[1.8.1]`; el escaneo con celular y la prueba en la imagen Linux quedan para la fase 13 — 2026-10-24, orquestador |
 | 12 | docs | §15 | entrega el veredicto local; commit del hub | Commiteada: BE `2f18fee` (solo documentación) / docs (este commit). Veredicto QA local: continuar con condiciones (DEF-F11-028 MAJOR abierto) — 2026-10-24, orquestador |
 | 12b | BE | DEF-F11-028 (fase aparte pedida por el usuario el 2026-10-24, antes de la 13) | `fix(facturacion): «Depósitos pendientes» incluye el depósito agotado (Cerrado e inactivo) con factura por numerar o refacturar (DEF-F11-028)` | Commiteada: BE `9e399de` / docs (este commit); re-test local de F6-ALM-018, F6-REF-005 y F6-REF-006: PASA — 2026-10-24 |
+| 12c | BE, FE | §15C (sin migración) | `fix(facturacion,guias,servicios): renovación del depósito agotado en la gracia, orden de bloqueo de las guías y precios de servicio programados (DEC-055)` | Pendiente |
 | 13 | staging | §16 | entrega el informe de staging y los mensajes de commit pendientes | Pendiente |
 
 Cada fase entrega su resumen y espera el commit del usuario antes de la siguiente (`DEC-003`).

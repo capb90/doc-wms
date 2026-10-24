@@ -1,12 +1,12 @@
 # Prompt del ejecutor — Plan de brechas P1 de la auditoría de paridad
 
-> **Cómo usarlo:** copia el bloque de abajo en una sesión nueva. Antes, cambia `FASE = N` por el número de la fase (1 a 13).
+> **Cómo usarlo:** copia el bloque de abajo en una sesión nueva. Antes, cambia `FASE = N` por el número de la fase (1 a 13, o `12c`).
 > - Una fase por sesión, en orden.
 > - Cuando el agente se detiene, revisas, haces el commit y abres una sesión nueva con la fase siguiente.
 >
 > **Plan:** `docs/planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md`, aprobado por el usuario el 2026-10-23.
 > **Modelo recomendado:**
-> - **Opus 5.5** para las fases grandes: 2, 3, 5, 6, 8 y 11.
+> - **Opus 5.5** para las fases grandes: 2, 3, 5, 6, 8, 11 y 12c.
 > - **Sonnet 5.5** para el resto.
 >
 > Cuando termine la fase 13, este prompt se mueve a `docs/archivo/prompts/brechas-paridad-p1/` (`procesos/flujo-de-trabajo-agentes.md` §2).
@@ -28,7 +28,7 @@ Eres el implementador de la FASE indicada arriba del plan cerrado de brechas P1 
 2. docs/contexto/decisiones.md completo, en especial §6 (DEC-050…054).
 3. docs/contexto/convenciones-tecnicas.md, en especial §4 (permisos), §5 (migraciones) y §10 (trampas).
 4. docs/procesos/flujo-de-trabajo-agentes.md.
-5. El plan COMPLETO. Tu alcance es la sección de tu fase (tabla de abajo), más las decisiones D1–D42 de §2 que esa sección cita. El resto del plan es contexto: no lo implementes.
+5. El plan COMPLETO. Tu alcance es la sección de tu fase (tabla de abajo), más las decisiones D1–D46 de §2 que esa sección cita. El resto del plan es contexto: no lo implementes.
 6. Si tu fase lo indica, la ficha de cada brecha en docs/analisis/auditoria-paridad-integral-2026-10-23/modulos/<NN>-<modulo>/08-brechas.md.
 
 | Fase | Sección del plan | Contenido | Migración |
@@ -45,6 +45,7 @@ Eres el implementador de la FASE indicada arriba del plan cerrado de brechas P1 
 | 10 | §13 | Correo de fallo de respaldo; variables S3 en compose; procedimiento | — |
 | 11 | §14 | Guía de salida con código QR de verificación, seleccionable por el parámetro GUIDE_CODE_TYPE; el código de barras se conserva | AddGuideCodeTypeParameter |
 | 12 | §15 | Procedimiento de corte; casos e informe QA local; documentación | — |
+| 12c | §15C | Ajustes de DEC-055: depósito agotado en la gracia (renovación por el job), orden de bloqueo de las guías (D5) y precios de servicio programados | — |
 | 13 | §16 | Despliegue y QA en staging (con aprobación paso a paso) | aplica las 4, más AddForkliftUseEntryLog |
 
 ## Reglas

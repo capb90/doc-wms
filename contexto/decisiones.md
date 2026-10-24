@@ -161,6 +161,12 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Diario de ingresos con el formato legacy** (BR-07-002). **Se construye.** Agrupado por depósito, con agencia e importador. Lleva una fila por camión con el manifiesto DIAN y el peso de manifiesto, el total de vehículos y las firmas («Jefe de Bodega», «Recibí conforme DIAN», «Firma Funcionario»), en pantalla, PDF y Excel.
 - **Las agencias no consultan por su cuenta** (BR-08-008). No hay acceso externo para las agencias de aduanas: Comercio Exterior genera el reporte de ingresos por agencia y se lo envía.
 
+**DEC-055 — Ajustes tras la ejecución del plan de brechas P1** (2026-10-24). Respuestas del usuario a las observaciones del orquestador (`planes/registro-ejecucion-brechas-p1-2026-10-24.md`, «Decisiones para el usuario»). Lo marcado **«Se construye»** necesita plan cerrado (`DEC-001`).
+- **Tiquete cobrado a consumidor final.** El tiquete nombra a quien se facturó, aunque el depósito tenga cliente: con un cobro a consumidor final dice «Consumidor Final». Se acepta lo que hace hoy `TicketRecipient` (fase 4, D12), que reemplaza el criterio de CHG-84 para este caso.
+- **Depósito agotado en la gracia** (precisa `DEC-053`). **Se construye.** Si un depósito se agota por completo en los días de gracia y tenía mercancía al cierre del día de inicio del período nuevo (S), ese período se abre con esa cantidad, se factura y se cierra por agotamiento. Hoy `CloseDepletedProductPeriodsAsync` cierra el período viejo sin renovarlo. Lo que sale el mismo día S sigue sin cobrarse (D19 del plan).
+- **Auditoría de los procesos automáticos.** Los jobs (activación de convenios, renovaciones, mora, conciliación, abandono) **no** dejan `audit_logs`. Bastan las fechas en la entidad, los avisos y los logs del servidor.
+- **Precios de servicio programados.** **Se construye.** Se acepta registrar un precio con vigencia futura (día en hora de Colombia). El vigente rige hasta esa fecha y el nuevo entra solo (`Service.SetPrice` ya lo soporta desde la fase 6). La lista de precios lo muestra «Programado». Se relaja `SetServicePriceValidator`.
+
 ## 7. Documentos impresos
 
 **DEC-060 — Código QR de verificación en la guía de salida** (2026-10-23, pedido del cliente).
