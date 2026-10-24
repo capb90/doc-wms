@@ -164,3 +164,34 @@
   - `ForkliftService.cs:91` y `ForeignTradeService.cs:39` filtran `Agreement.Status == Active`: unos 30 s a medianoche sin ver el programado, hasta que corre el job.
   - Editar un convenio «Programado» cuya fecha ya pasó, antes del job, falla la validación de fecha del formulario (ya pasaba antes).
 
+### Fase 8 — Reportes (§11)
+
+- **Subagente:** Opus. Partida BE `cc832b3` / FE `682e1f7` / docs `0c7ab56`. Una ronda, sin preguntas.
+- **Commits (2026-10-24):** BE `02c0b32` · FE `ae20d54` · docs: el de esta anotación.
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1892 | 1894 (6 viejas borradas con `DailyIncomingGoodsRowBuilder`, 8 nuevas) |
+  | Wms.IntegrationTests | 384 de 386 | 388 de 390 |
+  | Vitest | 468 (94 archivos) | 472 (95 archivos) |
+  | Lint | 281 errores / 413 avisos | 281 / 413; cero en archivos nuevos |
+
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** ninguna; `has-pending-model-changes` limpio.
+- **Prueba manual:** contra la API local sobre un `postgres:18.0` desechable (ya detenido) con un admin de bootstrap: diario por defecto IMP, EXP correcto, XX → 400, PDF de inspección 200, diario de salidas e importaciones 200, kardex inexistente 404. PDF de muestra con 6 depósitos revisado con `pdftotext` (bloques, subtotales, «Total vehículos» y firmas).
+- **Borrados:** `DailyIncomingGoodsRowBuilder.cs`, `DailyIncomingGoodsReportRowDto.cs` y sus pruebas (reemplazados por `DailyIncomingGoodsReportBuilder`).
+- **Desviaciones:**
+  - `buildExcelWorkbook` separado dentro de `excel-export.ts` para probar `footerLines` en una hoja.
+  - La planilla de envío está en el depósito: se repite por camión en PDF y Excel, y va en el encabezado en pantalla.
+  - Un depósito cuyos camiones del rango están todos anulados no sale; un primer camión anulado sigue fijando la fecha de ingreso.
+  - Camiones ordenados por fecha y, si empatan, por creación. Importador solo del rol `IMPORTER`.
+  - El validador conserva sus mensajes de fecha; el handler calcula el rango con `ReportDateRange`.
+  - Excel del diario de salidas: los totales van en «No. Guía» y la cantidad suma todas las filas aunque mezclen unidades.
+  - Pantalla del diario: tarjetas por depósito; «Exportar Excel» solo con resultados.
+  - El PDF del diario de salidas imprime ahora el manifiesto DIAN bajo «Manifiesto» (nulo fuera de importación).
+- **Visto fuera de alcance:**
+  - El filtro `fromDate`/`toDate` de `GET foreign-trade/deposits` (`GetDepositsHandler.cs:79-88`) sigue con la fecha de creación.
+  - El Excel del kardex sigue sin encabezado del depósito (resto de BR-07-005).
+  - `convenciones-tecnicas.md` §3 ubica `formatColombiaDate` y `formatColombiaTime` en `shared/utils/format.ts`, pero están en `app/utils/colombia-date.ts`.
+
