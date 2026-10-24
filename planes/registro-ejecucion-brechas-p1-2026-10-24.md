@@ -66,3 +66,24 @@
   - Sin prueba manual contra la API local, por lo mismo de la fase 2; los endpoints se probaron por HTTP en `Wms.IntegrationTests`.
 - **Visto fuera de alcance:** `WarehouseMapper.MapToDto` no ignora `ActiveDispatchGuideNumber` ni `ActiveDispatchGuideDiffersFromLoad` (solo avisos RMG de Mapperly). La guía automática de exportación no valida la marca, conforme a D9.
 
+### Fase 4 — Báscula: corrección por pesaje y «Solo báscula» (§7)
+
+- **Subagente:** Sonnet. Partida BE `272b785` / FE `b1b27fa` / docs `900884f`. Una ronda.
+- **Commits (2026-10-24):** BE `157503b` · FE `8e4deb2` · docs: el de esta anotación.
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1788 | 1807 |
+  | Wms.IntegrationTests | 340 de 342 | 350 de 352 |
+  | Vitest | 440 | 445 |
+  | Lint | 281 errores / 413 avisos | 281 / 413; cero en archivos nuevos |
+
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** ninguna; `has-pending-model-changes` limpio.
+- **Cambios de comportamiento a tener presentes:**
+  - `ModifyFirstWeight` ya no guarda el propio peso como neto: con un solo pesaje el neto queda nulo (D11).
+  - **Tiquete de un depósito facturado a consumidor final:** con la cadena del §7.2 (factura → no registrado → cliente del servicio → «CONSUMIDOR FINAL»), que D12 respalda («el tiquete muestra al destinatario no registrado»), ahora imprime «Consumidor Final» en lugar del cliente del depósito (CHG-84). El subagente pidió confirmarlo; el orquestador lo dio por resuelto por el plan. **Para revisión del usuario.**
+- **Desviaciones:** el filtro del historial citado en `WeighbridgeHistoryFilters.cs:41-48` es el de nombre; el de `CustomerId` ya miraba `wc.Invoice`. Se extendió el de nombre. Sin prueba manual contra la API local (no hay base de Development); verificado con pruebas de integración y `pdftotext` del tiquete.
+- **Visto fuera de alcance:** BR-02-007 (los handlers de corrección no rechazan ciclos anulados); la fase 5 amplía `CycleNetWeights`.
+
