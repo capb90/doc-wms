@@ -38,6 +38,8 @@ Redespliegue típico tras un cambio de código: `backend` y reinicio de `wms-api
 
 - La API respalda la base y los archivos subidos a diario a las 02:00 (Colombia) en los destinos activos (`/api/v1/administration/backup-destinations`, solo Admin). Retiene 30 diarios y 12 mensuales; los manuales no se borran.
 - En staging el destino es Local, en `/opt/wms/backups`. Nombre del archivo: `wms_{aaaammdd_hhmmss}_{id8}.dump`.
+- **Destino externo (BR-08-001, plan de brechas P1 fase 10; se aplica en la fase 13):** además del Local, un destino S3 llamado `s3-externo` en un bucket **privado** de Lightsail Object Storage en otra región. El usuario crea el bucket y la clave de acceso, y guarda `BACKUP_S3_ACCESS_KEY_ID` y `BACKUP_S3_SECRET_ACCESS_KEY` solo en `deploy/staging/.env.staging`; `compose.staging.yaml` las pasa como `Backups__S3Credentials__s3-externo__*`. Con aprobación: `scripts/deploy-staging.sh config`, recrear `wms-api`, crear el destino (Postman «3b. Crear destino S3»), probarlo y correr un respaldo con dos destinos `Succeeded`. Pasos completos en `Backend/wms-api/deploy/staging/README.md`.
+- **Correo de fallo:** un respaldo `Failed` o `PartiallySucceeded` envía «[WMS] Falló el respaldo del dd/MM/aaaa» a los Admin activos y a `Notifications:AdminEmails`, sin repetir, aunque la base esté caída o `Notifications:Enabled` esté apagado. Antes de provocar un fallo para probarlo, verifica que esos correos sean de cuentas reales.
 - La restauración se describe en el runbook. Restaurar borra lo que los operarios hicieron después: solo con aprobación del usuario.
 
 ## 6. Cuidado

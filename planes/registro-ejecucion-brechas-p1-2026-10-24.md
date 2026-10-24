@@ -219,3 +219,22 @@
   - `OpenMigratedBilling` y su DTO muestran solo `LegacyNumber`.
   - Los CSV de `planes/migracion-staging/` no traen las columnas nuevas (fase 12, procedimiento de corte).
 
+### Fase 10 — Respaldos: correo de fallo y destino externo (§13)
+
+- **Subagente:** Sonnet. Partida BE `f37f353` / FE `ae20d54` / docs `3e37921`. Una ronda, sin preguntas. Backend, `deploy/` y docs; nada contra staging.
+- **Commits (2026-10-24):** BE `30df3b0` · docs: el de esta anotación (incluye `procesos/despliegue-staging.md` §5).
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1915 | 1922 |
+  | Wms.IntegrationTests | 393 de 395 | 398 de 400 |
+
+  Vitest y lint no aplican. En una corrida intermedia falló además `StorageMinimumVatTests.PerCargoUnitWithOwnFloor…` y pasó en las dos siguientes: **intermitente**, a vigilar.
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** ninguna; `has-pending-model-changes` limpio.
+- **Despliegue:** `compose.staging.yaml` pasa `Backups__S3Credentials__s3-externo__AccessKeyId` y `…__SecretAccessKey` desde `BACKUP_S3_ACCESS_KEY_ID` y `BACKUP_S3_SECRET_ACCESS_KEY` (vacías por defecto). Runbook de `deploy/staging/README.md` con los pasos 1–8 y «Correo de fallo». Postman: petición «3b. Crear destino S3 (externo)» y variables `bucket` (`CAMBIAR-BUCKET`), `region` y `prefix`, sin secretos.
+- **Desviaciones:** `HtmlEncode` solo sobre el texto del error y de los destinos; `MergeRecipients` separa `Notifications:AdminEmails` por coma o punto y coma; el `catch` de `StartManualAsync` avisa con `BackupKind.Manual` y destino «sin determinar».
+- **Pendiente para el usuario (fase 13):** `deploy/staging/.env.staging.example` no trae `BACKUP_S3_ACCESS_KEY_ID` ni `BACKUP_S3_SECRET_ACCESS_KEY`; agregarlas vacías (el subagente no abre `.env*`).
+- **Visto fuera de alcance:** el resto del runbook no se revisó; advertencias NU1903 de `Microsoft.OpenApi` 2.3.0 y `Newtonsoft.Json` 9.0.1.
+
