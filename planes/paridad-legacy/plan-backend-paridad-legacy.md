@@ -2884,10 +2884,12 @@ Cada paso primero en simulación y luego en firme:
      nro_deposito; fecha_deposito; modalidad; id_cliente; id_importador; id_exportador; id_sia;
      nro_doccomercial; fecha_doccomercial; nro_manifiestodian; fecha_manifiestodian;
      id_producto; id_embalaje; ingresan; nacionalizados; salen; saldo;
-     ultimo_fin_facturado; trm_ingreso; valor_mercancia; moneda
+     ultimo_fin_facturado; trm_ingreso; valor_mercancia; moneda; prorroga
      ```
 
-     - Las dos últimas columnas, `valor_mercancia` y `moneda`, son **opcionales** (DEF-MIG-004): un CSV con las 19 columnas anteriores se sigue aceptando y el depósito queda sin CIF.
+     - Las tres últimas columnas, `valor_mercancia`, `moneda` y `prorroga`, son **opcionales**: un CSV con las 19 columnas anteriores se sigue aceptando y el depósito queda sin CIF y sin prórroga (DEF-MIG-004, BR-08-003).
+     - **Identidad del depósito (BR-08-005).** El legacy reinicia la serie cada año: el depósito es el par (`nro_deposito`, año de `fecha_deposito` en hora de Colombia). Las filas se agrupan por ese par y los mensajes lo muestran como «BA0042 (2023)». Se guarda en `WarehouseStorage.LegacyYear`; los migrados antes de esa columna quedan con el año nulo y se reconocen por el año de su fecha de ingreso.
+     - **Prórroga (BR-08-003).** `prorroga` (columna 22) vale `1` o `0`, vacía = `0`; cualquier otro valor → "Fila {n}: La prórroga (prorroga) «x» debe ser 1 o 0." Con `1` en un depósito de importación se registra la prórroga (`RegisterExtension`, nota «Prórroga registrada en el legacy (depósito {clave}); migrada.»): plazo de 60 días y una segunda prórroga responde 409. En otra modalidad se ignora con la advertencia "Fila {n}: advertencia: la prórroga solo aplica a importación; se ignora en el depósito {clave}." Es parte de los datos de cabecera: todas las filas del depósito deben coincidir.
      - `modalidad` acepta, sin distinguir mayúsculas ni tildes (DEF-MIG-001):
        - el código v2: `IMP`, `EXP` o `INSP`;
        - el nombre de `modalidad.nom_modalidad` del legacy: «Entrada por Importación» → `IMP` y «Entrada por Exportación» → `EXP`. El legacy no tiene modalidad de inspección; «Entrada por Otros», las «Salida por …» y «Solo servicio de pesaje» no crean depósito;
@@ -2914,7 +2916,7 @@ Cada paso primero en simulación y luego en firme:
        - En importación también `ImportWarehouseStorage` con manifiesto y fecha.
      - **Productos.** `WarehouseStorageProduct.CreateMigrated(productId, packagingTypeId, unitMeasureId, received = ingresan, current = saldo)` (nuevo): `DeclaredQuantity = ingresan`, sin camiones (`EntryProducts` vacío).
      - **Movimientos**, con `SourceType = MigrationOpening` (valor nuevo) y `SourceId` = el depósito: uno `In` por `ingresan` («Ingreso legacy {nro}») y uno `Out` por `salen` si es > 0 («Despachado en el legacy»). El kardex cuadra.
-     - Correspondencia `Deposits` → `nro_deposito`. Un depósito ya migrado se omite: "Fila {n}: el depósito {nro} ya fue migrado."
+     - Correspondencia `Deposits` → `{nro_deposito}@{año}`. Un depósito ya migrado se omite: "Fila {n}: el depósito {nro} ({año}) ya fue migrado." Es «ya migrado» el de la misma clave, el de `LegacyYear` nulo con el mismo número y año de ingreso, o el de una correspondencia anterior por número solo cuando su depósito es de ese año.
   3. **Protección de los migrados**, que no tienen camiones:
      - `ReturnStorageForCorrection` → 409 "El depósito {n} viene del legacy: corrija sus cantidades con un ajuste de inventario."
      - La anulación de pesajes no aplica (no tienen ciclos).
@@ -2923,9 +2925,10 @@ Cada paso primero en simulación y luego en firme:
 
      ```
      nro_deposito; id_producto; id_embalaje; nro_levante; fecha_levante; nro_aceptacion; fecha_aceptacion;
-     cantidad_levante; peso_bruto; fob_dolares; tasa_cambio; fob_pesos
+     cantidad_levante; peso_bruto; fob_dolares; tasa_cambio; fob_pesos; anio_deposito
      ```
 
+     - **`anio_deposito` (BR-08-005), columna 13 opcional:** el año de `fecha_deposito` del depósito del levante. Sin ella, el número debe identificar a un solo depósito migrado; si existe en varios años → "Fila {n}: el depósito {nro} existe en varios años; exporte la columna anio_deposito." Con ella, el levante va al depósito de ese número y año. El año es parte de la agrupación.
      - **Agrupación (DEF-MIG-003).** El legacy reparte un levante en una fila de `producto_levante` por cada `producto_en_bodega` (cada camión del depósito). Antes de crear, el importador agrupa las filas del archivo por (depósito, producto, embalaje, número de levante, número de aceptación):
        - suma `cantidad_levante`;
        - el peso bruto, el FOB en dólares y en pesos, la tasa y las fechas son de la tabla `levante`: cada fila los repite completos, así que se toman de la primera fila del grupo y no se suman (decisión del usuario del 2026-10-06);
@@ -2943,7 +2946,8 @@ Cada paso primero en simulación y luego en firme:
      **Depósitos.** Corregida tras la fase 1 de la migración (2026-10-06), sobre la consulta congelada `db_legacy/trabajo/consultas/11_depositos.sql`:
      - `modalidad` sale como el código de la v2 con un `CASE` por `id_modalidad` (DEF-MIG-001);
      - `saldo` y `trm_ingreso` salen calculados;
-     - se agregan `valor_mercancia` (`ingreso.preciomercancia`) y `moneda` (`ingreso.id_paismonedaprecio`), solo cuando el valor es mayor que cero (DEF-MIG-004).
+     - se agregan `valor_mercancia` (`ingreso.preciomercancia`) y `moneda` (`ingreso.id_paismonedaprecio`), solo cuando el valor es mayor que cero (DEF-MIG-004);
+     - se agrega `prorroga` (`deposito.prorroga`, 0 o 1), la columna 22 del CSV (BR-08-003). Los depósitos de exportación e inspección la traen en 0 o se ignora con advertencia.
 
      Con el dump del 2024-06-10 da 133 filas (128 depósitos), con las mismas 19 primeras columnas que el CSV congelado de la fase 1.
 
@@ -2955,7 +2959,7 @@ Cada paso primero en simulación y luego en firme:
             X.ingresan, X.nacionalizados, X.salen, X.ingresan - X.salen AS saldo, X.ultimo_fin_facturado,
             (SELECT T.valor FROM tasa_cambio T WHERE T.fecha_inicio <= DATE(X.fecha_ingreso) AND T.fecha_fin >= DATE(X.fecha_ingreso)
                AND T.estado <> 'eliminado' AND T.valor > 0 ORDER BY (T.id_pais = 'ECU') DESC, T.id_tasacambio DESC LIMIT 1) AS trm_ingreso,
-            X.valor_mercancia, X.moneda
+            X.valor_mercancia, X.moneda, X.prorroga
      FROM (
        SELECT D.id_deposito, I.id_modalidad, M.nom_modalidad AS modalidad, D.nro_deposito, D.fecha_deposito,
               I.fechahora_ingreso AS fecha_ingreso, I.id_importador AS id_cliente, I.id_importador, I.id_exportador, I.id_sia,
@@ -2970,7 +2974,8 @@ Cada paso primero en simulación y luego en firme:
                       AND PS.estado <> 'eliminado' AND PB3.estado <> 'eliminado'), 0) AS salen,
               (SELECT MAX(F.fechafin_periodo) FROM facturaciigo F WHERE F.id_deposito = D.id_deposito AND F.estado = 'facturada') AS ultimo_fin_facturado,
               CASE WHEN I.preciomercancia > 0 THEN CAST(I.preciomercancia AS DECIMAL(18,2)) END AS valor_mercancia,
-              CASE WHEN I.preciomercancia > 0 THEN I.id_paismonedaprecio END AS moneda
+              CASE WHEN I.preciomercancia > 0 THEN I.id_paismonedaprecio END AS moneda,
+              D.prorroga
        FROM deposito D JOIN ingreso I ON I.id_ingreso = D.id_ingreso JOIN modalidad M ON M.id_modalidad = I.id_modalidad
        JOIN producto_en_bodega PB ON PB.id_deposito = D.id_deposito AND PB.estado <> 'eliminado'
        WHERE D.estado <> 'eliminado' AND I.estado <> 'eliminado' AND I.id_importador <> 70
@@ -2980,7 +2985,7 @@ Cada paso primero en simulación y luego en firme:
      ORDER BY X.nro_deposito, X.id_producto, X.id_embalaje, X.id_deposito;
      ```
 
-     - **Orden total (O-1):** `X.id_deposito` desempata dos depósitos vivos con el mismo número de años distintos, para que una reexportación traiga las filas en el mismo orden y el mismo hash.
+     - **Orden total (O-1):** `X.id_deposito` desempata dos depósitos vivos con el mismo número de años distintos, para que una reexportación traiga las filas en el mismo orden y el mismo hash. Desde BR-08-005 esos depósitos se migran como depósitos distintos, por (número, año de `fecha_deposito`).
      - `trm_ingreso` es la `tasa_cambio` vigente en la fecha de ingreso, como `kardex.php:227`: solo registros no eliminados y con valor > 0; si hay varias, primero la de `ECU` y luego la más reciente.
      - El legacy factura al importador (`cron.php:21`): por eso `id_cliente = id_importador`.
      - El ajuste de prueba D2 del plan de migración (`ultimo_fin_facturado = 2026-09-30`) se aplica después, sobre el CSV.
@@ -2993,7 +2998,8 @@ Cada paso primero en simulación y luego en firme:
 
      ```sql
      SELECT D.nro_deposito, PB.id_producto, PB.id_embalaje, L.nro_levante, L.fecha_levante, L.nro_aceptacion,
-            L.fecha_aceptacion, PL.cantidad_levante, L.peso_bruto, L.fob_dolares, L.tasa_cambio, L.fob_pesos
+            L.fecha_aceptacion, PL.cantidad_levante, L.peso_bruto, L.fob_dolares, L.tasa_cambio, L.fob_pesos,
+            YEAR(D.fecha_deposito) AS anio_deposito
      FROM producto_levante PL JOIN levante L ON L.id_levante = PL.id_levante
      JOIN producto_en_bodega PB ON PB.id_productoenbodega = PL.id_productoenbodega
      JOIN deposito D ON D.id_deposito = PB.id_deposito
@@ -3014,7 +3020,7 @@ Cada paso primero en simulación y luego en firme:
      ORDER BY D.nro_deposito, L.nro_levante, L.nro_aceptacion, PB.id_producto, PL.id_productolevante;
      ```
 
-     - **Orden total (O-1):** `PL.id_productolevante`, la clave de `producto_levante`, desempata las filas que coinciden en lo demás, para que una reexportación traiga el mismo orden y el mismo hash.
+     - **Orden total (O-1):** `PL.id_productolevante`, la clave de `producto_levante`, desempata las filas que coinciden en lo demás, para que una reexportación traiga el mismo orden y el mismo hash. `anio_deposito` (BR-08-005) separa los levantes de dos depósitos que repiten número; la consulta no cambia su orden.
      - **No se filtra por `nro_deposito`:** el legacy reinicia la serie cada año (`BA0001` existe en varios años; 9.682 depósitos con 4.755 números). Por número, la consulta traía 819 filas en vez de 170 y cargaba levantes de depósitos cerrados en el depósito vivo con el mismo número (DEF-MIG-002).
      - El FOB del legacy está en el levante y no por producto. Si un levante tiene varios productos, el FOB se asigna completo a la primera fila del levante y 0 a las demás, para no multiplicarlo en las pólizas (F5-06). El importador aplica esta regla por par número–aceptación.
 - **Evidencia:**

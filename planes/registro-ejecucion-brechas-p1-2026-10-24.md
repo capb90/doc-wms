@@ -195,3 +195,27 @@
   - El Excel del kardex sigue sin encabezado del depósito (resto de BR-07-005).
   - `convenciones-tecnicas.md` §3 ubica `formatColombiaDate` y `formatColombiaTime` en `shared/utils/format.ts`, pero están en `app/utils/colombia-date.ts`.
 
+### Fase 9 — Migración legacy: año y prórroga (§12)
+
+- **Subagente:** Sonnet. Partida BE `02c0b32` / FE `ae20d54` / docs `4e964d3`. Una ronda, sin preguntas. Backend y docs.
+- **Commits (2026-10-24):** BE `f37f353` · docs: el de esta anotación (incluye F6-03 de `planes/paridad-legacy/plan-backend-paridad-legacy.md` con `prorroga`, `anio_deposito`, las consultas y O-1).
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1894 | 1915 |
+  | Wms.IntegrationTests | 388 de 390 | 393 de 395 |
+
+  Vitest y lint no aplican (sin cambios de frontend).
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** `20261024163412_AddWarehouseStorageLegacyYear` (columna `legacy_year`; el índice pasa a `idx_warehouse_storage_legacy_number_year` con `NULLS NOT DISTINCT`), con su `Designer` y el snapshot. `has-pending-model-changes` limpio. Se aplicó con toda la cadena en el Postgres de Testcontainers de `Wms.IntegrationTests`; no en `wmsdb`.
+- **Desviaciones:**
+  1. **D28 sobre el texto del plan (DEC-002):** una correspondencia antigua «con el número solo» marca «ya migrado» solo si su depósito ya no existe o es del mismo año; si no, un BA0042 de 2025 se rechazaría por el de 2023 ya migrado.
+  2. `CreateMigrated` recibe `legacyYear` obligatorio (1900–2200).
+  3. En la conciliación, una fila sin `fecha_deposito` da error de fila (antes no se leía esa columna).
+  4. El DTO de conciliación sigue mostrando el número sin el año, para no cambiar el contrato.
+- **Visto fuera de alcance:**
+  - `LegacyReleaseFobSplitter` reparte el FOB por (levante, aceptación) sin mirar el depósito: dos depósitos del mismo número y distinto año que compartan esos números podrían anular el FOB del segundo (improbable).
+  - `OpenMigratedBilling` y su DTO muestran solo `LegacyNumber`.
+  - Los CSV de `planes/migracion-staging/` no traen las columnas nuevas (fase 12, procedimiento de corte).
+
