@@ -238,3 +238,34 @@
 - **Pendiente para el usuario (fase 13):** `deploy/staging/.env.staging.example` no trae `BACKUP_S3_ACCESS_KEY_ID` ni `BACKUP_S3_SECRET_ACCESS_KEY`; agregarlas vacías (el subagente no abre `.env*`).
 - **Visto fuera de alcance:** el resto del runbook no se revisó; advertencias NU1903 de `Microsoft.OpenApi` 2.3.0 y `Newtonsoft.Json` 9.0.1.
 
+### Fase 11 — Guía de salida con código QR de verificación (§14)
+
+- **Subagente:** Opus. Partida BE `30df3b0` / FE `ae20d54` / docs `944d847`. Dos rondas (el orquestador devolvió dos desviaciones que el plan ya resolvía).
+- **Commits (2026-10-24):** BE `560f558` · FE `e2e11e6` · docs: el de esta anotación (incluye `procesos/despliegue-staging.md` §6, clave del QR y proxy conocido).
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1922 | 1971 |
+  | Wms.IntegrationTests | 398 de 400 | 405 de 407 |
+  | Vitest | 472 (95 archivos) | 481 (96 archivos) |
+  | Lint | 281 errores / 413 avisos | 281 / 413; cero en archivos nuevos o tocados |
+
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** `20261024170332_AddGuideCodeTypeParameter` (inserta `GUIDE_CODE_TYPE = QR`, activo), con su `Designer` y el snapshot. `has-pending-model-changes` limpio. Aplicada a un `postgres:18.0` desechable (ya detenido).
+- **Paquete:** `QRCoder` `[1.8.1]` (forma estricta, por D39 y §14.8). Arrastra `System.Drawing.Common` 6.0.0 como transitiva; `PngByteQRCode` no la usa.
+- **Prueba manual** (API local sobre base desechable): token basura → 404 «La guía no existe o el código no es válido.»; `PATCH` del parámetro con `XYZ` → 400, con `barcode` y `QR` → 200; el limitador responde 429 desde la consulta 31. PDF en los dos modos revisado con `pdftotext`. No se pudo decodificar el QR en el equipo (sin `zbarimg`); las pruebas validan el PNG y el token.
+- **Correcciones pedidas por el orquestador (resueltas por el plan):**
+  1. §14.5: `UseForwardedHeaders` solo para los proxies conocidos. Nuevo `ForwardedHeadersSetup` (sección `ForwardedHeaders` con `KnownProxies` y `KnownNetworks`), llamado antes del limitador. En `compose.staging.yaml` se retiró `ASPNETCORE_FORWARDEDHEADERS_ENABLED` y se creó la red `wms` con subred fija `10.201.0.0/24`, Caddy en `10.201.0.10` y `ForwardedHeaders__KnownProxies__0` con esa IP. Con pruebas unitarias y de integración (un proxy desconocido no cambia la partición).
+  2. §14.8: `QRCoder` con versión exacta `[1.8.1]`.
+- **Desviaciones vigentes:**
+  - `/verificar/` se abre con o sin sesión, como `/ayuda`, y no va en `PUBLIC_ROUTES` (que redirige al usuario con sesión) — D40.
+  - `DispatchGuidePdfService` recibe `IConfiguration`, `IServiceScopeFactory?` y `ILogger`; el aviso a Admin va en un ámbito propio, fuera de la transacción de la emisión. Si el QR no se genera, cae a código de barras (D38).
+  - No se hizo el `Select` opcional de `admin/parameters`.
+- **Para la fase 13 (con aprobación):**
+  - el usuario genera `GUIDE_VERIFICATION_KEY` en `.env.staging` (y, si quiere, la lista vacía en `.env.staging.example`, que el agente no abre);
+  - **el primer `up -d` con la red nueva `wms` recrea los contenedores** (sin tocar volúmenes); comprobar que HTTPS no entra en loop y que la subred `10.201.0.0/24` no choca con otra red del servidor;
+  - confirmar que `QRCoder` funciona en la imagen Linux;
+  - escanear la guía en papel con Android e iPhone.
+- **Visto fuera de alcance:** `GlobalExceptionHandler` registra cada 404 público como error (ruido en el log); el aviso «Falta la clave…» se repite en cada descarga y por depósito en el ZIP; NU1903 de `Newtonsoft.Json` 9.0.1.
+

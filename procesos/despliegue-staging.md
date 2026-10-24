@@ -42,7 +42,17 @@ Redespliegue típico tras un cambio de código: `backend` y reinicio de `wms-api
 - **Correo de fallo:** un respaldo `Failed` o `PartiallySucceeded` envía «[WMS] Falló el respaldo del dd/MM/aaaa» a los Admin activos y a `Notifications:AdminEmails`, sin repetir, aunque la base esté caída o `Notifications:Enabled` esté apagado. Antes de provocar un fallo para probarlo, verifica que esos correos sean de cuentas reales.
 - La restauración se describe en el runbook. Restaurar borra lo que los operarios hicieron después: solo con aprobación del usuario.
 
-## 6. Cuidado
+## 6. Clave del QR de la guía de salida
+
+- **Qué es (plan de brechas P1, fase 11, D38 y D42; se aplica en la fase 13):** la guía de salida imprime un QR con un enlace de verificación firmado, o el código de barras, según el parámetro `GUIDE_CODE_TYPE` (`QR` o `BARCODE`, en Administración → Parámetros; empieza en `QR`). El token se firma con `DispatchGuides__VerificationKey`, que `compose.staging.yaml` lee de `GUIDE_VERIFICATION_KEY`.
+- **La clave la genera y la guarda el usuario** (`openssl rand -base64 32`), una por ambiente, solo en `deploy/staging/.env.staging` y con los secretos del ambiente. El agente no la genera ni la escribe.
+- **No se rota salvo compromiso:** rotarla (o perderla) invalida los QR ya impresos.
+- **`Frontend__BaseUrl` debe ser la URL pública real** del frontend: es la que queda impresa en el QR.
+- Sin clave en modo QR, la guía sale con código de barras y se avisa a los Admin; nunca se bloquea la impresión.
+- La página pública es `/verificar/guia/{token}` y el endpoint `GET api/v1/public/dispatch-guides/verify/{token}` (sin sesión, 30 consultas por minuto y por IP). **Producción:** la misma variable, con su propia clave. Pasos en `Backend/wms-api/deploy/staging/README.md`.
+- **Proxies conocidos:** el API acepta `X-Forwarded-For` y `X-Forwarded-Proto` solo de Caddy, por su IP fija `10.201.0.10` en la red `wms` del compose (`ForwardedHeaders__KnownProxies__0`). Reemplaza a `ASPNETCORE_FORWARDEDHEADERS_ENABLED`, que se retiró. El primer `up -d` con la red nueva recrea los contenedores sin tocar los volúmenes (detalle en «Notas técnicas» del runbook).
+
+## 7. Cuidado
 
 - El agente no escribe contraseñas en el navegador: el usuario inicia sesión y el agente usa esa sesión.
 - No edites datos migrados del legacy para probar. Usa los datos de práctica (`PRAC-`) o crea datos marcados `QA-…`.

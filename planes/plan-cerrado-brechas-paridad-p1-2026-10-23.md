@@ -1238,7 +1238,7 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 | 8 | BE, FE | §11 | `feat(reportes): diario de ingresos con formato legacy, fecha de ingreso, manifiesto DIAN y Excel de diarios` | Commiteada: BE `02c0b32` / FE `ae20d54` / docs (este commit) — 2026-10-24, orquestador |
 | 9 | BE, docs | §12 y la migración `AddWarehouseStorageLegacyYear` | `feat(migracion): depósitos legacy por número y año; prórroga migrada` | Commiteada: BE `f37f353` / docs (este commit), con la migración `20261024163412_AddWarehouseStorageLegacyYear`; sin cambios de FE — 2026-10-24, orquestador |
 | 10 | BE, deploy, docs | §13 | `feat(respaldos): correo de fallo y destino S3 externo` | Commiteada: BE `30df3b0` (código y `deploy/`) / docs (este commit); sin cambios de FE — 2026-10-24, orquestador |
-| 11 | BE, FE, deploy | §14 y la migración `AddGuideCodeTypeParameter` | `feat(guias): código QR de verificación en la guía de salida, seleccionable por parámetro` | Pendiente |
+| 11 | BE, FE, deploy | §14 y la migración `AddGuideCodeTypeParameter` | `feat(guias): código QR de verificación en la guía de salida, seleccionable por parámetro` | Commiteada: BE `560f558` / FE `e2e11e6` / docs (este commit), con la migración `20261024170332_AddGuideCodeTypeParameter` y `QRCoder` fijado en `[1.8.1]`; el escaneo con celular y la prueba en la imagen Linux quedan para la fase 13 — 2026-10-24, orquestador |
 | 12 | docs | §15 | entrega el veredicto local; commit del hub | Pendiente |
 | 13 | staging | §16 | entrega el informe de staging y los mensajes de commit pendientes | Pendiente |
 
