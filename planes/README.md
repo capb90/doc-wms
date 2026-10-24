@@ -5,6 +5,7 @@
 
 | Plan | Fecha | Estado | Notas |
 | --- | --- | --- | --- |
+| `plan-cerrado-brechas-paridad-p1-2026-10-23.md` | 2026-10-23 | Aprobado | 13 brechas P1 y 7 de DEC-050…054 de la auditoría de paridad, más 5 colaterales y el QR de verificación en la guía de salida (fase 11, DEC-060). 13 fases y 4 migraciones. Prompt del ejecutor: `prompt-plan-brechas-paridad-p1-2026-10-23.md`. Ninguna fase iniciada |
 | `plan-cerrado-organizacion-documentacion-2026-10-23.md` | 2026-10-23 | Ejecutado | Creó este hub. Pendiente fuera de alcance: publicarlo en un remoto |
 | `plan-cerrado-selector-conductor-2026-10-08.md` | 2026-10-08 | Ejecutado | Verificado en staging el 2026-10-08 (BE `044be08` / FE `4ca4e0a`). Siguen abiertos DEF-F11-023, 024 y 026 (MINOR) |
 | `plan-cerrado-permisos-por-usuario-2026-10-07.md` | 2026-10-07 | **Diferido** | No implementar antes del corte. Su §11 lista correcciones obligatorias antes de retomarlo |

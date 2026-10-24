@@ -13,6 +13,8 @@
 | DEC-020…029 | Facturación |
 | DEC-030…034 | Permisos |
 | DEC-040…044 | Migración del legacy y staging |
+| DEC-050…059 | Respuestas a la auditoría de paridad (2026-10-23) |
+| DEC-060…069 | Documentos impresos |
 
 ## 1. Forma de trabajo
 
@@ -43,7 +45,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 **DEC-011 — Agencia de aduanas = SIA = intermediario.** Es un solo rol de negocio, con código canónico `CUSTOMS_AGENCY`. Un `"SIA"` o `"INTERMEDIARY"` en el código es un bug.
 
 **DEC-012 — Fecha de ingreso y consecutivos** (Ola 1, 2026-09-14; Ola 2, 2026-09-17).
-- La fecha de ingreso del depósito es la hora de Vigilancia del primer camión; los siguientes no la cambian. Báscula y Comercio Exterior pueden corregirla, sin límite hacia atrás y nunca hacia el futuro.
+- La fecha de ingreso del depósito es la hora de Vigilancia del primer camión; los siguientes no la cambian. Báscula y Comercio Exterior pueden corregirla, sin límite hacia atrás y nunca hacia el futuro. *Precisada por DEC-051 (2026-10-23):* «sin límite hacia atrás» significa dentro de la estadía del primer camión.
 - Rige la etiqueta, la fecha de la TRM, el año del consecutivo y el inicio del primer período de almacenamiento.
 - Consecutivos de 5 dígitos, con reinicio anual y sin saltos: `2026T00001`, `2026BA00001` (solo importación), `2026EXP00001`, `2026INSP00001`, `2026S00001` (una serie para todas las guías) y `2026OC00001`.
 - Tiquetes y depósitos toman el año de la fecha de ingreso; guías y órdenes, el de su emisión.
@@ -131,3 +133,39 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - Montacargas: tractomula 220.000, doble troque 150.000, sencillo 140.000, turbo 110.000, guacal/estiba 40.000, con IVA según el check.
 
 **DEC-042 — Staging como ambiente de operarios** (2026-10-07). No se restauró el punto previo: los datos de QA (S6) quedan como ejemplo y hay datos de práctica `PRAC-`. Cuentas por rol `operario.*` y `qa.*`. La medición PRF-002 la hace un operario real.
+
+## 6. Respuestas a la auditoría de paridad (2026-10-23)
+
+Respuestas del usuario a las diferencias con el legacy que no tenían decisión, en `analisis/auditoria-paridad-integral-2026-10-23/06-brechas-priorizadas.md` §3.1. Lo marcado **«Se construye»** necesita un plan cerrado antes del código (`DEC-001`). Lo demás confirma el comportamiento actual de V2.
+
+**DEC-050 — Báscula** (2026-10-23).
+- **La orden de cargue va antes de la salida** (BR-02-001). Báscula no pesa la salida sin una orden de cargue existente. No se vuelve al flujo legacy de «pesar primero y completar después».
+- **«Solo báscula» sin cliente obligatorio** (BR-02-002). **Se construye.** Como en el legacy, se puede pesar sin cliente registrado; el cobro va al conductor o al consumidor final.
+- **Qué corrige Báscula después de guardar** (BR-02-010). Solo pesos (con motivo), fecha del pesaje, observación del tiquete y datos del conductor y del vehículo. Comercio Exterior corrige documento, mercancía y cantidades mientras el depósito está en Borrador. Lo demás se anula y se repite. Se mantienen DEF-F3-018 y la D-2 de `DEC-019`.
+- **Camión con varios documentos: el operario elige** (BR-02-013). **Se construye.** Por defecto, un solo pesaje (Bruto y Tara) para todos los depósitos del camión, como en el legacy. Si descarga en puntos distintos, un pesaje intermedio por depósito, como hoy. *Lo resuelve el plan:* cómo se reparte el neto entre los depósitos cuando hay un solo pesaje.
+
+**DEC-051 — Depósitos** (2026-10-23).
+- **Límite de la corrección de la fecha de ingreso** (BR-04-002; precisa `DEC-012`). Se corrige solo dentro de la estadía del primer camión: no antes de su ingreso en Vigilancia ni después de su salida. Para ir más atrás se corrige primero el ingreso de Vigilancia (WMS-5). Es lo que hace hoy el código; no hay cambio.
+- **Camión tardío a un depósito agotado** (BR-04-001). Un depósito cerrado por agotamiento no recibe más camiones: el camión nuevo con el mismo documento abre otro depósito. `DEC-013` aplica a depósitos en Borrador o Confirmado.
+- **Una etiqueta por depósito** (BR-04-012). No se construye la etiqueta por vehículo del legacy (`adhesivovehiculo.php`).
+
+**DEC-052 — Salidas** (2026-10-23).
+- **Bloqueo manual de salidas por cliente** (BR-05-004). **Se construye.** Una marca «sin salidas» en el tercero, con motivo y auditoría, que impide crear órdenes de cargue y emitir guías, aparte del bloqueo por mora. Es el `cliente.sinsalidas` del legacy. *Lo resuelve el plan:* qué roles la ponen y la quitan (`DEC-005`, `DEC-031`).
+- **Guía antes del cargue, con aviso** (BR-05-006). **Se construye.** La guía se sigue pudiendo emitir antes del cargue. Si lo cargado difiere de lo que dice la guía, se avisa a Comercio Exterior para que la anule y la emita de nuevo.
+
+**DEC-053 — Facturación** (2026-10-23).
+- **«Depósitos pendientes» incluye los cerrados con trabajo pendiente** (BR-06-003). **Se construye.** Como en el legacy, un depósito sigue en la lista mientras tenga una factura de almacenamiento en Borrador sin N.º SIIGO o una anulada sin refacturar, aunque ya no tenga un período abierto.
+- **La renovación cobra el saldo al inicio del período** (BR-06-005). **Se construye.** El período renovado cobra la cantidad facturable al día de su inicio (fin + 1), aunque el job corra después, con el mismo criterio de `DEC-028`. Afecta a las fórmulas por cantidad; `PERCENTAGE_OF_VALUE` no cambia.
+
+**DEC-054 — Reportes y agencias** (2026-10-23).
+- **Diario de ingresos con el formato legacy** (BR-07-002). **Se construye.** Agrupado por depósito, con agencia e importador. Lleva una fila por camión con el manifiesto DIAN y el peso de manifiesto, el total de vehículos y las firmas («Jefe de Bodega», «Recibí conforme DIAN», «Firma Funcionario»), en pantalla, PDF y Excel.
+- **Las agencias no consultan por su cuenta** (BR-08-008). No hay acceso externo para las agencias de aduanas: Comercio Exterior genera el reporte de ingresos por agencia y se lo envía.
+
+## 7. Documentos impresos
+
+**DEC-060 — Código QR de verificación en la guía de salida** (2026-10-23, pedido del cliente).
+- **Objetivo:** evitar guías adulteradas.
+- **Qué imprime la guía:** un **código QR** con un enlace de verificación firmado, o el código de barras de siempre, según el parámetro `GUIDE_CODE_TYPE` (`QR` o `BARCODE`), que edita el Admin. El código de barras se conserva en el código.
+- **Valor inicial:** `QR`.
+- **Verificación:** al escanear el QR se abre una página pública, sin iniciar sesión. Muestra los datos mínimos de la guía para cotejarlos con el papel: número, fechas, estado vigente o anulada, depósito, destino, productos y cantidades, y la placa parcialmente oculta. Nunca muestra datos de personas (`DEC-007`).
+- **Fuente:** el usuario, en el plan `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` (fase 11, D35–D42).
