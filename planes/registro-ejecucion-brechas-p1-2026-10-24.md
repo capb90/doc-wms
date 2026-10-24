@@ -283,3 +283,73 @@
 - **Desviaciones:** el informe se llama `P1-informe-2026-10-24.md` (el plan decía `…-2026-10-XX`); `commands/Reception/README.md` sigue diciendo «crea InventoryMovement IN» (el plan solo pedía los otros dos).
 - **Observación sobre C5:** `POST service/{id}/prices` rechaza vigencias futuras («La fecha de inicio de vigencia no puede ser futura.»), así que el arreglo de `Service.SetPrice` (fase 6) solo se ejerce en el dominio. Programar precios exigiría relajar ese validador (fuera del plan).
 
+## Resumen final (fases 1 a 12) — 2026-10-24
+
+El orquestador terminó la fase 12 y **no lanzó la fase 13**: exige el «sí» del usuario en cada paso.
+
+### Commits
+
+| Fase | Backend | Frontend | docs |
+| --- | --- | --- | --- |
+| 1 | `267bef6` (usuario) | `7963a4f` (usuario) | `b6f725a` |
+| 2 | `a7bd8ef` | `9c64ca5` | `2f987ce` |
+| 3 | `272b785` | `b1b27fa` | `900884f` |
+| 4 | `157503b` | `8e4deb2` | `d393a7d` |
+| 5 | `9ba1380` | `8dba8a8` | `cc3c20b` |
+| 6 | `7e3e150` | — | `4263494` |
+| 7 | `cc832b3` | `682e1f7` | `0c7ab56` |
+| 8 | `02c0b32` | `ae20d54` | `4e964d3` |
+| 9 | `f37f353` | — | `3e37921` |
+| 10 | `30df3b0` | — | `944d847` |
+| 11 | `560f558` | `e2e11e6` | `7efd72c` |
+| 12 | `2f18fee` (solo docs) | — | `de249e8` |
+
+Todo en local: nada se empujó a ningún remoto. Los commits de `docs` están en `main`, su única rama.
+
+### Pruebas (de la línea base de la fase 2 al cierre de la 12)
+
+| Suite | Antes | Después |
+| --- | --- | --- |
+| Wms.Tests | 1763 | 1971 |
+| Wms.IntegrationTests | 320 de 322 | 405 de 407 |
+| Vitest | 412 (87 archivos) | 481 (96 archivos) |
+| Lint | 281 errores / 413 avisos | 281 / 413 |
+
+Las 2 fallas de integración son siempre las mismas y ya estaban en la línea base: `InitiateCustomerIdTests.Queue_PendingService_ReturnsCustomerId` y `DiscardOperationTests.Discard_ReleasesTruckToNotStarted` (pasan aisladas; probable tope de 100 camiones de la cola de báscula). En la fase 10 apareció una vez intermitente `StorageMinimumVatTests.PerCargoUnitWithOwnFloor…`.
+
+### Migraciones generadas
+
+- `20261024144232_AddStakeholderExitBlock` (fase 3)
+- `20261024155558_FixAgreementActiveStakeholderIndex` (fase 7)
+- `20261024163412_AddWarehouseStorageLegacyYear` (fase 9)
+- `20261024170332_AddGuideCodeTypeParameter` (fase 11)
+
+Todas aplicadas solo en Postgres desechables o de Testcontainers. La base de Development `wmsdb` sigue en un esquema viejo y su contenedor `wms-postgres-db`, detenido.
+
+### Defectos abiertos
+
+- **DEF-F11-028 (MAJOR):** «Depósitos pendientes» omite el depósito agotado (`Closed`, `IsActive = false`) con factura por numerar o por refacturar. Se recomienda corregirlo antes de la fase 13 y re-ejecutar F6-ALM-018, F6-REF-005 y F6-REF-006.
+- Siguen abiertos de antes: DEF-F11-023, 024 y 026 (MINOR).
+
+### Decisiones para el usuario
+
+1. **DEF-F11-028:** ¿se corrige en una fase aparte antes del despliegue?
+2. **Auditoría de jobs (fase 7):** la activación programada de convenios no deja `audit_logs` porque el job no tiene usuario; auditar jobs exige cambiar `AppDbContext`.
+3. **Orden de bloqueo en las guías (fase 2):** las guías de importación y de exportación toman el consecutivo `S` antes de bloquear los productos (contra el orden de D5). Hoy no hay ciclo; ¿se ajustan las dos en otra fase?
+4. **Tiquete de un depósito facturado a consumidor final (fase 4):** ahora imprime «Consumidor Final», por la cadena del §7.2 y D12, en lugar del cliente del depósito (CHG-84).
+5. **Depósito agotado en la gracia (fase 6):** `CloseDepletedProductPeriodsAsync` cierra su período antes del job y lo que había el día S no se cobra. Posible choque con DEC-053.
+6. **Precios futuros (fases 6 y 12):** `POST service/{id}/prices` rechaza vigencias futuras; el arreglo C5 solo aplica si se relaja ese validador.
+7. **Base de Development (fase 7):** un subagente arrancó `wms-postgres-db` e intentó migrar la base por defecto; falló en `RemoveSampleSeedData` y, según su informe, se revirtió sin cambios. El orquestador volvió a detener el contenedor.
+8. **Rama de `docs`:** el orquestador commiteó en `main` porque el hub no tiene `develop`.
+
+### Pendiente para la fase 13 (con aprobación paso a paso)
+
+- **`GUIDE_VERIFICATION_KEY`:** la genera y la guarda el usuario en `deploy/staging/.env.staging` (`openssl rand -base64 32`). Rotarla invalida los QR impresos.
+- **Bucket de respaldos:** bucket privado de Lightsail en otra región, con `BACKUP_S3_ACCESS_KEY_ID` y `BACKUP_S3_SECRET_ACCESS_KEY` en `.env.staging`; agregar ambas, vacías, en `.env.staging.example` (lo mismo con `GUIDE_VERIFICATION_KEY`). Pasos 1–8 del runbook y FB-BAK-007.
+- **§16.1:** conteo en solo lectura de los clientes con más de un convenio `Active`; si hay alguno, detenerse y preguntar. Listar los convenios programados vencidos.
+- **Migraciones:** `AddForkliftUseEntryLog` más las 4 del plan, con script idempotente, después del respaldo previo.
+- **Red nueva del compose (fase 11):** el primer `up -d` recrea los contenedores en la red `wms` (`10.201.0.0/24`, Caddy en `10.201.0.10`). Comprobar que la subred no choca con otra red del servidor y que HTTPS no entra en loop.
+- **QR:** confirmar que `QRCoder` funciona en la imagen Linux y escanear una guía en papel con Android e iPhone (F5-GUI-020). Comprobar `Frontend__BaseUrl`.
+- **PRF-002:** lo mide un operario real con este build, si el usuario lo programa.
+- Aviso a Facturación por BR-06-005: las renovaciones abiertas pueden subir en su próximo recálculo.
+
