@@ -5,7 +5,7 @@
 
 | Plan | Fecha | Estado | Notas |
 | --- | --- | --- | --- |
-| `plan-cerrado-brechas-paridad-p1-2026-10-23.md` | 2026-10-23 | Aprobado | 13 brechas P1 y 7 de DEC-050…054 de la auditoría de paridad, más 5 colaterales y el QR de verificación en la guía de salida (fase 11, DEC-060). 13 fases y 4 migraciones. Prompt del ejecutor: `prompt-plan-brechas-paridad-p1-2026-10-23.md`. Ninguna fase iniciada |
+| `plan-cerrado-brechas-paridad-p1-2026-10-23.md` | 2026-10-23 | En ejecución | 13 brechas P1 y 7 de DEC-050…054 de la auditoría de paridad, más 5 colaterales y el QR de verificación en la guía de salida (fase 11, DEC-060). 13 fases y 4 migraciones. Prompt del ejecutor: `prompt-plan-brechas-paridad-p1-2026-10-23.md`. Fase 1 implementada el 2026-10-24, pendiente de commit; estado por fase en su §17 |
 | `plan-cerrado-organizacion-documentacion-2026-10-23.md` | 2026-10-23 | Ejecutado | Creó este hub. Pendiente fuera de alcance: publicarlo en un remoto |
 | `plan-cerrado-selector-conductor-2026-10-08.md` | 2026-10-08 | Ejecutado | Verificado en staging el 2026-10-08 (BE `044be08` / FE `4ca4e0a`). Siguen abiertos DEF-F11-023, 024 y 026 (MINOR) |
 | `plan-cerrado-permisos-por-usuario-2026-10-07.md` | 2026-10-07 | **Diferido** | No implementar antes del corte. Su §11 lista correcciones obligatorias antes de retomarlo |
@@ -26,3 +26,4 @@ Las Olas 1, 2 y 3 (septiembre de 2026) se implementaron, pero sus planes se perd
 | `../analisis/analisis-motor-acuerdos-facturacion-2026-09-17.md` | Diagnóstico: el motor de acuerdos es adecuado con ajustes. Referencia |
 | `../analisis/analisis-impacto-permisos-granulares-2026-10-07.md` | Reemplazado por el plan de permisos por usuario, y diferido |
 | `../analisis/revision-fob-cif-migracion-v2-2026-10-08.md` | **Abierto:** la equivalencia FOB/CIF de la migración no está validada; no la des por cerrada |
+| `../analisis/analisis-fob-cif-legacy-v2-2026-10-24.md` | **Abierto, con decisiones pendientes.** Los datos del legacy confirman que el ingreso es FOB y el levante CIF (V2 los tiene invertidos). La tarifa base T1, sin acuerdos, facturaría el 205 % del legacy. Con acuerdos por cliente y la fórmula prorrateada, V2 iguala el total del legacy (≈102 %) sin desarrollo. 10 decisiones en su §7 |

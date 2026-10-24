@@ -1226,21 +1226,21 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 
 ## 17. Orden y checkpoints
 
-| Fase | Repo | Entrega | El agente se detiene y… |
-| --- | --- | --- | --- |
-| 1 | BE, FE | §4 | resume; commit sugerido: `refactor(api): retira endpoints sin uso de ingresos y órdenes de Bodega; leyenda no fiscal en tiquete y factura` |
-| 2 | BE, FE | §5 | `fix(salidas): bloqueo de stock en órdenes, levantes y guías; anular la guía antes de cancelar o modificar la orden` |
-| 3 | BE, FE | §6 y la migración `AddStakeholderExitBlock` | `feat(salidas): aviso de guía distinta a lo cargado y bloqueo manual de salidas por cliente` |
-| 4 | BE, FE | §7 | `fix(bascula): corrección por pesaje con neto por depósito; Solo báscula sin cliente` |
-| 5 | BE, FE | §8 | `feat(bascula): un solo pesaje para varios documentos con neto prorrateado y tiquete por depósito` |
-| 6 | BE | §9 | `fix(facturacion): respaldo del servicio complementario, precio futuro y renovación con el saldo al inicio` |
-| 7 | BE, FE | §10 y la migración `FixAgreementActiveStakeholderIndex` | `feat(facturacion): activación de convenios programados, índice de convenio activo y depósitos pendientes cerrados` |
-| 8 | BE, FE | §11 | `feat(reportes): diario de ingresos con formato legacy, fecha de ingreso, manifiesto DIAN y Excel de diarios` |
-| 9 | BE, docs | §12 y la migración `AddWarehouseStorageLegacyYear` | `feat(migracion): depósitos legacy por número y año; prórroga migrada` |
-| 10 | BE, deploy, docs | §13 | `feat(respaldos): correo de fallo y destino S3 externo` |
-| 11 | BE, FE, deploy | §14 y la migración `AddGuideCodeTypeParameter` | `feat(guias): código QR de verificación en la guía de salida, seleccionable por parámetro` |
-| 12 | docs | §15 | entrega el veredicto local; commit del hub |
-| 13 | staging | §16 | entrega el informe de staging y los mensajes de commit pendientes |
+| Fase | Repo | Entrega | El agente se detiene y… | Estado |
+| --- | --- | --- | --- | --- |
+| 1 | BE, FE | §4 | resume; commit sugerido: `refactor(api): retira endpoints sin uso de ingresos y órdenes de Bodega; leyenda no fiscal en tiquete y factura` | Implementada el 2026-10-24 sobre BE `b27c9bf` / FE `31da26c`; sin commit |
+| 2 | BE, FE | §5 | `fix(salidas): bloqueo de stock en órdenes, levantes y guías; anular la guía antes de cancelar o modificar la orden` | Pendiente |
+| 3 | BE, FE | §6 y la migración `AddStakeholderExitBlock` | `feat(salidas): aviso de guía distinta a lo cargado y bloqueo manual de salidas por cliente` | Pendiente |
+| 4 | BE, FE | §7 | `fix(bascula): corrección por pesaje con neto por depósito; Solo báscula sin cliente` | Pendiente |
+| 5 | BE, FE | §8 | `feat(bascula): un solo pesaje para varios documentos con neto prorrateado y tiquete por depósito` | Pendiente |
+| 6 | BE | §9 | `fix(facturacion): respaldo del servicio complementario, precio futuro y renovación con el saldo al inicio` | Pendiente |
+| 7 | BE, FE | §10 y la migración `FixAgreementActiveStakeholderIndex` | `feat(facturacion): activación de convenios programados, índice de convenio activo y depósitos pendientes cerrados` | Pendiente |
+| 8 | BE, FE | §11 | `feat(reportes): diario de ingresos con formato legacy, fecha de ingreso, manifiesto DIAN y Excel de diarios` | Pendiente |
+| 9 | BE, docs | §12 y la migración `AddWarehouseStorageLegacyYear` | `feat(migracion): depósitos legacy por número y año; prórroga migrada` | Pendiente |
+| 10 | BE, deploy, docs | §13 | `feat(respaldos): correo de fallo y destino S3 externo` | Pendiente |
+| 11 | BE, FE, deploy | §14 y la migración `AddGuideCodeTypeParameter` | `feat(guias): código QR de verificación en la guía de salida, seleccionable por parámetro` | Pendiente |
+| 12 | docs | §15 | entrega el veredicto local; commit del hub | Pendiente |
+| 13 | staging | §16 | entrega el informe de staging y los mensajes de commit pendientes | Pendiente |
 
 Cada fase entrega su resumen y espera el commit del usuario antes de la siguiente (`DEC-003`).
 
