@@ -137,3 +137,30 @@
   - Si un depósito se agota **por completo** en la gracia, `CloseDepletedProductPeriodsAsync` cierra su período antes del job: no hay renovación y lo que había el día S no se cobra. El plan solo cubre el agotamiento dentro de un grupo. Posible choque con DEC-053.
   - Un precio futuro desplazado por otro anterior queda con `ValidTo < ValidFrom` e inactivo (inocuo, pero visible en la lista de precios).
 
+### Fase 7 — Facturación: convenios programados, índice y pendientes (§10)
+
+- **Subagente:** Sonnet. Partida BE `7e3e150` / FE `8dba8a8` / docs `4263494`. Una ronda.
+- **Commits (2026-10-24):** BE `cc832b3` · FE `682e1f7` · docs: el de esta anotación.
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1855 | 1892 |
+  | Wms.IntegrationTests | 372 de 374 | 384 de 386 |
+  | Vitest | 455 (92 archivos) | 468 (94 archivos) |
+  | Lint | 281 errores / 413 avisos | 281 / 413; cero en archivos nuevos |
+
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** `20261024155558_FixAgreementActiveStakeholderIndex` (solo el filtro del índice único pasa a `status = 'Active'`), con su `Designer` y el snapshot. `has-pending-model-changes` limpio. Aplicada a un `postgres:18.0` desechable (ya detenido).
+- **Base local por defecto:** el subagente arrancó `wms-postgres-db` (estaba detenido) e intentó migrar la base configurada por defecto. Tenía 3 migraciones pendientes y `RemoveSampleSeedData` falló por claves foráneas de ubicaciones; según el subagente, la transacción se revirtió sin cambios. Probablemente es `wmsdb`, que `procesos/verificacion-local.md` §1 pide no migrar sin preguntar. El orquestador volvió a detener el contenedor. **Para revisión del usuario.**
+- **Pregunta resuelta por el orquestador (alcance, no por una Dn):** el plan (§10.4, prueba 2) espera `audit_logs` de la activación programada, pero `AppDbContext.CollectAuditEntries` solo audita con un usuario en `HttpContext`, y los jobs no lo tienen (el de facturación tampoco deja `audit_logs`). Se conservó `IAuditContext.Describe` y la prueba verifica las fechas del convenio (`ActivationDate`, `ArchivingDate`, `UpdatedAt`) y el aviso a Facturación. Auditar los jobs exige cambiar `AppDbContext`, fuera de esta fase. **Queda para el usuario** decidir si se hace en otra fase.
+- **Desviaciones:**
+  - `Stakeholder.ActivateAgreement` ya no archiva y reactiva el convenio que ya es el activo; `Agreement.Create` toma `ActivationDate` del estado resultante.
+  - La activación guarda en dos pasos (D21) con primitivas propias; `Stakeholder.ActivateDueScheduledAgreements` existe y está probada en memoria, pero el servicio no la usa.
+  - El frontend envía la fecha como `yyyy-MM-ddT00:00:00-05:00` y el backend la normaliza con `ColombiaTime.StartOfDayUtc`.
+  - La columna «Pendiente» reemplaza a «Por refacturar», que quedaba redundante.
+  - Sin prueba manual contra la API local.
+- **Visto fuera de alcance:**
+  - `ForkliftService.cs:91` y `ForeignTradeService.cs:39` filtran `Agreement.Status == Active`: unos 30 s a medianoche sin ver el programado, hasta que corre el job.
+  - Editar un convenio «Programado» cuya fecha ya pasó, antes del job, falla la validación de fecha del formulario (ya pasaba antes).
+

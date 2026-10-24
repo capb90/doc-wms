@@ -1234,7 +1234,7 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 | 4 | BE, FE | §7 | `fix(bascula): corrección por pesaje con neto por depósito; Solo báscula sin cliente` | Commiteada: BE `157503b` / FE `8e4deb2` / docs (este commit) — 2026-10-24, orquestador |
 | 5 | BE, FE | §8 | `feat(bascula): un solo pesaje para varios documentos con neto prorrateado y tiquete por depósito` | Commiteada: BE `9ba1380` / FE `8dba8a8` / docs (este commit) — 2026-10-24, orquestador |
 | 6 | BE | §9 | `fix(facturacion): respaldo del servicio complementario, precio futuro y renovación con el saldo al inicio` | Commiteada: BE `7e3e150` / docs (este commit); sin cambios de FE — 2026-10-24, orquestador |
-| 7 | BE, FE | §10 y la migración `FixAgreementActiveStakeholderIndex` | `feat(facturacion): activación de convenios programados, índice de convenio activo y depósitos pendientes cerrados` | Pendiente |
+| 7 | BE, FE | §10 y la migración `FixAgreementActiveStakeholderIndex` | `feat(facturacion): activación de convenios programados, índice de convenio activo y depósitos pendientes cerrados` | Commiteada: BE `cc832b3` / FE `682e1f7` / docs (este commit), con la migración `20261024155558_FixAgreementActiveStakeholderIndex` — 2026-10-24, orquestador |
 | 8 | BE, FE | §11 | `feat(reportes): diario de ingresos con formato legacy, fecha de ingreso, manifiesto DIAN y Excel de diarios` | Pendiente |
 | 9 | BE, docs | §12 y la migración `AddWarehouseStorageLegacyYear` | `feat(migracion): depósitos legacy por número y año; prórroga migrada` | Pendiente |
 | 10 | BE, deploy, docs | §13 | `feat(respaldos): correo de fallo y destino S3 externo` | Pendiente |
