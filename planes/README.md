@@ -5,7 +5,7 @@
 
 | Plan | Fecha | Estado | Notas |
 | --- | --- | --- | --- |
-| `plan-cerrado-brechas-paridad-p1-2026-10-23.md` | 2026-10-23 | En ejecución | 13 brechas P1 y 7 de DEC-050…054 de la auditoría de paridad, más 5 colaterales y el QR de verificación en la guía de salida (fase 11, DEC-060). 13 fases y 4 migraciones. Prompt del ejecutor: `prompt-plan-brechas-paridad-p1-2026-10-23.md`. Fases 1–5 commiteadas (la 1 por el usuario; desde la 2, por el orquestador); fases siguientes en ejecución, registro en `registro-ejecucion-brechas-p1-2026-10-24.md`; estado por fase en su §17 |
+| `plan-cerrado-brechas-paridad-p1-2026-10-23.md` | 2026-10-23 | En ejecución | 13 brechas P1 y 7 de DEC-050…054 de la auditoría de paridad, más 5 colaterales y el QR de verificación en la guía de salida (fase 11, DEC-060). 13 fases y 4 migraciones. Prompt del ejecutor: `prompt-plan-brechas-paridad-p1-2026-10-23.md`. Fases 1–6 commiteadas (la 1 por el usuario; desde la 2, por el orquestador); fases siguientes en ejecución, registro en `registro-ejecucion-brechas-p1-2026-10-24.md`; estado por fase en su §17 |
 | `plan-cerrado-organizacion-documentacion-2026-10-23.md` | 2026-10-23 | Ejecutado | Creó este hub. Pendiente fuera de alcance: publicarlo en un remoto |
 | `plan-cerrado-selector-conductor-2026-10-08.md` | 2026-10-08 | Ejecutado | Verificado en staging el 2026-10-08 (BE `044be08` / FE `4ca4e0a`). Siguen abiertos DEF-F11-023, 024 y 026 (MINOR) |
 | `plan-cerrado-permisos-por-usuario-2026-10-07.md` | 2026-10-07 | **Diferido** | No implementar antes del corte. Su §11 lista correcciones obligatorias antes de retomarlo |

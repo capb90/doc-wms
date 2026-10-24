@@ -113,3 +113,27 @@
   - En el detalle de CE, un depósito adicional no lista su ciclo en `weighbridgeCycles` (el ciclo cuelga del ServiceRecord ancla): puede faltar «Ver ciclo».
   - Al imprimir varios tiquetes seguidos, el navegador puede bloquear las ventanas emergentes después de la primera; la descarga de cada PDF sí sale.
 
+### Fase 6 — Facturación: tarifa faltante, precio futuro y renovación (§9)
+
+- **Subagente:** Opus. Partida BE `9ba1380` / FE `8dba8a8` / docs `cc3c20b`. Una ronda, sin preguntas. Solo backend.
+- **Commits (2026-10-24):** BE `7e3e150` · docs: el de esta anotación.
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1834 | 1855 |
+  | Wms.IntegrationTests | 359 de 361 | 372 de 374 |
+
+  Vitest y lint no se corrieron: la fase no toca el frontend. Con `BillAtPeriodStart` retirado del job a propósito, fallan los 3 casos de salida en la gracia: las pruebas detectan el cambio.
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** ninguna; `has-pending-model-changes` limpio.
+- **Desviaciones:**
+  1. **C5 (D18, DEC-002):** cambiar solo `Service.SetPrice` no bastaba: `ServicePrice.Expire` siempre ponía `IsActive = false`. Ahora `Expire` deja activo el precio si el vencimiento es futuro, nunca alarga una vigencia y lo desactiva si el vencimiento cae antes de su inicio.
+  2. La prueba va en `Wms.Tests/Domain/Services/ServiceSetPriceTests.cs` (el namespace `Domain.Service` choca con la clase).
+  3. Caso 1 de la renovación: CE-7 rechaza una cantidad igual a la actual; la prueba hace 10 → 11 → 10.
+  4. `StorageBillableCargoUnits.Count` devuelve el conjunto de Id de las unidades que cuentan.
+  5. Caso extra 6b: tanquero despachado antes del día S, que no cuenta.
+- **Visto fuera de alcance (para el usuario):**
+  - Si un depósito se agota **por completo** en la gracia, `CloseDepletedProductPeriodsAsync` cierra su período antes del job: no hay renovación y lo que había el día S no se cobra. El plan solo cubre el agotamiento dentro de un grupo. Posible choque con DEC-053.
+  - Un precio futuro desplazado por otro anterior queda con `ValidTo < ValidFrom` e inactivo (inocuo, pero visible en la lista de precios).
+
