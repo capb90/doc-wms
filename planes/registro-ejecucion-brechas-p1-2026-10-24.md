@@ -41,3 +41,28 @@
   - `LoadingOrderReservationService.RemoveAsync` no deja retirar un ítem que salió en una guía ya anulada (no filtra `CancelledAt`).
   - `GetLoadingOrderDetailHandler`: falta un paréntesis en la condición de `reserveForThisOrder`.
 
+### Fase 3 — Guía con aviso y marca «sin salidas» (§6)
+
+- **Subagente:** Opus. Partida BE `a7bd8ef` / FE `9c64ca5` / docs `2f987ce`. Una ronda, sin preguntas.
+- **Commits (2026-10-24):** BE `272b785` · FE `b1b27fa` · docs: el de esta anotación.
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1769 | 1788 |
+  | Wms.IntegrationTests | 329 de 331 | 340 de 342 |
+  | Vitest | 423 (88 archivos) | 440 (90 archivos) |
+  | Lint | 281 errores / 413 avisos | 281 / 413; cero en archivos nuevos |
+
+- **Fallas de la línea base:** las mismas 2 de la fase 2.
+- **Migración:** `20261024144232_AddStakeholderExitBlock` (4 columnas en `stakeholders`: `exits_blocked` con valor por defecto `false`, motivo, fecha y autor sin FK), con su `Designer` y el snapshot. `has-pending-model-changes` limpio. Se aplicó a un Postgres 18 desechable (`wms-fase3-mig`, ya detenido), porque la base de Development `wmsdb` está detenida y en un esquema viejo. **Pendiente para el usuario:** aplicarla a la base local que use.
+- **Permisos:** política nueva `ExitBlockAccess` (Admin, ForeignTrade, Billing) solo para `PATCH stakeholder/{id}/exit-block`; no quita funciones a ningún rol (DEC-005). Pruebas de 403 para Receiving, Scale y Warehouse.
+- **Desviaciones:**
+  - `activeDispatchGuideDiffersFromLoad` solo en `ILoadingOrder` de warehouse, como en la fase 2.
+  - El composable invalida también `['stakeholder', id]` para refrescar el detalle.
+  - La prueba de integración usa guía de 10 y cargue de 8 (el depósito sembrado es de 10), en vez de 100 y 80.
+  - Espacio de nombres `Wms.Tests.Domain.Stakeholders` en la carpeta `Domain/Stakeholder/` (el singular chocaba con la entidad, CS0118).
+  - `UnblockExits(userId)` conserva la firma, pero el autor del desbloqueo queda en `audit_logs`.
+  - Sin prueba manual contra la API local, por lo mismo de la fase 2; los endpoints se probaron por HTTP en `Wms.IntegrationTests`.
+- **Visto fuera de alcance:** `WarehouseMapper.MapToDto` no ignora `ActiveDispatchGuideNumber` ni `ActiveDispatchGuideDiffersFromLoad` (solo avisos RMG de Mapperly). La guía automática de exportación no valida la marca, conforme a D9.
+

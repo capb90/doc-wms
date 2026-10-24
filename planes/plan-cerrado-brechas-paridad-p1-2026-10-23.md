@@ -1230,7 +1230,7 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 | --- | --- | --- | --- | --- |
 | 1 | BE, FE | §4 | resume; commit sugerido: `refactor(api): retira endpoints sin uso de ingresos y órdenes de Bodega; leyenda no fiscal en tiquete y factura` | Commiteada: BE `267bef6` / FE `7963a4f` (commits del usuario, 2026-10-24) |
 | 2 | BE, FE | §5 | `fix(salidas): bloqueo de stock en órdenes, levantes y guías; anular la guía antes de cancelar o modificar la orden` | Commiteada: BE `a7bd8ef` / FE `9c64ca5` / docs (este commit) — 2026-10-24, orquestador |
-| 3 | BE, FE | §6 y la migración `AddStakeholderExitBlock` | `feat(salidas): aviso de guía distinta a lo cargado y bloqueo manual de salidas por cliente` | Pendiente |
+| 3 | BE, FE | §6 y la migración `AddStakeholderExitBlock` | `feat(salidas): aviso de guía distinta a lo cargado y bloqueo manual de salidas por cliente` | Commiteada: BE `272b785` / FE `b1b27fa` / docs (este commit), con la migración `20261024144232_AddStakeholderExitBlock` — 2026-10-24, orquestador |
 | 4 | BE, FE | §7 | `fix(bascula): corrección por pesaje con neto por depósito; Solo báscula sin cliente` | Pendiente |
 | 5 | BE, FE | §8 | `feat(bascula): un solo pesaje para varios documentos con neto prorrateado y tiquete por depósito` | Pendiente |
 | 6 | BE | §9 | `fix(facturacion): respaldo del servicio complementario, precio futuro y renovación con el saldo al inicio` | Pendiente |
