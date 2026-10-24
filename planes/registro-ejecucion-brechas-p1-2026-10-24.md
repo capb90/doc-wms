@@ -87,3 +87,29 @@
 - **Desviaciones:** el filtro del historial citado en `WeighbridgeHistoryFilters.cs:41-48` es el de nombre; el de `CustomerId` ya miraba `wc.Invoice`. Se extendió el de nombre. Sin prueba manual contra la API local (no hay base de Development); verificado con pruebas de integración y `pdftotext` del tiquete.
 - **Visto fuera de alcance:** BR-02-007 (los handlers de corrección no rechazan ciclos anulados); la fase 5 amplía `CycleNetWeights`.
 
+### Fase 5 — Báscula: un pesaje para varios documentos (§8)
+
+- **Subagente:** Opus. Partida BE `157503b` / FE `8e4deb2` / docs `d393a7d`. Una ronda, sin preguntas.
+- **Commits (2026-10-24):** BE `9ba1380` · FE `8dba8a8` · docs: el de esta anotación.
+- **Pruebas:**
+
+  | Suite | Antes | Después |
+  | --- | --- | --- |
+  | Wms.Tests | 1807 | 1834 |
+  | Wms.IntegrationTests | 350 de 352 | 359 de 361 |
+  | Vitest | 445 (90 archivos) | 455 (92 archivos) |
+  | Lint | 281 errores | 281; cero en archivos nuevos |
+
+- **Fallas de la línea base:** las mismas 2 de la fase 2 («Sequence contains no matching element»; pasan aisladas).
+- **Migración:** ninguna; `has-pending-model-changes` limpio.
+- **Verificación del PDF** (`pdftotext`): camión con manifiestos 20.000 y 10.000 y neto 27.000 → `2026T00001` con 18.000 y `2026T00002` con 9.000, los dos con «Pesaje compartido por 2 depósitos · neto del camión 27.000 kg».
+- **Desviaciones:**
+  - Texto nuevo del 409 obsoleto de `RecordWeighingHandler` (el plan no lo daba): «Este ciclo es de un solo pesaje y ya quedó cerrado con el primero.».
+  - `CompleteCycleHandler` abre su propia transacción si no hay una abierta (el endpoint directo `POST weighbridge/cycles/{id}/complete` no la abría y el consecutivo del tiquete la exige).
+  - Agregados: el paso de tiquete lista todos los números y el botón dice «Imprimir tiquetes»; `IsSharedWeighing` también en `GetOpenCycleByPlate`; pruebas de componente de `WeightCapture` y `DepositDetailWeightsCard`.
+  - Sin prueba manual contra la API local (no hay base de Development en marcha).
+- **Visto fuera de alcance:**
+  - Advertencia de EF: `FormulaType.ParameterSchema` sin value comparer.
+  - En el detalle de CE, un depósito adicional no lista su ciclo en `weighbridgeCycles` (el ciclo cuelga del ServiceRecord ancla): puede faltar «Ver ciclo».
+  - Al imprimir varios tiquetes seguidos, el navegador puede bloquear las ventanas emergentes después de la primera; la descarga de cada PDF sí sale.
+

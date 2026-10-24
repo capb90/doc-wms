@@ -1232,7 +1232,7 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 | 2 | BE, FE | §5 | `fix(salidas): bloqueo de stock en órdenes, levantes y guías; anular la guía antes de cancelar o modificar la orden` | Commiteada: BE `a7bd8ef` / FE `9c64ca5` / docs (este commit) — 2026-10-24, orquestador |
 | 3 | BE, FE | §6 y la migración `AddStakeholderExitBlock` | `feat(salidas): aviso de guía distinta a lo cargado y bloqueo manual de salidas por cliente` | Commiteada: BE `272b785` / FE `b1b27fa` / docs (este commit), con la migración `20261024144232_AddStakeholderExitBlock` — 2026-10-24, orquestador |
 | 4 | BE, FE | §7 | `fix(bascula): corrección por pesaje con neto por depósito; Solo báscula sin cliente` | Commiteada: BE `157503b` / FE `8e4deb2` / docs (este commit) — 2026-10-24, orquestador |
-| 5 | BE, FE | §8 | `feat(bascula): un solo pesaje para varios documentos con neto prorrateado y tiquete por depósito` | Pendiente |
+| 5 | BE, FE | §8 | `feat(bascula): un solo pesaje para varios documentos con neto prorrateado y tiquete por depósito` | Commiteada: BE `9ba1380` / FE `8dba8a8` / docs (este commit) — 2026-10-24, orquestador |
 | 6 | BE | §9 | `fix(facturacion): respaldo del servicio complementario, precio futuro y renovación con el saldo al inicio` | Pendiente |
 | 7 | BE, FE | §10 y la migración `FixAgreementActiveStakeholderIndex` | `feat(facturacion): activación de convenios programados, índice de convenio activo y depósitos pendientes cerrados` | Pendiente |
 | 8 | BE, FE | §11 | `feat(reportes): diario de ingresos con formato legacy, fecha de ingreso, manifiesto DIAN y Excel de diarios` | Pendiente |
