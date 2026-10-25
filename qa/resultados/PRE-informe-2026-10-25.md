@@ -439,3 +439,41 @@ En el primer intento, E2E-17 usó otro depósito y la salida respondió 409: «L
   - antes de desplegar, el commit de la corrección de DEF-F11-035;
   - comunicar `DEC-056` a los operarios de Comercio Exterior y Bodega, y a Vigilancia: el conductor pide la guía de importación antes del cargue.
 - **Limpieza:** API, frontend y `wms-postgres-db` detenidos. `wms_qa_preprod` conserva los datos `QA-PRE-RT-`.
+
+## 12. Anexo — Re-test de DEF-F11-029, 031, 032 y 033 (2026-10-25)
+
+Plan `planes/plan-cerrado-correccion-def-f11-029-033-2026-10-25.md`. Local, sobre la copia `wms_qa_preprod` que se conservó (§10).
+
+- **Builds:**
+  - BE `390eb0e`, más la corrección sin commit;
+  - FE `83a0af0`, sin cambios.
+- **Cómo se ejecutó:** solo por API, en el puerto 5281, con el sumidero SMTP `axllent/mailpit` (SMTP 1025). `Notifications:AdminEmails` es una dirección de prueba.
+  - Para conectarse a la base se creó el rol temporal `qa_rt_029`, con permisos solo en `wms_qa_preprod`, y se eliminó al terminar.
+  - Las cuentas `qa.rt.*` son nuevas: `qa.rt.boot` (Admin, por `Bootstrap`), `qa.rt.comext`, `qa.rt.bascula` y `qa.rt.vigilancia`. Las claves viven solo en el scratchpad del ejecutor.
+  - Los avisos en tiempo real se leyeron con un cliente SignalR conectado como Admin y como CE. El frontend muestra como aviso emergente cada `ReceiveNotification` que llega por esa conexión.
+- **Datos:** camión `QPT313` (motivo «Solo Bascula»), ciclo `a329eccf…`, tiquete `2026T00057`. Evidencia: `evidencias/PRE/pre-retest-def-f11-029-033.txt`.
+
+| ID | Defecto | P | Resultado | Evidencia |
+|---|---|---|---|---|
+| PRE-B1-CE / PRE-B7-01 | DEF-F11-029 | P0/P1 | PASA | `QPT313` entra, se pesa (tara 12.000, bruto 30.000; el ciclo se completa), se corrige y sale. Admin y CE reciben solo «Trazabilidad» («Camión QPT313 cambió a estado: …») y, el Admin, la «Modificación de Peso en Báscula». Ningún «WeighingCaptured» ni «WeighbridgeCycleCompleted» |
+| FB-BAK-007 / F3-COR-011 | DEF-F11-032 | P1 | PASA | `qa.rt.bascula` corrige el bruto (30.000 → 31.000). Asunto: «⚠️ [Admin] El usuario qa.rt.bascula modificó el pesaje #2 (Bruto) del ciclo a329eccf». Cuerpo: «Fecha y Hora 25/10/2026 17:45 (hora Colombia)», enviado a las 17:45 −05. El rol sigue en inglés («[Admin]», «Nivel Warning»), fuera de alcance (D5) |
+| PRE-B6-03 | DEF-F11-033 | P2 | FALLA → PASA | `POST warehouse/locations` con `{}` como Admin responde **400** «Error de validación.» con tres mensajes: «El código de ubicación es requerido.», «El nombre de ubicación es requerido.» y «La capacidad debe ser mayor a cero.» |
+| E2E-02 paso 4 / PRE-B7-04 | DEF-F11-031 | P0/P1 | PASA | Tabla Ampara / Saldo con `pdftotext -layout`, el mismo formato en todas las celdas: `2026BA00003` 98 / 0 (se despachó entero después de la ronda), `2026BA00040` 10 / 4, `2026BA00021` 15 / 25, `2026BA00004` 120 / 70 y el migrado `2023BA00019` 1.350 / 365. Ya no aparece «50,0000» |
+
+### 12.1 Compuertas
+
+| Compuerta | Resultado |
+|---|---|
+| `dotnet build Wms.sln` | Sin errores |
+| `Wms.Tests` | 2016/2016 |
+| `Wms.IntegrationTests` | 433/435. Fallan solo las 2 de la línea base, que pasan al correrlas solas |
+| `has-pending-model-changes` | Limpio |
+
+### 12.2 Veredicto
+
+- **Fichas:** DEF-F11-029, 031, 032 y 033 pasan a **Corregido**, con el re-test en PASA. Pasan a «Verificado» cuando se haga el commit del backend.
+- **Ronda:** no quedan defectos de la ronda sin corregir. Siguen abiertos los MINOR del selector de conductor (DEF-F11-023, 024 y 026) y la condición 3 del §9 (§8, puntos 1 a 5) en staging.
+- **Limpieza:**
+  - API, `qa-rt-mailpit` y `wms-postgres-db` detenidos;
+  - rol `qa_rt_029` eliminado;
+  - `wms_qa_preprod` conserva el camión `QPT313` (salió) y las cuentas `qa.rt.*`.

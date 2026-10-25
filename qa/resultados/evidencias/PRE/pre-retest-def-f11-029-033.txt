@@ -1,0 +1,32 @@
+# Re-test DEF-F11-029, 031, 032 y 033 — 2026-10-25 (hora Colombia)
+# Local, base wms_qa_preprod. BE develop 390eb0e + corrección sin commit · FE 83a0af0 (sin cambios). Cuentas qa.rt.* creadas para el re-test.
+
+## B1/B7 (DEF-F11-029) — avisos SignalR recibidos por qa.rt.boot (Admin) y qa.rt.comext (CE) durante ingreso, pesajes, corrección y salida de QPT313
+# Pesajes: tara 12.000 (22:45:18 UTC) y bruto 30.000 (22:45:18 UTC), ciclo a329eccf Complete, tiquete 2026T00057
+{"label":"admin","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: Ingreso registrado","at":"2026-10-25T22:45:13.410Z"}
+{"label":"comext","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: Ingreso registrado","at":"2026-10-25T22:45:13.410Z"}
+{"label":"admin","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: En tránsito","at":"2026-10-25T22:45:18.764Z"}
+{"label":"comext","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: En tránsito","at":"2026-10-25T22:45:18.764Z"}
+{"label":"admin","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: Listo para pesaje","at":"2026-10-25T22:45:18.862Z"}
+{"label":"comext","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: Listo para pesaje","at":"2026-10-25T22:45:18.862Z"}
+{"label":"admin","title":"Modificación de Peso en Báscula","message":"El usuario qa.rt.bascula modificó el pesaje #2 (Bruto) del ciclo a329eccf... Peso original: 30.000,00 kg, Nuevo peso: 31.000,00 kg. Razón: Re-test DEF-F11-032. Corrección de bruto","at":"2026-10-25T22:45:28.467Z"}
+{"label":"comext","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: Salida registrada","at":"2026-10-25T22:45:54.454Z"}
+{"label":"admin","title":"Trazabilidad","message":"Camión QPT313 cambió a estado: Salida registrada","at":"2026-10-25T22:45:54.454Z"}
+# Avisos «WeighingCaptured» o «WeighbridgeCycleCompleted»: 0
+
+## FB-BAK-007 / F3-COR-011 (DEF-F11-032) — correo del sumidero (mailpit) tras PATCH weighbridge/{ciclo}/second-weight por qa.rt.bascula
+Asunto: ⚠️ [Admin] El usuario qa.rt.bascula modificó el pesaje #2 (Bruto) del ciclo a329eccf
+Para: admin-qa@wms.test
+Fecha del cuerpo: 25/10/2026 17:45 (hora Colombia)
+Enviado (cabecera Date): 2026-10-25T17:45:28-05:00
+
+## PRE-B6-03 (DEF-F11-033) — POST warehouse/locations con {} como qa.rt.boot (Admin)
+PRE-B6-03 {} -> 400 {"type": "https://tools.ietf.org/html/rfc9110#section-15.5.1", "title": "Error de validación.", "status": 400, "errors": [{"code": "Code", "description": "El código de ubicación es requerido."}, {"code": "Name", "description": "El nombre de ubicación es requerido."}, {"code": "Capacity", "description": "La capacidad debe ser mayor a cero."}], "description": "Error de validación de datos", "traceId": "…"}
+
+## E2E-02 paso 4 (DEF-F11-031) — tabla Ampara | Saldo de GET foreign-trade/imports/{id}/label (pdftotext -layout)
+# Antes (ronda, BE 57c94dd): 2026BA00003 «Ampara 50,0000 · Saldo 48,00»
+2026BA00003 (QA-PRE, despachado por completo después de la ronda): Ampara 98 · Saldo 0
+2026BA00040 (QA-PRE-RT, levante parcial):                         Ampara 10 · Saldo 4
+2026BA00021 (QA-PRE, levante parcial):                            Ampara 15 · Saldo 25
+2026BA00004 (QA-PRE, levante parcial):                            Ampara 120 · Saldo 70
+2023BA00019 (migrado, levante 1.350, celda consolidada):          Ampara 1.350 · Saldo 365
