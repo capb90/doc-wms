@@ -6,6 +6,7 @@
 | --- | --- |
 | `00-plan-maestro.md` | Alcance, ambientes, riesgos (§9) y **decisiones del negocio (§10)**, que mandan sobre las fichas |
 | `fase-00-smoke.md` … `fase-11-regresion-cierre.md` | Casos de prueba por fase. La fase 11 tiene el Anexo A (datos migrados) |
+| `plan-ronda-qa-preproduccion-2026-10-25.md` | Ronda QA de preproducción (regresión integral sobre una copia de los datos migrados, antes de la fase 13 del plan P1). Prompt: `prompt-ronda-qa-preproduccion-2026-10-25.md` |
 | `plan-correccion-defectos.md` | Plan de corrección: CHG-01…CHG-90 en 12 fases, todas completadas. Su §4.0 contiene las reglas comunes de implementación |
 | `plantillas/` | Plantillas de ficha de defecto, informe de fase y registro de datos |
 | `resultados/informe-final.md` | Veredicto de la campaña (GO / NO-GO) y sus condiciones |
