@@ -239,7 +239,7 @@ Después sigue la fase 13 del plan P1, con la aprobación del usuario paso a pas
 
 | Fase | Estado | Notas |
 | --- | --- | --- |
-| 1 | Hecha el 2026-10-25, sin commit | Wms.Tests 1981 → 2004; Wms.IntegrationTests 415/417 → 424/426 (las 2 de la línea base); modelo sin cambios. Desviación por D10: `ReissueInvoiceCommandHandler` toma el cliente de los períodos (`CustomerChangeBillingRules.ReissueCustomer`) para que la refacturación salga al cliente nuevo; los períodos `Open` con la factura anulada también pasan al cliente nuevo |
+| 1 | Hecha el 2026-10-25: BE `b8c600e`; el cambio de agencia, sin commit | Wms.Tests 1981 → 2004; Wms.IntegrationTests 415/417 → 425/427 (las 2 de la línea base); modelo sin cambios. Agregado a pedido del usuario: el cambio de agencia por `PUT …/stakeholders` (el que usa la pantalla de CE) también recalcula (`UpdateDepositStakeholdersHandler`). Desviación por D10: `ReissueInvoiceCommandHandler` toma el cliente de los períodos (`CustomerChangeBillingRules.ReissueCustomer`) para que la refacturación salga al cliente nuevo; los períodos `Open` con la factura anulada también pasan al cliente nuevo |
 | 2 | Pendiente | — |
 | 3 | Pendiente | — |
 | 4 | Pendiente | — |
