@@ -19,6 +19,7 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 > Actualizado el 2026-10-24 en la fase 12 del plan de brechas P1 (local, FE `e2e11e6` / BE `560f558`): se agrega DEF-F11-028 (MAJOR, «Depósitos pendientes» omite el depósito agotado con factura por numerar), estado «Nuevo». Informe: `P1-informe-2026-10-24.md`.
 > Actualizado el 2026-10-24, antes de la fase 13 del plan de brechas P1 (local, BE `9e399de`): DEF-F11-028 corregido y verificado en re-test local (F6-ALM-018, F6-REF-005 y F6-REF-006 PASA). Quedan 151 Verificadas y 3 Nuevas (DEF-F11-023, 024 y 026).
 > Actualizado en la ronda QA de preproducción (2026-10-25, FE `cb2a4f7` / BE `57c94dd`, base `wms_qa_preprod`): se agregan los defectos desde DEF-F11-029. Informe: `../PRE-informe-2026-10-25.md`.
+> Actualizado el 2026-10-25 en el plan de corrección de DEF-F11-030 y DEF-F11-034 (local): DEF-F11-030 corregido (BE `b8c600e` y `6f49710`); DEF-F11-034 corregido en backend (fase 2, sin commit; falta el diálogo de Bodega). Re-test QA en la fase 4 del plan.
 
 | ID | Severidad | Estado | Módulo | Título |
 |---|---|---|---|---|
@@ -181,4 +182,4 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 | [DEF-F11-031](DEF-F11-031.md) | TRIVIAL | Nuevo | Comercio Exterior | La etiqueta con levante muestra «Ampara» con cuatro decimales |
 | [DEF-F11-032](DEF-F11-032.md) | MINOR | Nuevo | Transversal | Los correos de aviso a Admin cortan el asunto en el primer punto y fechan en UTC |
 | [DEF-F11-033](DEF-F11-033.md) | MINOR | Nuevo | Administración / API | Crear una ubicación sin código responde 500 en lugar de 400 |
-| [DEF-F11-034](DEF-F11-034.md) | MAJOR | Nuevo | Vigilancia / Bodega | Vigilancia deja salir sin guía un camión cuya orden de importación se cargó sin báscula de salida |
+| [DEF-F11-034](DEF-F11-034.md) | MAJOR | Corregido (backend) | Vigilancia / Bodega | Vigilancia deja salir sin guía un camión cuya orden de importación se cargó sin báscula de salida |
