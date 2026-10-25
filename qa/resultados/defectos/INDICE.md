@@ -179,10 +179,10 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 | [DEF-F11-026](DEF-F11-026.md) | MINOR | Nuevo | Báscula / Bodega | Enter antes de que llegue la búsqueda cierra el selector sin elegir y borra lo escrito |
 | [DEF-F11-027](DEF-F11-027.md) | MAJOR | Verificado | Administración | El filtro por nombre de Administración → Conductores no filtra |
 | [DEF-F11-028](DEF-F11-028.md) | MAJOR | Verificado | Facturación | «Depósitos pendientes» omite el depósito cerrado por agotamiento aunque tenga factura por numerar |
-| [DEF-F11-029](DEF-F11-029.md) | MINOR | Corregido | Báscula / Transversal | Cada pesaje muestra a Admin y CE un aviso técnico «WeighingCaptured» con el GUID del ciclo |
+| [DEF-F11-029](DEF-F11-029.md) | MINOR | Verificado | Báscula / Transversal | Cada pesaje muestra a Admin y CE un aviso técnico «WeighingCaptured» con el GUID del ciclo |
 | [DEF-F11-030](DEF-F11-030.md) | CRITICAL | Verificado | Comercio Exterior / Facturación | Reconfirmar tras corregir valor, moneda o fecha deja la factura Borrador con el importe anterior |
-| [DEF-F11-031](DEF-F11-031.md) | TRIVIAL | Corregido | Comercio Exterior | La etiqueta con levante muestra «Ampara» con cuatro decimales |
-| [DEF-F11-032](DEF-F11-032.md) | MINOR | Corregido | Transversal | Los correos de aviso a Admin cortan el asunto en el primer punto y fechan en UTC |
-| [DEF-F11-033](DEF-F11-033.md) | MINOR | Corregido | Administración / API | Crear una ubicación sin código responde 500 en lugar de 400 |
+| [DEF-F11-031](DEF-F11-031.md) | TRIVIAL | Verificado | Comercio Exterior | La etiqueta con levante muestra «Ampara» con cuatro decimales |
+| [DEF-F11-032](DEF-F11-032.md) | MINOR | Verificado | Transversal | Los correos de aviso a Admin cortan el asunto en el primer punto y fechan en UTC |
+| [DEF-F11-033](DEF-F11-033.md) | MINOR | Verificado | Administración / API | Crear una ubicación sin código responde 500 en lugar de 400 |
 | [DEF-F11-034](DEF-F11-034.md) | MAJOR | Verificado | Vigilancia / Bodega | Vigilancia deja salir sin guía un camión cuya orden de importación se cargó sin báscula de salida |
 | [DEF-F11-035](DEF-F11-035.md) | MINOR | Verificado | Bodega / Comercio Exterior | Comercio Exterior recibe «Generar guía de salida» por cada cargue de importación aunque la guía ya esté emitida |

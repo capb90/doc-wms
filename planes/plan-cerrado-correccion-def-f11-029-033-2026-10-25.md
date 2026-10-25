@@ -1,6 +1,6 @@
 # Plan cerrado — Corrección de DEF-F11-029, 031, 032 y 033 antes de la fase 13
 
-> **Fecha:** 25 de octubre de 2026. **Estado:** Ejecutado el 2026-10-25, pendiente de commit (aprobado por el usuario el 2026-10-25). Ejecución y desviaciones en el §6. Prompt del ejecutor: `prompt-correccion-def-f11-029-033-2026-10-25.md`.
+> **Fecha:** 25 de octubre de 2026. **Estado:** Ejecutado el 2026-10-25 y commiteado (BE `3cbf181`, docs `58dcbd5`); aprobado por el usuario el 2026-10-25. Ejecución y desviaciones en el §6. Prompt del ejecutor: `archivo/prompts/qa/prompt-def-f11-029-031-032-033.md` (archivado tras el commit).
 > **Origen:** los 4 defectos menores abiertos de la ronda QA de preproducción (`qa/resultados/PRE-informe-2026-10-25.md` §6). El usuario pidió corregirlos antes de la fase 13 del plan de brechas P1.
 > **Base:** BE `develop` `390eb0e` · FE `develop` `83a0af0`.
 > **Alcance:** solo backend. Una fase, sin migración y sin cambios de permisos.
@@ -128,7 +128,7 @@ Las fichas pasan a «Corregido» con el commit y luego a «Verificado» en el re
   - `Wms.IntegrationTests`: 433/435, con solo las 2 fallas de la línea base, que pasan al correrlas solas;
   - `has-pending-model-changes`: limpio.
 - **Re-test local** sobre `wms_qa_preprod`: B1/B7, FB-BAK-007, PRE-B6-03 y E2E-02 paso 4 en PASA. Detalle en `qa/resultados/PRE-informe-2026-10-25.md` §12; evidencia en `qa/resultados/evidencias/PRE/pre-retest-def-f11-029-033.txt`.
-- **Fichas:** las cuatro quedan en «Corregido (pendiente de commit)». Pasan a «Verificado» con el commit, como pide el prompt del ejecutor; el §3 decía el orden inverso.
+- **Fichas:** las cuatro quedaron en «Corregido (pendiente de commit)» y pasaron a «Verificado» con el commit del backend (`3cbf181`), como pide el prompt del ejecutor; el §3 decía el orden inverso.
 
 ### 6.1 Desviaciones y precisiones
 

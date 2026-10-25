@@ -471,7 +471,7 @@ Plan `planes/plan-cerrado-correccion-def-f11-029-033-2026-10-25.md`. Local, sobr
 
 ### 12.2 Veredicto
 
-- **Fichas:** DEF-F11-029, 031, 032 y 033 pasan a **Corregido**, con el re-test en PASA. Pasan a «Verificado» cuando se haga el commit del backend.
+- **Fichas:** DEF-F11-029, 031, 032 y 033 pasaron a **Corregido**, con el re-test en PASA, y a **Verificado** con el commit del backend (`3cbf181`).
 - **Ronda:** no quedan defectos de la ronda sin corregir. Siguen abiertos los MINOR del selector de conductor (DEF-F11-023, 024 y 026) y la condición 3 del §9 (§8, puntos 1 a 5) en staging.
 - **Limpieza:**
   - API, `qa-rt-mailpit` y `wms-postgres-db` detenidos;
