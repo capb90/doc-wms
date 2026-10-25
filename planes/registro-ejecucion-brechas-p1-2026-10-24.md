@@ -393,3 +393,16 @@ Los tres puntos «Pendiente de construir» quedaron en la **fase 12c** del plan 
 - **Prueba manual** (API local en 5281 sobre la base desechable, con un admin de arranque): precio de hoy → 200, «vigente»; precio para mañana a las 15:30 → 200, `isScheduled = true` y `validFrom` en las 00:00 de Colombia; la lista muestra el programado y el vigente (este vence a las 23:59:59.999999 de la víspera); el precio actual del servicio sigue siendo el de hoy; precio negativo → 400.
 - **QA:** casos nuevos F1-SRV-021 y F6-ALM-019. No se re-ejecutaron a mano F6-ALM-009, F6-ALM-018, F6-TAR-* ni F3-COB: los cubren `StorageRenewalAtPeriodStartTests`, `PendingDepositsListTests`, `ManualPeriodCloseTests` y `StorageRecalculationDispatchTests`, en verde. Quedan para el QA de la fase 13.
 - **Para la fase 13:** son 5 migraciones del plan, más `AddForkliftUseEntryLog` (§16.1).
+
+## Ronda QA de preproducción (2026-10-25)
+
+- **Plan:** `qa/plan-ronda-qa-preproduccion-2026-10-25.md`. **Informe:** `qa/resultados/PRE-informe-2026-10-25.md`. **Datos:** `qa/resultados/registro-datos-qa-preproduccion.md`.
+- **Build:** BE `develop` `57c94dd` · FE `develop` `cb2a4f7`, los dos limpios. Ejecutor: agente QA sin historial, sin cambios de código ni commits.
+- **Base:** `wms_qa_preprod`, copia de `wms_migracion` (`CREATE DATABASE … TEMPLATE`). `wms_migracion`, `wmsdb` y las bases de grabación no se tocaron. La copia **queda** para el re-test.
+- **Ensayo de migraciones (R3):** las 6 que faltaban (`AddForkliftUseEntryLog`, `AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear`, `AddGuideCodeTypeParameter`, `RelaxServicePriceActiveIndex`) se aplicaron sobre los datos migrados en unos 2 s, sin errores; `has-pending-model-changes` limpio.
+- **Resultado:** 178 casos (B0–B7): 162 pasan, 3 fallan, 8 observaciones, 4 no ejecutados (FA-MIG-013 queda para el corte real) y 1 no aplica. P0 100 % y P1 98,6 % ejecutados.
+- **Defectos nuevos:**
+  - **DEF-F11-030 (CRITICAL):** reconfirmar tras corregir solo el valor, la moneda o la fecha de un depósito devuelto a Borrador deja la factura con el importe anterior.
+  - **DEF-F11-034 (MAJOR):** un camión cargado sin pasar por la báscula de salida sale por Vigilancia sin guía (variante de DEF-F5-014 / CHG-33).
+  - DEF-F11-029, 032 y 033 (MINOR) y DEF-F11-031 (TRIVIAL).
+- **Veredicto: GO con condiciones** para la fase 13: corregir DEF-F11-030 y DEF-F11-034 antes de desplegar, o aceptarlos con las instrucciones operativas del informe (§9); y en staging, el QR en papel, `QRCoder` en Linux, el bucket externo con el fallo provocado, PRF-002 y FA-MIG-013 en el corte.

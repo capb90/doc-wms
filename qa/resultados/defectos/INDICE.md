@@ -18,6 +18,7 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 > Actualizado el 2026-10-08 en la Fase 4 del selector de conductor (staging, FE `4ca4e0a` / BE `044be08`, sin recrear la base): DEF-F11-022, DEF-F11-025 y DEF-F11-027 pasan a «Verificado»; DEF-F11-023 y DEF-F11-024 vistos en staging, siguen «Nuevo» con DEF-F11-026 (MINOR conocidos, desplegados por decisión del usuario). Sin fichas nuevas. Quedan 150 Verificadas y 3 Nuevas.
 > Actualizado el 2026-10-24 en la fase 12 del plan de brechas P1 (local, FE `e2e11e6` / BE `560f558`): se agrega DEF-F11-028 (MAJOR, «Depósitos pendientes» omite el depósito agotado con factura por numerar), estado «Nuevo». Informe: `P1-informe-2026-10-24.md`.
 > Actualizado el 2026-10-24, antes de la fase 13 del plan de brechas P1 (local, BE `9e399de`): DEF-F11-028 corregido y verificado en re-test local (F6-ALM-018, F6-REF-005 y F6-REF-006 PASA). Quedan 151 Verificadas y 3 Nuevas (DEF-F11-023, 024 y 026).
+> Actualizado en la ronda QA de preproducción (2026-10-25, FE `cb2a4f7` / BE `57c94dd`, base `wms_qa_preprod`): se agregan los defectos desde DEF-F11-029. Informe: `../PRE-informe-2026-10-25.md`.
 
 | ID | Severidad | Estado | Módulo | Título |
 |---|---|---|---|---|
@@ -175,3 +176,9 @@ Generado el 2026-10-03 a partir de las fichas de esta carpeta (build FE `1501cd6
 | [DEF-F11-026](DEF-F11-026.md) | MINOR | Nuevo | Báscula / Bodega | Enter antes de que llegue la búsqueda cierra el selector sin elegir y borra lo escrito |
 | [DEF-F11-027](DEF-F11-027.md) | MAJOR | Verificado | Administración | El filtro por nombre de Administración → Conductores no filtra |
 | [DEF-F11-028](DEF-F11-028.md) | MAJOR | Verificado | Facturación | «Depósitos pendientes» omite el depósito cerrado por agotamiento aunque tenga factura por numerar |
+| [DEF-F11-029](DEF-F11-029.md) | MINOR | Nuevo | Báscula / Transversal | Cada pesaje muestra a Admin y CE un aviso técnico «WeighingCaptured» con el GUID del ciclo |
+| [DEF-F11-030](DEF-F11-030.md) | CRITICAL | Corregido | Comercio Exterior / Facturación | Reconfirmar tras corregir valor, moneda o fecha deja la factura Borrador con el importe anterior |
+| [DEF-F11-031](DEF-F11-031.md) | TRIVIAL | Nuevo | Comercio Exterior | La etiqueta con levante muestra «Ampara» con cuatro decimales |
+| [DEF-F11-032](DEF-F11-032.md) | MINOR | Nuevo | Transversal | Los correos de aviso a Admin cortan el asunto en el primer punto y fechan en UTC |
+| [DEF-F11-033](DEF-F11-033.md) | MINOR | Nuevo | Administración / API | Crear una ubicación sin código responde 500 en lugar de 400 |
+| [DEF-F11-034](DEF-F11-034.md) | MAJOR | Nuevo | Vigilancia / Bodega | Vigilancia deja salir sin guía un camión cuya orden de importación se cargó sin báscula de salida |

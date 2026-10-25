@@ -1,0 +1,90 @@
+5xx/ERR: 1
+   ('POST warehouse/locations', 'admin', 500)
+Sin token: ['GET administration/system-roles', 'GET administration/business-role', 'GET administration/taxes', 'GET administration/operation-modalities', 'GET administration/packaging-types', 'GET public/dispatch-guides/verify/{token}']
+Multirol distinto de la unión: 0
+Retiradas (en 10-03, no ahora): ['GET billing/storage-invoice-draft', 'PATCH entry-logs/{id}', 'POST billing/invoices', 'POST warehouse/loading-orders']
+Nuevas: ['GET foreign-trade/loading-orders/{id}/dispatch-guide-preview', 'GET public/dispatch-guides/verify/{token}', 'GET reports/general-inventory/locations', 'GET weighbridge/dashboard', 'GET weighbridge/service-records/{serviceRecordId}/registration', 'PATCH stakeholder/{id}/exit-block', 'POST billing/payments/vouchers']
+Cambios de roles:
+  DELETE entry-reasons/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin
+  DELETE stakeholder/{stakeholderId}/agreement/{agreementId}/services/{agreementServiceId}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  DELETE stakeholder/{stakeholderId}/bank-account/{bankAccountId}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  DELETE stakeholder/{stakeholderId}/contact/{bankAccountId}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  GET entry-logs: Admin+Receiving+Warehouse -> Admin+Receiving
+  GET entry-logs/{id}: Admin+Receiving+Warehouse -> Admin+Receiving
+  GET reports/general-inventory: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing+FT+Warehouse
+  GET warehouse/forklift-rate: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/forklift-uses: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/forklift-uses/active: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/forklift-uses/{id}: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/inventory/deposits: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/inventory/movements: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/inventory/stock/{warehouseStorageId}: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/loading-orders/pending: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/loading-orders/{id}: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/loading-orders/{id}/pdf: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/locations: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/locations/{id}/placements: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/movements-report: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing+FT+Warehouse
+  GET warehouse/movements-report/pdf: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing+FT+Warehouse
+  GET warehouse/novelties: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT+Warehouse
+  GET warehouse/novelties/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT+Warehouse
+  GET warehouse/novelties/{id}/pdf: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT+Warehouse
+  GET warehouse/pending-direct-reception: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/pending-from-weighbridge: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/receptions: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/receptions/{id}: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/search/plate/{plate}: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/storage-products/{id}/placements: Admin+Receiving+Warehouse -> Admin+Warehouse
+  GET warehouse/warehouse-storages/{id}/cargo-units: Admin+Receiving+Warehouse -> Admin+Warehouse
+  PATCH departure-authorizations/{id}: Admin+Receiving+Warehouse -> Admin+Receiving
+  PATCH drivers/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT+Receiving+Scale+Warehouse
+  PATCH entry-reasons/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin
+  PATCH product/{id}: Admin+Receiving+Warehouse -> Admin
+  PATCH stakeholder/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  PATCH stakeholder/{stakeholderId}/agreement/{agreementId}/services/{agreementServiceId}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  PATCH stakeholder/{stakeholderId}/agreement/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  PATCH stakeholder/{stakeholderId}/bank-account/{bankAccountId}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  PATCH stakeholder/{stakeholderId}/contact/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  PATCH vehicles/{id}: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT+Receiving+Scale
+  PATCH warehouse/forklift-uses/{id}/payment-mode: Admin+Receiving+Warehouse -> Admin+Warehouse
+  PATCH warehouse/loading-orders/{id}/cancel: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST drivers: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT+Receiving+Scale+Warehouse
+  POST entry-logs: Admin+Receiving+Warehouse -> Admin+Receiving
+  POST entry-logs/{id}/departure: Admin+Receiving+Warehouse -> Admin+Receiving
+  POST entry-logs/{id}/departure-authorizations: Admin+Receiving+Warehouse -> Admin+Receiving
+  POST entry-logs/{id}/manifests: Admin+Receiving+Warehouse -> Admin+Receiving
+  POST entry-reasons: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin
+  POST product: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin
+  POST stakeholder: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  POST stakeholder/{id}/assign-role: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  POST stakeholder/{id}/bank-account: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  POST stakeholder/{id}/contact: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  POST stakeholder/{id}/remove-role: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT
+  POST stakeholder/{stakeholderId}/agreement: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  POST stakeholder/{stakeholderId}/agreement/{agreementId}/services: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  POST stakeholder/{stakeholderId}/agreement/{agreementId}/services/{agreementServiceId}/activate: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  POST stakeholder/{stakeholderId}/agreement/{agreementId}/services/{agreementServiceId}/deactivate: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  POST stakeholder/{stakeholderId}/agreement/{id}/activate: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  POST stakeholder/{stakeholderId}/agreement/{id}/deactivate: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+Billing
+  POST vehicles: Admin+Billing+FT+Receiving+Scale+Warehouse -> Admin+FT+Receiving+Scale
+  POST warehouse/forklift-uses/start: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/forklift-uses/{id}/end: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/loading-orders/{id}/execute: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/novelties: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/novelties/{id}/void: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/receptions: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/receptions/register-arrival: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/receptions/without-weighbridge: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/receptions/{id}/complete: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/storage-products/{id}/placements: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/storage-products/{id}/placements/move: Admin+Receiving+Warehouse -> Admin+Warehouse
+  POST warehouse/storage-products/{id}/placements/release: Admin+Receiving+Warehouse -> Admin+Warehouse
+  PUT warehouse/novelties/{id}: Admin+Receiving+Warehouse -> Admin+Warehouse
+Roles de las nuevas:
+  GET foreign-trade/loading-orders/{id}/dispatch-guide-preview: Admin+FT  anon=401
+  GET public/dispatch-guides/verify/{token}: Admin+Billing+FT+Receiving+Scale+Warehouse  anon=404
+  GET reports/general-inventory/locations: Admin+Billing+FT+Warehouse  anon=401
+  GET weighbridge/dashboard: Admin+Scale  anon=401
+  GET weighbridge/service-records/{serviceRecordId}/registration: Admin+Scale  anon=401
+  PATCH stakeholder/{id}/exit-block: Admin+Billing+FT  anon=401
+  POST billing/payments/vouchers: Admin+Billing  anon=401
