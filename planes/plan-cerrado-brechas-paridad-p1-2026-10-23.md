@@ -7,6 +7,7 @@
 > - Las respuestas del usuario del 2026-10-23: 13 preguntas al negocio (DEC-050…054) y 15 de diseño (§2).
 > - Agregado el 2026-10-23, con el plan ya aprobado: el pedido del cliente de un **código QR de verificación en la guía de salida** (fase 11, D35–D42, `DEC-060`), con 4 respuestas del usuario.
 > - Agregado el 2026-10-24, después de ejecutar las fases 1 a 12: la **fase 12c** (§15C, D43–D46), con los tres cambios de `DEC-055` y el ajuste del orden de bloqueo de las guías.
+> - Agregado el 2026-10-25, durante la fase 12c: D47 y D48, respuestas del usuario a lo que el código no permitía (el índice de un precio activo por servicio y el precio de la guía).
 >
 > **Base (según `contexto/estado.md` §2):** backend `wms-api` `develop` `b27c9bf` · frontend `wms` `develop` `31da26c`.
 > **Staging (último despliegue registrado):** BE `044be08` / FE `4ca4e0a`, con datos migrados.
@@ -30,7 +31,7 @@
    - migraciones;
    - desviaciones.
 4. **Este plan no deja decisiones abiertas** (§2). Si el código contradice el plan, no improvises: detente y pregunta, con todas las dudas en un solo mensaje. Si el texto choca con una decisión `Dn` en un caso borde, gana la decisión (`DEC-002`): aplícala y menciónala en una línea.
-5. **Migraciones:** solo con `dotnet ef … --project Wms.Infrastructure --startup-project Wms.Api` y solo contra la base local (`DEC-004`). Nunca edites a mano los archivos generados. Este plan crea **cuatro**, cada una en su fase: `AddStakeholderExitBlock` (3), `FixAgreementActiveStakeholderIndex` (7), `AddWarehouseStorageLegacyYear` (9) y `AddGuideCodeTypeParameter` (11). En las demás fases, `dotnet ef migrations has-pending-model-changes` debe salir limpio.
+5. **Migraciones:** solo con `dotnet ef … --project Wms.Infrastructure --startup-project Wms.Api` y solo contra la base local (`DEC-004`). Nunca edites a mano los archivos generados. Este plan crea **cinco**, cada una en su fase: `AddStakeholderExitBlock` (3), `FixAgreementActiveStakeholderIndex` (7), `AddWarehouseStorageLegacyYear` (9), `AddGuideCodeTypeParameter` (11) y `RelaxServicePriceActiveIndex` (12c, D47). En las demás fases, `dotnet ef migrations has-pending-model-changes` debe salir limpio.
 6. **Staging:** las fases 1 a 12 son locales. La fase 13 despliega a staging solo con la aprobación explícita del usuario, paso por paso. No abras `.env*` ni `deploy/staging/.env.*`.
 7. **Reglas de código** (`D/contexto/convenciones-tecnicas.md`):
    - errores de negocio con `BadRequestException`, `ConflictException` o `NotFoundException`, con el mensaje en español;
@@ -137,6 +138,8 @@
 | D44 | **Orden de bloqueo de las guías:** las guías de importación y de exportación bloquean la orden y sus productos **antes** de tomar el consecutivo `S`, como manda D5. La de exportación pasa a bloquear también la orden | Usuario, 2026-10-24; D5 |
 | D45 | **Precios programados:** `POST service/{id}/prices` acepta una vigencia futura, normalizada a las 00:00 de Colombia de ese día. El vigente rige hasta la víspera. La lista los muestra «Programado» (`IsScheduled`). Reemplaza la regla ALM-20/D20 del validador | Usuario, 2026-10-24 (`DEC-055`); `Service.SetPrice` (fase 6) |
 | D46 | Registrar un precio deja inactivos los precios programados que empiezan después de él: es el comportamiento actual de `SetPrice` y `Expire`, y solo se documenta | Fase 6 (`ServicePrice.Expire`); registro de ejecución |
+| D47 | **Índice de precios activos:** el índice único parcial `idx_service_price_one_active_per_service` (`service_id` con `is_active = true`, de `InitialParityLegacy`) impedía D45, porque un precio programado convive activo con el vigente. Pasa a `idx_service_price_one_active_per_start`, único por `(service_id, valid_from)` con `is_active = true`, con la migración `RelaxServicePriceActiveIndex` en la fase 12c. La regla de un solo precio vigente la mantiene `Service.SetPrice` | Usuario, 2026-10-25 (fase 12c); `ServicePriceConfiguration.cs` |
+| D48 | **Precio de la guía:** `ForeignTradeService.GetGuidePriceAsync` (guía sin convenio) toma el precio de `GUIA_SALIDA` vigente hoy, con el mismo filtro del resolutor de tarifas (`ValidFrom <= ahora`, `ValidTo` nulo o posterior, el más reciente). Antes tomaba cualquier precio activo y podía cobrar el programado antes de su fecha | Usuario, 2026-10-25 (fase 12c); `BillingResolver.cs` nivel 3 |
 
 ---
 
@@ -156,8 +159,8 @@
 | 10 | Respaldos: correo y destino externo | BE, deploy, docs | — | S | — |
 | 11 | Guía de salida con código QR de verificación | BE, FE, deploy | `AddGuideCodeTypeParameter` | M | 2 y 3 (mismos handlers de guía) |
 | 12 | Documentación: procedimiento de corte, QA y estado | docs | — | M | 1–11 |
-| 12c | Ajustes de `DEC-055` y orden de bloqueo de las guías | BE, FE | — | M | 12 y 12b |
-| 13 | QA local, despliegue y QA en staging | todos | aplica 4 | M | 12c, y aprobación del usuario |
+| 12c | Ajustes de `DEC-055` y orden de bloqueo de las guías | BE, FE | `RelaxServicePriceActiveIndex` (D47) | M | 12 y 12b |
+| 13 | QA local, despliegue y QA en staging | todos | aplica 5 | M | 12c, y aprobación del usuario |
 
 Las fases van en secuencia (DF13 del plan frontend de paridad): varias tocan los mismos handlers y pantallas. Las fases 6, 9, 10 y 11 no dependen de otras fases salvo lo indicado, pero se mantienen en orden para que cada commit parta del anterior.
 
@@ -1201,7 +1204,7 @@ Se agregan o actualizan en `D/qa/fase-*.md`, siguiendo la numeración de cada bl
 
 > Agregada el 2026-10-24, después de la ejecución de las fases 1 a 12 y de la fase 12b (corrección de DEF-F11-028, `planes/registro-ejecucion-brechas-p1-2026-10-24.md`). Va **antes de la fase 13**, para desplegar todo junto.
 >
-> **Partida:** BE `9e399de` · FE `e2e11e6`. Sin migración.
+> **Partida:** BE `9e399de` · FE `e2e11e6`. Sin migración en el plan original; con D47 (2026-10-25) suma `RelaxServicePriceActiveIndex`.
 
 ### 15C.1 Depósito agotado en la gracia (D43, `DEC-055`, precisa `DEC-053`)
 
@@ -1275,6 +1278,9 @@ Se agregan o actualizan en `D/qa/fase-*.md`, siguiendo la numeración de cada bl
     - Tipo `isScheduled?: boolean` en `F/features/services/types/service.ts`.
     - **Nuevo** `F/features/services/utils/service-price-status.ts`, puro, con la etiqueta y la severidad.
 - **Permisos:** sin cambio. `POST service/{id}/prices` sigue con su política actual (Admin y Billing, `BillingAccess`); la pantalla, igual.
+- **Agregado en la ejecución (2026-10-25, D47 y D48):**
+  - el índice único de un precio activo por servicio respondía 409 al programar un precio: pasa a uno por servicio y día de inicio, con la migración `RelaxServicePriceActiveIndex`;
+  - el precio de la guía sin convenio (`ForeignTradeService.GetGuidePriceAsync`) filtra por fechas, como el resolutor: con un precio programado, la guía cobra el vigente. Prueba en `ScheduledServicePriceTests` (caso 4).
 - **Pruebas:**
   - **`Wms.Tests`:**
     - **Nuevo** `B/Wms.Tests/Services/SetServicePriceValidatorTests.cs`: una fecha futura es válida; un precio negativo y un vencimiento anterior al inicio no lo son;
@@ -1295,7 +1301,7 @@ Se agregan o actualizan en `D/qa/fase-*.md`, siguiendo la numeración de cada bl
 ### 15C.5 Criterio de salida de la fase 12c
 
 - Compuertas del §18.
-- Sin migración: `has-pending-model-changes` limpio.
+- Migración `RelaxServicePriceActiveIndex` (D47) y `has-pending-model-changes` limpio.
 - Las pruebas nuevas de los tres cambios en verde.
 
 ---
@@ -1314,7 +1320,8 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
    - `AddStakeholderExitBlock`;
    - `FixAgreementActiveStakeholderIndex`;
    - `AddWarehouseStorageLegacyYear`;
-   - `AddGuideCodeTypeParameter`.
+   - `AddGuideCodeTypeParameter`;
+   - `RelaxServicePriceActiveIndex` (fase 12c, D47).
 
    Se aplican con un script idempotente (`dotnet ef migrations script --idempotent`).
 
@@ -1351,7 +1358,7 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 | 11 | BE, FE, deploy | §14 y la migración `AddGuideCodeTypeParameter` | `feat(guias): código QR de verificación en la guía de salida, seleccionable por parámetro` | Commiteada: BE `560f558` / FE `e2e11e6` / docs (este commit), con la migración `20261024170332_AddGuideCodeTypeParameter` y `QRCoder` fijado en `[1.8.1]`; el escaneo con celular y la prueba en la imagen Linux quedan para la fase 13 — 2026-10-24, orquestador |
 | 12 | docs | §15 | entrega el veredicto local; commit del hub | Commiteada: BE `2f18fee` (solo documentación) / docs (este commit). Veredicto QA local: continuar con condiciones (DEF-F11-028 MAJOR abierto) — 2026-10-24, orquestador |
 | 12b | BE | DEF-F11-028 (fase aparte pedida por el usuario el 2026-10-24, antes de la 13) | `fix(facturacion): «Depósitos pendientes» incluye el depósito agotado (Cerrado e inactivo) con factura por numerar o refacturar (DEF-F11-028)` | Commiteada: BE `9e399de` / docs (este commit); re-test local de F6-ALM-018, F6-REF-005 y F6-REF-006: PASA — 2026-10-24 |
-| 12c | BE, FE | §15C (sin migración) | `fix(facturacion,guias,servicios): renovación del depósito agotado en la gracia, orden de bloqueo de las guías y precios de servicio programados (DEC-055)` | Pendiente |
+| 12c | BE, FE | §15C y la migración `RelaxServicePriceActiveIndex` (D47) | `fix(facturacion,guias,servicios): renovación del depósito agotado en la gracia, orden de bloqueo de las guías y precios de servicio programados (DEC-055)` | Implementada el 2026-10-25 sobre BE `9e399de` / FE `e2e11e6`, sin commit; con la migración `20261025152149_RelaxServicePriceActiveIndex` y D47–D48. Pendiente del commit del usuario |
 | 13 | staging | §16 | entrega el informe de staging y los mensajes de commit pendientes | Pendiente |
 
 Cada fase entrega su resumen y espera el commit del usuario antes de la siguiente (`DEC-003`).

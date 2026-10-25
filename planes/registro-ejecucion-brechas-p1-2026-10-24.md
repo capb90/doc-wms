@@ -377,3 +377,19 @@ Todas aplicadas solo en Postgres desechables o de Testcontainers. La base de Dev
 | 8 | Rama de `docs` | Sin decisión en esta ronda (el orquestador usó `main`, la única rama del hub) | — |
 
 Los tres puntos «Pendiente de construir» quedaron en la **fase 12c** del plan (§15C, D43–D46), agregada el 2026-10-24, antes de la fase 13.
+
+## Fase 12c — Ajustes de DEC-055 y orden de bloqueo de las guías (2026-10-25)
+
+- **Partida:** BE `9e399de` · FE `e2e11e6`, los dos limpios. Sin commit: lo hace el usuario.
+- **§15C.1 (D43):** `StorageDepletionRules.ShouldCloseOnDepletion` (pura) deja abierto el período agotado cuyo fin ya pasó. El job (`AutoCloseExpiredStoragePeriodsAsync`) y el cierre manual (`CloseStoragePeriodsHandler`) llaman `CloseDepletedProductPeriodsAsync` después de abrir la renovación, en la misma transacción. De paso, el contador `invoicesGenerated` del job cuenta la renovación aunque ya quede cerrada.
+- **§15C.2 (D44):** la guía de importación bloquea los productos después de la orden y antes del consecutivo `S`. La de exportación bloquea la orden y los productos al abrir su transacción, y vuelve a leer la guía vigente bajo el bloqueo en cada intento. `StockRowLock` lo documenta. La prueba determinista falla con `55P03` sin el cambio.
+- **§15C.3 (D45, D46):** el validador acepta fechas futuras; el handler normaliza una fecha futura a las 00:00 de Colombia; `ServicePriceDto.IsScheduled` sale en el mapper y en el listado de precios; la lista muestra «Programado», «Vigente» o «Histórico» (`service-price-status.ts`); la fecha viaja como el día elegido en Colombia (`toColombiaStartOfDayIso`).
+- **Preguntas al usuario y respuestas (2026-10-25):**
+  1. El índice único `idx_service_price_one_active_per_service` respondía 409 al programar un precio. **Respuesta:** migración en la 12c → **D47**, `20261025152149_RelaxServicePriceActiveIndex` (único por `(service_id, valid_from)` con `is_active = true`).
+  2. `ForeignTradeService.GetGuidePriceAsync` tomaba cualquier precio activo de `GUIA_SALIDA`. **Respuesta:** se corrige en la 12c → **D48**, el mismo filtro de fechas del resolutor.
+- **Migración:** `RelaxServicePriceActiveIndex`, con su `Designer` y el snapshot. Toda la cadena se aplicó sin errores a un `postgres:18.0` desechable (ya detenido). `has-pending-model-changes` limpio.
+- **Base de Development:** se arrancó `wms-postgres-db` y se intentó `database update` contra la base por defecto (`wmsdb`) antes de ver la advertencia de `procesos/verificacion-local.md` §1. Falló en `RemoveSampleSeedData` y se revirtió sin aplicar nada (la migración sigue «Pending»). El contenedor se volvió a detener.
+- **Compuertas:** build sin errores · Wms.Tests 1973 → 1981 · Wms.IntegrationTests 405/407 → 415/417 (las 2 de la línea base, `InitiateCustomerIdTests.Queue_PendingService_ReturnsCustomerId` y `DiscardOperationTests.Discard_ReleasesTruckToNotStarted`, dependen del orden y pasan solas) · Vitest 481 → 486 · lint 281 → 281 errores, ninguno en archivos nuevos · `yarn build` con código 0.
+- **Prueba manual** (API local en 5281 sobre la base desechable, con un admin de arranque): precio de hoy → 200, «vigente»; precio para mañana a las 15:30 → 200, `isScheduled = true` y `validFrom` en las 00:00 de Colombia; la lista muestra el programado y el vigente (este vence a las 23:59:59.999999 de la víspera); el precio actual del servicio sigue siendo el de hoy; precio negativo → 400.
+- **QA:** casos nuevos F1-SRV-021 y F6-ALM-019. No se re-ejecutaron a mano F6-ALM-009, F6-ALM-018, F6-TAR-* ni F3-COB: los cubren `StorageRenewalAtPeriodStartTests`, `PendingDepositsListTests`, `ManualPeriodCloseTests` y `StorageRecalculationDispatchTests`, en verde. Quedan para el QA de la fase 13.
+- **Para la fase 13:** son 5 migraciones del plan, más `AddForkliftUseEntryLog` (§16.1).

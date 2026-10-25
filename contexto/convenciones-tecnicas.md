@@ -97,7 +97,7 @@ Los `[Authorize]` de ASP.NET se suman (AND): para aflojar una acción de un cont
 
 - Las genera y aplica **el agente**, solo con `dotnet ef`, solo en la base local (`DEC-004`). Comandos en `procesos/verificacion-local.md` §4.
 - **Nunca se editan a mano** los archivos generados de `Wms.Infrastructure/Migrations/`. Tampoco hay SQL manual contra ninguna base.
-- **El historial se consolidó** el 2026-10-01 en `20261001193201_InitialParityLegacy`: las bases con la cadena anterior se recrean, no se actualizan. Desde entonces hay 14 migraciones más; la última es `20261024170332_AddGuideCodeTypeParameter` (las cuatro del plan de brechas P1: `AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear` y esa).
+- **El historial se consolidó** el 2026-10-01 en `20261001193201_InitialParityLegacy`: las bases con la cadena anterior se recrean, no se actualizan. Desde entonces hay 15 migraciones más; la última es `20261025152149_RelaxServicePriceActiveIndex` (las cinco del plan de brechas P1: `AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear`, `AddGuideCodeTypeParameter` y esa, de la fase 12c).
 - Staging se actualiza con un script idempotente (`dotnet ef migrations script --idempotent`) que aplica `deploy-staging.sh migrate`, con aprobación del usuario.
 - `Directory.Build.props` fija `BaseOutputPath` por un fallo de `dotnet ef` en macOS. `dotnet-ef` se instala global.
 - Una columna nueva `NOT NULL` en una tabla con `HasData` **no lleva** `HasDefaultValue`.

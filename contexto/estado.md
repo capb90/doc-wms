@@ -44,7 +44,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 
 **Commits posteriores al último despliegue registrado** (según los registros, no están en staging):
 
-> **Además,** los commits del plan de brechas P1 (fases 1 a 11, `planes/registro-ejecucion-brechas-p1-2026-10-24.md`), hasta BE `560f558` / FE `e2e11e6`, **no están en staging**. Traen 4 migraciones (`AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear`, `AddGuideCodeTypeParameter`) y exigen, antes de desplegar, la clave `GUIDE_VERIFICATION_KEY` y las variables del destino S3 en `deploy/staging/.env.staging` (las pone el usuario) y el conteo de convenios activos duplicados (`planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` §16.1). Se despliegan en la fase 13, con aprobación.
+> **Además,** los commits del plan de brechas P1 (fases 1 a 11, `planes/registro-ejecucion-brechas-p1-2026-10-24.md`), hasta BE `560f558` / FE `e2e11e6`, **no están en staging**. Traen 4 migraciones (`AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear`, `AddGuideCodeTypeParameter`), más `RelaxServicePriceActiveIndex` de la fase 12c (2026-10-25, sin commit al escribir esto), y exigen, antes de desplegar, la clave `GUIDE_VERIFICATION_KEY` y las variables del destino S3 en `deploy/staging/.env.staging` (las pone el usuario) y el conteo de convenios activos duplicados (`planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` §16.1). Se despliegan en la fase 13, con aprobación.
 
 | Repo | Commit | Contenido |
 | --- | --- | --- |
