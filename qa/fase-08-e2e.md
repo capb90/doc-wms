@@ -38,8 +38,8 @@ Un flujo `PASA` solo si todos sus puntos de control pasan. Si un paso falla, el 
 | 8 | Vigilancia | Salida de `QAE001`. Ingreso `QAE002` con Cargue importación. | `QAE001` fuera de planta; `QAE002` en cola. |
 | 9 | CE | OC por 100 para `QAE002`. | OC `2026OC…` Pending; reservado 100; disponible 0. |
 | 10 | Báscula | Salida de mercancía con la OC; cobro; tara 14.000. | Ciclo de salida; factura BASCULA. |
-| 11 | Bodega | Ejecutar cargue 100. | OC Loaded; stock 0; reserva liberada; depósito **Closed**; períodos cerrados; CE recibe «Guía de salida requerida». |
-| 12 | CE | Guía de salida; cobro inmediato. | Guía `2026S…`; saldos: entrada 100, anterior 100, despachado 100, nuevo 0; factura GUIA_SALIDA. |
+| 11 | CE | Guía de salida antes del cargue (DEC-056: el conductor la pide en CE); cobro inmediato. | Guía `2026S…`; saldos: entrada 100, anterior 100, despachado 100, nuevo 0; factura GUIA_SALIDA. |
+| 12 | Bodega | Ejecutar cargue 100: el diálogo muestra «Guía de salida 2026S… vigente». | OC Loaded; stock 0; reserva liberada; depósito **Closed**; períodos cerrados; sin aviso «Guía de salida requerida». |
 | 13 | Báscula | Repesaje bruto 34.000. | Neto 20.000; OC Dispatched; servicio Completed. |
 | 14 | Vigilancia | Salida `QAE002`. | Fuera de planta. |
 | 15 | Admin | Trazabilidad, movimientos por depósito, facturación por CPI. | Etapas finales; kardex IN 100 / OUT 100; facturas del depósito listadas. |
@@ -51,8 +51,8 @@ Un flujo `PASA` solo si todos sus puntos de control pasan. Si un paso falla, el 
 | 1 | Vigilancia + Báscula | Camiones `QAE003` (60) y `QAE004` (40) con `QAE-CP-002`. | Un depósito; dos entradas; stock 100; «Camiones ingresados: 2». |
 | 2 | Bodega | Recepción de `QAE003` contando 58. | Aviso de diferencia a CE; stock 100. |
 | 3 | CE | CE-7 a 98; confirmar; cerrar ingreso. | Cantidad 98; correo de ajuste; factura con 98. |
-| 4 | CE | Levante 50; OC 50; Bodega carga 50; guía. | Saldos de la guía: entrada 98, anterior 98, despachado 50, nuevo 48. Etiqueta reimpresa con 48. |
-| 5 | CE | Levante 48; segunda OC 48; cargue; segunda guía. | Saldos: anterior 48, despachado 48, nuevo 0. La primera guía no cambió. Depósito Closed. |
+| 4 | CE | Levante 50; OC 50; guía (DEC-056); Bodega carga 50. | Saldos de la guía: entrada 98, anterior 98, despachado 50, nuevo 48. Etiqueta reimpresa con 48. |
+| 5 | CE | Levante 48; segunda OC 48; segunda guía; cargue. | Saldos: anterior 48, despachado 48, nuevo 0. La primera guía no cambió. Depósito Closed. |
 
 ### E2E-03 · Camión tardío en depósito confirmado (P0)
 
@@ -89,7 +89,7 @@ En E2E-01 paso 4: Bodega inicia montacargas (Tractomula, horómetro 100) antes d
 
 ### E2E-10 · Orden multi-depósito y multi-cliente (P1)
 
-Dos depósitos IMP confirmados y nacionalizados de `QA Cliente Uno` y `QA Multirol` → una OC con ambos → báscula salida → cargue parcial en uno → guía (anotar el firmante y el destinatario, R-CE-08) → ZIP por depósito → saldos por línea correctos en cada depósito.
+Dos depósitos IMP confirmados y nacionalizados de `QA Cliente Uno` y `QA Multirol` → una OC con ambos → báscula salida → guía (anotar el firmante y el destinatario, R-CE-08) → cargue parcial en uno: aviso «Guía con cantidades distintas a lo cargado» (DEC-052) → anular y emitir la guía de nuevo → ZIP por depósito → saldos por línea correctos en cada depósito.
 
 ### E2E-11 · Correcciones y reversas encadenadas (P0)
 
@@ -97,8 +97,8 @@ Dos depósitos IMP confirmados y nacionalizados de `QA Cliente Uno` y `QA Multir
 |---|---|---|
 | 1 | Báscula registra un ingreso y lo descarta en Recuperar. | Depósito Cancelled; el camión se puede volver a registrar (R-BAS-02). |
 | 2 | Báscula completa una operación y la anula (Anular pesaje). | Ciclo Canceled; efecto en depósito/stock/factura documentado. |
-| 3 | CE devuelve un depósito confirmado a Borrador, corrige un producto, reconfirma. | Sin factura duplicada; importe recalculado. |
-| 4 | CE crea OC, Bodega carga, CE emite guía, CE anula la guía, CE revierte la salida. | Guía ANULADA (número no reutilizado); factura de la guía anulada o marcada para revisión; stock devuelto; depósito reabierto; período reabierto. |
+| 3 | CE devuelve un depósito confirmado a Borrador, corrige un producto o el valor de la mercancía, reconfirma. | Sin factura duplicada; importe recalculado con lo corregido (DEF-F11-030). |
+| 4 | CE crea OC, CE emite guía, Bodega carga, CE anula la guía, CE revierte la salida. | Guía ANULADA (número no reutilizado); factura de la guía anulada o marcada para revisión; stock devuelto; depósito reabierto; período reabierto. |
 | 5 | Facturación anula la factura de almacenamiento y refactura. | Nueva factura Draft enlazada; períodos re-enlazados. |
 | 6 | CE anula el depósito. | Stock fuera; períodos cerrados; facturas según política; avisos a Bodega y Facturación. |
 
@@ -124,7 +124,7 @@ Ingreso con placa errada → báscula registra → Vigilancia intenta corregir e
 
 ### E2E-17 · Salida con el tiquete de ingreso (P2)
 
-Camión entra con mercancía de un depósito ya confirmado y nacionalizado y sale con otra mercancía usando el mismo tiquete (F3-SAL-011 / F5-OC-021) → la OC se despacha al cargar sin segundo pesaje.
+Camión entra con mercancía de un depósito ya confirmado y nacionalizado y sale con otra mercancía usando el mismo tiquete (F3-SAL-011 / F5-OC-021) → CE emite la guía (DEC-056) → la OC se despacha al cargar sin segundo pesaje.
 
 ### E2E-18 · Concurrencia en báscula (P2)
 

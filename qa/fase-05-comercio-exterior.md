@@ -98,11 +98,13 @@ Validar que Comercio Exterior, dueño del depósito, puede completarlo y confirm
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
 | F5-COR-001 | Devolver para corrección | En un depósito Confirmed sin dependencias: tabla de productos → devolver. | `Draft`; observaciones con «Corrección solicitada: …». | P1 | FUN |
-| F5-COR-002 | Reconfirmar | Corregir y confirmar otra vez. | `Confirmed`; la factura del período se mantiene o recalcula (no se duplica: apertura idempotente). | P0 | PER |
+| F5-COR-002 | Reconfirmar | Corregir y confirmar otra vez. | `Confirmed`; la factura del período se recalcula con lo corregido (valor, moneda, agencia, cliente o productos), sin duplicarse (DEF-F11-030, DEC-056). | P0 | PER |
 | F5-COR-003 | Desde Draft | Devolver uno en Draft (por API). | «Solo se puede devolver para corrección un depósito en estado Confirmed…». | P2 | RN |
 | F5-COR-004 | Depósito migrado | (Si hay migrados.) | 409 «…viene del legacy: corrija sus cantidades con un ajuste de inventario.». | P3 | RN |
 | F5-COR-005 | Devolver con OC activa | Depósito con OC `Pending` → devolver a Borrador. | Esperado de negocio: bloquear o advertir. Riesgo R-CE-05: se permite. Luego F4-CAR-014. | P1 | RN |
 | F5-COR-006 | Guía con depósito en Borrador | Con el depósito de F5-COR-005 en Draft, intentar emitir la guía de la OC. | «No se pueden generar guías de salida para depósitos en estado Borrador…». | P1 | RN |
+| F5-COR-007 | Corregir valor o moneda en Borrador recalcula la factura | Depósito `Confirmed` con tarifa `PERCENTAGE_OF_VALUE` y factura del período en Borrador → devolver a Borrador → cambiar el valor (p. ej. USD 10.000 → 20.000) o la moneda (COP → USD) o la agencia → guardar → reconfirmar. | **Nuevo (DEF-F11-030, DEC-056):** al guardar, la misma factura se recalcula con lo nuevo (al pasar a USD toma la TRM de la DIAN o queda «TRM pendiente»); con la agencia nueva, el detalle dice «AGENCIA: …». Con la factura aprobada conserva el número y avisa a Facturación con el total anterior y el nuevo. Reconfirmar no duplica ni vuelve a recalcular. | P0 | PER |
+| F5-COR-008 | Cambiar el cliente con factura de almacenamiento | Depósito devuelto a Borrador: cambiar el cliente con la factura del período en Borrador; repetir con la factura aprobada; y con la factura anulada sin refacturar, refacturar. | **Nuevo (DEC-056):** en Borrador, la factura y los períodos pasan al cliente nuevo con su convenio. Aprobada (o consolidada): 409 «La factura de almacenamiento {N.º} del depósito {número} está aprobada: Facturación debe anularla antes de cambiar el cliente.» y nada cambia. Anulada: la refacturación sale al cliente nuevo. | P0 | RN |
 
 ### 5.6 Anular depósito (ANU)
 
@@ -203,12 +205,12 @@ Validar que Comercio Exterior, dueño del depósito, puede completarlo y confirm
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
 | F5-GUI-001 | Pendientes | `/dispatch-guides/pending`. | OC de importación Pending/InProgress/Loaded sin guía vigente; «Generar guía». | P0 | FUN |
-| F5-GUI-002 | Emitir guía IMP | Generar para la OC de F5-OC-001 tras el cargue: fecha de salida, ciudad con días de tránsito (vencimiento calculado), firmante, «Continuar al cobro» → destinatario cliente, inmediato. | Guía `2026S000nn`; factura GUIA_SALIDA (precio del convenio × N.º de depósitos); PDF. | P0 | FUN |
+| F5-GUI-002 | Emitir guía IMP | Generar para la OC de F5-OC-001 **antes del cargue** (DEC-056): fecha de salida, ciudad con días de tránsito (vencimiento calculado), firmante, «Continuar al cobro» → destinatario cliente, inmediato. | Guía `2026S000nn`; factura GUIA_SALIDA (precio del convenio × N.º de depósitos); PDF. | P0 | FUN |
 | F5-GUI-003 | Saldos congelados (WMS-19) | PDF de la guía. | Por línea: entrada (recibido), saldo anterior (= entrada − despachado en guías previas no anuladas), cantidad, nuevo saldo. Sin duplicar el saldo anterior. | P0 | RN |
 | F5-GUI-004 | Saldos tras cambios posteriores | Hacer un CE-7 o un nuevo cargue y reabrir el PDF de la guía anterior. | Los saldos de la guía emitida no cambian. | P1 | RN |
 | F5-GUI-005 | Segunda guía de la misma OC | Generar otra. | «Ya existe una guía de salida para esta orden de cargue.». | P1 | RN |
 | F5-GUI-006 | Vencimiento | Ciudad sin días de tránsito; vencimiento anterior a la salida; fecha de salida > 24 h futura. | «Indique la fecha de vencimiento…», «La fecha de vencimiento debe ser posterior a la fecha de salida.», rechazo de > 24 h. Comparar el vencimiento calculado en UI y backend (R-CE-09) cerca de medianoche si es posible. | P2 | VAL |
-| F5-GUI-007 | Guía antes del cargue | Emitir con la OC `Pending`. | Se permite (DEC-052, BR-05-006): la guía usa lo pedido. Si el cargue difiere, ver F5-GUI-018. | P2 | RN |
+| F5-GUI-007 | Guía antes del cargue | Emitir con la OC `Pending`. | Es el orden obligatorio en importación (DEC-056; Bodega no carga sin guía, F4-CAR-016): la guía usa lo pedido. Si el cargue difiere, ver F5-GUI-018. | P1 | RN |
 | F5-GUI-008 | Estado de la OC no válido | OC Cancelled, Reverted o Dispatched. | «No se puede generar guía para una orden en estado '…'.». | P1 | RN |
 | F5-GUI-009 | Sin precio | Cliente sin convenio GUIA_SALIDA y sin precio base (local). | «No se encontró precio para la guía de salida del cliente '…'…». | P2 | ERR |
 | F5-GUI-010 | Total 0 | Destinatario único con total 0. | «El total a pagar debe ser mayor a cero.». | P2 | VAL |

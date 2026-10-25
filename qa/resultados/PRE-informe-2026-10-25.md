@@ -358,7 +358,7 @@ Ningún BLOCKER. Los defectos abiertos de antes (DEF-F11-023, 024 y 026, MINOR d
 3. Respaldo al bucket externo real de Lightsail y fallo provocado con un bucket inexistente (FB-BAK-007).
 4. PRF-002 (medición con un operario real).
 5. FA-MIG-013 en el ensayo del corte con el volcado nuevo.
-6. Re-test de DEF-F11-030 (E2E-11 paso 3, F5-COR-002) y de DEF-F11-034 (PRE-B2-SAL-01), y de los MINOR si se corrigen.
+6. ~~Re-test de DEF-F11-030 (E2E-11 paso 3, F5-COR-002) y de DEF-F11-034 (PRE-B2-SAL-01)~~: hecho en local el 2026-10-25 (§11). Queda el de los MINOR si se corrigen.
 
 ## 9. Criterios de salida y veredicto
 
@@ -384,3 +384,58 @@ Ningún BLOCKER. Los defectos abiertos de antes (DEF-F11-023, 024 y 026, MINOR d
 - **`wms_qa_preprod` no se borró:** queda en `wms-postgres-db` para el re-test de los defectos. Bases presentes al cerrar: `wms_grabacion`, `wms_grabacion_anular`, `wms_grabacion_plantilla`, `wms_migracion`, `wms_qa_preprod`, `wmsdb`.
 - En la copia quedan las cuentas `qa.pre.*` (con `qa.pre.boot`), los datos QA-PRE del registro, los destinos de respaldo QA-PRE inactivos y el camión `QPE001` en planta (DEF-F11-034). Las claves y la clave de prueba del QR viven solo en el scratchpad del ejecutor.
 - Sin commits ni cambios de código o configuración versionada. Evidencias en `qa/resultados/evidencias/PRE/`: la matriz del API, su comparación con la del 2026-10-03 y la captura del QR en celular. Los PDF de datos QA-PRE se revisaron con `pdftotext` y quedaron en el scratchpad; no se guardaron capturas con datos de personas.
+
+## 11. Anexo — Re-test de DEF-F11-030 y DEF-F11-034 (2026-10-25)
+
+Fase 4 de `planes/plan-cerrado-correccion-def-f11-030-034-2026-10-25.md`. Local, sobre la copia `wms_qa_preprod` que se conservó (§10).
+
+- **Builds:**
+  - BE `b3de3cc`, más la corrección de DEF-F11-035 sin commit;
+  - FE `83a0af0`.
+- **Cómo se ejecutó:** API en 5281 y frontend de desarrollo en 3000, con las cuentas `qa.pre.*`. El cargue de Bodega se probó en la pantalla, con la sesión Admin de la ronda; lo demás, por API.
+- **Datos:** prefijo `QA-PRE-RT-`, camiones `QPR0nn`, depósitos `2026BA00036`–`2026BA00040` y `2026EXP00003`, órdenes `2026OC00024`–`2026OC00028`.
+- **Tarifas:** desde la ronda, C1 tiene convenio de almacenamiento al 0,22 % del valor y C2 al 0,25 %. Por eso los importes no coinciden con la tarifa base T1 (0,295 %) del §4.
+
+### 11.1 DEF-F11-030 — Corrección en Borrador y cambio de cliente
+
+| ID | P | Resultado | Evidencia |
+|---|---|---|---|
+| F5-COR-007 (valor) · F5-COR-002 · E2E-11 paso 3 | P0 | PASA | `2026BA00036` confirmado con USD 10.000: factura Borrador, subtotal $69.485,46 → devolver a Borrador → `PATCH …/draft` con 20.000: **la misma factura** pasa a $138.970,92 (+ IVA = $165.375,39) al guardar → reconfirmar: `Confirmed`, una sola factura, sin otro recálculo. Auditoría: «Recálculo del almacenamiento del depósito 2026BA00036 por corrección de valor de la mercancía…» |
+| F5-COR-007 (moneda) | P0 | PASA | `2026BA00037` confirmado en COP 100.000.000: subtotal $220.000 → devolver → pasar a USD 30.000: TRM DIAN 3.158,43 asignada y subtotal $208.456,38 (30.000 × 3.158,43 × 0,22 %) |
+| F5-COR-007 (agencia) | P1 | PASA | Mismo depósito, `PUT …/stakeholders` con otra agencia: el detalle de la factura cambia de «AGENCIA:QA-PRE Agencia SIA SAS» a la agencia nueva (una agencia migrada) |
+| F5-COR-007 (aprobada) | P0 | PASA | `2026BA00036` con la factura numerada `QA-PRE-FE-RT01` y aprobada → devolver y corregir a USD 15.000: mismo número y estado, total $165.375 → $124.032. Facturación (los 3 usuarios del rol) recibe «Factura de almacenamiento actualizada» con el total anterior y el nuevo |
+| F5-COR-008 (Borrador) | P0 | PASA | `2026BA00038` de C1 (subtotal $69.485,46) → devolver → cliente C2: factura y período pasan a C2 y se recalculan con su convenio (subtotal $78.960,75, 0,25 %) |
+| F5-COR-008 (aprobada) | P0 | PASA | `2026BA00036` con `QA-PRE-FE-RT01` aprobada: `PATCH …/customer` (Confirmed) y `PATCH …/draft` (Borrador) → 409 «La factura de almacenamiento QA-PRE-FE-RT01 del depósito 2026BA00036 está aprobada: Facturación debe anularla antes de cambiar el cliente.»; el cliente y la factura no cambian |
+| F5-COR-008 (anulada) | P0 | PASA | `2026BA00037`: Facturación anula la factura → devolver → cliente C2: el período pasa a C2 → refacturar: factura nueva a C2, subtotal $236.882,25 (USD 30.000 × 3.158,43 × 0,25 %) |
+
+### 11.2 DEF-F11-034 — Guía antes del cargue de importación
+
+| ID | P | Resultado | Evidencia |
+|---|---|---|---|
+| F4-CAR-016 | P0 | PASA | Pantalla: `2026OC00024` (importación, sin guía) → aviso «Esta orden es de importación y no tiene guía de salida vigente. El conductor debe solicitarla en Comercio Exterior antes del cargue.» y «Ejecutar Cargue» deshabilitado con firma y stock completos. API: 409 «No se puede cargar la orden 2026OC00024: es de importación y no tiene guía de salida vigente…»; la OC sigue `Pending`, sin movimientos y con la reserva activa |
+| F4-CAR-017 | P1 | PASA | Con la guía `2026S00015` emitida: «Guía de salida 2026S00015 vigente. Verifíquela con el conductor.» y el cargue se ejecuta desde la pantalla (OC `Loaded`). La orden de exportación `2026OC00028` no muestra aviso, carga, recibe la guía automática `2026S00019` (Export) y queda `Dispatched` |
+| PRE-B2-SAL-01 | P0 | PASA | `QPR010` entra con «Cargue mercancia importacion» y no pasa por báscula: el cargue sin guía responde 409 y la mercancía no sale. Con la guía, carga, y Vigilancia registra la salida (200) con la OC `Loaded`, sin pesaje: es el riesgo aceptado en `DEC-056` |
+| F4-CAR-002 | P1 | FALLA → PASA | El primer cargue con guía (`2026OC00024`) avisó a Comercio Exterior «Guía de salida requerida… Generar guía de salida.» aunque la guía ya existía: **DEF-F11-035** (MINOR). Se corrigió en esta fase (el aviso solo sale sin guía vigente, D15). Tras la corrección, E2E-01 y E2E-17 no lo generan |
+| E2E-01 | P0 | PASA | `2026BA00039` (100 unidades, USD 30.000) confirmado; factura `QA-PRE-FE-RT20` aprobada; levante 100; salida de `QPR020` → `QPR021` con cargue de importación → `2026OC00025` → salida en báscula con cobro y tara 14.000 (OC `InProgress`) → **guía `2026S00016` antes del cargue** (100/100/100/0) → cargue 100: OC `Loaded`, stock 0, depósito `Closed`, período cerrado, sin aviso de guía → repesaje 34.000: OC `Dispatched`, servicio `Completed` → salida de `QPR021` → kárdex IN 100 / OUT 100 |
+| E2E-17 | P2 | PASA | `QPR030` entra con `2026BA00040` (tiquete `2026T00055`) → levante → `2026OC00027` de ese depósito → guía `2026S00018` → salida con el tiquete de ingreso (OC `InProgress`, `awaitingGuide: false`) → cargue → OC `Dispatched` sin segundo pesaje y sin aviso de guía |
+
+En el primer intento, E2E-17 usó otro depósito y la salida respondió 409: «La orden … tiene mercancía del depósito …, que no llegó en el tiquete…». Es una regla vigente, no un defecto. Esa guía (`2026S00017`) se anuló y la OC `2026OC00026` se canceló.
+
+### 11.3 Compuertas tras DEF-F11-035
+
+| Compuerta | Resultado |
+|---|---|
+| `Wms.Tests` | 2008/2008 |
+| `Wms.IntegrationTests` | 431/433; fallan solo las 2 de la línea base |
+| `has-pending-model-changes` | Limpio |
+
+`LoadingRequiresGuideTests.ImportOrderWithGuide_Loads` comprueba que no hay aviso y falla con el código anterior.
+
+### 11.4 Veredicto del re-test
+
+- **Fichas:** DEF-F11-030 y DEF-F11-034 pasan a **Verificado**. DEF-F11-035 se detectó, corrigió y verificó en el re-test.
+- **Condiciones del §9:** se levantan las condiciones 1 y 2. Ya no hay CRITICAL ni MAJOR abiertos de la ronda. Sigue la condición 3 (§8, puntos 1 a 5) en staging.
+- **Veredicto: GO para la fase 13**, con lo del §8 y estos avisos:
+  - antes de desplegar, el commit de la corrección de DEF-F11-035;
+  - comunicar `DEC-056` a los operarios de Comercio Exterior y Bodega, y a Vigilancia: el conductor pide la guía de importación antes del cargue.
+- **Limpieza:** API, frontend y `wms-postgres-db` detenidos. `wms_qa_preprod` conserva los datos `QA-PRE-RT-`.

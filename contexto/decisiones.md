@@ -151,7 +151,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 
 **DEC-052 — Salidas** (2026-10-23).
 - **Bloqueo manual de salidas por cliente** (BR-05-004). **Se construye.** Una marca «sin salidas» en el tercero, con motivo y auditoría, que impide crear órdenes de cargue y emitir guías, aparte del bloqueo por mora. Es el `cliente.sinsalidas` del legacy. *Lo resuelve el plan:* qué roles la ponen y la quitan (`DEC-005`, `DEC-031`).
-- **Guía antes del cargue, con aviso** (BR-05-006). **Se construye.** La guía se sigue pudiendo emitir antes del cargue. Si lo cargado difiere de lo que dice la guía, se avisa a Comercio Exterior para que la anule y la emita de nuevo.
+- **Guía antes del cargue, con aviso** (BR-05-006). **Se construye.** La guía se sigue pudiendo emitir antes del cargue. Si lo cargado difiere de lo que dice la guía, se avisa a Comercio Exterior para que la anule y la emita de nuevo. *Precisada por `DEC-056`:* en importación la guía es obligatoria antes del cargue.
 
 **DEC-053 — Facturación** (2026-10-23).
 - **«Depósitos pendientes» incluye los cerrados con trabajo pendiente** (BR-06-003). **Se construye.** Como en el legacy, un depósito sigue en la lista mientras tenga una factura de almacenamiento en Borrador sin N.º SIIGO o una anulada sin refacturar, aunque ya no tenga un período abierto.
@@ -166,6 +166,16 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Depósito agotado en la gracia** (precisa `DEC-053`). **Se construye.** Si un depósito se agota por completo en los días de gracia y tenía mercancía al cierre del día de inicio del período nuevo (S), ese período se abre con esa cantidad, se factura y se cierra por agotamiento. Hoy `CloseDepletedProductPeriodsAsync` cierra el período viejo sin renovarlo. Lo que sale el mismo día S sigue sin cobrarse (D19 del plan).
 - **Auditoría de los procesos automáticos.** Los jobs (activación de convenios, renovaciones, mora, conciliación, abandono) **no** dejan `audit_logs`. Bastan las fechas en la entidad, los avisos y los logs del servidor.
 - **Precios de servicio programados.** **Se construye.** Se acepta registrar un precio con vigencia futura (día en hora de Colombia). El vigente rige hasta esa fecha y el nuevo entra solo (`Service.SetPrice` ya lo soporta desde la fase 6). La lista de precios lo muestra «Programado». Se relaja `SetServicePriceValidator`.
+
+**DEC-056 — Guía antes del cargue de importación y cambio de cliente con factura** (2026-10-25). Respuestas del usuario a las propuestas P1 y P2 del plan `planes/plan-cerrado-correccion-def-f11-030-034-2026-10-25.md` (DEF-F11-030 y DEF-F11-034).
+- **Guía antes del cargue de importación** (precisa `DEC-052`). Bodega no ejecuta el cargue de una orden de importación sin guía de salida vigente: responde 409 y no mueve stock. El conductor pide la guía en Comercio Exterior antes del cargue, y el operario de bodega la valida en la pantalla del cargue, que muestra el número vigente o el aviso y no deja ejecutar. La guía ya no puede emitirse después del cargue. Exportación (guía automática) e inspección (sin guía) no cambian.
+- **Vigilancia y Báscula no agregan controles.** Hay una sola salida y un operario que atiende entradas y salidas: su operación sigue siendo rápida. *Riesgo aceptado:* un camión que se salta la báscula sale con guía pero sin pesaje ni cobro de báscula, y la orden queda cargada sin despachar. Las guardas de CHG-33 siguen para las órdenes cargadas sin guía de antes del cambio.
+- **Cambio de cliente del depósito con factura de almacenamiento.**
+  - Con la factura del período en Borrador y no consolidada, la factura y sus períodos pasan al cliente nuevo y se recalculan con su convenio.
+  - Con la factura en otro estado, o consolidada, se rechaza: Facturación debe anularla antes.
+  - Con la factura anulada sin refacturar, los períodos pasan al cliente nuevo y la refacturación sale a su nombre.
+- **Corrección en Borrador.** Corregir valor, moneda, agencia o fecha de ingreso de un depósito devuelto a Borrador recalcula al momento la factura del período abierto (`DEC-022`); la reconfirmación no recalcula.
+- **Fuente:** el usuario, al aprobar el plan (2026-10-25): «la operación en vigilancia y bascula debe ser rapida como esta actualmente. El operario de bodega puede validar la guia de salida.»
 
 ## 7. Documentos impresos
 

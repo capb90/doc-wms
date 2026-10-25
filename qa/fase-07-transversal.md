@@ -78,7 +78,7 @@ Para cada reporte: (a) ejecutar con un filtro que incluya datos QA conocidos; (b
 |---|---|---|---|---|---|
 | F7-NOT-001 | Conexión en tiempo real | Login; revisar Red. | WebSocket a `/hubs/notifications` abierto. | P1 | INT |
 | F7-NOT-002 | Aviso a Facturación | Provocar una TRM pendiente o un cargo al mínimo. | `facturacion` recibe el aviso en vivo y queda en `/notifications`. | P1 | INT |
-| F7-NOT-003 | Aviso a Comercio Exterior | Provocar un evento para CE: nuevo depósito IMP, diferencia de recepción, camión tardío, «Guía de salida requerida». | Esperado: `c_exterior` (y `j_coral`, `f_chosi`) lo reciben. Riesgo R-ADM-01 ★: no llegan a nadie (NormalizedName FOREXTERIOR). Si se confirma: CRITICAL. | P0 | INT |
+| F7-NOT-003 | Aviso a Comercio Exterior | Provocar un evento para CE: nuevo depósito IMP, diferencia de recepción, camión tardío, «Guía con cantidades distintas a lo cargado» (desde DEC-056, «Guía de salida requerida» solo sale con órdenes cargadas sin guía antes del cambio). | Esperado: `c_exterior` (y `j_coral`, `f_chosi`) lo reciben. Riesgo R-ADM-01 ★: no llegan a nadie (NormalizedName FOREXTERIOR). Si se confirma: CRITICAL. | P0 | INT |
 | F7-NOT-004 | Aviso a Admin | Corrección de peso; validación con discrepancia. | Admin recibe aviso (y correo). | P1 | INT |
 | F7-NOT-005 | Aviso a Bodega | CE anula un depósito con OC en cargue. | `bodega` recibe aviso. | P2 | INT |
 | F7-NOT-006 | Página de notificaciones | Filtros Todas, No leídas, Leídas; marcar una y todas; paginación. | Funciona; el contador se actualiza. | P1 | FUN |

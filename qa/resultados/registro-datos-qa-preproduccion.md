@@ -85,3 +85,20 @@
 - Facturas con número QA-PRE: `QA-PRE-FE-0001`, `QA-PRE-FE-0003` y `QA-PRE-FE-TRM1` aprobadas; `QA-PRE-FE-0007`, `QA-PRE-FE-0106` y `QA-PRE-FE-MORA1` pagadas; `QA-PRE-FE-0018` anulada.
 - DEF-F11-034: `QPE001` (salida iniciada en báscula, `2026OC00022` cargada sin guía) sigue en planta porque la salida responde 409; `QPE002` (`2026OC00023`, cargada sin báscula) salió sin guía.
 - Todos los demás camiones `QP…` tienen la salida registrada.
+
+## Re-test de DEF-F11-030 y DEF-F11-034 (2026-10-25)
+
+Datos creados en `wms_qa_preprod` por el re-test (informe PRE, §11). Prefijo `QA-PRE-RT-`.
+
+| Dato | Uso |
+|---|---|
+| `2026BA00036` (C1, USD 10.000 → 20.000 → 15.000; factura `QA-PRE-FE-RT01` aprobada) | F5-COR-007 valor y factura aprobada; F5-COR-008 bloqueo |
+| `2026BA00037` (C1 → C2, COP → USD 30.000; factura anulada y refacturada a C2) | F5-COR-007 moneda y agencia; F5-COR-008 anulada |
+| `2026BA00038` (C1 → C2, 30 unidades, levante 30) | F5-COR-008 Borrador; origen de `2026OC00024` |
+| `2026BA00039` (C1, 100 unidades, factura `QA-PRE-FE-RT20` aprobada; `Closed`) | E2E-01 |
+| `2026BA00040` (C1, 10 unidades, tiquete `2026T00055`) | E2E-17 |
+| `2026EXP00003` (C1, 20 unidades) | F4-CAR-017 exportación |
+| `2026OC00024` (`Loaded`, guía `2026S00015`), `2026OC00025` (`Dispatched`, `2026S00016`), `2026OC00026` (cancelada; guía `2026S00017` anulada), `2026OC00027` (`Dispatched`, `2026S00018`), `2026OC00028` (`Dispatched`, guía de exportación `2026S00019`) | F4-CAR-016/017, PRE-B2-SAL-01, E2E-01, E2E-17 |
+| Camiones `QPR001`–`QPR003`, `QPR010`, `QPR020`, `QPR021`, `QPR030`, `QPR040`, `QPR041`; conductores `QA-PRE Conductor 9nn` | Ingresos del re-test |
+
+Quedan en planta: `QPR001`–`QPR003` y `QPR030` (camiones de ingreso de los depósitos) y `QPR041`. `QPR010`, `QPR020`, `QPR021` y `QPR040` salieron.

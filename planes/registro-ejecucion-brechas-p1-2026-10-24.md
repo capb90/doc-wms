@@ -406,3 +406,18 @@ Los tres puntos «Pendiente de construir» quedaron en la **fase 12c** del plan 
   - **DEF-F11-034 (MAJOR):** un camión cargado sin pasar por la báscula de salida sale por Vigilancia sin guía (variante de DEF-F5-014 / CHG-33).
   - DEF-F11-029, 032 y 033 (MINOR) y DEF-F11-031 (TRIVIAL).
 - **Veredicto: GO con condiciones** para la fase 13: corregir DEF-F11-030 y DEF-F11-034 antes de desplegar, o aceptarlos con las instrucciones operativas del informe (§9); y en staging, el QR en papel, `QRCoder` en Linux, el bucket externo con el fallo provocado, PRF-002 y FA-MIG-013 en el corte.
+
+## Corrección de DEF-F11-030 y DEF-F11-034 (2026-10-25)
+
+- **Plan:** `planes/plan-cerrado-correccion-def-f11-030-034-2026-10-25.md`, aprobado por el usuario con P1 (a) y P2 («guía validada por Bodega»). Nueva decisión: `DEC-056`.
+- **Commits:**
+  - BE `b8c600e` y `6f49710`: DEF-F11-030 (recálculo al corregir en Borrador y cambio de cliente);
+  - BE `b3de3cc`: DEF-F11-034 (el cargue de importación exige la guía vigente; la lista de Bodega trae `requiresDispatchGuide`);
+  - FE `83a0af0`: diálogo de cargue con el aviso y el bloqueo;
+  - **sin commit:** DEF-F11-035 (BE, el aviso «Guía de salida requerida» solo sin guía vigente).
+- **Pruebas:** Wms.Tests 1981 → 2008; Wms.IntegrationTests 415/417 → 431/433 (las 2 de la línea base); Vitest 486 → 490. Sin migraciones nuevas.
+- **Re-test local** sobre `wms_qa_preprod` (anexo §11 del informe PRE): DEF-F11-030 y DEF-F11-034 **Verificado**; DEF-F11-035 detectado, corregido y verificado.
+- **Veredicto:** GO para la fase 13. Antes del despliegue:
+  - el commit de DEF-F11-035;
+  - comunicar `DEC-056` a Comercio Exterior, Bodega y Vigilancia;
+  - lo del §8 del informe en staging.

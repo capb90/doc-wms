@@ -14,7 +14,7 @@
 | `resultados/F*-informe-*.md` | Informes por fase y sesión (F11: S0…S6) |
 | `resultados/SEL-informe-2026-10-08.md` | QA del selector de conductor |
 | `resultados/P1-informe-2026-10-24.md` | QA local del plan de brechas P1 (fases 1 a 11): casos nuevos y de regresión, DEF-F11-028 y condiciones para la fase 13 |
-| `resultados/PRE-informe-2026-10-25.md` | Ronda QA de preproducción (2026-10-25, BE `57c94dd` / FE `cb2a4f7`) sobre `wms_qa_preprod`, copia de los datos migrados: ensayo de las 6 migraciones, B0–B7 (178 casos) y veredicto **GO con condiciones** (DEF-F11-030 CRITICAL y DEF-F11-034 MAJOR). Datos: `resultados/registro-datos-qa-preproduccion.md` |
+| `resultados/PRE-informe-2026-10-25.md` | Ronda QA de preproducción (2026-10-25, BE `57c94dd` / FE `cb2a4f7`) sobre `wms_qa_preprod`, copia de los datos migrados: ensayo de las 6 migraciones, B0–B7 (178 casos) y veredicto **GO con condiciones** (DEF-F11-030 CRITICAL y DEF-F11-034 MAJOR). Anexo §11: re-test del 2026-10-25 (BE `b3de3cc` / FE `83a0af0`), los dos «Verificado» y **GO** para la fase 13. Datos: `resultados/registro-datos-qa-preproduccion.md` |
 | `resultados/evidencias/`, `resultados/muestras-f*/` | Evidencias y muestras (capturas, PDF, respuestas del API) |
 | `resultados/registro-datos-qa*.md` | Datos de prueba creados en cada fase |
 | `resultados/*.sql` | Consultas de «palanca» usadas en pruebas locales (solo base local) |

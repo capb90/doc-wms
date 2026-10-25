@@ -162,8 +162,8 @@ Validar la recepción de los camiones que vienen de báscula y de los que no pas
 
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F4-CAR-001 | Ejecutar cargue completo | `/warehouse/loading-orders` → OC de la preparación → ejecutar: cantidad 80, sello, cuadrilla, firma, fotos. | OC `Loaded` (o `Dispatched` si el ciclo de salida ya cerró); stock `QA Cebolla` −80 con movimiento OUT; reserva liberada; resultado por ítem con posiciones liberadas (LIFO). | P0 | FUN |
-| F4-CAR-002 | Aviso de guía (IMP) | Tras F4-CAR-001, notificaciones de CE. | «Guía de salida requerida» (R-ADM-01); Admin recibe «Cargue completado» por correo. | P1 | INT |
+| F4-CAR-001 | Ejecutar cargue completo | Con la guía de la OC ya emitida por CE (F5-GUI-002; DEC-056): `/warehouse/loading-orders` → OC de la preparación → ejecutar: cantidad 80, sello, cuadrilla, firma, fotos. | OC `Loaded` (o `Dispatched` si el ciclo de salida ya cerró); stock `QA Cebolla` −80 con movimiento OUT; reserva liberada; resultado por ítem con posiciones liberadas (LIFO). | P0 | FUN |
+| F4-CAR-002 | Aviso de guía (IMP) | Tras F4-CAR-001, notificaciones de CE y correo de Admin. | Con la guía previa (DEC-056) ya no llega «Guía de salida requerida»: ese aviso queda solo para órdenes cargadas sin guía antes del cambio. Admin recibe «Cargue completado» por correo. | P1 | INT |
 | F4-CAR-003 | Cargue parcial | Otra OC de 30: cargar 20. | 20 descontados; los 10 restantes liberados y disponibles otra vez; OC `Loaded`. | P0 | RN |
 | F4-CAR-004 | Cargar más de lo pedido | 31 de 30. | «La cantidad a cargar (31) excede la cantidad solicitada (30)…». | P1 | VAL |
 | F4-CAR-005 | Cargar 0 | Todo en 0. | «No se cargó mercancía: cancele la orden en lugar de ejecutarla.». | P1 | VAL |
@@ -177,12 +177,15 @@ Validar la recepción de los camiones que vienen de báscula y de los que no pas
 | F4-CAR-013 | Orden de trabajo PDF | Imprimir la orden de trabajo. | PDF con ítems, depósitos, vehículo, cuadrilla. | P2 | FUN |
 | F4-CAR-014 | Depósito devuelto a Borrador | CE devuelve a Borrador el depósito de una OC `Pending` (F5-COR-005) → Bodega ejecuta. | Esperado: bloqueo. Riesgo R-CE-05: el cargue se ejecuta sobre un depósito en Borrador. | P1 | RN |
 | F4-CAR-015 | Item repetido o ajeno | Por API: ítem duplicado; ítem de otra orden. | «El item … está repetido en el cargue.» / «Los siguientes items no pertenecen a la orden…». | P3 | API |
+| F4-CAR-016 | Cargue de importación sin guía | OC de importación `Pending` sin guía vigente (o con la guía anulada) → «Ejecutar» → completar firma y cantidades. Por API: `POST warehouse/loading-orders/{id}/execute`. | **Nuevo (DEF-F11-034, DEC-056):** el diálogo muestra, arriba y sin cerrar, «Esta orden es de importación y no tiene guía de salida vigente. El conductor debe solicitarla en Comercio Exterior antes del cargue.» y «Ejecutar Cargue» queda deshabilitado aun con firma y stock. Por API: 409 «No se puede cargar la orden {OC}: es de importación y no tiene guía de salida vigente…»; la OC sigue `Pending`, sin movimiento de stock y con la reserva activa. | P0 | RN |
+| F4-CAR-017 | Cargue con guía: el diálogo muestra el número vigente | OC de importación con guía emitida → «Ejecutar». Repetir con una OC de exportación. | **Nuevo (DEC-056):** «Guía de salida {N.º} vigente. Verifíquela con el conductor.» (verde) y el cargue se ejecuta. La de exportación no muestra aviso y carga como siempre (guía automática, F4-CAR-009). | P1 | FUN |
 
 ## 6. Criterios de salida específicos
 
 - P0 de REC, RSB, RUC, MON, INV y CAR ejecutados.
 - Si F4-RSB-002 o F4-RUC-001 fallan (riesgos ★), se registran como CRITICAL y el usuario decide si seguir.
 - Riesgos verificados: R-BOD-01 a 09; R-CE-05 (F4-CAR-014).
+- DEC-056: F4-CAR-016 y F4-CAR-017 en `PASA`.
 - Registro de datos con recepciones, usos de montacargas y órdenes ejecutadas.
 
 ## 7. Entregables
