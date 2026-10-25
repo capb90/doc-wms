@@ -1,6 +1,6 @@
 # Análisis de FOB y CIF: legacy frente a V2, con comprobación en los datos del legacy
 
-> **Fecha:** 24 de octubre de 2026 (Colombia).
+> **Fecha:** 24 de octubre de 2026 (Colombia). **Estado:** decisiones del §7 respondidas el 2026-10-25 (`DEC-029`).
 > **Pedido:** el usuario quiere saber cómo se usan el valor FOB y el valor CIF, y en qué se diferencian el legacy y V2, para tomar decisiones. Autorizó la comprobación sobre los datos del legacy.
 > **Alcance:**
 > - el código actual: backend `develop` `b27c9bf`, frontend según `contexto/estado.md`;
@@ -251,18 +251,20 @@ Hay 165 quincenas de 2024 de clientes sin historial previo, que no se pueden cal
 
 ## 7. Decisiones pendientes
 
-| # | Decisión | Fundamento |
-| --- | --- | --- |
-| 1 | ¿Qué valor es la base del cobro por porcentaje: FOB (lo que hoy se captura en el depósito) o CIF? | §4.3: el historial no decide; §4.6: impacto del 0,7 % |
-| 2 | ¿Cómo se rotula y se pide el valor del levante: CIF, como en el legacy, o FOB? ¿Sobre cuál se liquida la póliza? | §2, §4.2 |
-| 3 | ¿El depósito guarda los dos valores, FOB del ingreso y CIF, o uno solo con un nombre inequívoco? | §3 |
-| 4 | ¿Se permite corregir el valor de un depósito confirmado, con motivo y recálculo? | §3 |
-| 5 | **¿Se adopta la fórmula prorrateada para el almacenamiento (`DEC-025`)?** Los datos la respaldan | §5.3, §5.5 |
-| 6 | **¿Facturación valida los porcentajes por cliente calibrados con los datos, empezando por los 29 que concentran el 80 %, contra sus convenios reales?** | §5.2, §5.6 |
-| 7 | **¿Con qué tarifa base (prorrateada y menor que T1) se cobra a los clientes sin acuerdo?** | §5.3: una base única prorrateada cerca del 0,141 % neto cuadra el total, pero no el tamaño |
-| 8 | ¿El valor del levante se registra una sola vez por levante o se reparte entre sus productos? | §3 |
-| 9 | ¿Qué valor se captura en exportación e inspección, y alguno de esos convenios cobra por porcentaje? | §3 |
-| 10 | Revisar T1 (`DEC-041`) antes de facturar en producción, junto con la carga de los acuerdos y una facturación en paralelo de un mes | §4.6, §5 |
+> **Respondidas el 2026-10-25** y registradas en `contexto/decisiones.md` como **DEC-029**. La columna «Respuesta» resume cada una.
+
+| # | Decisión | Fundamento | Respuesta (DEC-029) |
+| --- | --- | --- | --- |
+| 1 | ¿Qué valor es la base del cobro por porcentaje: FOB (lo que hoy se captura en el depósito) o CIF? | §4.3: el historial no decide; §4.6: impacto del 0,7 % | FOB del ingreso |
+| 2 | ¿Cómo se rotula y se pide el valor del levante: CIF, como en el legacy, o FOB? ¿Sobre cuál se liquida la póliza? | §2, §4.2 | CIF, como el legacy; la póliza se liquida sobre el CIF (se construye) |
+| 3 | ¿El depósito guarda los dos valores, FOB del ingreso y CIF, o uno solo con un nombre inequívoco? | §3 | Uno solo, rotulado «Valor de la mercancía» (= FOB del ingreso); solo textos |
+| 4 | ¿Se permite corregir el valor de un depósito confirmado, con motivo y recálculo? | §3 | No: solo en Borrador, como hoy |
+| 5 | **¿Se adopta la fórmula prorrateada para el almacenamiento (`DEC-025`)?** Los datos la respaldan | §5.3, §5.5 | Sí, por defecto; la de lote completo queda para convenios que la pidan |
+| 6 | **¿Facturación valida los porcentajes por cliente calibrados con los datos, empezando por los 29 que concentran el 80 %, contra sus convenios reales?** | §5.2, §5.6 | Sí: lista calibrada, Facturación la valida empezando por los 29; se carga lo validado |
+| 7 | **¿Con qué tarifa base (prorrateada y menor que T1) se cobra a los clientes sin acuerdo?** | §5.3: una base única prorrateada cerca del 0,141 % neto cuadra el total, pero no el tamaño | La define Facturación: prorrateada, menor que T1, referencia 0,141 % neto |
+| 8 | ¿El valor del levante se registra una sola vez por levante o se reparte entre sus productos? | §3 | Una vez por levante, y el doble registro se bloquea (se construye) |
+| 9 | ¿Qué valor se captura en exportación e inspección, y alguno de esos convenios cobra por porcentaje? | §3 | Igual que importación; Facturación confirma si algún convenio cobra por porcentaje |
+| 10 | Revisar T1 (`DEC-041`) antes de facturar en producción, junto con la carga de los acuerdos y una facturación en paralelo de un mes | §4.6, §5 | Sí: T1 revisada, acuerdos cargados y un mes de facturación en paralelo |
 
 ## 8. Límites
 

@@ -66,7 +66,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 5 | Decidir si se desactivan las cuentas `qa.*` en staging | `planes/migracion-staging/resultados/informe-fase-5.md` | |
 | 6 | Vaciar o anonimizar staging al terminar las pruebas (tiene datos reales) | `planes/migracion-staging/plan-migracion-legacy-staging.md` | |
 | 7 | **Corte real:** volcado nuevo del legacy y repetir las fases 1 y 3 de la migración, **con el congelamiento y el conteo de operaciones abiertas (C1 a C9) como paso 0** | `planes/migracion-staging/plan-migracion-legacy-staging.md`; `planes/migracion-staging/procedimiento-corte-operaciones-abiertas.md` (escrito el 2026-10-24, sin ensayar) | El CSV de depósitos trae ahora `prorroga` y el de levantes `anio_deposito` (BR-08-003 y BR-08-005): regenerar las consultas de F6-03 |
-| 8 | **FOB/CIF de la migración:** la mecánica numérica funciona, pero la equivalencia de conceptos no está validada | `analisis/revision-fob-cif-migracion-v2-2026-10-08.md` | No dar la migración de FOB/CIF por cerrada |
+| 8 | **FOB/CIF y tarifas (`DEC-029`, 2026-10-25):** decidido que el depósito guarda el FOB del ingreso («Valor de la mercancía») y el levante es CIF. Falta: plan cerrado para los rótulos del levante y la póliza (CIF), el nombre único del valor del depósito y el bloqueo del valor repetido del levante; que Facturación valide los acuerdos calibrados y la tarifa base prorrateada que reemplaza T1; y un mes de facturación en paralelo antes de producción | `analisis/analisis-fob-cif-legacy-v2-2026-10-24.md` §7; `contexto/decisiones.md` DEC-029 | Staging sigue facturando con T1 a los clientes sin acuerdo |
 | 9 | Dar de baja el ambiente Azure `test` cuando el cliente valide staging | `Backend/wms-api/infra/` | |
 | 10 | Video tutoriales: F7 entregada para revisión; etiquetas de Trazabilidad en inglés (H1) | `videos/guiones/plan-produccion-videos.md` | |
 | 11 | Permisos por usuario | `planes/plan-cerrado-permisos-por-usuario-2026-10-07.md` | **Diferido** después del corte |
@@ -86,9 +86,8 @@ Los documentos con estado atrasado se pusieron al día el 2026-10-23: la fase 6 
 
 | Tema | Pregunta | Mientras tanto |
 | --- | --- | --- |
-| Prorrateo del almacenamiento | ¿Las renovaciones cobran el CIF completo o el proporcional al saldo? | Conviven `PERCENTAGE_OF_VALUE` y `PERCENTAGE_OF_VALUE_PRORATED`; se elige al configurar (`DEC-025`) |
 | Mínimos de almacenamiento (WMS-32) | ¿El mínimo de importación es $184.000 con 0,255 %? (El umbral de $72.156.863 = $184.000 ÷ 0,255 %.) | Los mínimos son configurables, con o sin IVA (`minimumIncludesVat`). Para la migración se aprobó T1/T2 (`DEC-041`) |
-| FOB/CIF del legacy | ¿Qué dato del legacy equivale al CIF del v2? | Ver pendiente 8 |
+| Tarifas de almacenamiento para producción | ¿Qué porcentaje tiene la tarifa base prorrateada y qué acuerdos por cliente se validan? (`DEC-029`) | Lo define Facturación; staging sigue con T1 (`DEC-041`). Ver pendiente 8 |
 
 Ya resueltas, aunque documentos antiguos las den por abiertas:
 

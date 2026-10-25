@@ -101,7 +101,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 
 **DEC-025 — Fórmulas de almacenamiento** (2026-07-09).
 - `PERCENTAGE_OF_VALUE` cobra un % del CIF del lote completo y **no se multiplica por el stock**. Cambiarla alteraría convenios firmados.
-- El prorrateo por saldo existe aparte, como `PERCENTAGE_OF_VALUE_PRORATED` (`CIF × CurrentStock / ReceivedQuantity`, base plana, mínimo sin prorratear). **Falta que el cliente confirme cuál aplica**; conviven ambas.
+- El prorrateo por saldo existe aparte, como `PERCENTAGE_OF_VALUE_PRORATED` (`CIF × CurrentStock / ReceivedQuantity`, base plana, mínimo sin prorratear). **Falta que el cliente confirme cuál aplica**; conviven ambas. *Precisada por `DEC-029` (2026-10-25): la prorrateada es la fórmula por defecto; la de lote completo queda para los convenios que la pidan. La base es el valor de la mercancía (FOB del ingreso), no el CIF.*
 - No se prohíbe ninguna fórmula por lo que le falte al modelo de datos: el cliente cobra por vehículo, por contenedor o por tanquero en convenios reales (hoy `PER_VEHICLE` y `PER_CARGO_UNIT`). Solo `PER_VEHICLE_TYPE` es exclusiva del montacargas.
 
 **DEC-026 — Almacenamiento por regla resuelta** (2026-07-09).
@@ -111,6 +111,19 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 **DEC-027 — Tarifa base por producto y modalidad** (2026-07). Cuando no hay convenio, la tarifa sale de `ServicePricingRule`, espejo de `AgreementService`. «Tipo de depósito» es `OperationModality`, no un concepto aparte. El cálculo existe una sola vez.
 
 **DEC-028 — Cantidad facturable en el recálculo** (2026-10-06, DEF-F11-017). El recálculo cobra el stock más las salidas netas por cargue desde que el período tomó su stock (`StorageBillableQuantity`), no el stock actual.
+
+**DEC-029 — FOB, CIF y tarifas del almacenamiento por porcentaje** (2026-10-25). Respuestas del usuario a las 10 decisiones del §7 de `analisis/analisis-fob-cif-legacy-v2-2026-10-24.md`. Precisa `DEC-025` y `DEC-041`. Lo marcado **«Se construye»** necesita plan cerrado (`DEC-001`).
+- **Base del cobro: el FOB del ingreso** (§7.1). El porcentaje se cobra sobre el valor que se captura en el depósito, que en los migrados es `ingreso.preciomercancia` (FOB). No se captura el CIF al ingreso. *Por qué:* el historial no distingue las bases (0,7 % de diferencia), el CIF no se conoce al ingreso y los porcentajes se calibran sobre lo que ya está en los datos.
+- **El levante es CIF, como en el legacy** (§7.2). **Se construye.** El valor del levante se pide y se rotula «CIF» en el formulario, los listados, el detalle del depósito, el kárdex y la póliza («CIF UAP» y «CIF no UAP»). La póliza se liquida sobre ese CIF. Se corrige la premisa «el legacy rotula CIF pero suma el FOB» de `PolicySummaryCalculator` y `pages/reports/policies.vue`. Los datos migrados no cambian: `levante.fob_dolares` ya es el CIF. Los nombres de columna (`FobUsd`, `FobCop`) se pueden conservar.
+- **El depósito guarda un solo valor, con nombre neutro** (§7.3). **Se construye** (solo textos). Se rotula «Valor de la mercancía» en captura, detalle, fórmula, umbral, glosario y textos de facturación. Se documenta que equivale al FOB del ingreso. Desaparecen «Valor Comercial», «Valor declarado», «Umbral CIF» y «CIF» referidos al depósito. Sin campo nuevo ni migración.
+- **El valor solo se corrige en Borrador** (§7.4). Se mantiene como hoy: CE devuelve el depósito a Borrador y la factura del período se recalcula (`DEC-056`).
+- **Fórmula prorrateada por defecto** (§7.5; cierra la pregunta abierta de `DEC-025`). `PERCENTAGE_OF_VALUE_PRORATED` es la fórmula de la tarifa base de almacenamiento y la de los acuerdos nuevos. `PERCENTAGE_OF_VALUE` (lote completo) sigue disponible para un convenio que lo diga expresamente.
+- **Acuerdos por cliente calibrados y validados** (§7.6). Se genera la lista de porcentajes calibrados por cliente, fuera del repo (`DEC-007`), y Facturación la coteja con los convenios reales, empezando por los 29 clientes que concentran el 80 % de las quincenas. Solo lo validado se carga como acuerdo en V2. Regenerar la lista exige consultar el volcado con aprobación del usuario.
+- **Tarifa base para clientes sin acuerdo: la define Facturación** (§7.7; precisa T1 de `DEC-041`). Prorrateada y menor que T1, con el 0,141 % neto como referencia y el mismo mínimo de $50.000 con IVA. Facturación fija el porcentaje con su tarifa pública vigente.
+- **Valor del levante una sola vez, con bloqueo** (§7.8). **Se construye.** El valor va en el primer producto del levante. Si el número de levante ya tiene valor en otro producto, el siguiente se guarda con valor 0: el aviso DF4 pasa a bloqueo (backend y formulario). La migración ya lo hace así (`LegacyReleaseFobSplitter`).
+- **Exportación e inspección** (§7.9). Capturan el mismo «Valor de la mercancía», sin cambios. Facturación confirma si algún convenio de esas modalidades cobra por porcentaje; si ninguno, el valor queda informativo.
+- **Antes de facturar en producción** (§7.10). T1 se reemplaza por la tarifa base de §7.7, se cargan los acuerdos validados y se factura **un mes en paralelo** con el sistema actual, comparando por cliente. Mientras tanto, staging sigue facturando con T1 a los clientes sin acuerdo.
+- **Fuente:** el usuario, en la sesión del 2026-10-25, opción por opción.
 
 ## 4. Permisos
 
@@ -126,7 +139,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - El corte real exige un volcado nuevo y repetir las fases 1 y 3 del plan de migración.
 
 **DEC-041 — Tarifas aprobadas para la migración** (2026-10-06/07).
-- T1: almacenamiento IMP al 0,295 % con mínimo de $50.000 con IVA.
+- T1: almacenamiento IMP al 0,295 % con mínimo de $50.000 con IVA. *Precisada por `DEC-029`: antes de facturar en producción, T1 se reemplaza por la tarifa base prorrateada que defina Facturación.*
 - T2: mínimo IMP de $50.000.
 - T3: báscula $16.806,72 + IVA.
 - T4: guía $15.000 (el v2 la cobra aunque el legacy no lo hacía).

@@ -64,7 +64,7 @@ La mercancía típica son perecederos (p. ej. cebolla), líquidos en tanqueros y
 | **Cuadrilla** | Grupo de cargue o descargue. | `Crew` |
 | **Montacargas** | Servicio de descargue o cargue, con horómetro inicial y final y el camión con el que se inicia. | `ForkliftUse`, `ForkliftRate` |
 | **TRM** | Tasa representativa del mercado (COP por USD), de la DIAN o manual. | `WarehouseStorage.Trm`, `TrmSource`, `TrmDate` |
-| **CIF / valor de la carga** | Valor declarado de la mercancía; base de las tarifas por porcentaje. | `WarehouseStorage.CargoValue` + `Currency` |
+| **Valor de la mercancía** | Valor del ingreso, equivalente al FOB (`DEC-029`); base de las tarifas por porcentaje. El código y algunos textos aún lo llaman «CIF». | `WarehouseStorage.CargoValue` + `Currency` |
 | **Tercero** | Persona o empresa con uno o varios roles de negocio. | `Stakeholder`, `StakeholderBusinessRole` |
 | **Agencia de aduanas = SIA = intermediario** | Un solo rol de negocio, código `CUSTOMS_AGENCY`. Un `"SIA"` o `"INTERMEDIARY"` en el código es un bug. | `BusinessRole` |
 | **Convenio** | Tarifas pactadas con un cliente por servicio, producto, modalidad y perecedero, con fórmulas. | `Agreement` → `AgreementService` + `AgreementParameter` |

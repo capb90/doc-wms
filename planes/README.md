@@ -27,5 +27,5 @@ Las Olas 1, 2 y 3 (septiembre de 2026) se implementaron, pero sus planes se perd
 | --- | --- |
 | `../analisis/analisis-motor-acuerdos-facturacion-2026-09-17.md` | Diagnóstico: el motor de acuerdos es adecuado con ajustes. Referencia |
 | `../analisis/analisis-impacto-permisos-granulares-2026-10-07.md` | Reemplazado por el plan de permisos por usuario, y diferido |
-| `../analisis/revision-fob-cif-migracion-v2-2026-10-08.md` | **Abierto:** la equivalencia FOB/CIF de la migración no está validada; no la des por cerrada |
-| `../analisis/analisis-fob-cif-legacy-v2-2026-10-24.md` | **Abierto, con decisiones pendientes.** Los datos del legacy confirman que el ingreso es FOB y el levante CIF (V2 los tiene invertidos). La tarifa base T1, sin acuerdos, facturaría el 205 % del legacy. Con acuerdos por cliente y la fórmula prorrateada, V2 iguala el total del legacy (≈102 %) sin desarrollo. 10 decisiones en su §7 |
+| `../analisis/revision-fob-cif-migracion-v2-2026-10-08.md` | Resuelto por el análisis del 2026-10-24 y `DEC-029`: el ingreso es FOB y el levante CIF |
+| `../analisis/analisis-fob-cif-legacy-v2-2026-10-24.md` | **Decidido el 2026-10-25 (`DEC-029`);** falta el plan cerrado de lo que se construye y la validación de Facturación. Los datos del legacy confirman que el ingreso es FOB y el levante CIF (V2 los tiene invertidos). La tarifa base T1, sin acuerdos, facturaría el 205 % del legacy. Con acuerdos por cliente y la fórmula prorrateada, V2 iguala el total del legacy (≈102 %) sin desarrollo. 10 decisiones en su §7 |
