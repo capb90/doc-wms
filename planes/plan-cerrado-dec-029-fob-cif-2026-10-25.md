@@ -1,6 +1,6 @@
 # Plan cerrado — Lo que se construye por DEC-029 (levante CIF, «Valor de la mercancía», valor único del levante y fórmula prorrateada por defecto)
 
-> **Fecha:** 25 de octubre de 2026. **Estado:** Aprobado por el usuario el 2026-10-25. Ejecutado el 2026-10-25 (BE `dafd573`, FE `d838535`; la fase 3, de docs, sin commit). Prompt del ejecutor, por fase: `prompt-plan-dec-029-fob-cif-2026-10-25.md`.
+> **Fecha:** 25 de octubre de 2026. **Estado:** Aprobado por el usuario el 2026-10-25. Ejecutado el 2026-10-25 (BE `dafd573`, FE `d838535`; la fase 3, de docs, sin commit). Prompt del ejecutor, por fase (archivado): `archivo/prompts/dec-029/prompt-plan-dec-029-fob-cif-2026-10-25.md`.
 > **Origen:** `DEC-029` (`contexto/decisiones.md`), respuestas del 2026-10-25 al §7 de `analisis/analisis-fob-cif-legacy-v2-2026-10-24.md`, y las 4 respuestas del usuario a las preguntas de este plan (2026-10-25).
 > **Base:** BE `develop` `3cbf181` · FE `develop` `83a0af0` · docs `main` `74416e1`.
 > **Alcance:** 3 fases (BE, FE, docs y verificación). Una migración de solo datos, `RenameValueFormulaLabels`. Sin cambios de permisos.

@@ -4,8 +4,9 @@
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/Backend/wms-api`, con `Frontend/wms`, `docs` y `video-tutoriales-trabajo` agregados.
 > 2. Copia el bloque de abajo y cambia `FASE = 1` por la fase que toca: 1, 2 o 3, en ese orden.
 > 3. Al terminar, el agente entrega el resumen y el mensaje de commit. Tú haces el commit (`DEC-003`) y lanzas la fase siguiente en otra sesión nueva.
+> 4. Archivado el 2026-10-25, tras la fase 3 (BE `dafd573`, FE `d838535`; la fase 3, de docs, sin commit al archivarlo).
 >
-> **Plan:** `docs/planes/plan-cerrado-dec-029-fob-cif-2026-10-25.md`, aprobado el 2026-10-25. Cuando termine la fase 3 y se haga su commit, este prompt se mueve a `docs/archivo/prompts/dec-029/`.
+> **Plan:** `docs/planes/plan-cerrado-dec-029-fob-cif-2026-10-25.md`, aprobado el 2026-10-25.
 
 ---
 
