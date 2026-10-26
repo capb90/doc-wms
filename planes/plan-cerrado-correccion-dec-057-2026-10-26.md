@@ -1,0 +1,202 @@
+# Plan cerrado — Corrección de la revisión de DEC-057 y ajustes visuales (DEC-058)
+
+> **Fecha:** 26 de octubre de 2026. **Estado:** Aprobado por el usuario el 2026-10-26. Prompt del ejecutor, por fase: `prompt-correccion-dec-057-2026-10-26.md`.
+> **Origen:**
+> - la revisión del código de `plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md`: dos revisores independientes contrastaron los diffs de backend y frontend con D1–D24;
+> - los ajustes visuales que pidió el usuario, registrados en `DEC-058` con sus respuestas a las preguntas de este plan.
+>
+> Todo va antes de la fase 13.
+> **Base:** BE `develop` `a8d06dd` · FE `develop` `41a17e1`.
+> **Alcance:**
+> - 5 fases: correcciones; uniformidad de páginas; báscula; tablero de depósitos; documentación y QA;
+> - sin migración ni cambios de permisos;
+> - el backend solo cambia en las fases 1 y 4.
+>
+> **Rutas:** relativas a `code_workspace/`. Prefijos: `B/` = `Backend/wms-api/`; `F/` = `Frontend/wms/app/`; `FT/` = `Frontend/wms/test/`; `D/` = `docs/`.
+
+---
+
+## 0. Instrucciones para el ejecutor
+
+1. Lee `B/AGENTS.md`, `Frontend/wms/AGENTS.md`, `D/contexto/convenciones-tecnicas.md`, `DEC-057`, `DEC-058` y este plan completo. De las fases 1 y 3, lee también las decisiones D1, D12 y D13 del plan de DEC-057.
+2. Trabaja en `develop` (BE y FE) y en `main` de docs, sin ramas ni commits (`DEC-003`). Al cerrar cada fase te detienes con el resumen y los mensajes de commit de cada repo.
+3. Sin migración: `has-pending-model-changes` debe seguir limpio.
+4. Confirma con grep las líneas citadas. Si el código no coincide, detente y pregunta, con todas las dudas en un solo mensaje. Si un caso borde choca con una decisión de este plan (Cn, Un, Bn o Kn), gana la decisión (`DEC-002`).
+5. **Sin retrocesos** (`DEC-005`): ninguna pantalla pierde una función que tiene hoy. Por ejemplo, los filtros por columna y el «Exportar» de `AppTable`, la recuperación de operaciones de báscula y los atajos.
+
+---
+
+## 1. Decisiones
+
+### 1.1 Correcciones de la revisión de DEC-057 (fase 1)
+
+| # | Defecto | Corrección | Fuente |
+| --- | --- | --- | --- |
+| C1 | **Guardar durante la búsqueda de la carta porte crea un depósito nuevo.**<br>• `documentMatchBlocksSave` (`F/features/weighbridge/components/DocumentMatchBanner.vue:43-47`) no bloquea en los estados `searching` ni `idle`.<br>• El operario escribe un número que ya tiene un depósito abierto y hace clic en «Guardar»: al salir del campo arranca la búsqueda (`status: "searching"`, `F/pages/operations/weighbridge/index.vue:942`), y en el mismo clic sale el guardado con `targetWarehouseStorageId: null`.<br>• Como desde D1 de DEC-057 nada se asocia solo, el backend crea un segundo depósito.<br>• Lo mismo pasa con Enter en un campo posterior | Con número y tipo de documento diligenciados, **Guardar queda bloqueado mientras el documento no esté buscado con esa misma clave**:<br>• la regla pasa a `documentMatchBlocksSave(state, currentSearchKey)`;<br>• con `currentSearchKey` no vacío, bloquea con estado `idle` o `searching`, o cuando `state.searchKey` es distinto de `currentSearchKey`;<br>• sin número, la regla de hoy no cambia.<br>Además:<br>• `StorageServiceForm.vue:595` le pasa su `currentSearchKey` (`:537`);<br>• la página recibe la clave por un emit nuevo (`document-key`) y la usa en `canSave` (`index.vue:635`);<br>• si `submit` (`StorageServiceForm.vue:781-783`) llega en `idle` con número y tipo, lanza `searchDocument(true)` y no guarda;<br>• mientras busca, «Guardar» dice «Buscando el documento…».<br>Aplica también al depósito adicional | D1 de DEC-057 |
+| C2 | **Un camión anulado deja el peso del depósito en «Pendiente».**<br>• `DepositPhysicalWeight.Summarize` recibe los camiones anulados, y un anulado de un solo pesaje queda con fuente `None`.<br>• Además, el neto de un anulado con dos pesajes suma en el total de CE, mientras que la validación lo excluye | En los tres detalles de CE (`B/Wms.Application/ForeignTrade/Queries/GetImportDepositDetail/GetImportDepositDetailHandler.cs:159`, `GetExportDepositDetail/GetExportDepositDetailHandler.cs:93` y `GetInspectionDepositDetail/GetInspectionDepositDetailHandler.cs:110`), `Summarize` recibe solo los camiones con `VoidedAt` nulo, como `DepositValidationMath.RegisteredWeight`. Si todos están anulados: `Pending` y neto null | D12 de DEC-057 |
+| C3 | **La tolerancia del 5 % falla con camiones pesados y camiones según manifiesto en el mismo depósito.** `DepositValidationMath.Compare` (`B/Wms.Application/ForeignTrade/Common/Services/DepositValidationMath.cs:54-67`) calcula la diferencia contra todo lo registrado, pero el 5 % lo mide sobre lo pesado. Con 1.000 kg pesados, 20.000 kg según manifiesto y una plantilla de 21.100, marca un 10 % | Se calcula \|plantilla − parte según manifiesto − pesado\| y se compara con el 5 % de lo pesado.<br>• `Compare` recibe la parte según manifiesto, además de `weighedWeight`;<br>• sin camiones pesados no se evalúa;<br>• la diferencia que se muestra es la que se evalúa;<br>• usos: `GetDepositValidationHandler.cs:52` y `ValidateDepositCommandHandler.cs:49` | D12 de DEC-057 |
+| C4 | **El P. manifiesto del primer pesaje suma los camiones anulados.** `cycleManifestWeight` (`F/pages/operations/weighbridge/index.vue:217`) suma todos los camiones del ciclo, y `GetWeighbridgeCycleHandler.cs:69-72` los devuelve con los anulados | `WarehouseStorageEntrySummaryDto` (`B/Wms.Application/Weighbridge/Common/Dtos/WeighbridgeCycleDetailDto.cs:82`) agrega `IsVoided`. El frontend los excluye en `cycleManifestWeight` y agrega el campo a su tipo | D13 de DEC-057 |
+| C5 | **Fuera de alcance** (quedan anotados en el §8 del plan de DEC-057):<br>• la búsqueda repetida tras el 409 borra las cantidades digitadas, y `lastDocumentSearch` es de toda la página;<br>• el duplicado de la mercancía se detecta por texto parcial;<br>• no hay candidatos de destinatario en las facturas de báscula y montacargas;<br>• la tarjeta por vehículo de exportación no valida la modalidad;<br>• hay varias consultas por candidato;<br>• falta accesibilidad en las tarjetas del selector;<br>• la cotización del inicio puede salir con otro cliente | — | Pedido del usuario |
+
+### 1.2 Uniformidad de páginas (fase 2)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| U1 | **Encabezado común.** Nuevo `F/components/app/AppPageHeader.vue`:<br>• props `title` (obligatoria), `subtitle?` y `backTo?` (una ruta: muestra «Volver», `pi pi-arrow-left`, `severity="secondary" outlined`, que navega con `navigateTo` sin anidar `Button` en `NuxtLink`);<br>• slot `actions`, a la derecha;<br>• renderiza una tarjeta `card shadow-md flex flex-wrap items-center justify-between gap-4` con `<h1 class="text-2xl font-semibold mb-1">` y `<p class="text-muted-color m-0">`.<br>La acción principal de crear es un `Button` primario con `pi pi-plus` y el texto «Nuevo …» o «Nueva …» | `DEC-058`; referencia `F/pages/billing/configurations/index.vue:94-105` |
+| U2 | **Esqueleto de la página:**<br>• raíz `<div class="wms-page">` con las tarjetas en este orden: encabezado, filtros (si hay) y contenido;<br>• la clase nueva `.wms-page` (`display: flex; flex-direction: column; gap: 1rem`, y `.wms-page > .card { margin-bottom: 0 }`) va en `F/assets/layout/_utils.scss`.<br>Corrige el espaciado irregular de hoy: `.card { margin-bottom: 2rem }` le gana a `mb-4`. Las sobrescrituras locales de `.card` en `notifications/index.vue:238-239` y `foreign-trade/deposits/index.vue:389-390` se quitan | Revisión de uniformidad |
+| U3 | **Tarjeta de filtros:**<br>• `card` con `grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4`;<br>• cada campo con `LabelBase` y su `for`;<br>• la búsqueda con `IconField` + `pi pi-search`, con espera de 300 ms (`watchDebounced`, convenciones §3) y volviendo a la página 1;<br>• «Limpiar filtros» cuando hay más de un filtro | Convenciones §3 |
+| U4 | **Tabla:**<br>• `DataTable` con `size="small"`, `striped-rows` y `:loading` (superpuesto; ya no un spinner que reemplaza la tabla);<br>• slot `#empty` estándar: ícono `text-3xl` y texto `text-muted-color`;<br>• paginador con plantilla, texto y opciones comunes en `F/shared/utils/table.ts`: `TABLE_PAGINATOR_TEMPLATE` (primera, anterior, páginas, siguiente, última, reporte y filas), `TABLE_PAGE_REPORT` («Mostrando {first} a {last} de {totalRecords} registros») y `TABLE_ROWS_OPTIONS` ([10, 25, 50]).<br>`AppTable` usa las mismas constantes. Las acciones de fila son botones de ícono `text rounded` con `aria-label` y `v-tooltip` | Revisión de uniformidad |
+| U5 | **`AppTable`** (`F/components/app/AppTable.vue`, 15 páginas):<br>• deja de mostrar su `<h4>` de título (`:505-507`) y su «Nuevo» gris (`:429-441`);<br>• la página pone `AppPageHeader` con el título y el «Nuevo» primario, que llama al mismo handler de creación;<br>• la búsqueda global, «Limpiar filtros» y «Exportar» pasan a una tarjeta de filtros que `AppTable` renderiza arriba de su tarjeta de tabla (U3);<br>• los filtros por columna se conservan (`DEC-005`).<br>Con esto aparece el «Nuevo» que hoy falta en `admin/drivers` y `admin/vehicles` (`enable-create` sin barra) | Revisión de uniformidad |
+| U6 | **Arreglos que salieron en la revisión:**<br>• `admin/stakeholders?rol=`: el título, el subtítulo y la miga de pan cambian con el rol («Clientes», «Empresas de transporte», «Agencias de aduana»; sin rol, «Terceros»), y el filtro de rol se muestra con el valor inicial (`initialValue`, `AppTable.vue:108`);<br>• `admin/audit`: el paginador usa el mismo `rows` que la consulta (hoy 20 contra 10);<br>• `operations/entries/history`: un solo título y un solo nodo raíz;<br>• `operations/weighbridge/history`: sin tarjeta dentro de tarjeta;<br>• `admin/products`: la casilla suelta pasa a la tarjeta de filtros;<br>• en la referencia (`billing/configurations`, `invoices`, `payments`, `pending-deposits`, `foreign-trade/loading-orders`), la búsqueda con espera y la etiqueta con `for` | Revisión de uniformidad |
+| U7 | **Alcance:** las páginas del menú (`F/components/layout/AppMenu.vue`):<br>• **listas e informes:** esqueleto completo (U1–U4);<br>• **tableros y bancos de trabajo** (Trazabilidad, los tableros de Báscula, Bodega, CE y Facturación, y Vigilancia): solo el encabezado y `.wms-page`;<br>• la báscula se rehace en la fase 3;<br>• el tablero de depósitos, en la fase 4.<br>**Fuera:** el centro de ayuda, los formularios de creación y las páginas de detalle | `DEC-058`; respuesta «Las del menú» |
+| U8 | **Guardia:** nueva `FT/unit/guards/page-header.spec.ts`. Recorre las rutas de `AppMenu.vue`, resuelve su archivo en `F/pages` y exige `AppPageHeader` y la clase `wms-page`. El centro de ayuda va en una lista de excepciones con su motivo. Reutiliza `source-files.ts` | `DEC-058` |
+| U9 | **Documentación del frontend:** `Frontend/wms/README.md:73-76` deja de citar `PageHeader.vue` y `BaseCard.vue`, que no existen, y describe `AppPageHeader`, `.wms-page` y las constantes de tabla | Revisión de uniformidad |
+
+### 1.3 Báscula (fase 3)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| B1 | **Página:**<br>• `AppPageHeader` («Báscula», subtítulo y, en acciones, «Recuperar operaciones» con su contador);<br>• una tarjeta con la cola a todo el ancho.<br>Desaparece la grilla de dos columnas (`index.vue:1507`, CSS `:1976-2022`) y, con ella, la cola pegajosa que quedaba bajo la barra superior | `DEC-058` |
+| B2 | **Cola como tabla** (`F/features/weighbridge/components/TruckQueue.vue`):<br>• columnas: Placa (negrita), Estado, Motivo, Cliente, Conductor, Modalidad, Manifiesto, Primer peso (kg y tipo) y Espera (minutos, en ámbar desde 60), más la acción «Capturar peso» cuando aplica. Todos los datos ya vienen en el DTO (`F/features/weighbridge/types/queue.ts:11-40`);<br>• sin paginador (el backend corta en 100);<br>• los filtros (Todos, Sin iniciar, Por cobrar, Por pesar, Por repesar, con su conteo) van arriba de la tabla y conservan `?cola=`;<br>• clic o Enter en una fila abre el panel;<br>• la consulta sigue cada 15 s;<br>• la fila del camión con borrador muestra «En proceso» | `DEC-058` |
+| B3 | **Etiquetas pequeñas:** una clase compartida `.wms-tag-sm` (`font-size: 0.75rem; font-weight: 600; padding: 0.125rem 0.375rem`) aplicada con `pt` o `class` y `!important` donde haga falta, porque `text-xs` sobre `Tag` no surte efecto. Se usa en la cola, en `OutputServiceForm.vue:314,338` y en `WeighbridgeCycleTickets.vue:174,185`, donde `size="small"` no existe en `Tag` | Revisión de la báscula |
+| B4 | **Panel de proceso propio.** Nuevo `F/features/weighbridge/components/WeighbridgeProcessPanel.vue` (**no es un `Dialog` de PrimeVue**):<br>• `Teleport` a `body`, fondo `fixed inset-0` oscurecido y panel centrado de `min(96vw, 80rem)` de ancho y `calc(100vh - 2rem)` de alto, con cuerpo desplazable;<br>• se muestra y se oculta con `v-show`: nunca se desmonta, así que las instancias de `KeepAlive :max="10"` y lo digitado sobreviven;<br>• `z-index` por encima de la barra superior (999) y por debajo de los diálogos de PrimeVue: F2, crear tercero, anular y demás quedan encima;<br>• bloquea el scroll del `body` mientras está abierto;<br>• por debajo de 840 px ocupa toda la pantalla;<br>• el cuerpo es el contenedor `wb` (`container-type: inline-size`), así las reglas `@container wb` siguen aplicando | `DEC-058`; precedente del problema: `Dialog.vue:3,5` desmonta |
+| B5 | **Contenido del panel:** la ficha de hoy, sin cambios de lógica.<br>• **Encabezado fijo:** placa, «Depósito adicional», motivo, hora de entrada, `WeighbridgeProgress`, «Soltar camión» y el botón «Volver a la cola» (`pi pi-arrow-left`).<br>• **Debajo:** «Camión y conductor», Registro, Cobro, Peso y Tiquete, en línea (DF5).<br>• El pie pegajoso con «Guardar» queda dentro del cuerpo desplazable.<br>• La plantilla sigue en `index.vue`, así los estilos con alcance se aplican aunque el panel se teletransporte | DF5 de `planes/paridad-legacy/plan-frontend-paridad-legacy.md` |
+| B6 | **Cierre y cambio de camión:**<br>• Escape **no** cierra el panel; solo «Volver a la cola».<br>• «Volver a la cola» guarda el borrador como hoy al cambiar de camión (`handleSelectQueueEntry`, `index.vue:518-562`), oculta el panel y devuelve el foco a la fila del camión.<br>• «Soltar camión» no cambia (`releaseTruck`).<br>• El encabezado del panel muestra los demás camiones con borrador (`unsavedDraftPlates`) como chips: un clic cambia de camión con la misma lógica de selección | `DEC-058`; PRF-002 |
+| B7 | **Historial del navegador:**<br>• abrir el panel hace `router.push` con `?camion=<entryLogId>`, y «Atrás» del navegador lo cierra (vuelve a la cola, conservando el borrador) en lugar de salir del módulo;<br>• cargar la página con `?camion=` lo abre;<br>• `?resume=…&sr=…&cycle=…` de «Recuperar operaciones» abre el panel y deja `?camion=` en lugar de borrar la consulta (`index.vue:1482`);<br>• la guarda de salida con borradores (`:1425-1441`) no cambia | `DEC-058` |
+| B8 | **Teclado y foco:**<br>• `isEnterIgnored` (`index.vue:1381-1391`) sigue igual: el panel no es `.p-dialog-mask`, y `truckCardRef` pasa al cuerpo del panel;<br>• F2 sigue abriendo el diálogo de peso;<br>• Alt+N cierra el panel (como «Volver a la cola») y Alt+K además filtra «Por repesar»;<br>• `focusCurrentStep` (`:487-505`) espera a que el panel esté visible (`nextTick` después de mostrarlo);<br>• al soltar el camión, el foco va a la primera fila «Sin iniciar» | `DEC-058` |
+| B9 | **Si el camión sale de la cola** mientras el panel está abierto, el panel sigue abierto, como hoy | Comportamiento actual |
+
+### 1.4 Tablero de depósitos de Comercio Exterior (fase 4)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| K1 | **Búsqueda en el backend.** `GetDepositsQuery` (`B/Wms.Application/ForeignTrade/Queries/GetDeposits/GetDepositsQuery.cs:12-23`) agrega `Search` (`string?`, hasta 100 caracteres). Con valor, `GetDepositsHandler` filtra con un OR de:<br>• número de depósito;<br>• `ServiceRecord.CargoManifestNumber`;<br>• `ServiceRecord.Documents.DocumentNumber`;<br>• nombre del cliente;<br>• nombre de cualquier tercero del servicio (`ServiceRecord.Stakeholders`);<br>• nombre o descripción de cualquier producto del depósito.<br>Detalles:<br>• `EF.Functions.ILike` con `EF.Functions.Unaccent` en los nombres y descripciones, como `GetStakeholdersHandler.cs:31-41`;<br>• el patrón se arma con un helper puro nuevo, `B/Wms.Common/Text/LikePattern.cs` (`Contains(text)`), que escapa `\`, `%` y `_`, y se pasa a `ILike` con el carácter de escape;<br>• `WarehouseStorageNumber` se conserva por compatibilidad;<br>• sin índices nuevos ni migración: el volumen (unos 10.000 depósitos) no lo justifica | `DEC-058` |
+| K2 | **Orden estable:** `OrderByDescending(CreatedAt).ThenByDescending(Id)` (`GetDepositsHandler.cs:88`), para que la carga por páginas no repita ni salte depósitos | Revisión del tablero |
+| K3 | **Pantalla** (`F/pages/foreign-trade/deposits/index.vue`):<br>• `AppPageHeader` («Depósitos», con subtítulo);<br>• tarjeta de filtros solo con el tipo (Importación, Exportación, Inspección) y las fechas, más «Limpiar filtros»;<br>• se quitan el buscador general de número y el selector de estado | `DEC-058`; respuesta «Quedan tipo y fechas» |
+| K4 | **Columnas:** nuevo componente `F/features/foreign-trade/components/DepositKanbanColumn.vue`, una por estado (Borrador, Confirmado, Anulado, Cerrado), en una grilla `md:grid-cols-2 xl:grid-cols-4`:<br>• **encabezado:** el nombre y el total (`pagination.totalCount` de la primera página);<br>• **buscador** propio: placeholder «Documento, depósito, tercero o producto», espera de 300 ms, y al cambiar vuelve al inicio de la columna;<br>• **cuerpo** con alto fijo (`calc(100vh - 22rem)`, mínimo 24rem) y scroll interno: la página ya no se alarga con los depósitos;<br>• **carga infinita** con `useInfiniteQuery` (páginas de 20; siguiente página mientras `pageIndex < totalPages`) y un centinela al final de la lista con `useIntersectionObserver` de `@vueuse/core`;<br>• mensajes «Cargando más…», «No hay más depósitos» y, sin resultados, «Sin depósitos»;<br>• `placeholderData: keepPreviousData`, para que el tablero no se vacíe al cambiar un filtro;<br>• la clave `['foreign-trade','deposits','kanban', estado, filtros, búsqueda]` sigue respondiendo a las invalidaciones de `['foreign-trade']`;<br>• desaparece el `Paginator` por columna (`:372-381`);<br>• la tarjeta de cada depósito no cambia, salvo sus etiquetas, que usan `.wms-tag-sm` (B3) | `DEC-058` |
+| K5 | **Fuera de alcance:** el filtro de fechas sigue sobre `CreatedAt` (las listas de importación, exportación e inspección usan `EntryDate`); `useDeposits.ts` sin uso se borra | Revisión del tablero |
+
+---
+
+## 2. Fase 1 — Correcciones C1–C4 (backend y frontend)
+
+**Pruebas:**
+
+| Proyecto | Prueba | Escenario |
+| --- | --- | --- |
+| Vitest | Ajustar `FT/components/weighbridge/DocumentMatchBanner.spec.ts` (regla `documentMatchBlocksSave`) | Con clave: `searching` bloquea, `idle` bloquea y una clave buscada distinta bloquea. Sin clave, no bloquea. `found` sin abiertos no bloquea. `found` con abiertos y sin elección bloquea |
+| Vitest | Función pura de la suma del manifiesto en `F/features/weighbridge/utils/manifest-deduced-weights.ts`, con su prueba | Excluye los camiones con `isVoided` |
+| `Wms.Tests` | `DepositPhysicalWeight` (o **Nuevo** `ForeignTrade/DepositPhysicalWeightTests.cs`) | Un anulado de un solo pesaje y uno vigente según manifiesto → `CalculatedFromManifest`, con el neto solo del vigente |
+| `Wms.Tests` | `DepositValidationMath` | 1.000 + 20.000, plantilla de 21.100 → 100 kg, dentro de la tolerancia. Plantilla de 21.200 → 200 kg, fuera (20 %). Solo según manifiesto → no se evalúa |
+| `Wms.IntegrationTests` | Ajustar `Weighbridge/SingleWeighingManifestNetTests.cs` | Con dos camiones de un solo pesaje, se anula uno → el detalle de CE sigue en `CalculatedFromManifest` |
+
+**Verificación manual corta** sobre `wms_qa_preprod`: escribir una carta porte con un depósito abierto y hacer clic en «Guardar» sin salir del campo → no se guarda y aparece el selector.
+
+**Commits sugeridos:**
+- **BE:** `fix(comercio-exterior,bascula): camiones anulados fuera del estado del peso y de la suma del manifiesto, y tolerancia de la validación solo sobre lo pesado (revisión DEC-057)`
+- **FE:** `fix(bascula): Guardar espera la búsqueda de la carta porte y la suma del manifiesto excluye los anulados (revisión DEC-057)`
+
+---
+
+## 3. Fase 2 — Uniformidad de páginas (frontend, U1–U9)
+
+**Orden de trabajo:**
+1. `AppPageHeader`, `.wms-page`, las constantes de tabla y `.wms-tag-sm` (B3, que se crea aquí para usarla después).
+2. `AppTable` (U5) y sus 15 páginas.
+3. Las demás páginas del menú, módulo por módulo: Administración, Vigilancia, Bodega, Comercio Exterior, Informes, Facturación y Notificaciones.
+4. Los arreglos de U6, la guardia U8 y el README U9.
+
+**Pruebas:**
+- **Nuevo:** `FT/components/app/AppPageHeader.spec.ts`. Título `h1`, subtítulo, «Volver» con `backTo` y el slot de acciones.
+- **Ajustar:** `FT/components/app/AppTable.spec.ts`. Sin `h4`; la tarjeta de filtros con la búsqueda y «Exportar»; los filtros por columna intactos.
+- **Nuevo:** la guardia de U8.
+- Las especificaciones existentes de las páginas tocadas siguen en verde.
+
+**Verificación visual** con el navegador integrado a 1366×768 y 1920×1080 (`yarn dev` contra la API local): una página por módulo y las de U6. Capturas en el scratchpad, sin datos de personas en los documentos.
+
+**Commit sugerido (FE):** `style(paginas): encabezado común, filtros y tablas uniformes en las páginas del menú (DEC-058)`
+
+---
+
+## 4. Fase 3 — Báscula (frontend, B1–B9)
+
+**Pruebas:**
+- **Nuevo:** `FT/components/weighbridge/TruckQueue.spec.ts`. Columnas y datos de la fila, filtros con conteo, «Capturar peso» solo en los estados que aplica y «En proceso» con borrador.
+- **Nuevo:** `FT/components/weighbridge/WeighbridgeProcessPanel.spec.ts`. Con `v-show` el contenido sigue montado al cerrar; Escape no emite cierre; «Volver a la cola» emite cierre.
+- **Ajustar:** `FT/unit/weighbridge/truck-drafts.spec.ts`, si cambia la firma de los borradores.
+
+**Verificación en pantalla** (navegador integrado, 1366×768 y 1920×1080):
+1. elegir un camión, digitar la mercancía sin guardar, «Volver a la cola», elegir otro y volver al primero: lo digitado sigue;
+2. Enter guarda el registro y cobra;
+3. F2 abre el peso sobre el panel, y Escape cierra solo F2;
+4. «Atrás» del navegador cierra el panel;
+5. «Recuperar operaciones» abre el panel en el paso pendiente;
+6. Alt+N vuelve a la cola;
+7. las etiquetas de la cola se ven pequeñas y en una línea.
+
+**Riesgo PRF-002:** queda anotado que la medición de ~30 s se hace con este diseño.
+
+**Commit sugerido (FE):** `feat(bascula): cola a todo el ancho y proceso en un panel propio sobre la cola (DEC-058)`
+
+---
+
+## 5. Fase 4 — Tablero de depósitos (backend y frontend, K1–K5)
+
+**Pruebas:**
+
+| Proyecto | Prueba | Escenario |
+| --- | --- | --- |
+| `Wms.Tests` | **Nuevo** `Common/LikePatternTests.cs` | Escapa `%`, `_` y `\`; recorta espacios; cadena vacía → null |
+| `Wms.IntegrationTests` | **Nuevo** `ForeignTrade/DepositKanbanSearchTests.cs` | `GET foreign-trade/deposits?status=Draft&search=` encuentra por número de depósito, por carta porte, por número de un documento adicional, por nombre del importador sin tildes («Pinas» encuentra «Piñas»), por producto y por agencia. Un depósito de otro estado no aparece. Con 25 depósitos de igual `CreatedAt`, las páginas de 20 y 5 no repiten ni saltan |
+| Vitest | **Nuevo** `FT/components/foreign-trade/DepositKanbanColumn.spec.ts` | Muestra el total; al ver el centinela pide la página siguiente; con la última página muestra «No hay más depósitos»; el buscador espera 300 ms y reinicia la columna |
+| Vitest | Ajustar `FT/unit/foreign-trade/kanban-columns.spec.ts` | Según las utilidades que queden |
+
+**Verificación en pantalla:** con más de 20 depósitos en Borrador, la columna carga más al bajar, la página no se alarga y la búsqueda por producto y por tercero filtra solo esa columna.
+
+**Commits sugeridos:**
+- **BE:** `feat(comercio-exterior): búsqueda por documento, depósito, tercero y producto en el tablero de depósitos, con orden estable (DEC-058)`
+- **FE:** `feat(comercio-exterior): tablero de depósitos con scroll por columna, carga infinita y buscador por estado (DEC-058)`
+
+---
+
+## 6. Fase 5 — Documentación y QA
+
+- **Casos QA:**
+  - `D/qa/fase-03-bascula.md`: reemplazar §34 «Cola a la izquierda», F3-REC-002, F3-UX-006 y F3-COL-005 por casos del panel, la cola en tabla, «Volver a la cola», «Atrás» del navegador, F2 sobre el panel y lo digitado que se conserva.
+  - `D/qa/fase-10-ux-visual-errores.md`: F10-UI-001 con el encabezado común y la guardia; F10-RES-001 con el panel a 1366×768.
+  - `D/qa/fase-05-comercio-exterior.md`: casos del tablero (scroll, carga infinita y búsqueda por columna).
+- **Registro:**
+  - este plan (§7);
+  - `D/planes/README.md`;
+  - `DEC-058`, con una línea de commits;
+  - una línea en el §8 del plan de DEC-057 con C1–C4 corregidos y C5 anotado;
+  - en `D/contexto/estado.md`, el pendiente 8b;
+  - el §16.4 del plan P1: los commits nuevos y los casos de QA en staging del panel y del tablero;
+  - `D/videos/videos-desactualizados-dec-057.md`: los videos de Báscula, Comercio Exterior y las listas, que cambian de aspecto.
+- **Nota para los operarios:** `D/manuales/nota-operarios-hallazgos-2026-10-26.md`, con una fila sobre el panel de báscula y el tablero.
+
+**Commit sugerido (docs):** `docs(planes,qa): corrección de la revisión de DEC-057 y ajustes visuales de DEC-058`
+
+---
+
+## 7. Estado de las fases
+
+| Fase | Estado | Commits | Notas |
+| --- | --- | --- | --- |
+| 1 · Correcciones C1–C4 | Pendiente | — | — |
+| 2 · Uniformidad de páginas | Pendiente | — | — |
+| 3 · Báscula | Pendiente | — | — |
+| 4 · Tablero de depósitos | Pendiente | — | — |
+| 5 · Docs y QA | Pendiente | — | — |
+
+---
+
+## 8. Riesgos
+
+| Riesgo | Mitigación |
+| --- | --- |
+| Uniformar unas 50 páginas puede romper detalles que nadie revisa | Una fase propia, verificación visual por módulo y la guardia de U8. Sin cambios de lógica |
+| El panel de báscula agrega un paso para cambiar de camión, y la meta es de ~30 s (`DEC-010`, PRF-002) | Los chips de borradores cambian de camión sin volver a la cola. Enter y F2 siguen. La medición PRF-002 se hace con este diseño |
+| Un panel propio, sin `Dialog`, debe resolver el foco y el bloqueo del scroll | B4 y B8 lo especifican, y la verificación en pantalla de la fase 3 lo prueba |
+| La búsqueda del tablero hace un OR sobre varias tablas, sin índice | Unos 10.000 depósitos: la consulta es aceptable. Si se nota lenta en staging, se agregan índices trigram en un plan aparte |
+| La carga infinita vuelve a pedir todas las páginas cargadas al invalidar | Es aceptable con páginas de 20. La columna rara vez se baja mucho, gracias al buscador |

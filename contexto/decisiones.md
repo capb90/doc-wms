@@ -35,7 +35,7 @@
 ## 2. Operación
 
 **DEC-010 — Premisas de pruebas** (2026-09-10, tras las pruebas con operarios). Rigen todos los ajustes:
-1. **Báscula rápida:** la meta son ~30 s por camión, como en el legacy. Pantalla única con cola (WMS-31).
+1. **Báscula rápida:** la meta son ~30 s por camión, como en el legacy. Pantalla única con cola (WMS-31). *Precisada por `DEC-058` (2026-10-26): la cola ocupa la página y el proceso se abre en un panel propio sobre ella; la meta de ~30 s sigue.*
 2. **Las cantidades del depósito son las declaradas en báscula.** Bodega solo informa y confirma. Comercio Exterior confirma e imprime la etiqueta sin esperar a Bodega (WMS-9).
 3. **La unidad de carga es un concepto propio** (contenedor, tanquero, remolque). Bodega la recibe completa, sin contar producto por producto (WMS-30).
 4. **Fechas editables:** si el camión entra el sábado y se procesa el lunes, todo lleva la fecha del sábado (WMS-33).
@@ -208,6 +208,26 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Sin cambios** (ya existen o son de datos): el tipo de vehículo ya es obligatorio en Báscula (H1); la fecha de ingreso se corrige en Vigilancia y luego en el depósito (H4); el tiquete con error se anula o se descarta (H5a); el cliente que no aparece se habilita con el rol Cliente en «Terceros» (H6).
 - **Fuente:** el usuario, en la sesión del 2026-10-26, opción por opción.
 - **Construido** (2026-10-26) con `planes/plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md`: BE `c2239cd`, `543fe7f` y `a8d06dd` (migración `AddLabelPrintEntry`); FE `0948d62` y `18f79f1`; verificado en local sobre `wms_qa_preprod`. Sin desplegar: va con la fase 13 del plan P1.
+
+
+**DEC-058 — Ajustes visuales antes de la fase 13** (2026-10-26). Pedido del usuario al revisar DEC-057, con sus respuestas a las preguntas del plan `planes/plan-cerrado-correccion-dec-057-2026-10-26.md` (§1.2–§1.4). **Se construye** con ese plan.
+- **Páginas uniformes.** Todas las páginas del menú usan el mismo esqueleto:
+  - un encabezado común: tarjeta con título `h1`, subtítulo y acciones a la derecha, con el «Nuevo …» primario;
+  - los filtros en su propia tarjeta, con etiquetas y búsqueda con espera;
+  - la tabla con el mismo estilo y paginador.
+  Se crea un componente de encabezado compartido y una prueba que lo exige. `billing/configurations` es la referencia, corregida en sus puntos débiles. Quedan fuera los formularios de creación, los detalles y el centro de ayuda.
+- **Báscula: cola a todo el ancho y proceso en un panel propio tipo modal.**
+  - La cola es una tabla con placa, estado, motivo, cliente, conductor, modalidad, manifiesto, primer peso y espera.
+  - Al elegir un camión, el proceso se abre en un panel grande sobre la cola, con fondo oscurecido.
+  - El panel **no es un diálogo de PrimeVue**: no se desmonta, así que lo digitado no se pierde, y Enter y F2 siguen funcionando.
+  - Escape no lo cierra; se cierra con «Volver a la cola», que conserva el borrador.
+  - Los pasos siguen en línea dentro del panel (DF5 del plan de paridad del frontend no cambia).
+  - Reemplaza «pantalla única con cola» de `DEC-010` (1).
+- **Tablero de depósitos de CE.**
+  - Cada estado es una columna con scroll propio y carga infinita, sin paginación.
+  - Cada columna tiene su buscador: documento comercial, número de depósito, tercero y producto.
+  - Arriba quedan solo el tipo de depósito y las fechas; se quitan el buscador general de número y el selector de estado.
+- **Fuente:** el usuario, en la sesión del 2026-10-26.
 
 ## 7. Documentos impresos
 
