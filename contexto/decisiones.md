@@ -207,6 +207,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Orden:** un plan cerrado con todo lo anterior se ejecuta **antes** de la fase 13 del plan de brechas P1, y la fase 13 despliega todo junto. Mientras tanto se manda a los operarios una nota de capacitación con lo que ya existe (H1, H4, H5a y H6).
 - **Sin cambios** (ya existen o son de datos): el tipo de vehículo ya es obligatorio en Báscula (H1); la fecha de ingreso se corrige en Vigilancia y luego en el depósito (H4); el tiquete con error se anula o se descarta (H5a); el cliente que no aparece se habilita con el rol Cliente en «Terceros» (H6).
 - **Fuente:** el usuario, en la sesión del 2026-10-26, opción por opción.
+- **Construido** (2026-10-26) con `planes/plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md`: BE `c2239cd`, `543fe7f` y `a8d06dd` (migración `AddLabelPrintEntry`); FE `0948d62` y `18f79f1`; verificado en local sobre `wms_qa_preprod`. Sin desplegar: va con la fase 13 del plan P1.
 
 ## 7. Documentos impresos
 

@@ -83,6 +83,7 @@ Anota en el informe cada palanca usada (SQL exacto, hora, reinicios).
 | F6-INV-010 | Factura GUIA_SALIDA | Revisar la de F5-GUI-002. | Precio del convenio × número de depósitos; enlazada a la guía. | P0 | RN |
 | F6-INV-011 | Factura en $0 | Depósito adicional en cero (si F3-MUL funcionó) o almacenamiento sin tarifa con mínimo 0. | Total 0; no lleva número fiscal; no aparece «Pendiente de número». | P1 | RN |
 | F6-INV-020 | Pantalla de creación congelada | Abrir `/billing/invoices/create` por URL; `POST billing/invoices` por API. | Esperado: sin acceso desde la UI (sin menú). Anotar si la página carga y si el endpoint crea facturas (R-FAC-13). | P2 | SEG |
+| F6-INV-021 | Cambiar el destinatario (BR-06-007) | Factura de almacenamiento en Borrador de un IMP con agencia y transportadora: «Cambiar destinatario» junto a «Destinatario» → elegir la agencia → Guardar. Por API, `PATCH …/recipient` con un tercero ajeno al depósito y sin rol Cliente, y con la factura aprobada. | **Nuevo (`DEC-057`, D21–D23):** el botón solo aparece en Borrador; el diálogo lista «Terceros de los depósitos de la factura» con sus roles (cliente e importador, agencia, transportadora) y debajo «O busque otro cliente». Al guardar, la factura queda a nombre de la agencia sin recargar la página (204). Tercero ajeno: 400 «El tercero no está relacionado con la factura ni es cliente.»; factura aprobada: 400 como antes. | P1 | FUN |
 
 ### 6.3 Acciones por estado — WMS-20 (ACC)
 

@@ -64,7 +64,7 @@ Para cada reporte: (a) ejecutar con un filtro que incluya datos QA conocidos; (b
 | ID | Documento | Verificación | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
 | F7-PDF-001 | Tiquete de báscula | (Ver F3-TIQ-002/004.) Cotejar con `docs/cliente/formatos/TIQUETE BASCULA OK.xlsx`. | Datos completos y correctos; hora Colombia; formato térmico. | P1 | FUN |
-| F7-PDF-002 | Etiqueta del depósito | Cotejar con `docs/cliente/formatos/DEPOSITO INGRESO.pdf`. | Texto por modalidad, fecha de ingreso, transportadoras, cantidades/peso, contador. | P1 | FUN |
+| F7-PDF-002 | Etiqueta del depósito y tarjeta del camión | Cotejar con `docs/cliente/formatos/DEPOSITO INGRESO.pdf` y con el «Adhesivo por vehículo» del legacy (`adhesivovehiculo.php`). | Texto por modalidad, fecha de ingreso, cantidades, contador. **Actualizado (`DEC-057`):** sin transportadoras; «{tipo de documento}: {número} ({fecha del documento})»; tabla Ampara · Saldo · Mercancía con el embalaje en el texto y sin repetir el nombre. La tarjeta del camión, con su placa, su manifiesto y «Cant. ingresa · Mercancía» (F5-ETI-001, F5-ETI-008). | P1 | FUN |
 | F7-PDF-003 | Guía de salida | Cotejar con `GUIA DE SALIDA CEBOLLA.pdf` y `guia_salida.jpg`. | Entrada, saldo anterior, despachado, nuevo saldo por línea; ANULADA si aplica. | P0 | RN |
 | F7-PDF-004 | Factura | PDF de 3 facturas (báscula, montacargas con IVA, almacenamiento). | Totales = pantalla; RETE_FUENTE no suma; detalle del depósito. | P1 | RN |
 | F7-PDF-005 | Orden de trabajo | Desde Bodega/CE. | Ítems, depósitos, vehículo, cuadrilla, ciudad. | P2 | FUN |

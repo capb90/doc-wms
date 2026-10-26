@@ -1341,33 +1341,37 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 
 ### 16.4 Agregado después de la fase 12c (2026-10-26)
 
-> **En espera (2026-10-26, `DEC-057`):** la fase 13 se ejecuta después del plan cerrado de los hallazgos de los operarios, y despliega todo junto. Ese plan agrega sus commits y, si las trae, sus migraciones a la lista de abajo.
+> **En espera (2026-10-26, `DEC-057`):** la fase 13 se ejecuta después del plan cerrado de los hallazgos de los operarios, y despliega todo junto. Ese plan agrega sus commits y, si las trae, sus migraciones a la lista de abajo. *Hecho el 2026-10-26:* el plan `DEC-057` está construido y verificado en local; sus commits, su migración y sus casos van abajo.
 
-Entre la fase 12c y la 13 se ejecutaron tres planes más:
+Entre la fase 12c y la 13 se ejecutaron cuatro planes más:
 - `plan-cerrado-correccion-def-f11-030-034-2026-10-25.md` (DEF-F11-030, 034 y 035; `DEC-056`);
 - `plan-cerrado-correccion-def-f11-029-033-2026-10-25.md`;
-- `plan-cerrado-dec-029-fob-cif-2026-10-25.md` (`DEC-029`).
+- `plan-cerrado-dec-029-fob-cif-2026-10-25.md` (`DEC-029`);
+- `plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md` (`DEC-057`).
 
 Sus cambios van en este despliegue. Lo que esto suma a §16.1–§16.3:
 
-- **Commits a desplegar:** BE `develop` `dafd573` y FE `develop` `d838535`, o los descendientes que el usuario confirme. Incluyen los commits posteriores al 2026-10-08 que `contexto/estado.md` §3 lista como no desplegados.
-- **Migraciones:** son **7**: las 6 de §16.1, paso 4, más `20261025235406_RenameValueFormulaLabels` (solo datos: nombres de dos fórmulas, `DEC-029` D4). Antes de aplicarlas, el script idempotente se revisa contra esta lista.
+- **Commits a desplegar:** BE `develop` `a8d06dd` y FE `develop` `18f79f1` (antes `dafd573` / `d838535`; los suben los commits de `DEC-057`: BE `c2239cd`, `543fe7f` y `a8d06dd`, FE `0948d62` y `18f79f1`), o los descendientes que el usuario confirme. Incluyen los commits posteriores al 2026-10-08 que `contexto/estado.md` §3 lista como no desplegados.
+- **Migraciones:** son **8**: las 6 de §16.1, paso 4, más `20261025235406_RenameValueFormulaLabels` (solo datos: nombres de dos fórmulas, `DEC-029` D4) y `20261026183022_AddLabelPrintEntry` (`DEC-057` D20: columna opcional `warehouse_storage_entry_id` en el registro de impresiones de la tarjeta, con su índice y su FK con `SET NULL`). Antes de aplicarlas, el script idempotente se revisa contra esta lista.
 - **Antes de desplegar, un conteo más (solo lectura, con aprobación):** levantes con valor en más de un producto, por depósito, número y aceptación, con recorte y mayúsculas (`DEC-029` D9). Se informa la cifra y no se corrige nada (`DEC-006`). En las bases locales salió 0.
 - **Avisos que da el usuario antes de abrir staging a los operarios:**
   - **a la operación, por `DEC-056`:** Bodega no carga una orden de importación sin guía de salida vigente;
   - **a Facturación, por `DEC-029`:** el levante ahora se rotula CIF, el depósito «Valor de la mercancía», y la fórmula prorrateada sale preseleccionada al crear tarifas. T1 sigue vigente en staging hasta que Facturación defina la tarifa base;
-  - **a Facturación, por BR-06-005:** ya previsto en §16.3.
+  - **a Facturación, por BR-06-005:** ya previsto en §16.3;
+  - **a los operarios, por `DEC-057`:** la nota `manuales/nota-operarios-hallazgos-2026-10-26.md` (selector de carta porte, manifiesto obligatorio en Báscula, los cuatro pesos, báscula en $0 por convenio, manifiesto DIAN para confirmar, tarjeta y tarjeta por camión);
+  - **a Facturación, por `DEC-057`:** el cambio de destinatario de la factura en Borrador y los cobros de báscula en $0 por convenio (factura no fiscal pagada en cero).
 - **QA en staging, además del humo de §16.3:**
   - el QR se genera con `QRCoder` dentro de la imagen Linux (`PRE-informe-2026-10-25.md` §8.2);
   - escanear una guía impresa con Android e iPhone (F5-GUI-020; la página dice «Vigente»);
   - FB-BAK-007 con el bucket externo real y un fallo provocado con un bucket inexistente, después de confirmar que los correos de Admin son cuentas reales;
   - **DEF-F11-030:** corregir en Borrador el valor de un depósito `PRAC-` recalcula su factura del período;
   - **DEF-F11-034:** Bodega no carga una orden de importación `PRAC-` sin guía;
-  - **DEC-029:** registrar un levante `PRAC-` con dos productos (el segundo sin valor, y 409 si se fuerza) y ver «CIF» en la póliza y el kárdex.
+  - **DEC-029:** registrar un levante `PRAC-` con dos productos (el segundo sin valor, y 409 si se fuerza) y ver «CIF» en la póliza y el kárdex;
+  - **DEC-057**, con datos `PRAC-`: el selector de carta porte con dos clientes y la misma carta porte (F3-REG-026, F3-REG-027); el manifiesto obligatorio (F3-REG-025); un solo pesaje de inspección con 21.380 y 13.700 (F3-PES-017, F3-PES-018); la báscula en $0 de un convenio de prueba (F3-COB-015); el manifiesto DIAN al confirmar (F5-CNF-017); la tarjeta del depósito y la del camión impresas (F5-ETI-001, F5-ETI-008); y el cambio de destinatario a la agencia (F6-INV-021).
 - **Fuera de esta fase:**
   - PRF-002 (`DEC-042`);
   - FA-MIG-013 y el corte real (`DEC-040`);
-  - regrabar los videos (`videos/videos-desactualizados-dec-029.md`);
+  - regrabar los videos (`videos/videos-desactualizados-dec-029.md` y `videos/videos-desactualizados-dec-057.md`);
   - las tareas de Facturación de `DEC-029`.
 - **Registro al terminar:**
   - la sección de staging en el informe;

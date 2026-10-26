@@ -32,7 +32,7 @@ Validar que Comercio Exterior, dueño del depósito, puede completarlo y confirm
 
 ## 4. Reglas que se verifican
 
-- **Confirmar** (Draft → Confirmed) exige, en orden: cliente; fecha del documento; terceros por modalidad (IMP: importador y agencia de aduanas; EXP: exportador; INSP: ninguno); moneda; valor > 0; por camión, N.º y peso de manifiesto > 0; con unidades de carga, mercancía en cada unidad y suma por unidad = declarado. Mensaje: «No se puede confirmar el depósito {n}. Falta: a; b; c.». **No exige la recepción de Bodega.** Confirmar abre el período de almacenamiento y su factura en la misma transacción.
+- **Confirmar** (Draft → Confirmed) exige, en orden: cliente; fecha del documento; terceros por modalidad (IMP: importador y agencia de aduanas; EXP: exportador; INSP: ninguno); en IMP, el número del manifiesto DIAN (`DEC-057` D8; la fecha no); moneda; valor > 0; por camión, N.º y peso de manifiesto > 0; con unidades de carga, mercancía en cada unidad y suma por unidad = declarado. Mensaje: «No se puede confirmar el depósito {n}. Falta: a; b; c.». **No exige la recepción de Bodega.** Confirmar abre el período de almacenamiento y su factura en la misma transacción.
 - **Levantes:** solo con el depósito confirmado; por producto; cantidad ≤ recibido − otros levantes; duplicados de número/aceptación entre depósitos rechazados; FOB con TRM DIAN del día (3 s) o tasa manual. Nacionalizado = suma de levantes > 0. Nacionalizado disponible por producto = máx(0, levantes − (despachado + reservado)).
 - **Orden de cargue:** ningún depósito en Borrador; al menos un cliente; IMP nacionalizado; cliente no bloqueado; stock disponible; tope de nacionalizado disponible; coherencia de unidades de carga; ciudad activa; orden externa (emisor agencia o importador, número único por emisor, fecha no futura); cuadrilla activa. Multi-cliente permitido (CE-12).
 - **Guía (IMP):** depósitos no en Borrador; tipo por el primer ítem; orden no Dispatched/Complete/Cancelled/Reverted; una guía vigente por orden; cargo GUIA_SALIDA; saldos congelados por línea (WMS-19). EXP: guía automática al cargar, sin cargo.
@@ -64,8 +64,8 @@ Validar que Comercio Exterior, dueño del depósito, puede completarlo y confirm
 
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F5-CNF-001 | Confirmar IMP completo | Detalle de `QA-CP-0001`: asignar cliente `QA Cliente Uno`; datos de Borrador (fecha del documento, moneda USD, valor 50.000); terceros importador `QA Importador` y agencia `QA Agencia SIA`; manifiesto por camión (N.º y peso) → «Confirmar depósito». | `Confirmed`; sugiere reimprimir etiqueta; período de almacenamiento y factura abiertos (ver en Facturación). Con USD, TRM DIAN o «TRM pendiente» (aviso a Facturación). | P0 | FUN |
-| F5-CNF-002 | Requisitos pendientes | En un depósito sin nada, revisar el botón «Confirmar». | Deshabilitado con el motivo; por API: «No se puede confirmar el depósito … Falta: cliente; fecha del documento; importador; agencia de aduanas; moneda; valor…; manifiesto…». | P0 | RN |
+| F5-CNF-001 | Confirmar IMP completo | Detalle de `QA-CP-0001`: asignar cliente `QA Cliente Uno`; datos de Borrador (fecha del documento, moneda USD, valor 50.000); terceros importador `QA Importador` y agencia `QA Agencia SIA`; manifiesto por camión (N.º y peso); manifiesto DIAN `QA-DIAN-0001` (F5-IMP-001) → «Confirmar depósito». | `Confirmed`; sugiere reimprimir etiqueta; período de almacenamiento y factura abiertos (ver en Facturación). Con USD, TRM DIAN o «TRM pendiente» (aviso a Facturación). | P0 | FUN |
+| F5-CNF-002 | Requisitos pendientes | En un depósito sin nada, revisar el botón «Confirmar». | Deshabilitado con el motivo; por API: «No se puede confirmar el depósito … Falta: cliente; fecha del documento; importador; agencia de aduanas; número del manifiesto DIAN; moneda; valor…; manifiesto…». | P0 | RN |
 | F5-CNF-003 | Requisitos por modalidad | EXP sin exportador; INSP sin importador ni agencia. | EXP rechazado por exportador; INSP no los pide. | P0 | RN |
 | F5-CNF-004 | Confirmar sin recepción | Confirmar un depósito cuya recepción no se hizo. | Se permite (WMS-9). | P0 | RN |
 | F5-CNF-005 | Asignar cliente sin rol | Asignar un tercero sin rol CUSTOMER (por API si la UI lo filtra). | «El tercero seleccionado no tiene el rol CUSTOMER.». | P1 | VAL |
@@ -80,6 +80,7 @@ Validar que Comercio Exterior, dueño del depósito, puede completarlo y confirm
 | F5-CNF-014 | Manifiesto por camión | Editar N.º y peso del manifiesto de un camión en Confirmed. | Se guarda; recalcula la factura (WEIGHT_THRESHOLD si aplica). | P2 | INT |
 | F5-CNF-015 | Corregir placa de unidad de carga | Cambiar la placa de `QAT001` (Draft/Confirmed); poner una placa ya existente en el depósito. | Se guarda; duplicada rechazada. | P3 | RN |
 | F5-CNF-016 | Documentos (PDF consolidado) | «Documentos». | PDF consolidado del depósito. | P3 | FUN |
+| F5-CNF-017 | Manifiesto DIAN para confirmar la importación | IMP completo salvo el manifiesto DIAN: ver «Para confirmar el depósito … falta:» y pulsar el requisito; «Confirmar» por API. Registrar solo el número (sin fecha) y confirmar. Repetir con EXP e INSP. | **Nuevo (`DEC-057`, D8):** la lista dice «número del manifiesto DIAN» y su enlace lleva a la sección «Manifiesto DIAN»; por API, 400 «No se puede confirmar el depósito {N}. Falta: número del manifiesto DIAN.». Al guardar el número, la lista se actualiza sola y el depósito confirma; la fecha no se exige. EXP e INSP no lo piden. Un migrado que vuelve a Borrador también lo necesita al reconfirmar. | P0 | RN |
 
 ### 5.4 Productos del depósito por camión — WMS-29 (PRD)
 
@@ -142,19 +143,21 @@ Validar que Comercio Exterior, dueño del depósito, puede completarlo y confirm
 
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F5-ETI-001 | Etiqueta IMP sin nacionalizar | «Imprimir etiqueta» en un IMP sin levantes. | «MERCANCIA SIN NACIONALIZAR» en rojo; fecha de ingreso, cliente, transportadoras, cantidades. | P0 | FUN |
+| F5-ETI-001 | Etiqueta IMP sin nacionalizar | «Imprimir etiqueta» en un IMP sin levantes, con un producto cuya descripción repite el nombre (p. ej. «CEBOLLA FRESCA») y embalaje. | «MERCANCIA SIN NACIONALIZAR» en rojo; fecha de ingreso, importador, intermediario, placas y cantidades. **Actualizado (`DEC-057`, H10, H13–H15):** sin «Transportadora»; la línea del documento dice «{tipo}: {número} ({fecha del documento})», p. ej. «Carta Porte: QA-CP-0001 (2026-10-25)», o «N/A» sin fecha; la tabla es Ampara · Saldo · Mercancía, con el embalaje en el texto y el nombre sin repetir («CEBOLLA FRESCA (SACOS)»), sin columnas de unidad ni embalaje. | P0 | FUN |
 | F5-ETI-002 | Etiqueta nacionalizada | Tras F5-LEV-001. | «MERCANCIA NACIONALIZADA» en verde. | P0 | RN |
-| F5-ETI-003 | EXP e INSP | Imprimir. | «MERCANCIA PARA EXPORTACION» / «INSPECCION ADUANERA». | P1 | FUN |
+| F5-ETI-003 | EXP e INSP | Imprimir. | «MERCANCIA PARA EXPORTACION» / «INSPECCION ADUANERA». **Actualizado (`DEC-057`):** sin «Transportadora», con el bloque «Documentos:» que lista cada documento como «{tipo}: {número} ({fecha})» y la tabla de 3 columnas de F5-ETI-001. | P1 | FUN |
 | F5-ETI-004 | Nacionalizada con levante parcial | IMP con 2 productos, levante solo de uno y parcial. | Anotar: el código imprime «NACIONALIZADA» con cualquier levante (R-CE-06). Confirmar con el usuario si es correcto. | P2 | RN |
 | F5-ETI-005 | Contador de impresiones (GAP-024) | Imprimir 3 veces; ver el badge. | El contador sube; lista de impresiones con usuario y fecha. | P2 | FUN |
 | F5-ETI-006 | Anulado | Depósito anulado. | Botón no disponible. | P3 | RN |
 | F5-ETI-007 | Cantidad tras despacho | Tras una salida parcial, reimprimir. | La etiqueta muestra el saldo. | P2 | INT |
+| F5-ETI-008 | Tarjeta del camión | En el detalle de un IMP, un EXP y un INSP con 2 camiones: en la tabla de camiones, «Tarjeta del camión» de cada uno. | **Nuevo (`DEC-057`, H12, D19):** PDF con el encabezado de la tarjeta del depósito (número con código de barras, importador o exportador, intermediario, fecha de ingreso), «Placa: {placa}» y sus unidades de carga, la línea del documento, «Manifiesto No. {manifiesto del camión}», la tabla «Cant. ingresa · Mercancía» solo con lo que trajo ese camión y la franja de estado. Sin Ampara ni Saldo. | P1 | FUN |
+| F5-ETI-009 | Tarjeta del camión: anulado, otro depósito y registro | Un camión anulado del depósito; por API, la tarjeta con el Id de un camión de otro depósito. Después, ver el historial de impresiones. | **Nuevo (`DEC-057`, D19 y D20):** el camión anulado no ofrece el botón (por API, 400 «No se puede imprimir la tarjeta de un camión anulado.»); el de otro depósito, 404 «El camión no pertenece al depósito.». El historial agrega la columna «Tarjeta» («Depósito» o «Camión {placa}») y el contador suma las dos tarjetas. Un depósito migrado (sin camiones) no la ofrece. | P2 | RN |
 
 ### 5.10 Importación: manifiesto, levantes, validación (IMP, LEV, VAL)
 
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F5-IMP-001 | Manifiesto DIAN | Registrar N.º (≤ 200) y fecha (no futura). | Se guarda; 201 caracteres o fecha futura rechazados. | P1 | VAL |
+| F5-IMP-001 | Manifiesto DIAN | Registrar N.º (≤ 200) y fecha (no futura). | Se guarda; 201 caracteres o fecha futura rechazados. Desde `DEC-057` (D8) el número es requisito para confirmar la importación (F5-CNF-017). | P1 | VAL |
 | F5-LEV-001 | Registrar levante | En `QA-CP-0001` confirmado: levante N.º `QA-LEV-001`, aceptación, fecha, `QA Cebolla` cantidad 100, peso, FOB USD. | Se registra; tasa = TRM DIAN del día (o pide tasa manual si la DIAN no responde); estado `Nacionalizado`; nacionalizado disponible 100. | P0 | FUN |
 | F5-LEV-002 | Levante en Borrador | En un IMP en Draft. | «No se pueden registrar levantes en un depósito en estado Borrador. Confirme primero el depósito.». | P0 | RN |
 | F5-LEV-003 | Cantidad mayor a lo pendiente | Levante de 200 si el recibido es 160 y hay 100 levantados. | «La cantidad a levantar (200) supera lo pendiente por nacionalizar del producto (60).». | P0 | RN |

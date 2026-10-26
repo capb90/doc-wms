@@ -58,17 +58,17 @@ Desde ese momento aparece en Báscula y en «Asignar cliente» del detalle del d
 
 | Su hallazgo | Cómo queda |
 | --- | --- |
-| **Cartas porte con el mismo número** | Báscula ya no asocia el camión sola. Si el número de carta porte ya tiene depósitos, el sistema los muestra con su cliente, importador, transportadora, fecha y placas. El operario elige el depósito correcto o «Es otro documento: crear depósito nuevo». Los depósitos cerrados se ven, pero no se pueden elegir |
+| **Cartas porte con el mismo número** | Báscula ya no asocia el camión sola. Si el número de carta porte ya tiene depósitos, el sistema los muestra con su cliente, importador, agencia, transportadora, fecha y placas. El operario elige el depósito correcto o «Es otro documento: crear depósito nuevo»; mientras no elija, «Guardar» no se habilita. Los depósitos cerrados se ven en gris, con quién los cerró y cuándo, pero no se pueden elegir. «Agregar otro depósito» no acepta un documento que ya tiene un depósito abierto |
 | **Número de manifiesto** | Obligatorio, con su peso, al registrar el ingreso de un camión a un depósito. Solo báscula y Salida no lo piden |
 | **Pesos como en el sistema anterior** | Al tomar el primer peso se ven P. indicador, T. vehículo, P. manifiesto y P. mercancía. La tara se calcula sola: indicador menos manifiesto. Si el camión no tiene segundo pesaje, la mercancía según el manifiesto queda como el peso de la mercancía, rotulada «según manifiesto». Si tiene segundo pesaje, manda el peso real |
 | **Tiquete en cero** | Si el convenio del cliente dice que la báscula no se cobra, el tiquete sale en $0 con la marca «SIN COBRO POR CONVENIO». El valor cero no se digita a mano: sale del convenio |
-| **Manifiesto DIAN** | Comercio Exterior debe diligenciarlo para confirmar un depósito de importación |
+| **Manifiesto DIAN** | Comercio Exterior debe diligenciar su número (la fecha no) para confirmar un depósito de importación. La lista «Para confirmar el depósito … falta:» lo indica |
 | **Tarjeta: transportadora** | Se quita |
 | **Tarjeta: Ampara y Saldo con decimales** | Corregido: «730» en lugar de «730.00». Si la cantidad tiene fracción, como 730,5 toneladas, se muestra la fracción |
 | **Tarjeta: fecha de la carta porte** | Muestra el tipo de documento, el número y **la fecha del documento**. Si no se diligenció la fecha, dice «N/A» |
 | **Tarjeta: mercancía duplicada** | Corregido: el nombre ya no se repite |
 | **Tarjeta: columna Unidad** | Como en el sistema anterior: Ampara · Saldo · Mercancía, con el embalaje dentro del texto, por ejemplo «CEBOLLA FRESCA (SACOS)» |
-| **Tarjeta por vehículo** | Además de la tarjeta del depósito, cada camión tiene su tarjeta, con su placa y lo que trajo ese camión («Cant. ingresa · Mercancía») |
-| **Destinatario de la factura** | Facturación puede cambiar a quién va una factura en Borrador, por ejemplo a la agencia de aduanas |
+| **Tarjeta por vehículo** | Además de la tarjeta del depósito, cada camión tiene su tarjeta, con su placa, su manifiesto y lo que trajo ese camión («Cant. ingresa · Mercancía»). Se imprime con «Tarjeta del camión», en la tabla de camiones del detalle del depósito |
+| **Destinatario de la factura** | Facturación puede cambiar a quién va una factura en Borrador con «Cambiar destinatario», junto al destinatario. El sistema propone los terceros de los depósitos de la factura (cliente, importador, agencia y transportadora), por ejemplo la agencia de aduanas, o permite buscar otro cliente |
 
 Cuando la nueva versión esté instalada en el ambiente de pruebas, les avisamos para que la revisen. Los videos de ayuda de Báscula y de Comercio Exterior se actualizarán después.
