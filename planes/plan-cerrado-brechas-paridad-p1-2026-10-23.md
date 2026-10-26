@@ -1339,6 +1339,41 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 - **PRF-002** lo mide un operario real con este build, si el usuario lo programa (DEC-042).
 - **Informe:** se agrega una sección de staging en el informe de §15.3.
 
+### 16.4 Agregado después de la fase 12c (2026-10-26)
+
+Entre la fase 12c y la 13 se ejecutaron tres planes más:
+- `plan-cerrado-correccion-def-f11-030-034-2026-10-25.md` (DEF-F11-030, 034 y 035; `DEC-056`);
+- `plan-cerrado-correccion-def-f11-029-033-2026-10-25.md`;
+- `plan-cerrado-dec-029-fob-cif-2026-10-25.md` (`DEC-029`).
+
+Sus cambios van en este despliegue. Lo que esto suma a §16.1–§16.3:
+
+- **Commits a desplegar:** BE `develop` `dafd573` y FE `develop` `d838535`, o los descendientes que el usuario confirme. Incluyen los commits posteriores al 2026-10-08 que `contexto/estado.md` §3 lista como no desplegados.
+- **Migraciones:** son **7**: las 6 de §16.1, paso 4, más `20261025235406_RenameValueFormulaLabels` (solo datos: nombres de dos fórmulas, `DEC-029` D4). Antes de aplicarlas, el script idempotente se revisa contra esta lista.
+- **Antes de desplegar, un conteo más (solo lectura, con aprobación):** levantes con valor en más de un producto, por depósito, número y aceptación, con recorte y mayúsculas (`DEC-029` D9). Se informa la cifra y no se corrige nada (`DEC-006`). En las bases locales salió 0.
+- **Avisos que da el usuario antes de abrir staging a los operarios:**
+  - **a la operación, por `DEC-056`:** Bodega no carga una orden de importación sin guía de salida vigente;
+  - **a Facturación, por `DEC-029`:** el levante ahora se rotula CIF, el depósito «Valor de la mercancía», y la fórmula prorrateada sale preseleccionada al crear tarifas. T1 sigue vigente en staging hasta que Facturación defina la tarifa base;
+  - **a Facturación, por BR-06-005:** ya previsto en §16.3.
+- **QA en staging, además del humo de §16.3:**
+  - el QR se genera con `QRCoder` dentro de la imagen Linux (`PRE-informe-2026-10-25.md` §8.2);
+  - escanear una guía impresa con Android e iPhone (F5-GUI-020; la página dice «Vigente»);
+  - FB-BAK-007 con el bucket externo real y un fallo provocado con un bucket inexistente, después de confirmar que los correos de Admin son cuentas reales;
+  - **DEF-F11-030:** corregir en Borrador el valor de un depósito `PRAC-` recalcula su factura del período;
+  - **DEF-F11-034:** Bodega no carga una orden de importación `PRAC-` sin guía;
+  - **DEC-029:** registrar un levante `PRAC-` con dos productos (el segundo sin valor, y 409 si se fuerza) y ver «CIF» en la póliza y el kárdex.
+- **Fuera de esta fase:**
+  - PRF-002 (`DEC-042`);
+  - FA-MIG-013 y el corte real (`DEC-040`);
+  - regrabar los videos (`videos/videos-desactualizados-dec-029.md`);
+  - las tareas de Facturación de `DEC-029`.
+- **Registro al terminar:**
+  - la sección de staging en el informe;
+  - `contexto/estado.md` §3 (último despliegue, commits, migraciones y respaldo previo);
+  - `registro-ejecucion-brechas-p1-2026-10-24.md`;
+  - la fila 13 de §17;
+  - `planes/README.md`.
+
 ---
 
 ## 17. Orden y checkpoints

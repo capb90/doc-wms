@@ -46,7 +46,7 @@ Eres el implementador de la FASE indicada arriba del plan cerrado de brechas P1 
 | 11 | §14 | Guía de salida con código QR de verificación, seleccionable por el parámetro GUIDE_CODE_TYPE; el código de barras se conserva | AddGuideCodeTypeParameter |
 | 12 | §15 | Procedimiento de corte; casos e informe QA local; documentación | — |
 | 12c | §15C | Ajustes de DEC-055: depósito agotado en la gracia (renovación por el job), orden de bloqueo de las guías (D5) y precios de servicio programados | — |
-| 13 | §16 | Despliegue y QA en staging (con aprobación paso a paso) | aplica las 4, más AddForkliftUseEntryLog |
+| 13 | §16 (con §16.4) | Despliegue y QA en staging (con aprobación paso a paso). Usa el prompt propio `prompt-fase-13-staging-2026-10-26.md` | aplica las 7 de §16.4 |
 
 ## Reglas
 1. Trabaja en develop en los dos repos. NO crees ramas ni ejecutes git add, commit, push, merge, rebase ni reset (DEC-003). Puedes leer el estado con git status y git rev-parse --short HEAD. Para borrar archivos usa rm.
