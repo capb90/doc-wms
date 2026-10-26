@@ -289,7 +289,7 @@
 
 | Fase | Estado | Commits | Notas |
 | --- | --- | --- | --- |
-| 1 · BE carta porte y manifiestos | Pendiente | — | — |
+| 1 · BE carta porte y manifiestos | Hecha, sin commit (2026-10-26) | — | Base BE `dafd573`. `Wms.Tests` 2029 → 2044; `Wms.IntegrationTests` 438/440 → 449/451 (solo las 2 fallas conocidas, que pasan solas); `has-pending-model-changes` limpio, sin migración. Endpoint `GET weighbridge/storage/document-candidates`. **Notas:** (1) `TargetWarehouseStorageId` va como `Guid?` (D1); un Id inexistente responde 404 «El depósito elegido no existe.». (2) «Abierto» para elegir y para la guarda de D5 excluye los migrados (D3); `GetOpenCandidatesAsync` y `MatchOpenAsync` siguen iguales para `by-document` (D6). (3) Se borraron `EnsureTruckEntriesNotClosedAsync` y `ClosedMessage` (sin uso tras D3) con sus 2 pruebas; `Select`, `AmbiguousMessage`, `SelectClosed` y `FindClosedAsync` quedan para `by-document`. (4) `ToInitiateCommand` está en `RegisterStorageEntryHandler`, no en el controlador. (5) Además de los *helpers*, 13 pruebas que registraban ingresos inline recibieron el manifiesto; `SharedWeighingMultiDepositTests.CompletingTheMissingManifest_SplitsTheNet` borra el manifiesto en la base para simular un depósito anterior a D7; `EntryDateReportsTests` espera el manifiesto DIAN del helper en el kárdex; `StorageLinkedServiceFallbackTests` digita el manifiesto DIAN antes de su confirmación local |
 | 2 · BE pesos y tiquete en $0 | Pendiente | — | — |
 | 3 · BE tarjeta y destinatario | Pendiente | — | — |
 | 4 · FE Báscula | Pendiente | — | — |
