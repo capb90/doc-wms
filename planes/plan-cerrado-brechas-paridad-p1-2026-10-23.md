@@ -1341,6 +1341,8 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 
 ### 16.4 Agregado después de la fase 12c (2026-10-26)
 
+> **En espera (2026-10-26, `DEC-057`):** la fase 13 se ejecuta después del plan cerrado de los hallazgos de los operarios, y despliega todo junto. Ese plan agrega sus commits y, si las trae, sus migraciones a la lista de abajo.
+
 Entre la fase 12c y la 13 se ejecutaron tres planes más:
 - `plan-cerrado-correccion-def-f11-030-034-2026-10-25.md` (DEF-F11-030, 034 y 035; `DEC-056`);
 - `plan-cerrado-correccion-def-f11-029-033-2026-10-25.md`;

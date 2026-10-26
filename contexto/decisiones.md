@@ -59,7 +59,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - Los tipos de unidad son un catálogo global que amplía el administrador.
 - El tanquero es un tipo de unidad, no un embalaje.
 
-**DEC-015 — Unidad de medida y embalaje** (Ola 2, WMS-18). Se imprimen como campos separados. Las unidades de medida son un catálogo que administra el Admin (el enum desapareció).
+**DEC-015 — Unidad de medida y embalaje** (Ola 2, WMS-18). Se imprimen como campos separados. Las unidades de medida son un catálogo que administra el Admin (el enum desapareció). *Precisada por `DEC-057` (2026-10-26): la tarjeta va como el legacy (Ampara · Saldo · Mercancía, embalaje dentro del texto, sin unidad); el PDF del depósito y la guía siguen igual.*
 
 **DEC-016 — Alcances recortados de la Ola 3** (comentarios de Linear del 2026-09-21):
 - **WMS-12 no se implementa.** La etiqueta sigue solo en Comercio Exterior: nada de `LabelAccess` ni de marca «PRELIMINAR».
@@ -161,7 +161,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 **DEC-051 — Depósitos** (2026-10-23).
 - **Límite de la corrección de la fecha de ingreso** (BR-04-002; precisa `DEC-012`). Se corrige solo dentro de la estadía del primer camión: no antes de su ingreso en Vigilancia ni después de su salida. Para ir más atrás se corrige primero el ingreso de Vigilancia (WMS-5). Es lo que hace hoy el código; no hay cambio.
 - **Camión tardío a un depósito agotado** (BR-04-001). Un depósito cerrado por agotamiento no recibe más camiones: el camión nuevo con el mismo documento abre otro depósito. `DEC-013` aplica a depósitos en Borrador o Confirmado.
-- **Una etiqueta por depósito** (BR-04-012). No se construye la etiqueta por vehículo del legacy (`adhesivovehiculo.php`).
+- **Una etiqueta por depósito** (BR-04-012). No se construye la etiqueta por vehículo del legacy (`adhesivovehiculo.php`). *Reabierto por `DEC-057` (2026-10-26): se construye la tarjeta por vehículo, además de la del depósito.*
 
 **DEC-052 — Salidas** (2026-10-23).
 - **Bloqueo manual de salidas por cliente** (BR-05-004). **Se construye.** Una marca «sin salidas» en el tercero, con motivo y auditoría, que impide crear órdenes de cargue y emitir guías, aparte del bloqueo por mora. Es el `cliente.sinsalidas` del legacy. *Lo resuelve el plan:* qué roles la ponen y la quitan (`DEC-005`, `DEC-031`).
@@ -190,6 +190,23 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
   - Con la factura anulada sin refacturar, los períodos pasan al cliente nuevo y la refacturación sale a su nombre.
 - **Corrección en Borrador.** Corregir valor, moneda, agencia o fecha de ingreso de un depósito devuelto a Borrador recalcula al momento la factura del período abierto (`DEC-022`); la reconfirmación no recalcula.
 - **Fuente:** el usuario, al aprobar el plan (2026-10-25): «la operación en vigilancia y bascula debe ser rapida como esta actualmente. El operario de bodega puede validar la guia de salida.»
+
+**DEC-057 — Hallazgos de los operarios en staging** (2026-10-26). Respuestas del usuario a las decisiones de `analisis/hallazgos-operarios-2026-10-26.md`, sobre el informe de hallazgos que Bodegas Asociadas envió tras probar staging (build del 2026-10-08). Lo marcado **«Se construye»** necesita plan cerrado (`DEC-001`).
+- **La carta porte la confirma el operario** (H7). **Se construye.** Si el número y tipo de documento ya tienen depósitos abiertos, Báscula los muestra con cliente, importador, transportadora, fecha del documento y placas. El operario elige uno o «Es otro documento: crear depósito nuevo». Nada se asocia solo. Reemplaza la decisión P1 de `planes/paridad-legacy/plan-backend-paridad-legacy.md` (asociación automática por número y tipo). *Por qué:* hoy un camión de otro cliente con el mismo número entra al depósito equivocado, y un depósito sin fecha casa con cualquier fecha.
+- **Pesos del legacy en Báscula** (H3). **Se construye.** El formulario de ingreso muestra siempre P. indicador, T. vehículo, P. manifiesto y P. mercancía, y calcula la tara al digitar el manifiesto: mercancía = manifiesto y tara = indicador − mercancía. *Por definir en el plan:* con segundo pesaje, el neto real reemplaza a la mercancía deducida (el neto por diferencia de pesajes no se pierde).
+- **Tiquete de báscula en $0 solo por convenio** (H5b). **Se construye.** Si el convenio del cliente fija la báscula en $0, el cobro sale en cero, sin número fiscal (`DEC-024`) y marcado «sin cobro por convenio». El operario no puede digitar 0 a mano.
+- **Fecha y tipo del documento en la tarjeta, y mercancía sin duplicar** (H13, H14). **Se construye.**
+  - La tarjeta imprime «{tipo de documento}: {número} ({fecha del documento})», con «N/A» si no hay fecha, en lugar de la fecha de ingreso y del rótulo fijo «Carta Porte».
+  - La descripción del producto no se imprime si es igual al nombre (sin importar mayúsculas, espacios ni tildes) o si el nombre ya la contiene: tarjeta, PDF del depósito y guía de salida.
+- **Manifiesto obligatorio en Báscula** (H2). **Se construye.** El número y el peso del manifiesto del camión son obligatorios al registrar un ingreso a depósito (importación, exportación e inspección). Solo báscula y Salida no lo piden. Reemplaza la decisión P2 / BAS-01 del plan de paridad (opcional en Báscula, exigido al confirmar).
+- **Manifiesto DIAN al confirmar la importación.** **Se construye.** Pasa a ser requisito de confirmación del depósito de importación, como en el legacy. Los migrados y los ya confirmados no cambian.
+- **El cobro de un tiquete guardado no se edita en Báscula** (H5c). Se mantiene `DEC-050` (anular y repetir; Facturación ajusta en Borrador). **Se construye:** se monta para Facturación el diálogo de cambio de destinatario de la factura (BR-06-007).
+- **Sin «Transportadora» en la tarjeta** (H10). **Se construye.** Se quita de las tarjetas de importación, exportación e inspección, como en el legacy. Reemplaza lo pedido en WMS-11; el caso F5-ETI-001 se ajusta.
+- **Tarjeta por vehículo** (H12; reabre la etiqueta única de `DEC-051`). **Se construye.** Además de la tarjeta del depósito, una por cada camión: mismo encabezado, la placa y solo la mercancía y cantidades que ingresó ese camión, como `adhesivovehiculo.php`.
+- **Columnas de la tarjeta como el legacy** (H15; precisa `DEC-015` para la tarjeta). **Se construye.** Ampara · Saldo · Mercancía, con el embalaje dentro del texto («CEBOLLA FRESCA (SACOS)») y sin unidad. El PDF del depósito y la guía siguen con unidad y embalaje separados. *Riesgo aceptado:* con unidades mixtas en un depósito, la tarjeta no dice la unidad del Ampara.
+- **Orden:** un plan cerrado con todo lo anterior se ejecuta **antes** de la fase 13 del plan de brechas P1, y la fase 13 despliega todo junto. Mientras tanto se manda a los operarios una nota de capacitación con lo que ya existe (H1, H4, H5a y H6).
+- **Sin cambios** (ya existen o son de datos): el tipo de vehículo ya es obligatorio en Báscula (H1); la fecha de ingreso se corrige en Vigilancia y luego en el depósito (H4); el tiquete con error se anula o se descarta (H5a); el cliente que no aparece se habilita con el rol Cliente en «Terceros» (H6).
+- **Fuente:** el usuario, en la sesión del 2026-10-26, opción por opción.
 
 ## 7. Documentos impresos
 
