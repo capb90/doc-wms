@@ -124,6 +124,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - **Exportación e inspección** (§7.9). Capturan el mismo «Valor de la mercancía», sin cambios. Facturación confirma si algún convenio de esas modalidades cobra por porcentaje; si ninguno, el valor queda informativo.
 - **Antes de facturar en producción** (§7.10). T1 se reemplaza por la tarifa base de §7.7, se cargan los acuerdos validados y se factura **un mes en paralelo** con el sistema actual, comparando por cliente. Mientras tanto, staging sigue facturando con T1 a los clientes sin acuerdo.
 - **Fuente:** el usuario, en la sesión del 2026-10-25, opción por opción.
+- **Construido** (§7.2, §7.3, §7.5 en el formulario y §7.8) con `planes/plan-cerrado-dec-029-fob-cif-2026-10-25.md`: BE `dafd573` (migración `RenameValueFormulaLabels`), FE `d838535`; docs y verificación local el 2026-10-25. Sin desplegar en staging.
 
 ## 4. Permisos
 

@@ -107,7 +107,7 @@ El Admin C1 necesita un correo de la bandeja local (p. ej. `admin.demo@bodega-de
 | S1 | BASCULA | IVA 19 % y precio base **$16.806,72** (el video 1.6 se grabó con $16.807 porque el campo aún no admitía centavos) vigente desde D0 − 3 o antes: total **$20.000** | **1.6** | Serie 5 |
 | S2 | GUIA_SALIDA | Precio base **$15.000** (sin IVA) | PREP-3 | 7.12 |
 | S3 | PAPELERIA | Precio base **$10.000** | PREP-3 | 2.10 (servicio complementario) |
-| S4 | Tarifa base de ALMACENAMIENTO | «Porcentaje del valor declarado (sin prorrateo)», tipo de depósito «Importación», «Porcentaje» 0,295, «Mínimo a cobrar ($)» 50.000 con «El mínimo incluye IVA» marcado | **1.7** | Depósitos de clientes sin acuerdo |
+| S4 | Tarifa base de ALMACENAMIENTO | «Porcentaje del valor de la mercancía (lote completo)», tipo de depósito «Importación», «Porcentaje» 0,295, «Mínimo a cobrar ($)» 50.000 con «El mínimo incluye IVA» marcado | **1.7** | Depósitos de clientes sin acuerdo |
 | S5 | Valores mínimos | Importación **$50.000** «Con IVA incluido» (en **1.8**); Exportación **$50.000** «Con IVA incluido» (PREP-3) | 1.8 / PREP-3 | 3.5, 3.6 |
 | S6 | Tarifas de montacargas | Tractomula $220.000 · Doble troque $150.000 · Sencillo $140.000 · Turbo $110.000 · Guacal / Estiba $40.000 | **1.9** | 6.5 (Tractomula + IVA = **$261.800**) |
 | S7 | Tarifa base para perecederos | «Solo perecederos», «Por umbral de peso (perecederos)», umbral 20.000 kg, mínimo $60.000, $3 por kg | **2.6** | — |
@@ -117,7 +117,7 @@ El Admin C1 necesita un correo de la bandeja local (p. ej. `admin.demo@bodega-de
 | ID | Cliente | Referencia y nombre | Servicios | Estado | Se crea en |
 |---|---|---|---|---|---|
 | A0 | T1 | `CONV-DEMO-000` «Convenio 2025 Andina Demo» | ALMACENAMIENTO, Importación, «Fijo» $80.000 | **Activo** (se archiva en 2.8) | PREP-4 |
-| A1 | T1 | `CONV-DEMO-001` «Convenio 2026 Andina Demo» | (1) ALMACENAMIENTO, Importación, «Porcentaje del valor declarado (sin prorrateo)» 0,25 %, mínimo $45.000 con IVA; (2) ALMACENAMIENTO, P3 + Importación, 0,20 %, mínimo $30.000 con IVA | Borrador → **Activo** en 2.8 | 2.2 (servicio 1), 2.7 (servicio 2) |
+| A1 | T1 | `CONV-DEMO-001` «Convenio 2026 Andina Demo» | (1) ALMACENAMIENTO, Importación, «Porcentaje del valor de la mercancía (lote completo)» 0,25 %, mínimo $45.000 con IVA; (2) ALMACENAMIENTO, P3 + Importación, 0,20 %, mínimo $30.000 con IVA | Borrador → **Activo** en 2.8 | 2.2 (servicio 1), 2.7 (servicio 2) |
 | A2 | T2 | `CONV-DEMO-002` «Convenio almacenamiento Nariño Demo» | ALMACENAMIENTO, Importación, 0,28 %, mínimo $50.000 con IVA; luego MONTACARGAS «Por tipo de vehículo» (Tractomula $200.000, Doble troque $140.000, Sencillo $130.000, Turbo $100.000, Guacal / Estiba $35.000) y PAPELERIA como complementario | **Activo** | 2.9; 2.10 |
 
 ### 2.7 Camiones, conductores y documentos

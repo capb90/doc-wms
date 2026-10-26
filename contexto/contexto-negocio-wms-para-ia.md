@@ -50,7 +50,7 @@ La mercancía típica son perecederos (p. ej. cebolla), líquidos en tanqueros y
 | **Manifiesto de carga** | Documento aduanero de cada camión. Comercio Exterior registra su número y su peso antes de confirmar. | `UpdateTruckManifest`; `ImportWarehouseStorage.ManifestNumber` |
 | **Unidad de carga** | Contenedor, tanquero o remolque que entra con el camión. Se anotan su tipo y su placa; Bodega la recibe completa sin contar producto por producto; puede salir parcialmente. | `WarehouseStorageCargoUnit`, `WarehouseStorageCargoUnitProduct`, catálogo `CargoUnitType` |
 | **Modo de carga** | Si el depósito es de mercancía suelta o de unidades de carga. Lo fija el primer camión; no se mezclan. | `WarehouseStorage.CargoHandling` (`LooseGoods`, `CargoUnits`) |
-| **Levante** | Autorización de la DIAN para disponer de la mercancía importada, por producto. Lleva FOB en USD, tasa y FOB en COP. Se puede retirar. Comercio Exterior lo consulta en **MUISCA** (sin integración). | `ImportRelease` |
+| **Levante** | Autorización de la DIAN para disponer de la mercancía importada, por producto. Lleva CIF en USD, tasa y CIF en COP (`DEC-029`); el CIF se registra en un solo producto del levante y, si ese producto se retira, pasa al siguiente. Las columnas conservan los nombres `FobUsd` y `FobCop`. Se puede retirar. Comercio Exterior lo consulta en **MUISCA** (sin integración). | `ImportRelease` |
 | **Nacionalizado** | Estado de la importación cuando tiene **al menos un levante**. El despacho de cada producto no puede superar lo nacionalizado. | `ImportLabelsStatus` |
 | **Prórroga / abandono** | El depósito de importación cae en abandono a los 30 días sin prórroga, o a los 60 con ella; la alerta sale 10 días antes. La prórroga se registra una sola vez. | `AbandonmentCalculator`, `AbandonmentAlertBackgroundService` |
 | **Etiqueta** | Rótulo de la mercancía. Importación: «SIN NACIONALIZAR» y luego «NACIONALIZADO». Exportación: cantidad o peso. Se reimprime cuando cambia la cantidad; se cuentan las impresiones. | `LabelGenerationService`, `WarehouseStorageLabelPrint` |
@@ -64,7 +64,7 @@ La mercancía típica son perecederos (p. ej. cebolla), líquidos en tanqueros y
 | **Cuadrilla** | Grupo de cargue o descargue. | `Crew` |
 | **Montacargas** | Servicio de descargue o cargue, con horómetro inicial y final y el camión con el que se inicia. | `ForkliftUse`, `ForkliftRate` |
 | **TRM** | Tasa representativa del mercado (COP por USD), de la DIAN o manual. | `WarehouseStorage.Trm`, `TrmSource`, `TrmDate` |
-| **Valor de la mercancía** | Valor del ingreso, equivalente al FOB (`DEC-029`); base de las tarifas por porcentaje. El código y algunos textos aún lo llaman «CIF». | `WarehouseStorage.CargoValue` + `Currency` |
+| **Valor de la mercancía** | Valor del ingreso, equivalente al FOB (`DEC-029`); base de las tarifas por porcentaje. El código conserva el nombre `CargoValue` (y `CargoValueCop` en las fórmulas). | `WarehouseStorage.CargoValue` + `Currency` |
 | **Tercero** | Persona o empresa con uno o varios roles de negocio. | `Stakeholder`, `StakeholderBusinessRole` |
 | **Agencia de aduanas = SIA = intermediario** | Un solo rol de negocio, código `CUSTOMS_AGENCY`. Un `"SIA"` o `"INTERMEDIARY"` en el código es un bug. | `BusinessRole` |
 | **Convenio** | Tarifas pactadas con un cliente por servicio, producto, modalidad y perecedero, con fórmulas. | `Agreement` → `AgreementService` + `AgreementParameter` |
@@ -209,7 +209,7 @@ Si el camión no pasa por báscula (motivo «Solo bodega»), Bodega crea el dep�
 
 ### 5.9 Control aduanero (importación)
 
-- Levantes por producto, con FOB en USD, tasa y FOB en COP congelados. Se pueden retirar.
+- Levantes por producto, con CIF en USD, tasa y CIF en COP congelados. Se pueden retirar.
 - Prórroga, una sola vez. Abandono a los 30 o 60 días, con alerta diaria (07:00) 10 días antes y página `/foreign-trade/abandonment`.
 - Catálogo de ciudades con días de tránsito y marca de destino de abandono; el vencimiento de la guía se calcula a partir de ellos.
 
@@ -246,7 +246,7 @@ Puede ser un tercero registrado, una persona no registrada (basta su cédula; lo
 
 ```
 ServiceRecord (Input: carta porte, modalidad, terceros documentales, cierre de ingreso de camiones)
- └─ WarehouseStorage (número, estado, modo de carga, CIF, moneda, TRM y su origen, fecha de ingreso, cliente)
+ └─ WarehouseStorage (número, estado, modo de carga, valor de la mercancía, moneda, TRM y su origen, fecha de ingreso, cliente)
      ├─ WarehouseStorageProduct            por producto: declarado, cantidad del depósito, stock,
      │   └─ WarehouseStorageProductPlacement   reservado, disponible, embalaje, unidad; ubicaciones
      ├─ WarehouseStorageEntry              una fila por camión (EntryLog, ciclo de báscula, manifiesto)
@@ -339,8 +339,8 @@ En los niveles 1 y 2, la escalera de especificidad (`RuleSpecificity`) filtra pr
 | Código | Qué cobra |
 | --- | --- |
 | `FIXED` | Valor fijo; admite tarifas «IVA incluido». |
-| `PERCENTAGE_OF_VALUE` | Un % del CIF en pesos, con `minimum` y `minimumThreshold`. **No se multiplica por el stock.** |
-| `PERCENTAGE_OF_VALUE_PRORATED` | Un % de `CIF × CurrentStock / ReceivedQuantity`; base plana; el mínimo no se prorratea. Convive con la anterior hasta que el cliente decida (`DEC-025`). |
+| `PERCENTAGE_OF_VALUE` | «Porcentaje del valor de la mercancía (lote completo)». Un % del valor de la mercancía en pesos, con `minimum` y `minimumThreshold`. **No se multiplica por el stock.** |
+| `PERCENTAGE_OF_VALUE_PRORATED` | «Porcentaje del valor de la mercancía (prorrateado por saldo)». Un % de `valor de la mercancía × CurrentStock / ReceivedQuantity`; base plana; el mínimo no se prorratea. Es la fórmula por defecto: el formulario la preselecciona al crear una tarifa base o un servicio de acuerdo de ALMACENAMIENTO; la de lote completo queda para los convenios que la pidan (`DEC-029`). |
 | `PER_UOM` | Valor × cantidad en una unidad de medida; el parámetro `uom` debe coincidir con la de los productos. |
 | `PER_VEHICLE` | Valor × vehículos del depósito. |
 | `PER_CARGO_UNIT` | Valor × unidades de carga de un tipo (contenedor, tanquero…). |
@@ -353,14 +353,14 @@ En los niveles 1 y 2, la escalera de especificidad (`RuleSpecificity`) filtra pr
 ### 7.4 Almacenamiento
 
 - **Unidad de trabajo: el depósito.** Los productos con stock se agrupan por la regla que les resuelve; cada grupo es un cargo con su `StorageBillingPeriod` y sus productos en `StorageBillingPeriodProduct`. La factura es una por depósito (o la consolidada), con una línea por cargo.
-- **Magnitudes del depósito** (CIF, unidades de carga, vehículos): se cobran una sola vez. El CIF de un grupo se prorratea por `ReceivedQuantity`.
+- **Magnitudes del depósito** (valor de la mercancía, unidades de carga, vehículos): se cobran una sola vez. El valor de la mercancía de un grupo se prorratea por `ReceivedQuantity`.
 - **La factura siempre se genera** (`DEC-020`). Sin regla, o si la regla falla, el cargo usa el valor mínimo de la modalidad. Los mínimos sembrados son $0; los reales se configuran. La advertencia va al `Detail` de la factura (máx. 1000 caracteres) y a una notificación para Facturación.
 - **Período:**
   - El primero se abre **solo al confirmar**, y empieza en la **fecha de ingreso** en Colombia, nunca en el futuro.
   - Fin = inicio + N días del ciclo (o un mes en el mensual). La renovación ocurre al día siguiente de la fecha límite (fin + 3). El siguiente período empieza en fin + 1.
 - **Qué cobra cada período:**
   - El primero cobra la cantidad total.
-  - Las renovaciones cobran el saldo en las fórmulas por cantidad y en la prorrateada. `PERCENTAGE_OF_VALUE` cobra el CIF completo en cada renovación.
+  - Las renovaciones cobran el saldo en las fórmulas por cantidad y en la prorrateada. `PERCENTAGE_OF_VALUE` cobra el valor completo en cada renovación.
   - El período se cobra por adelantado.
 - **Renovación y cierre:** el job cierra los períodos vencidos y renueva los de depósitos con stock. Se puede cerrar a mano y refacturar.
 

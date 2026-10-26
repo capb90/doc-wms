@@ -232,3 +232,11 @@
 **Video nuevo sugerido:** «Verificar una guía con el celular» (página pública `/verificar/guia/…`), para Comercio Exterior y para quien recibe la guía en papel.
 
 **Guía de operarios** (`planes/migracion-staging/resultados/guia-pruebas-operarios.md`): se anotan los mismos puntos en su §12, para que rijan desde el despliegue de la fase 13.
+
+## 8. Terminología de `DEC-029` en los guiones (2026-10-25)
+
+> **Origen:** `planes/plan-cerrado-dec-029-fob-cif-2026-10-25.md` (D1–D5, D8), fase 3. Código de referencia: Backend `dafd573` / Frontend `d838535`. Los videos publicados que quedan desactualizados están en `videos/videos-desactualizados-dec-029.md`; se regraban en una tarea aparte.
+
+| Guiones | Qué cambió en el guion | Plan DEC-029 |
+|---|---|---|
+| 1.7, 2.2, 2.4, 2.5, 2.7, 2.9, 3.3, 3.5, 7.2, 7.7 y 7.15 (y S4 y A1 de `dataset-grabacion.md`) | El levante se rotula CIF («CIF del levante (USD)», «Valor CIF de los levantes (USD)…»). El valor del depósito es «Valor de la mercancía» (antes «Valor Comercial», «Valor mercancía» o «Valor de la mercancía (CIF)»). La fórmula de lote completo es «Porcentaje del valor de la mercancía (lote completo)» y el umbral, «Umbral del valor de la mercancía por encima del cual no se aplica el mínimo ($)». Las narraciones ya no llaman CIF al valor del depósito | D1–D4, D8 |

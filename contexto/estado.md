@@ -1,7 +1,7 @@
 # Estado del proyecto
 
 > **Para qué sirve:** qué está hecho, qué hay en staging, qué falta y qué decisiones siguen abiertas.
-> **Fecha de corte:** 2026-10-24. Backend `develop` `560f558`, frontend `develop` `e2e11e6`. Las secciones §1 a §4 describen el estado del 2026-10-23 más el hito y los commits del plan de brechas P1 (§2 y §3); el resto se revisa al cerrar la fase 13.
+> **Fecha de corte:** 2026-10-25. Backend `develop` `dafd573`, frontend `develop` `d838535`. Las secciones §1 a §4 describen el estado del 2026-10-23 más los hitos y commits del plan de brechas P1 y de `DEC-029` (§2, §3 y pendiente 8); el resto se revisa al cerrar la fase 13.
 > **Mantenimiento:** actualiza este documento al cerrar un trabajo que cambie el estado general (`procesos/flujo-de-trabajo-agentes.md` §7). Cambia la fecha de corte y no borres el historial de hitos.
 
 ## 1. Resumen
@@ -29,6 +29,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 2026-10-08 → 09 | Fixes tras el despliegue, producción de videos (F1–F7) y centro de ayuda | `74e16f3` / `146e26d` |
 | 2026-10-23 | Hub de documentación (`docs/`, repo propio) y `AGENTS.md`/`CLAUDE.md` en cada repo | `b27c9bf` / `31da26c` |
 | 2026-10-24 | **Plan de brechas P1** (fases 1 a 12; fase 13 pendiente): 20 brechas de la auditoría de paridad más 5 colaterales y el QR de verificación de la guía (`DEC-060`); 4 migraciones; QA local en `qa/resultados/P1-informe-2026-10-24.md` (GO con condiciones; DEF-F11-028 corregido y verificado en local, BE `9e399de`) | BE `560f558` / FE `e2e11e6` (fases 1 a 11; la 12 es solo de documentación) |
+| 2026-10-25 | **DEC-029 construido** (3 fases): levante rotulado CIF, «Valor de la mercancía» en el depósito y las fórmulas (migración `RenameValueFormulaLabels`), valor del levante una sola vez (409) que pasa al siguiente producto al retirar, y fórmula prorrateada preseleccionada en almacenamiento; verificado en local. Sin desplegar en staging; los videos que quedan desactualizados están en `videos/videos-desactualizados-dec-029.md` | `dafd573` / `d838535` |
 
 ## 3. Staging
 
@@ -66,7 +67,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 5 | Decidir si se desactivan las cuentas `qa.*` en staging | `planes/migracion-staging/resultados/informe-fase-5.md` | |
 | 6 | Vaciar o anonimizar staging al terminar las pruebas (tiene datos reales) | `planes/migracion-staging/plan-migracion-legacy-staging.md` | |
 | 7 | **Corte real:** volcado nuevo del legacy y repetir las fases 1 y 3 de la migración, **con el congelamiento y el conteo de operaciones abiertas (C1 a C9) como paso 0** | `planes/migracion-staging/plan-migracion-legacy-staging.md`; `planes/migracion-staging/procedimiento-corte-operaciones-abiertas.md` (escrito el 2026-10-24, sin ensayar) | El CSV de depósitos trae ahora `prorroga` y el de levantes `anio_deposito` (BR-08-003 y BR-08-005): regenerar las consultas de F6-03 |
-| 8 | **FOB/CIF y tarifas (`DEC-029`, 2026-10-25):** decidido que el depósito guarda el FOB del ingreso («Valor de la mercancía») y el levante es CIF. Falta: plan cerrado para los rótulos del levante y la póliza (CIF), el nombre único del valor del depósito y el bloqueo del valor repetido del levante; que Facturación valide los acuerdos calibrados y la tarifa base prorrateada que reemplaza T1; y un mes de facturación en paralelo antes de producción | `analisis/analisis-fob-cif-legacy-v2-2026-10-24.md` §7; `contexto/decisiones.md` DEC-029 | Staging sigue facturando con T1 a los clientes sin acuerdo |
+| 8 | **Tarifas de almacenamiento (`DEC-029`, 2026-10-25), para Facturación:** validar los acuerdos calibrados por cliente y fijar la tarifa base prorrateada que reemplaza T1; después, un mes de facturación en paralelo antes de producción | `analisis/analisis-fob-cif-legacy-v2-2026-10-24.md` §7; `contexto/decisiones.md` DEC-029 | Staging sigue facturando con T1 a los clientes sin acuerdo |
 | 9 | Dar de baja el ambiente Azure `test` cuando el cliente valide staging | `Backend/wms-api/infra/` | |
 | 10 | Video tutoriales: F7 entregada para revisión; etiquetas de Trazabilidad en inglés (H1) | `videos/guiones/plan-produccion-videos.md` | |
 | 11 | Permisos por usuario | `planes/plan-cerrado-permisos-por-usuario-2026-10-07.md` | **Diferido** después del corte |
