@@ -225,6 +225,6 @@ En `F/tools/video-tutoriales/` se reemplazan los textos que buscan los scripts p
 
 | Fase | Estado | Commits | Notas |
 | --- | --- | --- | --- |
-| 1 · Backend | Pendiente | — | — |
+| 1 · Backend | Hecha 2026-10-25, sin commit | — (base `3cbf181`) | Migración `20261025235406_RenameValueFormulaLabels` (solo los dos `UpdateData` de `formula_types`), aplicada en local a `wms_qa_preprod`: `wmsdb` sigue en un esquema anterior a `RemoveSampleSeedData` y no se migró (`procesos/verificacion-local.md` §1). `has-pending-model-changes` limpio. Compuertas: `dotnet build` 0 errores; `Wms.Tests` 2029/2029; `Wms.IntegrationTests` 438/440, con solo las 2 fallas de la línea base, que pasan solas; grep del §2.5 sin textos visibles (quedan comentarios con «valor de la mercancía (FOB del ingreso)», como pide el §2.2). Desviaciones: (1) nuevo `ReleaseValueLookup.cs`, la consulta de D6 compartida por alta y edición (como `ReleaseDuplicateLookup`, que no trae valor ni producto); (2) la elección del heredero de D7 es la función pura `ReleaseValueRules.FindHeir`, probada en `Wms.Tests`; (3) caso borde, gana D6: si otro producto del levante ya tiene valor (datos anteriores al bloqueo), el retiro no traspasa nada, para no repetir el CIF ni bloquear el retiro; (4) se ajustó además `PercentageOfValueFormulaCalculatorTests` (mensaje nuevo del §2.2) y los comentarios de pruebas que llamaban FOB al levante; (5) el alta del levante responde 200, no 201: la prueba comprueba éxito |
 | 2 · Frontend | Pendiente | — | — |
 | 3 · Docs y verificación | Pendiente | — | — |
