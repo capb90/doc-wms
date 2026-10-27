@@ -157,6 +157,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - **La apertura de la facturación espera a los convenios validados.** Crear un convenio no recalcula las facturas existentes. Si Facturación no valida a tiempo, staging se reinicia sin convenios ni apertura, y los dos se corren después, con el primer período igual desde el día del reinicio.
 - **Plan:** `planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`.
 - **Fuente:** el usuario, en la sesión del 2026-10-27, opción por opción.
+- **Ejecución:** fase 4 hecha el 2026-10-27 en staging. La base se recreó con 19 migraciones y el legacy se cargó con conteos idénticos al ensayo local. Quedaron las tarifas T1 a T4 y de montacargas, las 5 cuentas `operario.*` y los respaldos `local-staging` y `s3-externo`. Respaldos: `b88fdf98` antes del reinicio y `bf7bf952` «listo para operarios v2». Sin hoja validada, los convenios y `open-billing` quedan para la fase 4b (`planes/migracion-staging/resultados/informe-staging-limpio-fase-4.md`).
 
 ## 6. Respuestas a la auditoría de paridad (2026-10-23)
 
