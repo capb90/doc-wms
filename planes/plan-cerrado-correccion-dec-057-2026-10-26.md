@@ -204,7 +204,7 @@
 
 **Hallazgos abiertos.** Todos son de frontend, sin migración. Ninguno pierde datos guardados ni cambia un cálculo. Su corrección: `plan-cerrado-correccion-validacion-dec-058-2026-10-26.md`.
 
-**Corregidos (2026-10-26)** con ese plan, y verificados en local sobre `wms_qa_preprod`: R1–R6 (báscula) en FE `345cc44`, docs `d91a325`; R7, R8 y R10 (páginas) y R9 (textos, QA, nota y videos) en el commit FE y el de docs de su fase 2. Sus casos QA: F3-COL-014 a F3-COL-018, F3-RPT-003, F10-UI-009, F1-TER-020, F5-GUI-024 y F5-OC-024.
+**Corregidos (2026-10-26)** con ese plan, y verificados en local sobre `wms_qa_preprod`: R1–R6 (báscula) en FE `345cc44`, docs `d91a325`; R7, R8 y R10 (páginas) y R9 (textos, QA, nota y videos) en FE `a0db12b`, docs `6e20684`. Sus casos QA: F3-COL-014 a F3-COL-018, F3-RPT-003, F10-UI-009, F1-TER-020, F5-GUI-024 y F5-OC-024.
 
 | # | Gravedad | Hallazgo | Escenario |
 | --- | --- | --- | --- |
