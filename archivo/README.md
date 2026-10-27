@@ -10,6 +10,7 @@
 | `prompts/selector-conductor/` | Prompts de las fases 1 a 4 del selector de conductor | `planes/plan-cerrado-selector-conductor-2026-10-08.md` y `qa/resultados/SEL-informe-2026-10-08.md` |
 | `prompts/videos/` | Prompt de actualización de los guiones de video | `videos/guiones/` |
 | `prompts/dec-029/` | Prompt por fase (1 a 3) del plan de `DEC-029`: levante CIF, «Valor de la mercancía», valor único del levante y fórmula prorrateada | `planes/plan-cerrado-dec-029-fob-cif-2026-10-25.md` (§6) |
+| `prompts/dec-057/` | Prompts por fase del plan de `DEC-057` (hallazgos de los operarios, fases 1 a 6) y del plan de corrección de su revisión con los ajustes visuales de `DEC-058` (fases 1 a 5) | `planes/plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md` (§8) y `planes/plan-cerrado-correccion-dec-057-2026-10-26.md` (§7) |
 | `contexto-proyecto-wms.md` | Contexto técnico de abril de 2026 (modelo de datos y flujo de depósitos) | Superado por `contexto/contexto-negocio-wms-para-ia.md` |
 
 Las rutas dentro de estos archivos se actualizaron a la estructura del hub el 2026-10-23. El texto original de cada uno está en el historial de git: en este repo, los que venían de la antigua carpeta «ajustes» y de la raíz del hub; en el historial de `Backend/wms-api` o `Frontend/wms`, los que salieron de sus carpetas `docs/`.

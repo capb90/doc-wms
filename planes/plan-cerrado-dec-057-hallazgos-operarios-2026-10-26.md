@@ -1,6 +1,6 @@
 # Plan cerrado — Hallazgos de los operarios (DEC-057)
 
-> **Fecha:** 26 de octubre de 2026. **Estado:** Aprobado por el usuario el 2026-10-26. Ejecutado el 2026-10-26 (§8): las 6 fases commiteadas; la corrección posterior de la tarjeta de pesos de CE, sin commit. Prompt del ejecutor, por fase: `prompt-plan-dec-057-hallazgos-operarios-2026-10-26.md`.
+> **Fecha:** 26 de octubre de 2026. **Estado:** Aprobado por el usuario el 2026-10-26. Ejecutado el 2026-10-26 (§8): las 6 fases commiteadas, con la corrección posterior de la tarjeta de pesos de CE (FE `41a17e1`). Prompt del ejecutor, por fase (archivado): `archivo/prompts/dec-057/prompt-plan-dec-057-hallazgos-operarios-2026-10-26.md`.
 > **Origen:**
 > - `DEC-057` (`contexto/decisiones.md`) y `analisis/hallazgos-operarios-2026-10-26.md`;
 > - las respuestas del usuario a las preguntas de este plan (2026-10-26), registradas en D3, D11, D18 y D19.
