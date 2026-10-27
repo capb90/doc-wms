@@ -89,7 +89,7 @@ Anota en el informe cada palanca usada (SQL exacto, hora, reinicios).
 
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F6-ACC-001 | Diálogo de acciones | «Acciones» en una factura Draft. | Muestra solo las acciones válidas: asignar N.º, aprobar (deshabilitado sin N.º), editar detalle, notas, anular. | P0 | FUN |
+| F6-ACC-001 | Diálogo de acciones | «Acciones» en una factura Draft. | Muestra solo las acciones válidas: asignar N.º, aprobar (deshabilitado sin N.º), editar detalle, notas, anular. **Actualizado (`DEC-058`, U4; validación R9):** en la lista de Facturas, «Acciones» es un botón de ícono (rayo, `pi pi-bolt`) con la ayuda «Acciones» al pasar el mouse. | P0 | FUN |
 | F6-ACC-002 | Asignar N.º SIIGO | Asignar `QA-SIIGO-0001`. | Se guarda; aparece en el listado. | P0 | FUN |
 | F6-ACC-003 | N.º duplicado | Asignar el mismo número a otra factura. | 409 «Ya existe una factura con el número 'QA-SIIGO-0001'.». | P0 | RN |
 | F6-ACC-004 | N.º vacío o largo | Vacío; 51 caracteres. | «El número de factura no puede estar vacío.»; > 50 rechazado. | P2 | VAL |

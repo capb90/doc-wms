@@ -71,6 +71,10 @@ Rutas relativas a `video-tutoriales-trabajo/salida/publicacion/videos/`.
 | Cada página con su propio título; en las listas de `AppTable`, un título pequeño y un «Nuevo» gris | Todas las páginas del menú con la misma tarjeta de encabezado (título, subtítulo y acciones a la derecha, con el «Nuevo …» primario), la tarjeta de filtros y la tabla con el mismo estilo y paginador | U1–U5 |
 | «Registrar Pago», «Recepción Directa», «Crear Ubicación» | «Nuevo pago», «Nueva Recepción Directa», «Nueva ubicación» | U1 |
 | Botones con texto en las filas de Bodega: «Completar recepción», «Finalizar» (montacargas), «Ubicaciones» y «Registrar novedad» (inventario) | Botones de ícono, con ese texto como ayuda al pasar el mouse | U4 |
+| «Acciones» con texto en cada fila de Facturas | Botón de ícono (rayo), con «Acciones» como ayuda al pasar el mouse | U4 (validación R9) |
+| «Registrar prórroga» con texto en cada fila de Abandono | Botón de ícono (calendario con +), con «Registrar prórroga» como ayuda al pasar el mouse | U4 (validación R9) |
+| «Generar Guía» con texto en cada fila de Pendientes de guía | Botón de ícono (documento), con «Generar Guía» como ayuda al pasar el mouse. El texto de la página dice «Use el botón «Generar Guía» (ícono de documento) de cada orden…» | U4 (validación R9) |
+| «Generar Guía» en el encabezado de Pendientes de guía | «Nueva Guía», como en el historial de guías | U1 (validación R9) |
 
 ### 5.2 Subtítulos con narración desactualizada
 
@@ -85,7 +89,7 @@ Rutas relativas a `video-tutoriales-trabajo/salida/publicacion/subtitulos/`.
 | `serie-7/7-01-tablero-y-kanban.vtt` | 29 | «El buscador encuentra por número de depósito…» | Cada columna tiene su buscador: documento, depósito, tercero o producto. Arriba quedan el tipo y las fechas |
 | `serie-6/6-08-novedades-de-mercancia.vtt` | 9 | «También se registra desde el inventario con Registrar novedad.» | Sigue siendo cierto, pero ahora es un botón de ícono con esa ayuda (cambio menor) |
 
-Grep del 2026-10-26 sobre todas las series de «izquierda», «derecha», «ficha», «cola», «kanban», «columna», «buscador», «nuevo», «Registrar Pago», «Crear Ubicación», «Recepción Directa», «Completar recepción» y «Finalizar». Los demás subtítulos no contradicen `DEC-058`.
+Grep del 2026-10-26 sobre todas las series de «izquierda», «derecha», «ficha», «cola», «kanban», «columna», «buscador», «nuevo», «Registrar Pago», «Crear Ubicación», «Recepción Directa», «Completar recepción» y «Finalizar». Los demás subtítulos no contradicen `DEC-058`. Un segundo grep, del 2026-10-26 (validación R9), de «Acciones», «prórroga», «Generar guía», «Nueva guía», «Pendientes de guía», «Recuperar operaciones», «Nueva orden» y «Crear primera orden» no encuentra subtítulos que nombren esos botones: `7-08` habla de la prórroga y `7-13` de las pendientes sin nombrar el botón, así que no cambian.
 
 ### 5.3 Videos con imagen desactualizada
 

@@ -1341,18 +1341,19 @@ Cada paso que toca staging necesita un «sí» explícito del usuario. Runbook: 
 
 ### 16.4 Agregado después de la fase 12c (2026-10-26)
 
-> **En espera (2026-10-26, `DEC-057`):** la fase 13 se ejecuta después del plan cerrado de los hallazgos de los operarios, y despliega todo junto. Ese plan agrega sus commits y, si las trae, sus migraciones a la lista de abajo. *Hecho el 2026-10-26:* el plan `DEC-057` está construido y verificado en local; sus commits, su migración y sus casos van abajo. También quedó ejecutado `plan-cerrado-correccion-dec-057-2026-10-26.md` (corrección de la revisión de `DEC-057` y ajustes visuales de `DEC-058`), sin migración; sus commits y sus casos van abajo.
+> **En espera (2026-10-26, `DEC-057`):** la fase 13 se ejecuta después del plan cerrado de los hallazgos de los operarios, y despliega todo junto. Ese plan agrega sus commits y, si las trae, sus migraciones a la lista de abajo. *Hecho el 2026-10-26:* el plan `DEC-057` está construido y verificado en local; sus commits, su migración y sus casos van abajo. También quedó ejecutado `plan-cerrado-correccion-dec-057-2026-10-26.md` (corrección de la revisión de `DEC-057` y ajustes visuales de `DEC-058`), sin migración; sus commits y sus casos van abajo. Y, después de su validación, `plan-cerrado-correccion-validacion-dec-058-2026-10-26.md` (R1–R10, solo frontend y docs, sin migración); sus commits y sus casos también van abajo.
 
-Entre la fase 12c y la 13 se ejecutaron cinco planes más:
+Entre la fase 12c y la 13 se ejecutaron seis planes más:
 - `plan-cerrado-correccion-def-f11-030-034-2026-10-25.md` (DEF-F11-030, 034 y 035; `DEC-056`);
 - `plan-cerrado-correccion-def-f11-029-033-2026-10-25.md`;
 - `plan-cerrado-dec-029-fob-cif-2026-10-25.md` (`DEC-029`);
 - `plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md` (`DEC-057`);
-- `plan-cerrado-correccion-dec-057-2026-10-26.md` (revisión de `DEC-057` y `DEC-058`).
+- `plan-cerrado-correccion-dec-057-2026-10-26.md` (revisión de `DEC-057` y `DEC-058`);
+- `plan-cerrado-correccion-validacion-dec-058-2026-10-26.md` (validación de `DEC-058`, R1–R10).
 
 Sus cambios van en este despliegue. Lo que esto suma a §16.1–§16.3:
 
-- **Commits a desplegar:** BE `develop` `911399c` y FE `develop` `e1e871a` (antes `dafd573` / `d838535`; los suben los commits de `DEC-057`: BE `c2239cd`, `543fe7f` y `a8d06dd`, FE `0948d62`, `18f79f1` y `41a17e1`; y los de la corrección de la revisión y `DEC-058`: BE `7189676` y `911399c`, FE `543502d`, `3d4056b`, `1fbcc8a` y `e1e871a`), o los descendientes que el usuario confirme. Incluyen los commits posteriores al 2026-10-08 que `contexto/estado.md` §3 lista como no desplegados.
+- **Commits a desplegar:** BE `develop` `911399c` y FE `develop`: el commit de la fase 2 de la corrección de la validación de `DEC-058`, descendiente de `345cc44` (antes `dafd573` / `d838535`; los suben los commits de `DEC-057`: BE `c2239cd`, `543fe7f` y `a8d06dd`, FE `0948d62`, `18f79f1` y `41a17e1`; y los de la corrección de la revisión y `DEC-058`: BE `7189676` y `911399c`, FE `543502d`, `3d4056b`, `1fbcc8a` y `e1e871a`; y los de la corrección de su validación: FE `345cc44` y el de su fase 2), o los descendientes que el usuario confirme. Incluyen los commits posteriores al 2026-10-08 que `contexto/estado.md` §3 lista como no desplegados.
 - **Migraciones:** son **8** (`DEC-058` no agrega ninguna): las 6 de §16.1, paso 4, más `20261025235406_RenameValueFormulaLabels` (solo datos: nombres de dos fórmulas, `DEC-029` D4) y `20261026183022_AddLabelPrintEntry` (`DEC-057` D20: columna opcional `warehouse_storage_entry_id` en el registro de impresiones de la tarjeta, con su índice y su FK con `SET NULL`). Antes de aplicarlas, el script idempotente se revisa contra esta lista.
 - **Antes de desplegar, un conteo más (solo lectura, con aprobación):** levantes con valor en más de un producto, por depósito, número y aceptación, con recorte y mayúsculas (`DEC-029` D9). Se informa la cifra y no se corrige nada (`DEC-006`). En las bases locales salió 0.
 - **Avisos que da el usuario antes de abrir staging a los operarios:**
@@ -1370,9 +1371,9 @@ Sus cambios van en este despliegue. Lo que esto suma a §16.1–§16.3:
   - **DEC-029:** registrar un levante `PRAC-` con dos productos (el segundo sin valor, y 409 si se fuerza) y ver «CIF» en la póliza y el kárdex;
   - **DEC-057**, con datos `PRAC-`: el selector de carta porte con dos clientes y la misma carta porte (F3-REG-026, F3-REG-027); el manifiesto obligatorio (F3-REG-025); un solo pesaje de inspección con 21.380 y 13.700 (F3-PES-017, F3-PES-018); la báscula en $0 de un convenio de prueba (F3-COB-015); el manifiesto DIAN al confirmar (F5-CNF-017); la tarjeta del depósito y la del camión impresas (F5-ETI-001, F5-ETI-008); y el cambio de destinatario a la agencia (F6-INV-021);
   - **revisión de `DEC-057`**, con datos `PRAC-`: «Guardar» con una carta porte de depósito abierto sin salir del campo no guarda y muestra el selector (F3-REG-030);
-  - **`DEC-058`**, panel de báscula con datos `PRAC-`: la cola en tabla (F3-COL-008), abrir el panel, «Volver a la cola» con lo digitado intacto y Esc que no lo cierra (F3-COL-009 a F3-COL-011), «Atrás» del navegador (F3-COL-012), F2 sobre el panel (F3-COL-013), «Retomar» (F3-REC-002) y la pantalla a 1366×768 (F3-UX-006, F10-RES-001), en el equipo de Báscula si es posible;
+  - **`DEC-058`**, panel de báscula con datos `PRAC-`: la cola en tabla (F3-COL-008), abrir el panel, «Volver a la cola» con lo digitado intacto y Esc que no lo cierra (F3-COL-009 a F3-COL-011), «Atrás» del navegador (F3-COL-012), F2 sobre el panel (F3-COL-013), «Retomar» (F3-REC-002) y la pantalla a 1366×768 (F3-UX-006, F10-RES-001), en el equipo de Báscula si es posible. De la corrección de la validación: el encabezado mientras carga un camión, en la red de Báscula (F3-COL-014); las teclas del navegador con el foco en una fila (F3-COL-015); el foco que no sale del panel (F3-COL-016); F5 con el panel abierto (F3-COL-017); «Atrás» con una ventana abierta (F3-COL-018); y el panel en modo oscuro (F10-UI-009);
   - **`DEC-058`**, tablero de depósitos con los datos migrados (solo lectura): scroll por columna, carga infinita hasta el final de la columna más grande y búsqueda por carta porte, tercero y producto (F5-LIS-001, F5-LIS-007 a F5-LIS-009), con el tiempo de respuesta de la búsqueda anotado (riesgo del índice, §8 del plan de corrección);
-  - **`DEC-058`**, encabezado común en las páginas del menú (F10-UI-001), en una pasada rápida.
+  - **`DEC-058`**, encabezado común en las páginas del menú (F10-UI-001), en una pasada rápida; con él, el título de Terceros con el filtro de Roles (F1-TER-020), los enlaces de guías, órdenes y «Recuperar operaciones» en otra pestaña (F5-GUI-024, F5-OC-024, F3-REC-001) y el informe de báscula con error (F3-RPT-003).
 - **Fuera de esta fase:**
   - PRF-002 (`DEC-042`);
   - FA-MIG-013 y el corte real (`DEC-040`);

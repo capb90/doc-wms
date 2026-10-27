@@ -30,6 +30,7 @@ Login · Trazabilidad · Notificaciones · Usuarios · Terceros (lista, detalle,
 | F10-UI-006 | Textos | Revisar textos visibles. | En español, sin «stakeholder» residual donde ya dice «Terceros», sin estados en inglés (R-CE-07), sin errores ortográficos, sin claves de traducción crudas. | P2 | UI |
 | F10-UI-007 | Modo claro/oscuro | Si la plantilla ofrece cambio de tema: probarlo en 5 pantallas. | Legible en ambos; sin textos invisibles. | P3 | UI |
 | F10-UI-008 | Iconos | Iconos sin texto. | Tienen tooltip o etiqueta. | P3 | UI |
+| F10-UI-009 | Modo oscuro en Báscula | Activar el modo oscuro; entrar a Báscula, abrir un camión y recorrer sus pasos; volver a la cola y a otra página. | **Nuevo (validación `DEC-058`, R6):** el panel de proceso tiene fondo oscuro, igual que su encabezado y sus tarjetas; el fondo y el texto del resto de la página no cambian al entrar a Báscula ni al abrir el panel; «Espera» sigue en ámbar desde 60 min. | P3 | UI |
 
 ### 4.2 Responsive y equipos reales (RES)
 
