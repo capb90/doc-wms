@@ -1,6 +1,8 @@
 # Registro de los CSV de la fase 1
 
-> **Conjunto vigente para la fase 3: el «Conjunto v3»** (al final). Son los 11 CSV del conjunto v2 sin cambios más el CSV de ubicaciones regenerado con la consulta corregida por DEF-MIG-008, en la recarga del 2026-10-06 (`informe-actualizacion-fases-1-2.md`). Los conjuntos v1 y v2 quedan como histórico: **no se cargan en la fase 3.**
+> **Conjunto vigente: el «Conjunto v4»** (al final), para el reinicio de staging de `DEC-043` (`planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`). Es el v3 con `11_depositos.csv` y `12_levantes.csv` regenerados con las consultas actuales (prórroga y año del depósito) y el corte en R − 1 = 2026-10-26.
+>
+> El «Conjunto v3» fue el de la fase 3 del plan de migración (2026-10-06): los 11 CSV del conjunto v2 sin cambios más el CSV de ubicaciones regenerado con la consulta corregida por DEF-MIG-008 (`informe-actualizacion-fases-1-2.md`). Los conjuntos v1, v2 y v3 quedan como histórico: **no se cargan en el reinicio.**
 
 ## Conjunto v1 (primera ejecución, reemplazado)
 
@@ -125,3 +127,35 @@ Es el mismo resultado del v1.
 | 12 | `12_levantes.csv` | `Releases` | archivo del v2 (`consultas/v2/12_levantes.sql`) | 170 | 17.899 | ASCII | `6cb11d9c944c50b96e3669faf3a57206624b64fb21eae9474864f88858a38b26` | Idéntico |
 
 **Reproducibilidad del CSV nuevo:** se exportó dos veces y dio el mismo hash: el `ORDER BY B.id_bodega, S.id_seccion` es total.
+
+## Conjunto v4 (staging limpio, `DEC-043`, vigente)
+
+> **Fecha:** 2026-10-27. **R:** 2026-10-27; corte simulado 2026-10-26 (S3). Misma fuente (`legacy-mariadb`, base `bodegas`, dump del 2024-06-10).
+> **Qué cambia (S2):** `11_depositos.csv` y `12_levantes.csv`, exportados con las consultas actuales de F6-03 del plan P1 (`planes/paridad-legacy/plan-backend-paridad-legacy.md`). Los otros 10 son **los mismos archivos** del v3: no se reexportaron, y su SHA-256 se verificó contra `sha256-csv-fase-1-v3.txt` (12 de 12 «OK» antes de reemplazar los dos).
+> **Ubicación (fuera de git):** `db_legacy/trabajo/csv/`. Hashes en `csv/sha256-csv-v4.txt`. Los dos CSV del v3 se movieron, sin borrarlos, a `csv/v3-reemplazados/`. El CSV de depósitos sin el corte está en `extractos/v4/11_depositos_sin_d2.csv`.
+> **Consultas:** `db_legacy/trabajo/consultas/v4/`, extraídas sin editar del plan con `extraer_del_plan.py` (copiado sin cambios de `consultas/v3/`). Frente a `consultas/v3/`, las 9 de maestros son idénticas; `11_depositos.sql` agrega `D.prorroga` y `12_levantes.sql` agrega `YEAR(D.fecha_deposito) AS anio_deposito`.
+> **Corte:** `consultas/aplicar_d2.py`, que ahora recibe la fecha: `aplicar_d2.py entrada.csv salida.csv 2026-10-26`.
+> **Antes de cargar en staging (fase 4):** `cd db_legacy/trabajo/csv && shasum -a 256 -c sha256-csv-v4.txt`. `staging-limpio/cargar-legacy.sh` lo hace antes de cargar.
+
+| # | Archivo | Entidad (endpoint) | Consulta (`consultas/v4/`) | Filas de datos | Bytes | Codificación | SHA-256 | Frente al v3 |
+|---|---|---|---|---|---|---|---|---|
+| 1 | `01_ciudades.csv` | Ciudades (`administration/cities/import`) | `01_ciudades.sql` (v2) | 1.781 | 52.017 | UTF-8 | `58d57bb292c611d024fee7fa3b1d9bbc13e16a633f0ce44bcc00d8723bc693b8` | Idéntico |
+| 2 | `02_embalajes.csv` | `PackagingTypes` | `02_embalajes.sql` | 67 | 761 | ASCII | `c44e848041dc8ad6266f084a43e1bb277ec4653cc9c55e3afa8ce1f427d3e29e` | Idéntico |
+| 3 | `03_cuadrillas.csv` | `Crews` | `03_cuadrillas.sql` | 7 | 199 | ASCII | `5d2277833441797dd12848a7190b3d6bb9ca23d4078eff6345b55eecdcc7502f` | Idéntico |
+| 4 | `04_ubicaciones.csv` | `Locations` | `04_ubicaciones.sql` | 9 | 351 | ASCII | `58e984c260aaf7aaa0ddbc28c1cf43aa2199799659f2b41f5681e5637206367d` | Idéntico |
+| 5 | `05_clientes.csv` | `Customers` | `05_clientes.sql` | 1.056 | 57.999 | UTF-8 | `7bcd278b047ed4269d46fde4acebe08bd06942439cef07df226c933cbb1d2a28` | Idéntico |
+| 6 | `06_agencias.csv` | `CustomsAgencies` | `06_agencias.sql` | 78 | 3.910 | UTF-8 | `6b3bf4e6446f1163a20532c0b71a9f0982902555a3d3b15e3cdbd71410597577` | Idéntico |
+| 7 | `07_transportadoras.csv` | `TransportCompanies` | `07_transportadoras.sql` | 273 | 16.565 | UTF-8 | `56611d3b68eadf3915671379ba25cc1b8361c9f86fd617d73426c822ce8d3143` | Idéntico |
+| 8 | `08_vehiculos.csv` | `Vehicles` | `08_vehiculos.sql` | 10.594 | 205.392 | ASCII | `42df39558b5aecff1d97998d3a3bac9149c8f0e1e1fe144710ccca15b04f6ee3` | Idéntico |
+| 9 | `09_conductores.csv` | `Drivers` | `09_conductores.sql` | 4.416 | 268.663 | UTF-8 | `d27fd28acff625ba1280f566eaa6d4a5a8ee05d592c6ac887cc67b7ccdc3377d` | Idéntico |
+| 10 | `10_productos.csv` | `Products` | `10_productos.sql` | 1.778 | 71.507 | UTF-8 | `0124b8b54d0140705527f0ba76a643a57d7af426fb6835ace6ad83fc67c6c404` | Idéntico |
+| 11 | `11_depositos.csv` | `Deposits` (y conciliación) | `11_depositos.sql` (**F6-03 actual**, con `prorroga`) + `aplicar_d2.py` con `2026-10-26` | 133 (128 depósitos) | 19.815 | ASCII | `e7c0a2db97b9dda42fbc0f27fcbcda0cb8b9236c8856826b70a9ffa15524d6cb` | **Nuevo.** 22 columnas. Las 21 del v3 son iguales celda por celda y en el mismo orden, salvo `ultimo_fin_facturado` (2026-09-30 → 2026-10-26). `prorroga`: `1` en 1 fila (BA4575, 2022) y `0` en 132. Los 128 depósitos son `IMP` |
+| 12 | `12_levantes.csv` | `Releases` | `12_levantes.sql` (**F6-03 actual**, con `anio_deposito`) | 170 | 18.763 | ASCII | `95e7c6e35ce6841362608cf9cf7473cd602b6b4d13f9893b90728a309dae3dc5` | **Nuevo.** 13 columnas. Las mismas 170 filas del v3 en sus 12 columnas, ahora en el orden total de O-1, más `anio_deposito` (2024: 148, 2023: 19, 2022: 3) |
+
+**Corte:**
+- los 128 depósitos vivos quedaron con `ultimo_fin_facturado = 2026-10-26`;
+- originalmente, 104 tenían un último fin facturado entre el **2022-12-10** y el **2024-11-30**, y 24 no tenían período facturado. Es lo mismo que en el v1 a v3.
+
+**Reproducibilidad:** los dos CSV nuevos se exportaron dos veces y dieron el mismo hash. Con los desempates de O-1, el `ORDER BY` es total.
+
+**Números repetidos:** entre los 128 vivos no hay números repetidos, aunque 127 de esos números existen en otros años del legacy. Con `anio_deposito`, cada levante va al depósito de su año.
