@@ -149,11 +149,21 @@ Además, de la fase 3 anterior se repiten tres pasos, para asegurar que nada se 
   - **R8:** los nueve enlaces usan `AppLinkButton`.
   - **Desviaciones aceptadas:** las dos de la fase 1 y las cuatro de la fase 2. Entre ellas: los selectores de `FocusTrap`, que descartan las secciones plegadas; los nueve botones, no diez; y que los enlaces se activan con Enter, no con Espacio.
 - **Sin hallazgos nuevos.**
-- **Notas fuera de alcance**, que dejaron las fases y quedan para un plan aparte si el usuario lo pide:
-  - F2 abre «Captura de peso» con el foco en «Cerrar», porque `WeightCapture` no marca `autofocus`. Ya pasaba antes de `DEC-058`: la ventana de peso nunca tuvo foco inicial. Conviene revisarlo con PRF-002 (~30 s por camión).
-  - En Pendientes de guía, «Cantidad» sale sin formato.
-  - La lista vacía de Órdenes de cargue no distingue un filtro sin resultados.
-  - El informe de báscula arma la fecha con la hora local del equipo y no con `colombia-date`.
+- **Notas fuera de alcance**, que dejaron las fases. **Corregidas el 2026-10-26** a pedido del usuario: cuatro cambios triviales de frontend, sin plan cerrado (`DEC-001`), en el commit FE que sigue a `a0db12b`.
+  - **F2 abre con el foco en el peso.** `WeightCapture`, en la ventana (sin `embedded`), marca el campo «Peso» con `autofocus` (`pt.pcInputText`), y el `Dialog` de PrimeVue lo enfoca al abrirse. Antes enfocaba «Cerrar». En línea no cambia: el foco lo sigue poniendo `focusWeight`. Ya pasaba antes de `DEC-058`; ayuda a PRF-002.
+  - **«Cantidad» de Pendientes de guía con `formatNumber`**, por ejemplo «12.500,5».
+  - **Lista vacía de Órdenes de cargue con un filtro aplicado:** dice «Ninguna orden de cargue coincide con los filtros» y ofrece «Limpiar filtros». Sin filtros, conserva «No hay órdenes de cargue registradas» con «Crear Primera Orden».
+  - **Informe de báscula:** «hoy» sale de `nowColombiaPickerDate()`, al abrir y con «Hoy», y el día viaja con `toColombiaPickerDay`. Es la función de `colombia-date` que antes era interna (`pickerDay`), ahora exportada.
+  - **Pruebas:**
+    - `WeightCapture.spec.ts` suma 2: con y sin `autofocus`;
+    - `colombia-date.spec.ts` suma 2; también se corrió con `TZ=UTC` y `TZ=Asia/Tokyo`.
+
+    Vitest 603 → 607 en 113 archivos; `yarn lint` 276 errores y 399 avisos, igual, y ningún archivo tocado con más errores; `nuxt build` sin errores sobre una copia del árbol de trabajo.
+  - **Verificación en pantalla** sobre `wms_qa_preprod`, con el navegador integrado y la sesión del usuario. Las escrituras se bloquearon en la página: solo hubo dos `POST`, la negociación del hub de notificaciones y la vista previa del cobro, y no se guardó nada.
+    - En Pendientes de guía, una cantidad de 12.500,5 (inyectada en la respuesta, en la página) sale «12.500,5».
+    - En Órdenes de cargue, la placa `ZZZ999` da el mensaje nuevo, y su «Limpiar filtros» devuelve las 28 órdenes.
+    - En el informe, la fecha abre en 26/10/2026, «Día anterior» consulta `date=2026-10-25` y «Hoy» vuelve al 26.
+    - En el panel de QD5710, F2 abre «Captura de peso» con el foco en el campo Peso, «123» queda escrito de una vez y Esc cierra solo esa ventana, con el foco de vuelta en el peso del panel.
 
 ---
 
