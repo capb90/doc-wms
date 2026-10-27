@@ -114,7 +114,7 @@ Eres el ejecutor de la fase indicada arriba del plan cerrado «Staging limpio co
 - **Crear o activar un convenio no recalcula las facturas existentes:** los convenios van antes de open-billing (S11).
 - **Convenios:**
   - un solo convenio activo por cliente (D21);
-  - el tercero de V2 se busca por el número de identificación del CSV de clientes, con GET stakeholders?search=.
+  - el tercero de V2 se busca por el número de identificación del CSV de clientes, con GET stakeholder?search= (en singular), contando solo los terceros con ese número exacto, normalizado como lo hace el importador.
 - **Báscula en $0 por convenio:** es un servicio BASCULA FIXED en 0 dentro del convenio (DEC-057 D14). Un precio general en 0 se sigue rechazando.
 - **Respaldos en staging:** el destino S3 debe llamarse exactamente s3-externo, o el API no encuentra su credencial.
 

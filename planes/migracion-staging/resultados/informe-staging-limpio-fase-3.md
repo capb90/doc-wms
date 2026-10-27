@@ -97,9 +97,9 @@ Solo 21 de los 40 clientes con convenio tienen depósitos vivos. Los otros 19 es
 
 | Inicio | Fin | Límite | Fuente | Fórmula | Depósitos |
 | --- | --- | --- | --- | --- | ---: |
-| 2026-10-27 | 2026-11-11 | 2026-11-13 | Convenio | `PERCENTAGE_OF_VALUE_PRORATED` | 90 |
-| 2026-10-27 | 2026-11-11 | 2026-11-13 | Tarifa base | `PERCENTAGE_OF_VALUE` (T1) | 2 |
-| 2026-10-27 | 2027-04-25 | 2027-04-27 | Tarifa base | `PERCENTAGE_OF_VALUE` (T1) | 36 |
+| 2026-10-27 | 2026-11-11 | 2026-11-14 | Convenio | `PERCENTAGE_OF_VALUE_PRORATED` | 90 |
+| 2026-10-27 | 2026-11-11 | 2026-11-14 | Tarifa base | `PERCENTAGE_OF_VALUE` (T1) | 2 |
+| 2026-10-27 | 2027-04-25 | 2027-04-28 | Tarifa base | `PERCENTAGE_OF_VALUE` (T1) | 36 |
 
 - Todos los períodos están `Open`, con su factura en Borrador. Hay 128 facturas y ninguna sin período.
 - Los 90 con convenio son los depósitos de los clientes con porcentaje calibrado. Los 38 de la tarifa base son de los 3 clientes vivos sin quincenas (ids 464, 1058 y 1059), como anticipó la fase 2.
@@ -215,7 +215,7 @@ Se hizo con el Admin, porque en local no hay cuentas por rol (fase 1). Las respu
 
 - **`GET weighbridge/{cicloId}/invoice` da 404** («modo de pago pendiente») para un ciclo de **salida** que sí tiene su factura pagada. El handler solo busca facturas por los ingresos a depósito (`WarehouseStorageEntries`), así que no ve las de salida. No afecta la operación: la factura existe y se ve en Facturación. Vale revisar si alguna pantalla usa ese endpoint para las salidas.
 - **El cliente 925 del legacy comparte el tercero con el 926** (§4). Conviene que Facturación lo sepa al validar.
-- **Límite de pago del período:** fin + 2 días (11/11 → 13/11). En el ensayo del 6/10 fue fin + 3 (16/10 → 19/10). No es parte de esta fase; se anota por si Facturación pregunta.
+- **Límite de pago del período:** fin + 3 días (11/11 → 14/11), como en el ensayo del 6/10 y como fija `StoragePeriodCalculator`. *Corregido en la validación del 2026-10-27:* la primera versión de este informe decía fin + 2 (13/11 y 27/04), pero `limit_date` en `wms_migracion` da 14/11 en los 92 quincenales y 28/04 en los 36 de 180 días.
 
 ## 10. Estado que queda
 
