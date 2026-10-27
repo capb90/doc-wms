@@ -267,7 +267,7 @@ Con `R` = hoy, el ensayo y el reinicio usan el mismo `11_depositos.csv`. Si la f
 
   Los genera `T/staging-limpio/generar_accesos.py` a partir de los archivos de credenciales, sin imprimir las contraseñas. Se regeneran si se restablece una contraseña.
 - **Canal de reporte:** WhatsApp al responsable de las pruebas. Quedó en la guía de operarios y en `estado.md`, pendiente 4.
-- **Fecha de las tarjetas del tablero de depósitos (§8 del informe):** la tarjeta muestra `createdAt` (`Frontend/wms/app/features/foreign-trade/components/DepositKanbanColumn.vue`). En los 128 migrados, esa fecha es la de la carga, el 27/10/2026, no el ingreso del legacy. `IDepositKanbanDto` no trae la fecha de ingreso, así que el cambio toca el BE y el FE. Queda abierto.
+- **Fecha de las tarjetas del tablero de depósitos (§8 del informe):** la tarjeta muestra `createdAt` (`Frontend/wms/app/features/foreign-trade/components/DepositKanbanColumn.vue`). En los 128 migrados, esa fecha es la de la carga, el 27/10/2026, no el ingreso del legacy. `IDepositKanbanDto` no trae la fecha de ingreso, así que el cambio toca el BE y el FE. Plan propuesto: `plan-cerrado-fecha-ingreso-tablero-depositos-2026-10-27.md`.
 - **Admin:** su contraseña tiene 8 caracteres, el mínimo del sistema. Staging tiene datos reales y está en internet (§7), así que conviene una más larga.
 
 ---
