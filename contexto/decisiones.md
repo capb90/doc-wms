@@ -12,7 +12,7 @@
 | DEC-010…019 | Operación (báscula, depósito, salida) |
 | DEC-020…029 | Facturación |
 | DEC-030…034 | Permisos |
-| DEC-040…044 | Migración del legacy y staging |
+| DEC-040…049 | Migración del legacy y staging |
 | DEC-050…059 | Respuestas a la auditoría de paridad (2026-10-23) |
 | DEC-060…069 | Documentos impresos |
 
@@ -146,7 +146,15 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - T4: guía $15.000 (el v2 la cobra aunque el legacy no lo hacía).
 - Montacargas: tractomula 220.000, doble troque 150.000, sencillo 140.000, turbo 110.000, guacal/estiba 40.000, con IVA según el check.
 
-**DEC-042 — Staging como ambiente de operarios** (2026-10-07). No se restauró el punto previo: los datos de QA (S6) quedan como ejemplo y hay datos de práctica `PRAC-`. Cuentas por rol `operario.*` y `qa.*`. La medición PRF-002 la hace un operario real.
+**DEC-042 — Staging como ambiente de operarios** (2026-10-07). No se restauró el punto previo: los datos de QA (S6) quedan como ejemplo y hay datos de práctica `PRAC-`. Cuentas por rol `operario.*` y `qa.*`. La medición PRF-002 la hace un operario real. *Reemplazada en los datos y las cuentas por `DEC-043` cuando se ejecute su reinicio.*
+
+**DEC-043 — Staging limpio con los datos del legacy para las pruebas de los operarios** (2026-10-27). Respuestas del usuario antes de la fase 13 del plan P1. Reemplaza los datos y las cuentas de `DEC-042`, precisa el corte de `DEC-040` y es la excepción aprobada a `DEC-006` para recrear la base de staging una vez.
+- **Staging se recrea vacío y se migra de nuevo** con la herramienta de importación actual, después de la QA de la fase 13. No se restaura el respaldo del 6/10, porque lo cargó la herramienta vieja: sin año del depósito ni prórroga, y con el levante anterior a `DEC-029`. Antes se ensaya en local, en `wms_migracion`.
+- **La fuente sigue siendo `backupBodegas.sql`** (junio de 2024). Los CSV de depósitos y levantes se regeneran con las consultas actuales, que traen la prórroga y el año. **El corte simulado pasa al día anterior al reinicio:** la facturación de cada depósito vivo arranca el día del reinicio, sin períodos atrasados.
+- **Convenios:** una propuesta calibrada por cliente, con el método de `DEC-029` §7.6. Facturación la valida y solo lo validado se carga.
+- **Para los operarios:** el Admin y una cuenta `operario.*` por rol, con cambio de contraseña al entrar, más las tarifas, los parámetros y los respaldos. **Sin datos de práctica ni de QA, y sin cuentas `qa.*`.** Los operarios registran sus propios camiones desde Vigilancia.
+- **Plan:** `planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`.
+- **Fuente:** el usuario, en la sesión del 2026-10-27, opción por opción.
 
 ## 6. Respuestas a la auditoría de paridad (2026-10-23)
 

@@ -12,6 +12,8 @@
 > **Plan:** `docs/planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` §16, con su §16.4 (2026-10-26).
 > **Modelo recomendado:** Opus 5.5.
 >
+> **Después de esta fase (`DEC-043`, 2026-10-27):** staging se recrea y se migra de nuevo con `docs/planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`. Los operarios entran después de ese reinicio, no al cerrar esta fase.
+>
 > Al terminar la fase, este prompt y `prompt-plan-brechas-paridad-p1-2026-10-23.md` se mueven a `docs/archivo/prompts/brechas-paridad-p1/`.
 
 ---
@@ -33,7 +35,7 @@ Eres el ejecutor de la FASE 13 del plan cerrado de brechas P1 del WMS de Bodegas
    - §17, el estado de las fases.
 3. docs/procesos/despliegue-staging.md y Backend/wms-api/deploy/staging/README.md (el runbook).
 4. docs/contexto/estado.md §3: lo desplegado y lo que no.
-5. docs/contexto/decisiones.md, en especial DEC-006, DEC-007, DEC-017, DEC-042, DEC-055, DEC-056, DEC-029 y DEC-060.
+5. docs/contexto/decisiones.md, en especial DEC-006, DEC-007, DEC-017, DEC-042, DEC-043, DEC-055, DEC-056, DEC-029 y DEC-060. Por DEC-043, al terminar esta fase staging se reinicia con otro plan: no cambia nada de lo que haces aquí.
 6. docs/qa/resultados/PRE-informe-2026-10-25.md §8 y §9: lo que quedó para staging.
 
 ## Reglas absolutas
@@ -112,7 +114,7 @@ Eres el ejecutor de la FASE 13 del plan cerrado de brechas P1 del WMS de Bodegas
    - los resultados de los conteos;
    - los casos;
    - los defectos;
-   - el veredicto: listo para operarios, con condiciones o no.
+   - el veredicto: listo para el reinicio limpio de DEC-043 (los operarios entran después de él), con condiciones o no.
 2. Actualiza:
    - docs/contexto/estado.md §3: último despliegue, commits, migraciones y respaldo previo, y saca de la tabla los commits ya desplegados;
    - docs/planes/registro-ejecucion-brechas-p1-2026-10-24.md: una sección «Fase 13»;
@@ -129,7 +131,7 @@ Entrega en el chat un resumen corto:
 - resultado del respaldo externo y del QR;
 - conteo de casos por estado y defectos abiertos;
 - el veredicto;
-- los avisos que el usuario debe dar: DEC-056 a la operación y DEC-029 y BR-06-005 a Facturación;
+- los avisos que el usuario debe dar después del reinicio de DEC-043: DEC-056 a la operación y DEC-029 y BR-06-005 a Facturación;
 - lo que queda fuera: PRF-002, el corte real y FA-MIG-013, regrabar videos y las tareas de Facturación de DEC-029;
 - el mensaje de commit de docs.
 Después te detienes.
