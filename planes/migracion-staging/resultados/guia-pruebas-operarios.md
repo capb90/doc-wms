@@ -50,7 +50,7 @@ Cada vez que algo falle, se vea raro o no sepa qué hacer, anote:
 | **Qué pasó** | Salió el mensaje «…» y no avanzó |
 | **Captura de pantalla** | Adjúntela si puede |
 
-Envíe el reporte a **[completar: persona y canal que indique el responsable de las pruebas]**.
+Envíe el reporte **por WhatsApp al responsable de las pruebas**.
 
 ## 4. Tarifas vigentes en staging
 

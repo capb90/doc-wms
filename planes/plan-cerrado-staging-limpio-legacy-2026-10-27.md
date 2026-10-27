@@ -258,6 +258,18 @@ Con `R` = hoy, el ensayo y el reinicio usan el mismo `11_depositos.csv`. Si la f
   - **calibración por debajo del legacy:** con los datos de 2024, los porcentajes calibrados facturan el 86 % de lo que facturó el legacy. Puede haber alzas de tarifa, así que cada porcentaje se compara con lo pactado hoy;
   - **tarifa base:** T1 cobra el 0,295 % sobre el lote completo; la referencia prorrateada está entre el 0,136 % y el 0,162 %.
 
+**Validación de la fase 4 (2026-10-27).** Revisión de solo lectura sobre `informe-staging-limpio-fase-4.md` y el código del tablero.
+
+- **Resultado:** cumple el §5 con S11. La carga es idéntica a la fase 1 y las tarifas son idénticas a la fase 3. Las 5 cuentas `operario.*` piden cambiar la contraseña, no queda ninguna `qa.*`, y los dos destinos de respaldo funcionan. El punto de vuelta es la corrida `bf7bf952`. Sigue la 4b.
+- **Documento de acceso para los operarios:** dos PDF fuera de git, en `T/accesos-staging/`:
+  - `acceso-staging-operarios-2026-10-27.pdf`: dirección, usuarios, contraseñas temporales, primer ingreso, avisos y cómo reportar;
+  - `acceso-staging-operarios-y-admin-2026-10-27.pdf`: lo mismo, más una página del Admin.
+
+  Los genera `T/staging-limpio/generar_accesos.py` a partir de los archivos de credenciales, sin imprimir las contraseñas. Se regeneran si se restablece una contraseña.
+- **Canal de reporte:** WhatsApp al responsable de las pruebas. Quedó en la guía de operarios y en `estado.md`, pendiente 4.
+- **Fecha de las tarjetas del tablero de depósitos (§8 del informe):** la tarjeta muestra `createdAt` (`Frontend/wms/app/features/foreign-trade/components/DepositKanbanColumn.vue`). En los 128 migrados, esa fecha es la de la carga, el 27/10/2026, no el ingreso del legacy. `IDepositKanbanDto` no trae la fecha de ingreso, así que el cambio toca el BE y el FE. Queda abierto.
+- **Admin:** su contraseña tiene 8 caracteres, el mínimo del sistema. Staging tiene datos reales y está en internet (§7), así que conviene una más larga.
+
 ---
 
 ## 7. Riesgos
