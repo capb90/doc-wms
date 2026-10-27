@@ -2,6 +2,7 @@
 
 > **Plan:** `qa/plan-ronda-qa-preproduccion-2026-10-25.md` (R1–R10). **Registro de datos:** `qa/resultados/registro-datos-qa-preproduccion.md`.
 > **Veredicto:** **GO con condiciones** para la fase 13 (§9): ningún BLOCKER, ensayo de migraciones sin errores, un CRITICAL (DEF-F11-030) y un MAJOR (DEF-F11-034) abiertos, y los pendientes de staging del §8.
+> **Fase 13 en staging (2026-10-27):** §13. Despliegue de BE `911399c` / FE `33fbeba` con 7 migraciones; 22 casos: 21 PASA y 1 NO EJECUTADO, sin defectos. Veredicto: **listo para el reinicio limpio de `DEC-043`**.
 > **Conteo:** 178 casos · 162 pasan · 3 fallan · 8 observaciones · 4 no ejecutados · 1 no aplica. Defectos nuevos: 1 CRITICAL, 1 MAJOR, 3 MINOR, 1 TRIVIAL (DEF-F11-029 a 034).
 
 ## 1. Entorno
@@ -477,3 +478,97 @@ Plan `planes/plan-cerrado-correccion-def-f11-029-033-2026-10-25.md`. Local, sobr
   - API, `qa-rt-mailpit` y `wms-postgres-db` detenidos;
   - rol `qa_rt_029` eliminado;
   - `wms_qa_preprod` conserva el camión `QPT313` (salió) y las cuentas `qa.rt.*`.
+
+## 13. Fase 13 — Despliegue y QA en staging (2026-10-27)
+
+Fase 13 de `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` (§16 y §16.4), con el prompt `archivo/prompts/brechas-paridad-p1/prompt-fase-13-staging-2026-10-26.md`. El usuario aprobó cada paso sobre staging en el chat. Sin cambios de código, sin SQL de escritura y sin commits.
+
+### 13.1 Entorno y despliegue
+
+| Campo | Valor |
+| --- | --- |
+| Fecha (hora Colombia) | 2026-10-27, de 10:00 a 11:35 |
+| Commits desplegados | BE `develop` `911399c` · FE `develop` `33fbeba`, los dos limpios y descendientes de `dafd573` / `d838535`. Antes había en staging BE `044be08` / FE `4ca4e0a` (2026-10-08): 33 commits de BE y 32 de FE nuevos |
+| Humo local | `dotnet build Wms.sln` sin errores; `Wms.Tests` 2092/2092. La suite de integración no se corrió: ya se corrió al cerrar cada plan |
+| Respaldo previo | `wms_20261027_100805_b2d8dade.dump`, manual, `Succeeded`, destino `local-staging`, 4,57 MB |
+| Migraciones | Staging tenía 12 en `__EFMigrationsHistory`: `20261008230241_AddForkliftUseEntryLog` ya estaba aplicada, aunque `contexto/estado.md` §3 la daba por pendiente. El script idempotente (`dotnet ef migrations script --idempotent`, 19 migraciones) aplicó las **7 pendientes**: `AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear`, `AddGuideCodeTypeParameter`, `RelaxServicePriceActiveIndex`, `RenameValueFormulaLabels` y `AddLabelPrintEntry`. `deploy-staging.sh migrate` a las 10:19:55, en unos 4,5 s, sin errores: 19 en el historial y 6 roles |
+| Orden del despliegue | `migrate` → `backend` (imagen cargada sin reiniciar) → `frontend` (80 rutas) → `config` + `docker compose up -d` (10:32): los tres contenedores se recrearon en la red `wms-staging_wms`, sin tocar los volúmenes |
+| Red y proxy | Caddy en `10.201.0.10`, API `10.201.0.3`, Postgres `10.201.0.2`; sin choque de subred (las redes del servidor son 172.17/16, 172.18/16 y 172.26/20). `ForwardedHeaders__KnownProxies__0` = `10.201.0.10`; `ASPNETCORE_FORWARDEDHEADERS_ENABLED` ausente; HTTPS sin redirecciones en bucle. La red vieja `wms-staging_default` quedó sin uso y no se borró |
+| Configuración | `Frontend__BaseUrl` = URL pública real del frontend; `DispatchGuides__VerificationKey` definida (44 caracteres); las dos credenciales `s3-externo` definidas (20 y 40 caracteres); `GUIDE_CODE_TYPE` = `QR` y activo. Los valores no se imprimieron |
+| Arranque y humo | 0 `fail`/`crit`/excepciones en el log; los jobs arrancan (incluido `AgreementActivationJob`). `deploy-staging.sh smoke`: frontend 200, fallback de la SPA 200, login inválido 400 y CORS con el origen exacto |
+| Cuentas | `admin` (sesión del usuario) y `qa.facturacion`, `qa.bascula`, `qa.vigilancia`, `qa.comext` y `qa.bodega`, con la sesión iniciada por el usuario en el navegador integrado. El agente usó esas sesiones y no escribió contraseñas. Al terminar se borraron los tokens guardados en la pestaña |
+| Datos de prueba | Nuevos, marcados `QA-F13`: el conductor «QA-F13 Conductor Uno», los camiones `QF1301` y `QF1302`, los terceros «QA-F13 Importador SAS» y «QA-F13 Agencia de Aduanas SAS» (NIT ficticios), el depósito `2026BA00009` (carta porte `QA-F13-CP-001`), las órdenes `2026OC00005` a `2026OC00007` y las guías `2026S00004` y `2026S00005`. Para el QR se usó la guía QA-S6 `2026S00001`, porque no había ninguna guía `PRAC-`. No se tocó ningún dato migrado. Todo esto desaparece con el reinicio de `DEC-043` |
+
+### 13.2 Conteos previos (solo lectura)
+
+| Conteo | Resultado |
+| --- | --- |
+| Clientes con más de un convenio `Active` (D21) | **0** (2 convenios `Active` en total) |
+| Convenios programados vencidos (D20) | **0** (no hay convenios `Scheduled`) |
+| Levantes con valor en más de un producto (`DEC-029` D9; depósito + número + aceptación, con recorte y mayúsculas) | **0** de 109; ningún levante tiene más de un producto |
+
+### 13.3 Respaldo externo (§13 del plan, pasos 1–7)
+
+- Destino `s3-externo` (bucket privado `s3-externo`, `us-east-2`, prefijo `staging`) creado y probado: `success: true`. Se escribió y borró un archivo de prueba.
+- Corrida `ba224d0a`: `Succeeded`, con **dos** destinos `Succeeded`: `/opt/wms/backups/2026/10/wms_20261027_110137_ba224d0a.dump` y `s3://s3-externo/staging/2026/10/wms_20261027_110137_ba224d0a.dump` (4,57 MB).
+- Fallo provocado (FB-BAK-007) en la corrida `83c5910b`, en el §13.4.
+
+### 13.4 Casos
+
+| ID | P | Estado | Evidencia |
+| --- | --- | --- | --- |
+| QR en la imagen Linux (§16.4; §8.2 de este informe) | P0 | PASA | El PDF de `2026S00001` (200, 270 KB) sale con el QR y «Escanee para verificar esta guía», no con el código de barras: `QRCoder` funciona en el contenedor |
+| F5-GUI-020 | P0 | PASA | Guía `2026S00001` impresa y escaneada con Android y con iPhone: la página pública abre sin sesión, dice «Vigente», con el N.º 2026S00001 y la placa parcialmente oculta |
+| FB-BAK-007 | P1 | PASA | Destino temporal `qa-f13-s3-inexistente` a un bucket que no existe. La corrida `83c5910b` queda `PartiallySucceeded` (`local-staging` y `s3-externo` `Succeeded`; el temporal `Failed`: «The specified bucket does not exist») y llega el correo «[WMS] Falló el respaldo del 27/10/2026». El usuario confirmó antes que los correos de Admin y de `Notifications:AdminEmails` son reales. El temporal se borró (204); quedan activos `local-staging` y `s3-externo` |
+| F9-API-005 | P0 | PASA | `POST foreign-trade/loading-orders` con `qa.facturacion` (Billing) → 403; con `qa.bascula` (Scale) → 403 |
+| F3-SBA-001 | P0 | PASA | `QF1302`, solo báscula con el cliente QA-F13: cobro de $20.000 (`QA-F13-FE-001`), un pesaje de 18.000, ciclo `Complete` con el tiquete `2026T00017` y sin depósito |
+| F3-COR-001 | P0 | PASA | Ciclo de `QF1301`: el bruto de 42.000 se corrige a 42.100 con motivo (`qa.bascula`, 200, con el peso original 42.000). El Admin recibió el aviso de la modificación (confirmado por el usuario) |
+| F3-TIQ-002 | P0 | PASA | Tiquete `2026T00018` (PDF): empresa, «ORDEN DE PESO No.: 2026T00018», cliente QA-F13 con NIT, placa, conductor, producto, entrada y salida con hora, bruto 42.100, tara 12.000, manifiesto 30.000, mercancía 30.100, total $20.000 y «Documento interno de control de pesaje. No es una factura de venta.» |
+| F6-ALM-001 | P0 | PASA | Confirmado `2026BA00009` (con el manifiesto DIAN `QA-F13-DIAN-001`): un período `Open` del 27/10/2026 al 27/11/2026 (inicio = día de ingreso) y la factura en Borrador |
+| F11-REG-021 | P0 | PASA | La factura resuelve la tarifa T1 (`PERCENTAGE_OF_VALUE`, `ServiceRule`): USD 15.000 × TRM 3.157,94 × 0,295 % = $139.738,85 + IVA = $166.289,23 |
+| F5-COR-007 / DEF-F11-030 | P0 | PASA | Se devuelve a Borrador y el valor pasa de USD 15.000 a 16.000: al guardar, **la misma factura** (`c28e98f9`) se recalcula a $149.054,77 + IVA = $177.375,18 (× 16/15). Al reconfirmar, una sola factura y un solo período `Open` |
+| `DEC-029`, levante de dos productos (§16.4) | — | PASA | Levante `QA-F13-LEV-01`: «Producto Uno», 60 cajas, CIF USD 5.000 (TRM DIAN 3.157,94, $15.789.700). «Producto Dos» con CIF USD 1.000 → **409** «El CIF del levante QA-F13-LEV-01 ya se registró con «QA-F13 PRODUCTO UNO». Registre este producto sin valor.» Sin valor, 30 cajas → 200. En pantalla, la póliza dice «CIF UAP (USD)» / «CIF no UAP (USD)» (octubre no UAP 5.000) y el kárdex «CIF (USD)» con 5.000, una sola vez |
+| F7-REP-012 | P0 | PASA | El kárdex de `2026BA00009` da ingreso 150, nacionalizado 90 y existencias 100 + 50, igual al stock del API (`currentStock` 100 y 50) |
+| F5-OC-005 | P0 | PASA | Una orden de 70 con 60 nacionalizadas → 400 «La cantidad solicitada de «QA-F13 PRODUCTO UNO» en el depósito 2026BA00009 (70) supera lo nacionalizado disponible (60). Registre el levante antes de despachar.»; no se crea nada |
+| F5-OC-016 | P0 | PASA | `2026OC00005` (10) reserva 10; al cancelarla con motivo queda `Cancelled` y con reserva 0 |
+| F4-CAR-016 / DEF-F11-034 | P0 | PASA | `qa.bodega` intenta cargar `2026OC00006` (importación, sin guía) → **409** «No se puede cargar la orden 2026OC00006: es de importación y no tiene guía de salida vigente…»; la orden sigue `Pending` y no hay movimientos |
+| F5-OC-018 | P1 | PASA | Con la guía `2026S00004` vigente y la orden `Loaded` (stock 80), revertir → 409 «Anule primero la guía 2026S00004 de la orden 2026OC00006.» |
+| F5-GUI-021 | P0 | PASA | La guía `2026S00004` se anula con motivo (200). El usuario escaneó el mismo papel impreso: franja roja «GUÍA ANULADA el 27/10/2026». Facturación recibe «Guía anulada con factura emitida» |
+| F5-GUI-022 | P0 | PASA | Un token con formato válido y uno basura → 404 con el mismo mensaje, «La guía no existe o el código no es válido.»; la página pública dice «Esta guía no existe en el sistema o el código fue alterado.» |
+| F5-OC-017 | P0 | PASA | Con la guía anulada, se revierte `2026OC00006`: orden `Reverted`, stock de vuelta en 100 y el movimiento `In 20 LoadingOrderReversal` junto al `Out 20` |
+| F6-ALM-008 | P0 | PASA | Con `2026OC00007` (20, guía `2026S00005`) cargada, `POST billing/storage-periods/close` → 204: el período 27/10–27/11 queda `Closed`, se abre el 28/11–28/12 (inicio = fin + 1) con una factura nueva en Borrador, y Facturación recibe «Almacenamiento renovado» |
+| F6-ALM-009 | P0 | PASA | La renovación usa el saldo (`currentStock` 130 tras despachar 20). Con la fórmula de T1 (`PERCENTAGE_OF_VALUE`, base plana) cobra el valor completo: $149.054,77, como dice el caso. Las ramas por cantidad no se pueden ejercer en staging porque no hay tarifa por cantidad |
+| F5-OC-007 | P0 | NO EJECUTADO | Necesita un cliente bloqueado por mora, y en staging no hay cómo vencer una factura sin una palanca de tiempo por SQL (`DEC-006`). Quedó verificado en local (F11) |
+
+**Conteo:** 22 casos: **21 PASA**, 0 FALLA, 0 BLOQUEADO y **1 NO EJECUTADO**. De los 19 P0, se ejecutaron 18 y todos pasan.
+
+### 13.5 Defectos y observaciones
+
+- **Defectos nuevos:** ninguno; no se abrieron fichas.
+- **Observaciones, sin defecto:**
+  1. `contexto/estado.md` §3 daba `AddForkliftUseEntryLog` (BE `83de58a`) por no desplegada, pero ya estaba en `__EFMigrationsHistory` de staging. El conteo del prompt (7) era el correcto; el §16.4 del plan cuenta 8 porque parte de `044be08`.
+  2. El §16.1 del plan cita `deploy-staging.sh backup`, pero ese subcomando no existe. El respaldo previo se hizo con `POST administration/backups/run`, como dice `procesos/despliegue-staging.md` §3.
+  3. **Trampa al verificar las credenciales S3:** `docker exec … sh -c 'printenv …'` las muestra vacías porque el `sh` del contenedor descarta las variables con guion en el nombre (`s3-externo`). Hay que verificarlas con `docker exec wms-staging-wms-api-1 printenv <variable> | wc -c` (sin shell) o con `docker compose config`, mostrando solo la longitud. Sirve para el reinicio de `DEC-043`.
+  4. La tara de `QF1301` respondió 409 hasta que Bodega registró la llegada («Bodega debe registrar la llegada antes del segundo pesaje»). Es una regla vigente; en la QA hizo falta un paso de `qa.bodega` (`register-arrival`).
+  5. Al devolver a Borrador y reconfirmar, el período de `2026BA00009` cambió de Id, pero conservó la misma factura y las mismas fechas. Es coherente con el recálculo de DEF-F11-030; no afecta el resultado.
+
+### 13.6 Veredicto
+
+**Listo para el reinicio limpio de `DEC-043`.** El despliegue, las 7 migraciones, el respaldo externo, el correo de fallo y el QR en papel quedaron verificados en staging. Los P0 ejecutados pasan, y no hay defectos nuevos ni condiciones abiertas de esta fase.
+
+- **Quedan fuera:**
+  - PRF-002 (`DEC-042`);
+  - FA-MIG-013 y el corte real (`DEC-040`);
+  - regrabar los videos (`videos/videos-desactualizados-dec-029.md` y `videos/videos-desactualizados-dec-057.md`);
+  - las tareas de Facturación de `DEC-029`;
+  - los casos de `DEC-057` y `DEC-058` del §16.4: no ejecutados, porque el alcance de la fase lo fijó el usuario con el prompt.
+- **Avisos que da el usuario después del reinicio**, cuando los operarios entren:
+  - **`DEC-056`** a la operación: Bodega no carga una orden de importación sin guía de salida vigente;
+  - **`DEC-029`** a Facturación: levante rotulado CIF, «Valor de la mercancía» en el depósito, fórmula prorrateada preseleccionada, y T1 vigente hasta la tarifa base;
+  - **BR-06-005** a Facturación: las renovaciones abiertas pueden subir en su próximo recálculo;
+  - **`DEC-057` y `DEC-058`**: la nota `manuales/nota-operarios-hallazgos-2026-10-26.md` a los operarios, y a Facturación el cambio de destinatario y la báscula en $0 por convenio.
+- **Limpieza:**
+  - `local-staging` y `s3-externo` quedan activos;
+  - el destino temporal se borró;
+  - los datos `QA-F13` y las facturas de prueba quedan en staging hasta el reinicio;
+  - los PDF de prueba quedaron en la carpeta de descargas del equipo y en el scratchpad del ejecutor, fuera de git.

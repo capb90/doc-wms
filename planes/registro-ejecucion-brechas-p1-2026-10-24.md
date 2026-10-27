@@ -1,6 +1,6 @@
 # Registro de ejecución — Plan de brechas P1 (fases 2 a 12, orquestador)
 
-> **Plan:** `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md`. **Prompt de fase:** `planes/prompt-plan-brechas-paridad-p1-2026-10-23.md`. **Prompt del orquestador:** `planes/prompt-orquestador-brechas-paridad-p1-2026-10-24.md`.
+> **Plan:** `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md`. **Prompt de fase:** `archivo/prompts/brechas-paridad-p1/prompt-plan-brechas-paridad-p1-2026-10-23.md`. **Prompt del orquestador:** `planes/prompt-orquestador-brechas-paridad-p1-2026-10-24.md`.
 > **Inicio:** 2026-10-24. El orquestador lanza un subagente por fase, en secuencia, y hace el commit de cada fase con la autorización del usuario del 2026-10-24 (excepción a `DEC-003`, solo para el orquestador). Sin push, sin staging.
 
 ## Arranque
@@ -421,3 +421,36 @@ Los tres puntos «Pendiente de construir» quedaron en la **fase 12c** del plan 
   - el commit de DEF-F11-035;
   - comunicar `DEC-056` a Comercio Exterior, Bodega y Vigilancia;
   - lo del §8 del informe en staging.
+
+## Fase 13 — Despliegue y QA en staging (2026-10-27)
+
+- **Prompt:** `archivo/prompts/brechas-paridad-p1/prompt-fase-13-staging-2026-10-26.md`. Ejecutor: agente sin historial. El usuario aprobó en el chat cada paso sobre staging, incluidas las consultas de solo lectura. Sin cambios de código, sin SQL de escritura y sin commits.
+- **Commits desplegados:** BE `develop` `911399c` / FE `develop` `33fbeba` (antes BE `044be08` / FE `4ca4e0a`). Humo local: `dotnet build` sin errores y `Wms.Tests` 2092/2092.
+- **Conteos previos (solo lectura):**
+  - D21: 0 clientes con más de un convenio `Active`;
+  - D20: 0 convenios programados;
+  - `DEC-029` D9: 0 de 109 levantes con valor en más de un producto.
+- **Respaldo previo:** `wms_20261027_100805_b2d8dade.dump`.
+- **Migraciones:**
+  - staging tenía 12 (`AddForkliftUseEntryLog` ya estaba);
+  - el script idempotente aplicó las 7 pendientes en unos 4,5 s (`AddStakeholderExitBlock`, `FixAgreementActiveStakeholderIndex`, `AddWarehouseStorageLegacyYear`, `AddGuideCodeTypeParameter`, `RelaxServicePriceActiveIndex`, `RenameValueFormulaLabels`, `AddLabelPrintEntry`);
+  - el historial queda en 19.
+- **Despliegue:** `migrate` → `backend` → `frontend` → `config` + `up -d`. Los contenedores quedan en la red `wms-staging_wms`, con Caddy en `10.201.0.10` como proxy conocido. La clave del QR y las credenciales `s3-externo` están cargadas, y el smoke pasa.
+- **Respaldo externo:**
+  - destino `s3-externo` (bucket privado en `us-east-2`) probado;
+  - corrida `ba224d0a` con dos destinos `Succeeded`;
+  - FB-BAK-007: corrida `83c5910b` `PartiallySucceeded` y correo de fallo recibido; el destino temporal se borró.
+- **QR:** `QRCoder` genera el QR en la imagen Linux. La guía impresa se escaneó con Android e iPhone y dice «Vigente»; anulada, dice «GUÍA ANULADA».
+- **QA en staging:** 22 casos, 21 PASA y 1 NO EJECUTADO, con datos nuevos `QA-F13`.
+  - Los 18 P0 ejecutados pasan, entre ellos DEF-F11-030, DEF-F11-034 y `DEC-029` (levante de dos productos con 409, y «CIF» en la póliza y el kárdex).
+  - F5-OC-007 no se ejecutó: no hay cliente en mora sin palanca SQL.
+  - Informe en `qa/resultados/PRE-informe-2026-10-25.md` §13.
+- **Defectos:** ninguno nuevo. Hay 5 observaciones sin defecto (§13.5 del informe), entre ellas la trampa del `sh` que oculta las variables con guion al verificar las credenciales S3.
+- **Veredicto:** listo para el reinicio limpio de `DEC-043`.
+- **Avisos del usuario después del reinicio:** `DEC-056` a la operación; `DEC-029` y BR-06-005 a Facturación; la nota de `DEC-057` y `DEC-058` a los operarios.
+- **Fuera de la fase:**
+  - PRF-002;
+  - FA-MIG-013 y el corte real;
+  - regrabar los videos;
+  - las tareas de Facturación de `DEC-029`;
+  - los casos de `DEC-057` y `DEC-058` del §16.4, que el alcance del prompt no incluía.

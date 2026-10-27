@@ -1,6 +1,6 @@
 # Plan cerrado — Brechas P1 y decisiones DEC-050…054 de la auditoría de paridad
 
-> **Fecha:** 23 de octubre de 2026. **Estado:** aprobado por el usuario el 2026-10-23. Lo implementa otro agente, una fase por sesión, con el prompt `planes/prompt-plan-brechas-paridad-p1-2026-10-23.md`.
+> **Fecha:** 23 de octubre de 2026. **Estado:** aprobado por el usuario el 2026-10-23. Lo implementa otro agente, una fase por sesión, con el prompt `archivo/prompts/brechas-paridad-p1/prompt-plan-brechas-paridad-p1-2026-10-23.md`.
 > **Origen:**
 > - `analisis/auditoria-paridad-integral-2026-10-23/06-brechas-priorizadas.md`, con las 13 brechas P1 abiertas y las 7 que se construyen por DEC-050…054.
 > - Las fichas de cada brecha, en `analisis/auditoria-paridad-integral-2026-10-23/modulos/<NN>-<modulo>/08-brechas.md`.
@@ -1407,7 +1407,7 @@ Sus cambios van en este despliegue. Lo que esto suma a §16.1–§16.3:
 | 12 | docs | §15 | entrega el veredicto local; commit del hub | Commiteada: BE `2f18fee` (solo documentación) / docs (este commit). Veredicto QA local: continuar con condiciones (DEF-F11-028 MAJOR abierto) — 2026-10-24, orquestador |
 | 12b | BE | DEF-F11-028 (fase aparte pedida por el usuario el 2026-10-24, antes de la 13) | `fix(facturacion): «Depósitos pendientes» incluye el depósito agotado (Cerrado e inactivo) con factura por numerar o refacturar (DEF-F11-028)` | Commiteada: BE `9e399de` / docs (este commit); re-test local de F6-ALM-018, F6-REF-005 y F6-REF-006: PASA — 2026-10-24 |
 | 12c | BE, FE | §15C y la migración `RelaxServicePriceActiveIndex` (D47) | `fix(facturacion,guias,servicios): renovación del depósito agotado en la gracia, orden de bloqueo de las guías y precios de servicio programados (DEC-055)` | Commiteada el 2026-10-25: BE `57c94dd` / FE `cb2a4f7` / docs `1da5ce0`. Con la migración `20261025152149_RelaxServicePriceActiveIndex` y D47–D48 |
-| 13 | staging | §16 | entrega el informe de staging y los mensajes de commit pendientes | Pendiente |
+| 13 | staging | §16 | entrega el informe de staging y los mensajes de commit pendientes | Ejecutada el 2026-10-27: BE `911399c` / FE `33fbeba` en staging, 7 migraciones, respaldo previo `wms_20261027_100805_b2d8dade.dump`, respaldo externo y QR verificados; QA en staging 21 PASA y 1 no ejecutado, sin defectos (`qa/resultados/PRE-informe-2026-10-25.md` §13). Veredicto: listo para el reinicio de `DEC-043` |
 
 Cada fase entrega su resumen y espera el commit del usuario antes de la siguiente (`DEC-003`).
 

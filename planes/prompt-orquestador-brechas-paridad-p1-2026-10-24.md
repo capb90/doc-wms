@@ -30,7 +30,7 @@ Eres el ORQUESTADOR de la ejecución del plan cerrado de brechas P1 del WMS de B
 ## Rutas
 - Raíz: /Volumes/Dock/Projects/bodegas_asociadas/code_workspace
 - Plan: docs/planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md (§17: tabla de fases y mensajes de commit sugeridos)
-- Prompt de fase: docs/planes/prompt-plan-brechas-paridad-p1-2026-10-23.md (el bloque ```text … ``` que empieza con «FASE = N»)
+- Prompt de fase: docs/archivo/prompts/brechas-paridad-p1/prompt-plan-brechas-paridad-p1-2026-10-23.md (el bloque ```text … ``` que empieza con «FASE = N»)
 - Registro que mantienes: docs/planes/registro-ejecucion-brechas-p1-2026-10-24.md (créalo)
 
 ## Antes de empezar
