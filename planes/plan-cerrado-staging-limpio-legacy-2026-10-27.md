@@ -4,7 +4,10 @@
 > **Origen:** pedido del usuario del 2026-10-27, antes de la fase 13 del plan P1: «que el ambiente de staging quede limpio. Solo migrar los datos del legacy… y el sistema configurado para que los operarios puedan hacer las pruebas. También que queden configurados los acuerdos para clientes». Sus respuestas están en `DEC-043`.
 > **Relación con la fase 13 del plan P1:** la fase 13 despliega el build y hace la QA sobre el staging de hoy, tal como está escrita. Este plan **reinicia staging después de esa QA**:
 > - las fases 1 a 3 son locales y pueden correr en paralelo con la fase 13;
-> - la fase 4 empieza cuando la fase 13 esté cerrada y la fase 3 haya salido OK.
+> - la fase 4 empieza cuando la fase 13 esté cerrada y la fase 3 haya salido OK;
+> - la fase 4b (convenios y apertura de la facturación en staging) va cuando Facturación devuelva la hoja validada (S11).
+>
+> **R = 2026-10-27** (hoy): el usuario pidió hacer el reinicio hoy. El corte simulado queda en el 2026-10-26.
 >
 > **Build:** el que deje desplegado la fase 13: BE `911399c` y FE `33fbeba`, o sus descendientes. **Sin cambios de código.** Si la herramienta falla, se abre una ficha `DEF-MIG-NNN` y se corrige aparte, como en el plan de migración (§1).
 > **Rutas:** relativas a `code_workspace/`. Prefijos: `B/` = `Backend/wms-api/`; `D/` = `docs/`; `T/` = `db_legacy/trabajo/` (fuera de git).
@@ -41,13 +44,14 @@
 | --- | --- | --- |
 | S1 | **Se migra de nuevo.**<br>• La base de staging se recrea vacía, con las 18 migraciones del repo.<br>• Los datos entran por el API de importación, con simulación (`dryRun=true`) antes de cada firme, en el orden del §3.4 del plan de migración.<br>• Antes se ensaya en local, en `wms_migracion`, recreada.<br>• No se restaura `wms_20261006_2302.dump`: lo cargó la herramienta del 6/10, sin el año del depósito ni la prórroga (`f37f353`) y con el levante anterior a `DEC-029` | `DEC-043` |
 | S2 | **Conjunto v4.** Es el v3 con dos archivos regenerados:<br>• `11_depositos.csv`, con la consulta F6-03 actual de `D/planes/paridad-legacy/plan-backend-paridad-legacy.md`, que trae `prorroga` en la columna 22;<br>• `12_levantes.csv`, con la consulta actual, que trae `anio_deposito` en la columna 13.<br>Las consultas se extraen sin editar con `T/consultas/extraer_del_plan.py` a `T/consultas/v4/`. Los otros 10 CSV son los mismos archivos del v3: se verifica su SHA-256 contra `T/csv/sha256-csv-fase-1-v3.txt`. Los hashes del v4 van a `T/csv/sha256-csv-v4.txt` y al registro de CSV | `DEC-043`; plan P1 D28 y D29 |
-| S3 | **Corte simulado en R − 1.**<br>• `R` es el día del reinicio de staging (fase 4). Lo fija el usuario: al aprobar el plan o, a más tardar, al lanzar la fase 1, en el encabezado del prompt. Se anota en el §6.<br>• `aplicar_d2.py` recibe la fecha: pone `ultimo_fin_facturado = R − 1` en todas las filas de `11_depositos.csv`, como hizo D2 con el 30/09. El ajuste va solo en el CSV; el dump no se toca.<br>• La facturación de cada depósito vivo arranca en `R`.<br>• Si `R` cambia después de la fase 3, se regenera solo `11_depositos.csv` y se repite el ensayo local con los scripts, que es corto | `DEC-043`; precisa `DEC-040` |
+| S3 | **Corte simulado en R − 1.**<br>• `R` es el día del reinicio de staging (fase 4): **2026-10-27**, fijado por el usuario. Se anota en el §6.<br>• `aplicar_d2.py` recibe la fecha: pone `ultimo_fin_facturado = R − 1` en todas las filas de `11_depositos.csv`, como hizo D2 con el 30/09. El ajuste va solo en el CSV; el dump no se toca.<br>• La facturación de cada depósito vivo arranca en `R`.<br>• Si `R` cambia después de la fase 3, se regenera solo `11_depositos.csv` y se repite el ensayo local con los scripts, que es corto | `DEC-043`; precisa `DEC-040` |
 | S4 | **Tarifas:**<br>• T2, T3 y T4 y las cinco tarifas de montacargas, como `DEC-041`;<br>• **almacenamiento para clientes sin convenio:** la tarifa base que fije Facturación en el checkpoint de la fase 2. Es `PERCENTAGE_OF_VALUE_PRORATED`, `IMP001`, con su porcentaje y un mínimo de $50.000 con IVA (`DEC-029` §7.7);<br>• si Facturación no la fija, queda T1 como hoy: `PERCENTAGE_OF_VALUE` al 0,295 % con el mismo mínimo (`DEC-029` §7.10) | `DEC-029`, `DEC-041` |
 | S5 | **Propuesta de convenios.** Se calcula con el método del análisis FOB/CIF (§5.2):<br>• fórmula prorrateada;<br>• base: FOB × TRM del día de ingreso;<br>• el porcentaje por cliente es el que iguala lo facturado, neto de IVA, con su base;<br>• mínimo de $50.000 con IVA.<br>Antes de consultar el volcado se pide la aprobación del usuario (`DEC-029` §7.6).<br>**Universo:** los clientes con depósitos vivos en el conjunto v4 y los 29 que concentran el 80 % de las quincenas. Los de ambos grupos van una sola vez.<br>Por cada cliente se marca además si sus recibos de báscula del legacy salieron siempre en $0. Es solo una pista para Facturación: el $0 también lo daban los repesajes | `DEC-029` §7.6; `DEC-043` |
 | S6 | **Validación de Facturación:**<br>• la propuesta va como hoja de cálculo en `T/convenios/propuesta-convenios-v1.xlsx`, con los nombres y documentos solo ahí;<br>• Facturación la devuelve con sus columnas llenas: «Validado» (sí o no), «% acordado», «Báscula sin cobro» (sí o no) y «Observaciones»;<br>• **solo se carga lo que diga «Validado = sí»**;<br>• un cliente no validado factura con la tarifa base de S4 | `DEC-029` §7.6 |
 | S7 | **Forma del convenio en V2.** Uno por cliente y activo, con un solo activo por cliente (D21). Se crea con `POST stakeholder/{id}/agreement`:<br>• referencia `LEG-{id_cliente}`;<br>• nombre «Convenio calibrado legacy {id_cliente}»;<br>• estado `Active`.<br>Sus servicios se agregan con `POST …/agreement/{id}/services`:<br>• **almacenamiento:** `ALMACENAMIENTO`, `PERCENTAGE_OF_VALUE_PRORATED`, modalidad `IMP001`, sin producto, con el porcentaje acordado y un mínimo de 50.000 con IVA incluido; `TaxIncluded = false`;<br>• **báscula, si dice «Báscula sin cobro = sí»:** `BASCULA`, `FIXED` con monto 0 (`DEC-057` D14 y D15).<br>**El tercero de V2** se busca por el número de identificación del cliente en `05_clientes.csv`, con `GET stakeholders?search=`. Si no sale exactamente uno, el convenio no se carga y se informa | `DEC-029`; `DEC-057` |
 | S8 | **Configuración para los operarios:**<br>• el Admin, que crea `Bootstrap` al arrancar, con la contraseña que maneja el usuario;<br>• las cinco cuentas `operario.*` por rol, con `crear-cuentas-operarios-staging.sh` (corre el usuario), cambio de contraseña al entrar y los correos `capb.dev+operario.<rol>@gmail.com`;<br>• las tarifas de montacargas de `DEC-041`;<br>• los destinos de respaldo `local-staging` (Local, `/opt/wms/backups`) y `s3-externo`.<br>`GUIDE_CODE_TYPE` ya entra en `QR` con la migración, y el correo, `Frontend__BaseUrl` y la clave del QR no cambian: viven en `.env.staging`.<br>**No se crean** cuentas `qa.*`, datos de práctica ni datos de QA | `DEC-043`; `DEC-041`; `DEC-060` |
 | S9 | **Lo que queda de antes:**<br>• **los archivos subidos** (`/opt/wms/data/uploads`) se mueven, sin borrarlos, a `/opt/wms/data/uploads-antes-reinicio-AAAAMMDD`;<br>• **los respaldos viejos** se quedan en `/opt/wms/backups` como punto de vuelta;<br>• **`caddy_data`, `caddy_config` y las llaves de DataProtection** no se tocan | `DEC-006` |
+| S11 | **La apertura de la facturación espera a los convenios validados.**<br>• Crear o activar un convenio no recalcula las facturas existentes (`AgreementActivationService`): por eso los convenios van **antes** de `open-billing`.<br>• Si Facturación no devuelve la hoja validada antes de la fase 4, la fase 4 deja staging con los datos, las tarifas, las cuentas y los respaldos, **sin convenios y sin `open-billing`**. Los operarios ya pueden operar.<br>• Cuando llegue la hoja, la fase 4b corre en staging los convenios validados y `open-billing`, con el mismo script. Como el corte queda en `R − 1`, el primer período de cada depósito migrado arranca en `R`, aunque `open-billing` corra días después.<br>• Hasta la fase 4b, los depósitos migrados no tienen facturas. Un depósito nuevo de un cliente con convenio, que se cree antes de la 4b, factura con la tarifa base | Respuesta del usuario del 2026-10-27, «Abrir al validar» |
 | S10 | **En staging, después del reinicio, la verificación es de solo lectura.** La operación completa ya se prueba en el ensayo local (OK-7). Las únicas escrituras de la verificación son las corridas de respaldo. Así, lo primero que se escribe en staging lo hacen los operarios | `DEC-043` |
 
 ---
@@ -58,7 +62,7 @@
 1. **Preparar.**
    - Comprueba que `legacy-mariadb` (puerto 3308) está arriba con la base `bodegas`. Si no, recárgala desde `backupBodegas.sql` y compara los conteos del §4 del plan de migración.
    - Recrea `wms_migracion`: `dotnet ef database drop`, comprobando antes el destino con `--dry-run`, y `dotnet ef database update`. Deben quedar las 18 migraciones.
-   - El API local apunta a esa base por variable de entorno, con `Bootstrap__*`.
+   - El API local apunta a esa base por variable de entorno, con `Bootstrap__*`, **en un puerto propio (5290)**. El API del usuario corre en el 5281 sobre `wms_qa_preprod`: no lo detengas ni lo reconfigures.
 2. **Exportar el v4** (S2 y S3), con la `R` del §6.
 3. **Escribir `T/staging-limpio/cargar-legacy.sh`.** Recibe la URL del API y la ruta del archivo de credencial. Por entidad, en el orden del §3.4 del plan de migración, hace:
    - la simulación;
@@ -127,13 +131,13 @@
 ## 4. Fase 3 — Local: tarifas, convenios y apertura de la facturación
 
 **Pasos:**
-1. **Escribir `T/staging-limpio/cargar-tarifas-convenios.sh`**, con los mismos argumentos de `cargar-legacy.sh`. En este orden:
+1. **Escribir `T/staging-limpio/cargar-tarifas-convenios.sh`**, con los mismos argumentos de `cargar-legacy.sh` y tres opciones que se pueden correr por separado (`--tarifas`, `--convenios`, `--apertura`; sin opciones, las tres). En este orden:
    1. las tarifas de S4: la regla de almacenamiento, el mínimo, la báscula con IVA, la guía y las cinco de montacargas con `PUT forklift-rates/{tipo}`;
    2. los convenios validados (S7), leídos de una exportación CSV de la hoja validada en `T/convenios/`. Antes de crear un convenio, comprueba que el cliente no tiene otro activo;
    3. `open-billing`.
 
    Guarda cada respuesta en `T/evidencias/v4/<ambiente>/`.
-2. **Correrlo en local** sobre la base de la fase 1.
+2. **Correrlo en local** sobre la base de la fase 1, primero `--tarifas` y después `--convenios --apertura`, como se correrá en staging. Si todavía no hay hoja validada, el ensayo local usa la propuesta (`propuesta-convenios-v1.xlsx`) para probar el mecanismo; en staging solo se carga la validada.
 3. **Verificar:**
    - **tarifas y convenios:** lo cargado coincide con S4 y con la hoja validada;
    - **un solo convenio activo por cliente** (D21);
@@ -152,7 +156,7 @@
 | L9 | La operación de OK-7 funciona de punta a punta |
 | L10 | Los dos scripts corren de punta a punta sobre una base recién recreada, que es como corren en staging |
 
-Si `open-billing` rechaza un inicio en el futuro porque `R` es posterior al día del ensayo, el ensayo usa un `11_depositos.csv` con el corte en el día anterior al ensayo. La fase 4 usa el de `R`. Los dos se registran con su hash, y solo difieren en esa columna.
+Con `R` = hoy, el ensayo y el reinicio usan el mismo `11_depositos.csv`. Si la fase 4 se corre otro día, se regenera ese archivo con la fecha nueva (S3) y se repite el ensayo.
 
 **Entrega:**
 - el informe `D/planes/migracion-staging/resultados/informe-staging-limpio-fase-3.md`;
@@ -174,10 +178,10 @@ Si `open-billing` rechaza un inicio en el futuro porque `R` es posterior al día
 | 4 | Recrear la base | `docker compose down` sin `-v`, `docker volume rm wms-staging_pgdata` y mover los archivos subidos (S9) |
 | 5 | Base y API | `deploy-staging.sh dbup`, `migrate` con el script idempotente (deben ser las 18 migraciones) y `up`. Se verifican `__EFMigrationsHistory`, los 6 roles y que existe el Admin. El usuario inicia la sesión del Admin |
 | 6 | Cargar los datos | El usuario corre `cargar-legacy.sh` contra staging, antes verificando los hashes del v4. El agente lee las salidas y compara cada conteo con la fase 1: deben ser **idénticos** |
-| 7 | Tarifas, convenios y apertura | El usuario corre `cargar-tarifas-convenios.sh`. Los conteos, los «Opened» y los totales del primer período, por cliente y en total, deben ser **idénticos** a la fase 3 |
+| 7 | Tarifas | El usuario corre `cargar-tarifas-convenios.sh --tarifas`. Lo cargado debe ser idéntico a la fase 3. **Si ya está la hoja validada**, corre también `--convenios --apertura`, y los conteos, los «Opened» y los totales del primer período, por cliente y en total, deben ser idénticos a la fase 3. **Si no**, ese paso queda para la fase 4b (S11) |
 | 8 | Respaldos | Se crean los destinos `local-staging` y `s3-externo` (§13 del plan P1, pasos 1–7) y se prueban |
 | 9 | Cuentas | El usuario corre `crear-cuentas-operarios-staging.sh`. Se verifica que existen las 5 cuentas con `mustChangePassword = true` y ninguna `qa.*` |
-| 10 | Verificación de solo lectura | • `deploy-staging.sh smoke`.<br>• En SQL de lectura: no hay entradas, ciclos, órdenes, guías ni facturas de báscula o montacargas; las facturas son solo las de `open-billing`; no hay nada `PRAC-` ni `QA-`.<br>• En pantalla, con la sesión del Admin: diez depósitos migrados, uno con prórroga y un convenio |
+| 10 | Verificación de solo lectura | • `deploy-staging.sh smoke`.<br>• En SQL de lectura: no hay entradas, ciclos, órdenes, guías ni facturas de báscula o montacargas; las facturas son solo las de `open-billing` (ninguna, si la apertura quedó para la 4b); no hay nada `PRAC-` ni `QA-`.<br>• En pantalla, con la sesión del Admin: diez depósitos migrados, uno con prórroga y un convenio |
 | 11 | Respaldo «listo para operarios v2» | Una corrida con los dos destinos en `Succeeded`. Es el punto de vuelta para repetir las pruebas desde cero |
 
 **Entrega:**
@@ -197,18 +201,33 @@ Si `open-billing` rechaza un inicio en el futuro porque `R` es posterior al día
 
 **Commit sugerido (docs):** `docs(staging): reinicio limpio con los datos del legacy, convenios validados y cuentas por rol para las pruebas de los operarios (DEC-043)`
 
+### 5.1 Fase 4b — Staging: convenios validados y apertura de la facturación
+
+**Solo si la fase 4 no los cargó** (S11). Empieza cuando la hoja validada está en `T/convenios/propuesta-convenios-v1-validada.xlsx`. Cada paso que toca staging lleva su «sí».
+
+1. **Ensayo local con la hoja validada,** si la fase 3 usó la propuesta. Recrea `wms_migracion` y corre los dos scripts de punta a punta. Los criterios L6 a L8 deben cumplirse con la hoja validada.
+2. **Respaldo** «antes de la apertura» en staging, con los dos destinos en `Succeeded`.
+3. **Carga.** El usuario corre `cargar-tarifas-convenios.sh --convenios --apertura` contra staging. Los convenios, los «Opened» y los totales del primer período deben ser idénticos al ensayo local, con el primer período desde `R`.
+4. **Verificación de solo lectura.** Un solo convenio activo por cliente. Los depósitos que crearon los operarios antes de la 4b se listan con su tarifa y no se tocan (S11).
+5. **Respaldo** «listo para operarios v2, con convenios».
+
+**Entrega:** una sección «Fase 4b» en `informe-staging-limpio-fase-4.md`; la guía de los operarios actualizada (los convenios ya cargados); el §6; `DEC-043`.
+
+**Commit sugerido (docs):** `docs(staging): convenios validados y apertura de la facturación de los depósitos migrados en staging (DEC-043)`
+
 ---
 
 ## 6. Estado de las fases
 
-`R` (día del reinicio, S3): **pendiente.** El usuario la da al lanzar la fase 1, en el encabezado del prompt (`R = AAAA-MM-DD`). Sin ella, la fase 1 no exporta el v4.
+`R` (día del reinicio, S3): **2026-10-27**. Corte simulado: 2026-10-26.
 
 | Fase | Estado | Notas |
 | --- | --- | --- |
 | 1 · Local: v4 y carga de datos | Pendiente | — |
 | 2 · Propuesta de convenios y validación | Pendiente | Necesita la aprobación para consultar el volcado y el tiempo de Facturación |
 | 3 · Local: tarifas, convenios y apertura | Pendiente | — |
-| 4 · Staging: reinicio, carga y configuración | Pendiente | Después de la fase 13 del plan P1 |
+| 4 · Staging: reinicio, carga y configuración | Pendiente | Hoy, después de la fase 13 del plan P1 |
+| 4b · Staging: convenios y apertura | Pendiente | Cuando Facturación devuelva la hoja validada, si la fase 4 no los cargó (S11) |
 
 ---
 
@@ -218,7 +237,7 @@ Si `open-billing` rechaza un inicio en el futuro porque `R` es posterior al día
 | --- | --- |
 | Recrear staging borra la evidencia de la QA de la fase 13 | La fase 13 cierra su informe antes. El respaldo «antes del reinicio» conserva la base, y los archivos subidos se mueven sin borrarlos |
 | La herramienta actual da conteos distintos del v3 (año del depósito, prórroga, levante de `DEC-029`) | Se espera y se explica en la fase 1 (C7, C8). Si una diferencia viene de un defecto, ficha `DEF-MIG` antes de seguir |
-| Facturación tarda en validar | La fase 4 espera a la fase 2. Si el usuario prefiere no esperar, carga solo lo validado hasta ese día, y el resto factura con la tarifa base (S6) |
+| Facturación tarda en validar | S11: el reinicio va hoy sin convenios ni apertura, y la fase 4b los carga después. Mientras tanto los depósitos migrados no facturan, y un depósito nuevo de un cliente con convenio factura con la tarifa base |
 | El porcentaje calibrado pasa de lo facturado en el legacy a los depósitos de hoy | Es un ensayo: los convenios se calibraron con quincenas de 2022–2024. La validación fuera de la muestra se informa en la fase 2, y el mes en paralelo de `DEC-029` §7.10 sigue antes de producción |
 | Staging queda con datos reales de clientes, accesible desde internet | Se mantiene lo aceptado en el plan de migración (§9): contraseñas fuertes, cambio al primer ingreso y Swagger apagado. El pendiente 6 de `estado.md` sigue abierto |
 | Al recrear la base se pierden los destinos de respaldo de la fase 13 | El paso 8 de la fase 4 los vuelve a crear y probar. Las claves S3 siguen en `.env.staging` |

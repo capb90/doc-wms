@@ -153,6 +153,8 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - **La fuente sigue siendo `backupBodegas.sql`** (junio de 2024). Los CSV de depósitos y levantes se regeneran con las consultas actuales, que traen la prórroga y el año. **El corte simulado pasa al día anterior al reinicio:** la facturación de cada depósito vivo arranca el día del reinicio, sin períodos atrasados.
 - **Convenios:** una propuesta calibrada por cliente, con el método de `DEC-029` §7.6. Facturación la valida y solo lo validado se carga.
 - **Para los operarios:** el Admin y una cuenta `operario.*` por rol, con cambio de contraseña al entrar, más las tarifas, los parámetros y los respaldos. **Sin datos de práctica ni de QA, y sin cuentas `qa.*`.** Los operarios registran sus propios camiones desde Vigilancia.
+- **El reinicio es hoy, el 2026-10-27**, con el corte en el 2026-10-26.
+- **La apertura de la facturación espera a los convenios validados.** Crear un convenio no recalcula las facturas existentes. Si Facturación no valida a tiempo, staging se reinicia sin convenios ni apertura, y los dos se corren después, con el primer período igual desde el día del reinicio.
 - **Plan:** `planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`.
 - **Fuente:** el usuario, en la sesión del 2026-10-27, opción por opción.
 

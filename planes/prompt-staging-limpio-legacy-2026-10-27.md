@@ -3,25 +3,27 @@
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/Backend/wms-api`. Agrega `docs`, `db_legacy/trabajo` y, solo para la fase 1, `db_legacy`, porque la fase 1 puede recargar la MariaDB desde `backupBodegas.sql`.
 > 2. Copia el bloque de abajo y cambia las dos primeras líneas:
->    - `FASE = 1`, la fase que toca, de la 1 a la 4 y en orden;
->    - `R = AAAA-MM-DD`, el día del reinicio de staging. La fase 1 no exporta los datos sin él.
+>    - `FASE = 1`, la fase que toca: 1, 2, 3, 4 y, si hace falta, 4b;
+>    - `R = 2026-10-27`, el día del reinicio. Ya está puesto; cámbialo solo si el reinicio se mueve de día.
 > 3. Al terminar, el agente entrega el resumen y el mensaje de commit de docs. Tú haces el commit (`DEC-003`) y lanzas la fase siguiente en otra sesión nueva.
 >
 > **Plan:** `docs/planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`, aprobado el 2026-10-27.
 > **Modelo recomendado:** Opus 5.5 en las cuatro fases: carga real, calibración y staging.
 >
-> **Cuándo:**
-> - las fases 1 a 3 son locales y pueden correr mientras la fase 13 del plan P1 trabaja en staging;
-> - la fase 2 se detiene hasta que Facturación devuelva la hoja validada;
-> - la fase 4 va el día `R`, después de cerrar la fase 13. Reserva una ventana en la que estés presente: los scripts de carga y el de cuentas los corres tú.
+> **Orden de hoy (R = 2026-10-27):**
+> 1. Lanza a la vez la fase 13 del plan P1 (su prompt) y la fase 1 de este plan, en dos sesiones.
+> 2. Al cerrar la fase 1, lanza la fase 2. Al terminar la propuesta, el agente se detiene: lleva la hoja a Facturación.
+> 3. Lanza la fase 3 sin esperar a Facturación: si no hay hoja validada, ensaya con la propuesta.
+> 4. Con la fase 13 y la fase 3 cerradas, lanza la fase 4. Tienes que estar presente: los scripts de carga y el de cuentas los corres tú.
+> 5. Cuando Facturación devuelva la hoja validada, lanza la fase 4b, si la fase 4 no cargó los convenios.
 >
-> Cuando termine la fase 4 y se haga su commit, este prompt se mueve a `docs/archivo/prompts/migracion-staging/`.
+> Cuando termine la última fase que haga falta (la 4, o la 4b) y se haga su commit, este prompt se mueve a `docs/archivo/prompts/migracion-staging/`.
 
 ---
 
 ```text
 FASE = 1
-R = AAAA-MM-DD
+R = 2026-10-27
 
 Eres el ejecutor de la fase indicada arriba del plan cerrado «Staging limpio con los datos del legacy y convenios por cliente» (DEC-043) del WMS de Bodegas Asociadas. El plan está aprobado: impleméntalo tal como está, sin rediseñarlo. Ejecutas SOLO esa fase. R es el día del reinicio de staging (S3 del plan).
 
@@ -44,6 +46,7 @@ Eres el ejecutor de la fase indicada arriba del plan cerrado «Staging limpio co
    | 2 | §3 | Propuesta de convenios y validación de Facturación | Local |
    | 3 | §4 | Tarifas, convenios y apertura de la facturación | Local |
    | 4 | §5 | Reinicio, carga y configuración | Staging |
+   | 4b | §5.1 | Convenios validados y apertura de la facturación | Staging (y ensayo local) |
 
 2. docs/contexto/decisiones.md: DEC-043, DEC-006, DEC-007, DEC-029, DEC-040, DEC-041 y DEC-042.
 3. docs/planes/migracion-staging/plan-migracion-legacy-staging.md, §2 a §4, y en resultados/:
@@ -66,7 +69,7 @@ Eres el ejecutor de la fase indicada arriba del plan cerrado «Staging limpio co
   - Desde la fase 2: los commits de docs de las fases anteriores.
   - En la fase 4: la fase 13 del plan P1 está cerrada en su §17 y en estado.md.
   Si falta algo, detente y avisa.
-- Si R no es una fecha válida, o si en la fase 4 hoy no es R, detente y pregunta.
+- Si R no es una fecha válida, o si en la fase 4 hoy no es R, detente y pregunta: si el reinicio se movió de día, hay que regenerar 11_depositos.csv (S3) y repetir el ensayo.
 - Comprueba con grep o con el código las rutas, endpoints y nombres que cita tu fase. Si una no coincide, detente y pregunta, con todas las dudas en un solo mensaje.
 
 ## Reglas
@@ -90,6 +93,7 @@ Eres el ejecutor de la fase indicada arriba del plan cerrado «Staging limpio co
    - no escribes contraseñas en el navegador: si hace falta una sesión, la abre el usuario.
 7. **Bases locales:**
    - solo recreas wms_migracion, comprobando antes el destino con --dry-run;
+   - tu API local corre en el puerto 5290 contra wms_migracion. El API del usuario corre en el 5281 contra wms_qa_preprod: no lo detengas ni lo reconfigures;
    - no toques wmsdb, wms_qa_preprod ni las bases de grabación;
    - no uses el contenedor mysql57, que es de otro proyecto.
 8. **Defectos de la herramienta:** abre una ficha DEF-MIG-NNN con la plantilla docs/qa/plantillas/defecto.md y detente si bloquea el criterio de la fase.
@@ -106,7 +110,8 @@ Eres el ejecutor de la fase indicada arriba del plan cerrado «Staging limpio co
   - en levantes, la columna 13 es anio_deposito;
   - sin anio_deposito, un número repetido en varios años da error.
 - **Prórroga:** solo aplica a importación. En otra modalidad, el importador emite una advertencia y la ignora.
-- **open-billing:** abre el primer período desde ultimo_fin_facturado + 1. Si rechaza un inicio en el futuro, aplica la salida del §4 del plan.
+- **open-billing:** abre el primer período desde ultimo_fin_facturado + 1, aunque corra días después de R.
+- **Crear o activar un convenio no recalcula las facturas existentes:** los convenios van antes de open-billing (S11).
 - **Convenios:**
   - un solo convenio activo por cliente (D21);
   - el tercero de V2 se busca por el número de identificación del CSV de clientes, con GET stakeholders?search=.
