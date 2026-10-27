@@ -22,7 +22,7 @@ Login · Trazabilidad · Notificaciones · Usuarios · Terceros (lista, detalle,
 
 | ID | Caso | Verificación por pantalla | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F10-UI-001 | Encabezados y migas | Título de página, acciones principales arriba a la derecha. | Patrón uniforme entre módulos. | P2 | UI |
+| F10-UI-001 | Encabezados y migas | Recorrer las páginas del menú: título, acciones, filtros, tabla y miga. | Patrón uniforme entre módulos. **Actualizado (`DEC-058`, U1–U8):** todas las páginas del menú, salvo el centro de ayuda y los formularios «Crear», abren con la misma tarjeta de encabezado: un solo título, subtítulo y las acciones a la derecha, con el «Nuevo …» primario. Debajo van la tarjeta de filtros (etiquetas, búsqueda con espera y «Limpiar filtros» cuando hay más de un filtro) y la de contenido, con el mismo espacio entre tarjetas. Las tablas comparten el estilo, el aviso de vacío y el paginador («Mostrando {first} a {last} de {totalRecords} registros», 10/25/50 filas). La miga coincide con el título, también en Terceros con `?rol=`. La guardia `test/unit/guards/page-header.spec.ts` del frontend está en verde. | P2 | UI |
 | F10-UI-002 | Botones | Primario/secundario/peligro; estados deshabilitado y cargando. | Colores y estilos coherentes; acciones destructivas en rojo con confirmación. | P2 | UI |
 | F10-UI-003 | Estados con color | Etiquetas de estado (depósito, factura, OC, ciclo). | Mismos colores para el mismo concepto en todas las pantallas; texto además del color. | P2 | UI |
 | F10-UI-004 | Tablas | Columnas, alineación numérica a la derecha, paginación, orden, vacíos («Sin datos»). | Coherente; sin columnas cortadas. | P2 | UI |
@@ -35,7 +35,7 @@ Login · Trazabilidad · Notificaciones · Usuarios · Terceros (lista, detalle,
 
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
-| F10-RES-001 | Báscula a 1366×768 | Banco de trabajo con cola y ficha. | Sin solapamientos; la ficha no obliga a hacer scroll horizontal; botones de paso visibles. | P0 | UI |
+| F10-RES-001 | Báscula a 1366×768 | Banco de trabajo: la cola y el panel de proceso abierto. | Sin solapamientos; sin scroll horizontal; botones de paso visibles. **Actualizado (`DEC-058`, B4):** la cola ocupa todo el ancho. El panel queda encima de la cola y de la barra superior, su cuerpo se desplaza por dentro y el encabezado deja visibles «Guardar», «Soltar camión» y «Volver a la cola». F2 abre «Captura de peso» encima del panel. Ver F3-UX-006. | P0 | UI |
 | F10-RES-002 | Vigilancia a 1366×768 | Ingreso y salida. | Usable sin scroll horizontal. | P1 | UI |
 | F10-RES-003 | 1024×768 | Pantallas principales de cada módulo. | Menú colapsable; tablas con scroll interno, no de página. | P2 | UI |
 | F10-RES-004 | Tableta | Recepción, firma y fotos de Bodega en 768×1024 (si aplica). | Firma con el dedo; cámara/galería para fotos; botones alcanzables. | P2 | UI |

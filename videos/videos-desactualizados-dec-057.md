@@ -1,7 +1,7 @@
-# Videos publicados que `DEC-057` deja desactualizados
+# Videos publicados que `DEC-057` y `DEC-058` dejan desactualizados
 
 > **Fecha:** 26 de octubre de 2026. **Origen:** `planes/plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md`, §7.
-> **Código de referencia:** Backend `develop` `a8d06dd` · Frontend `develop` `18f79f1`.
+> **Código de referencia:** Backend `develop` `a8d06dd` · Frontend `develop` `18f79f1`. El §5 (`DEC-058`, agregado el 2026-10-26 por `planes/plan-cerrado-correccion-dec-057-2026-10-26.md` §6) se revisó contra Backend `911399c` · Frontend `e1e871a`.
 > **Publicación revisada:** `video-tutoriales-trabajo/salida/publicacion/` (subtítulos `.vtt` de las series 3, 5 y 7). Solo lectura: no se editan los `.vtt` ni los videos publicados.
 > **Regrabar en una tarea aparte**, como los de `videos-desactualizados-dec-029.md`. A diferencia de `DEC-029`, este plan **no** ajustó los guiones (`videos/guiones/guiones-video-tutoriales.md`) ni los scripts de grabación (`Frontend/wms/tools/video-tutoriales/`): la tarea de regrabación los actualiza primero.
 
@@ -54,3 +54,47 @@ Rutas relativas a `video-tutoriales-trabajo/salida/publicacion/videos/`.
 - Ajustar primero los guiones y los scripts de grabación (§1); este plan no los tocó.
 - Regrabar los 10 videos del §3, que incluyen los 2 del §2, y republicar sus `.vtt`.
 - `pronunciacion.json`: revisar «P. indicador», «T. vehículo» y «P. mercancía» (se leen «peso indicador», «tara del vehículo» y «peso de la mercancía»).
+- Grabar con la pantalla de `DEC-058` (§5): los videos de Báscula y el 7-01 se regraban con la cola en tabla, el panel de proceso y el tablero de columnas con buscador. Conviene regrabarlos una sola vez, con los cambios de `DEC-057` y `DEC-058` juntos.
+
+## 5. Cambios de aspecto de `DEC-058`
+
+`DEC-058` no cambia reglas de negocio, pero cambia el aspecto de Báscula, del tablero de depósitos de Comercio Exterior y de las páginas del menú. Los scripts de grabación (`Frontend/wms/tools/video-tutoriales/`) que buscan la ficha de báscula a la derecha, el buscador general o el paginador del tablero, o el título y el «Nuevo» de `AppTable`, se ajustan antes de regrabar.
+
+### 5.1 Qué cambió en pantalla
+
+| Antes | Ahora | Decisión |
+| --- | --- | --- |
+| Báscula en dos columnas: la cola de tarjetas a la izquierda y la ficha a la derecha | La cola es una tabla a todo el ancho (Placa, Estado, Motivo, Cliente, Conductor, Modalidad, Documento, Primer peso y Espera) y el camión se abre en un panel grande sobre la cola, con el fondo oscurecido. «Volver a la cola», «Atrás» del navegador o Alt+N lo cierran y conservan lo digitado; Esc no lo cierra. Los chips «Otros camiones en proceso» cambian de camión sin volver a la cola | B1, B2, B4–B8 |
+| «Guardar» en un pie pegajoso al final de la ficha | «Guardar» en el encabezado del panel, junto a «Soltar camión» y «Volver a la cola» | B5 (ajuste pedido por el usuario) |
+| «Recuperar operaciones» como enlace junto a la cola | Botón con su contador en el encabezado de la página | B1 |
+| Tablero de depósitos con buscador general de número, selector de estado y un paginador por columna | Arriba solo el tipo y las fechas. Cada columna tiene su buscador («Documento, depósito, tercero o producto»), su scroll propio y carga más depósitos al bajar | K3, K4 |
+| Cada página con su propio título; en las listas de `AppTable`, un título pequeño y un «Nuevo» gris | Todas las páginas del menú con la misma tarjeta de encabezado (título, subtítulo y acciones a la derecha, con el «Nuevo …» primario), la tarjeta de filtros y la tabla con el mismo estilo y paginador | U1–U5 |
+| «Registrar Pago», «Recepción Directa», «Crear Ubicación» | «Nuevo pago», «Nueva Recepción Directa», «Nueva ubicación» | U1 |
+| Botones con texto en las filas de Bodega: «Completar recepción», «Finalizar» (montacargas), «Ubicaciones» y «Registrar novedad» (inventario) | Botones de ícono, con ese texto como ayuda al pasar el mouse | U4 |
+
+### 5.2 Subtítulos con narración desactualizada
+
+Rutas relativas a `video-tutoriales-trabajo/salida/publicacion/subtitulos/`.
+
+| Archivo | Línea | Dice | Debe decir |
+| --- | ---: | --- | --- |
+| `serie-5/5-01-la-pantalla-de-bascula.vtt` | 13 | «A la izquierda está la cola: los camiones que Vigilancia dejó entrar.» | La cola ocupa toda la pantalla, como una tabla con los camiones que Vigilancia dejó entrar |
+| `serie-5/5-01-la-pantalla-de-bascula.vtt` | 29 | «A la derecha se abre la ficha.» | Al elegir un camión, su proceso se abre en un panel sobre la cola; «Volver a la cola» lo cierra sin perder lo digitado |
+| `serie-5/5-10-retomar-y-descartar.vtt` | 13 | «Retomar abre la ficha justo donde quedó.» | Retomar abre el panel del camión justo donde quedó (cambio menor) |
+| `serie-7/7-01-tablero-y-kanban.vtt` | 17 | «si hay más de diez, la columna pagina sola.» | La columna se desplaza por dentro y carga más depósitos al bajar |
+| `serie-7/7-01-tablero-y-kanban.vtt` | 29 | «El buscador encuentra por número de depósito…» | Cada columna tiene su buscador: documento, depósito, tercero o producto. Arriba quedan el tipo y las fechas |
+| `serie-6/6-08-novedades-de-mercancia.vtt` | 9 | «También se registra desde el inventario con Registrar novedad.» | Sigue siendo cierto, pero ahora es un botón de ícono con esa ayuda (cambio menor) |
+
+Grep del 2026-10-26 sobre todas las series de «izquierda», «derecha», «ficha», «cola», «kanban», «columna», «buscador», «nuevo», «Registrar Pago», «Crear Ubicación», «Recepción Directa», «Completar recepción» y «Finalizar». Los demás subtítulos no contradicen `DEC-058`.
+
+### 5.3 Videos con imagen desactualizada
+
+Rutas relativas a `video-tutoriales-trabajo/salida/publicacion/videos/`.
+
+| Video | Qué se ve viejo |
+| --- | --- |
+| `serie-5/5-01` a `serie-5/5-10` | Báscula en dos columnas (cola a la izquierda, ficha a la derecha), en lugar de la cola en tabla y el panel de proceso. Los de `DEC-057` (§3) ya estaban en la lista |
+| `serie-5/5-11-historial-de-bascula.mp4`, `serie-5/5-12-reporte-de-facturacion-diaria.mp4` | Encabezado, filtros y tabla con el aspecto anterior; el historial tenía una tarjeta dentro de otra |
+| `serie-7/7-01-tablero-y-kanban.mp4` | Buscador general, selector de estado y paginador por columna (§5.2) |
+| Los de la serie 7 que muestran listas: `7-07` (levantes), `7-08` (abandono), `7-09` (listas de empaque), `7-10` a `7-13` (órdenes de cargue y guías) y `7-15` (reportes) | Encabezado, filtros y tablas con el aspecto anterior; el flujo narrado sigue valiendo |
+| Serie 1 (listas de Administración, en especial `1-10-ubicaciones.mp4` con «Crear Ubicación»), serie 3 (facturas, pagos con «Registrar Pago», configuración, reportes), serie 4 (historial de Vigilancia), serie 6 (recepción con «Recepción Directa», montacargas, inventario y novedades con botones de texto) y la serie 0 (notificaciones y trazabilidad) | Solo el aspecto: encabezado común, «Nuevo …» primario, tarjeta de filtros, tablas y los textos de botón del §5.1. El flujo narrado sigue valiendo |

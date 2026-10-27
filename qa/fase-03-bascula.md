@@ -11,7 +11,7 @@ Validar el banco de trabajo de báscula de punta a punta: cola, tipos de operaci
 
 | Pantalla | Ruta | Bloques |
 |---|---|---|
-| Banco de trabajo (cola + ficha de 4 pasos) | `/operations/weighbridge[?cola=]` | COL, CAM, REG, COB, PES, TIQ, REI, MCA, UCA, SAL, SBA, UX |
+| Banco de trabajo (cola + panel de proceso de 4 pasos) | `/operations/weighbridge[?cola=][?camion=]` | COL, CAM, REG, COB, PES, TIQ, REI, MCA, UCA, SAL, SBA, UX |
 | Dashboard | `/operations/weighbridge/dashboard` | DSH |
 | Recuperar operaciones | `/operations/weighbridge/recover` | REC |
 | Historial (entradas y salidas) | `/operations/weighbridge/history` | HIS, COR |
@@ -31,8 +31,8 @@ Validar el banco de trabajo de báscula de punta a punta: cola, tipos de operaci
 
 ## 4. Modelo de la pantalla (para orientar al ejecutor)
 
-- **Cola** a la izquierda: estados «Sin iniciar», «Por cobrar», «Por pesar», «Por repesar»; filtro `?cola=`; refresco 15 s; espera en ámbar desde 60 min.
-- **Ficha** a la derecha con 4 pasos en línea: **Registro → Cobro → Peso → Tiquete**. El paso sale del estado del servidor. Enter ejecuta la acción del paso; F2 abre el peso en ventana; Esc la cierra.
+- **Cola (`DEC-058`)** a todo el ancho, como tabla: Placa, Estado, Motivo, Cliente, Conductor, Modalidad, Documento, Primer peso (kg y tipo), Espera (en ámbar desde 60 min) y «Capturar peso» donde aplica. Filtros arriba con su conteo: «Todos», «Sin iniciar», «Por cobrar», «Por pesar», «Por repesar» (`?cola=`); sin paginador; refresco 15 s. La fila de un camión con datos sin guardar dice «En proceso». «Recuperar operaciones», con su contador, va en el encabezado de la página.
+- **Panel de proceso (`DEC-058`):** clic o Enter en una fila abre el camión en un panel grande sobre la cola, con el fondo oscurecido y `?camion=` en la URL. No es una ventana que se cierre sola: **Esc no lo cierra**. Se cierra con «Volver a la cola», «Atrás» del navegador o Alt+N, y lo digitado se conserva. Encabezado: placa, motivo, hora de ingreso, la línea de progreso, los chips «Otros camiones en proceso» y, a la derecha, «Soltar camión», «Volver a la cola» y, en el registro, «Guardar». Debajo, los 4 pasos en línea: **Registro → Cobro → Peso → Tiquete**. El paso sale del estado del servidor. Enter ejecuta la acción del paso; F2 abre el peso en una ventana encima del panel; Esc cierra solo esa ventana.
 - **Tipos de operación:** «Ingreso con depósito», «Salida de mercancía», «Solo báscula». Se preseleccionan por el motivo de Vigilancia y se pueden cambiar hasta que existe un servicio.
 - **Card «Camión y conductor»**: transportadora, país del vehículo, tipo de vehículo, tipo y número de documento del conductor, apellidos y nombres son obligatorios para Guardar.
 - **Documento (`DEC-057`):** al salir del número, si el número y el tipo ya tienen depósitos, aparece un selector con una tarjeta por depósito abierto (cliente, importador o exportador, agencia, transportadora, fecha del documento, placas y camiones) y «Es otro documento: crear depósito nuevo». Los cerrados y migrados se ven en gris y no se eligen. Con abiertos, «Guardar» espera la elección. «N.º de manifiesto» y «Peso según manifiesto (kg)» son obligatorios en el ingreso a depósito.
@@ -58,10 +58,16 @@ Validar el banco de trabajo de báscula de punta a punta: cola, tipos de operaci
 | F3-COL-001 | Cola inicial | Abrir el banco de trabajo. | Los ingresos con motivo de pesaje aparecen «Sin iniciar» con placa, motivo y tiempo de espera. | P0 | FUN |
 | F3-COL-002 | Filtro por estado | Chips «Por cobrar», «Por pesar», «Por repesar»; abrir `/in-process` y `/pending-reweigh`. | La lista se filtra; las rutas viejas redirigen a `?cola=por-pesar` y `?cola=por-repesar`; los contadores coinciden. | P1 | FUN |
 | F3-COL-003 | Refresco | Registrar un ingreso nuevo en Vigilancia (otra ventana). | Aparece en ≤ 15 s sin recargar. | P1 | INT |
-| F3-COL-004 | Seleccionar camión | Clic en `QAA101`. | Se abre la ficha con el tipo «Ingreso con depósito» y modalidad IMP preseleccionados (DF8). | P0 | FUN |
-| F3-COL-005 | Soltar camión | En la ficha, «Soltar camión». | Vuelve a la cola; el foco va al primer «Sin iniciar». | P2 | UX |
+| F3-COL-004 | Seleccionar camión | Clic en `QAA101`. | Se abre el panel de proceso con el tipo «Ingreso con depósito» y modalidad IMP preseleccionados (DF8). **Actualizado (`DEC-058`):** antes se abría la ficha a la derecha de la cola. | P0 | FUN |
+| F3-COL-005 | Soltar camión | En el panel, «Soltar camión». | **Reescrito (`DEC-058`, B6 y B8):** el panel se cierra, el camión queda sin borrador (su fila ya no dice «En proceso») y el foco va a la primera fila «Sin iniciar» de la cola. | P2 | UX |
 | F3-COL-006 | Espera larga | Un camión con > 60 min. | Espera en ámbar. | P3 | UI |
-| F3-COL-007 | Atajo de captura | En una fila «Por pesar», botón «Capturar peso». | Abre la ficha en el paso de peso. | P2 | UX |
+| F3-COL-007 | Atajo de captura | En una fila «Por pesar», botón «Capturar peso». | Abre el panel en el paso de peso. | P2 | UX |
+| F3-COL-008 | Cola en tabla | Abrir el banco a 1366×768 y a 1920×1080 con camiones en los cuatro estados. | **Nuevo (`DEC-058`, B1–B3):** la cola ocupa todo el ancho, sin columna lateral; tabla con Placa en negrita, Estado, Motivo, Cliente, Conductor, Modalidad, Documento, Primer peso (kg y tipo), Espera y la columna Acciones con «Capturar peso» solo donde aplica; sin paginador; etiquetas de estado pequeñas y en una línea; sin scroll horizontal. Los filtros con su conteo van arriba de la tabla y conservan `?cola=`. | P1 | UI |
+| F3-COL-009 | Abrir el panel | Clic en una fila. Cerrar con «Volver a la cola», recorrer las filas con las flechas y abrir otra con Enter. | **Nuevo (`DEC-058`, B4 y B7):** el camión se abre en un panel grande sobre la cola, con el fondo oscurecido y `?camion=` en la URL; la página de detrás no se desplaza; Tab no sale del panel hacia las filas de la cola. | P0 | FUN |
+| F3-COL-010 | «Volver a la cola» conserva lo digitado | En `QAB201`, digitar parte del registro sin guardar → «Volver a la cola». Abrir otro camión; volver a `QAB201` con su chip «Otros camiones en proceso» y, otra vez, desde su fila. | **Nuevo (`DEC-058`, B6):** el panel se cierra sin soltar el camión; el foco queda en su fila, que dice «En proceso»; el chip y la fila lo reabren con lo digitado intacto. Complementa F3-REI-001. | P0 | PER |
+| F3-COL-011 | Esc no cierra el panel | Con el panel abierto y ninguna ventana encima, pulsar Esc. | **Nuevo (`DEC-058`, B6):** el panel sigue abierto y no se pierde nada. | P1 | UX |
+| F3-COL-012 | «Atrás» del navegador | Con el panel abierto y datos sin guardar, «Atrás» del navegador; después «Adelante». Abrir en otra pestaña la URL con `?camion=` de un camión de la cola y con la de un camión que ya salió. | **Nuevo (`DEC-058`, B7 y B9):** «Atrás» cierra el panel y vuelve a la cola, sin salir del módulo y con lo digitado intacto; «Adelante» lo reabre. Con `?camion=` de un camión de la cola se abre su panel; de uno que ya no está, aviso «Camión fuera de la cola» y la URL se limpia. Si el camión abierto sale de la cola mientras se trabaja, el panel sigue abierto. | P1 | UX |
+| F3-COL-013 | F2 sobre el panel | En el paso de peso, F2; después Esc. Con el panel cerrado, F2. | **Nuevo (`DEC-058`, B4 y B8):** «Captura de peso» se abre encima del panel; Esc cierra solo esa ventana y el panel sigue abierto, con la página de detrás sin desplazarse. Con el panel cerrado, F2 no abre nada. | P0 | UX |
 
 ### 6.2 Camión y conductor (CAM)
 
@@ -127,6 +133,7 @@ Validar el banco de trabajo de báscula de punta a punta: cola, tipos de operaci
 | F3-REG-027 | Depósito cerrado o migrado con el mismo número | Número de un depósito con el ingreso de camiones cerrado (F5-CNF-010) o de uno migrado del legacy → Tab → Guardar. | **Nuevo (`DEC-057`, D3):** el depósito se ve en gris, con candado, «Cerrado por {nombre} el {fecha}» o «Migrado», y no se puede elegir. Si no hay abiertos: «Los depósitos de este documento están cerrados: al guardar se crea un depósito nuevo.». Guarda y crea un depósito nuevo, sin 409. | P0 | RN |
 | F3-REG-028 | Depósito elegido que se cierra antes de guardar | Elegir un depósito abierto; en otra pestaña CE cierra su ingreso de camiones; Guardar. | **Nuevo (`DEC-057`, D1):** 409 «El depósito {N} ya no está abierto para el documento {número}. Vuelva a buscar el documento.»; la pantalla repite la búsqueda y el depósito pasa a gris. | P1 | RN |
 | F3-REG-029 | Fecha del documento al asociar | Elegir un depósito con fecha del documento; luego uno sin fecha y digitar una. | **Nuevo (`DEC-057`, D2):** con fecha, se muestra en solo lectura y manda la del depósito; sin fecha, se escribe la digitada. | P2 | RN |
+| F3-REG-030 | «Guardar» mientras se busca el documento | Escribir `QA-CP-0001` (ya con un depósito abierto) y, sin salir del campo, clic en «Guardar». Repetir con Enter desde un campo posterior y en un depósito adicional. | **Nuevo (revisión de `DEC-057`, C1):** no se guarda. Mientras se busca, el botón dice «Buscando el documento…» y está deshabilitado; al terminar aparece el selector de F3-REG-020 y «Guardar» espera la elección. No se crea un segundo depósito para el documento. | P0 | RN |
 
 ### 6.4 Cobro (COB)
 
@@ -212,7 +219,7 @@ Foco pedido explícitamente: registrar → guardar → abandonar → volver → 
 | ID | Caso | Pasos | Resultado esperado | P | Tipo |
 |---|---|---|---|---|---|
 | F3-REC-001 | Badge y lista | Con operaciones a medias, ver «Recuperar operaciones». | Badge con el número; `/recover` lista las operaciones con filtro por placa. | P1 | FUN |
-| F3-REC-002 | Retomar | «Retomar» una operación «Por cobrar». | Abre el banco en el paso pendiente sin modal. | P0 | PER |
+| F3-REC-002 | Retomar | «Retomar» una operación «Por cobrar»; después, «Atrás» del navegador. | **Reescrito (`DEC-058`, B7):** abre el banco con el panel del camión en el paso pendiente (Cobro) y `?camion=` en la URL. «Atrás» cierra el panel y deja la cola, no vuelve a «Recuperar operaciones». | P0 | PER |
 | F3-REC-003 | Retomar con primer peso | «Retomar» una con primer peso. | Abre en repesaje. | P1 | PER |
 | F3-REC-004 | Descartar operación sin ciclo | Registrar un ingreso IMP de prueba (`QAC401` nuevo documento), no cobrar, «Descartar» → confirmar. | Pide confirmación; servicio `Discarded`; el depósito en Borrador queda `Cancelled` con su stock anulado. | P0 | FUN |
 | F3-REC-005 | Descartar con ciclo | Intentar descartar una operación cobrada. | No aparece «Descartar» o «La operación ya tiene un ciclo de báscula; no puede descartarse.». | P1 | RN |
@@ -348,10 +355,10 @@ Requiere la preparación del §5.
 | F3-INT-005 | Báscula → Facturación | Facturación | Facturas → pestaña Báscula. | Una factura por cobro: inmediata Pagada, por facturar sin número, destinatario correcto. | P0 | INT |
 | F3-UX-001 | Enter por paso | Báscula | Recorrer un ingreso solo con teclado (Tab, Enter). | Paso 1 Guardar, paso 2 Cobrar, peso con Enter; Enter no actúa en listas desplegadas abiertas ni en modales. | P1 | UX |
 | F3-UX-002 | Foco automático | Báscula | Observar el foco en cada paso. | Documento/orden/cliente → total → peso → Imprimir → Finalizar. | P2 | UX |
-| F3-UX-003 | Atajos globales | Báscula | Alt+N y Alt+K fuera de un campo de texto. | Alt+N → báscula; Alt+K → `?cola=por-repesar`. No actúan dentro de un campo. | P2 | UX |
+| F3-UX-003 | Atajos globales | Báscula | Alt+N y Alt+K fuera de un campo de texto, con el panel cerrado y con el panel abierto. | Alt+N → báscula; Alt+K → `?cola=por-repesar`. No actúan dentro de un campo. **Actualizado (`DEC-058`, B8):** con el panel abierto, Alt+N lo cierra como «Volver a la cola», y Alt+K además filtra «Por repesar». | P2 | UX |
 | F3-UX-004 | Línea de progreso | Báscula | Recorrer los pasos. | Resumen de cada paso hecho; registro plegable «Ver»; colores coherentes (azul acción, ámbar atención, rojo error, verde completado). | P2 | UI |
 | F3-UX-005 | Mensajes de error del backend | Báscula | Provocar 3 errores distintos (sin cantidad, cliente bloqueado, peso inválido). | Se muestra el mensaje en español del backend, sin texto genérico duplicado (riesgo del plan de paridad §G.3). | P1 | ERR |
-| F3-UX-006 | Pantalla pequeña | Báscula | Ventana a 1366×768 y a 1024 px. | Cola y ficha usables sin solaparse. | P2 | UI |
+| F3-UX-006 | Pantalla pequeña | Báscula | Ventana a 1366×768, a 1024 px y a 800 px, con el panel abierto. | **Reescrito (`DEC-058`, B4):** la cola sin scroll horizontal. El panel ocupa casi toda la ventana, su cuerpo se desplaza por dentro y el encabezado deja visibles «Guardar», «Soltar camión» y «Volver a la cola» al bajar. Por debajo de 840 px el panel ocupa toda la pantalla y las acciones bajan a su propia línea. | P2 | UI |
 
 ## 7. Mini-checkpoints de la fase
 

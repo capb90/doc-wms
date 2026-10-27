@@ -228,6 +228,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
   - Cada columna tiene su buscador: documento comercial, número de depósito, tercero y producto.
   - Arriba quedan solo el tipo de depósito y las fechas; se quitan el buscador general de número y el selector de estado.
 - **Fuente:** el usuario, en la sesión del 2026-10-26.
+- **Construido** (2026-10-26) con `planes/plan-cerrado-correccion-dec-057-2026-10-26.md`: BE `911399c` (búsqueda del tablero); FE `3d4056b` (páginas uniformes), `1fbcc8a` (báscula) y `e1e871a` (tablero); el mismo plan corrigió la revisión de `DEC-057` (BE `7189676`, FE `543502d`). Sin migración; verificado en local sobre `wms_qa_preprod`. *Precisiones del usuario al construir:* la columna «manifiesto» de la cola se rotula «Documento», porque el dato es el número del documento del servicio y no el manifiesto del camión; «Guardar» va en el encabezado del panel, sin pie pegajoso. Sin desplegar: va con la fase 13 del plan P1.
 
 ## 7. Documentos impresos
 
