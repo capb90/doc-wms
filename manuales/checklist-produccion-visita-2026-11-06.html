@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Checklist paso a producción</title>
+<style>
+  @page { size: A4 portrait; margin: 11mm 10mm 12mm; }
+  :root {
+    --ink: #111827; --muted: #4b5563; --line: #d1d5db; --soft: #f3f4f6;
+    --red: #b91c1c; --red-bg: #fee2e2;
+    --amber: #b45309; --amber-bg: #fef3c7;
+    --vig: #1d4ed8; --bas: #b45309; --bod: #15803d; --com: #7e22ce; --fac: #be123c; --ger: #374151;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: var(--ink); font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { font-size: 11.5px; line-height: 1.3; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid var(--ink); padding-bottom: 6px; margin-bottom: 8px; }
+  h1 { margin: 0; font-size: 22px; }
+  .sub { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
+  .meta { text-align: right; font-size: 11px; color: var(--muted); }
+  .meta span { display: inline-block; min-width: 150px; border-bottom: 1px solid var(--ink); margin-left: 4px; }
+
+  .how { display: flex; gap: 10px; margin-bottom: 10px; font-size: 11px; }
+  .how div { flex: 1; padding: 6px 8px; border: 1px solid var(--line); border-radius: 6px; background: var(--soft); }
+  .how b { display: block; font-size: 11.5px; }
+
+  h2 { margin: 12px 0 5px; padding: 5px 8px; font-size: 14px; border-radius: 5px; color: #fff; break-after: avoid; }
+  h2 small { font-weight: 400; font-size: 11px; opacity: .9; margin-left: 6px; }
+  h2.a { background: var(--red); }
+  h2.b { background: var(--amber); }
+  h2.c { background: var(--ger); }
+  h3 { margin: 9px 0 3px; font-size: 12.5px; padding-left: 7px; border-left: 5px solid; break-after: avoid; }
+  h3.vig { border-color: var(--vig); color: var(--vig); }
+  h3.bas { border-color: var(--bas); color: var(--bas); }
+  h3.bod { border-color: var(--bod); color: var(--bod); }
+  h3.com { border-color: var(--com); color: var(--com); }
+  h3.fac { border-color: var(--fac); color: var(--fac); }
+  h3.ger { border-color: var(--ger); color: var(--ger); }
+
+  table { width: 100%; border-collapse: collapse; }
+  tr { break-inside: avoid; }
+  td { border-bottom: 1px solid var(--line); padding: 4px 4px; vertical-align: top; }
+  td.box { width: 20px; padding-top: 5px; }
+  td.box i { display: block; width: 12px; height: 12px; border: 1.5px solid var(--ink); border-radius: 2px; }
+  td.q { width: 50%; }
+  td.q b { font-weight: 700; }
+  td.code { width: 58px; font-size: 10px; color: var(--muted); white-space: nowrap; }
+  td.ans { border-left: 1px dashed var(--line); padding-left: 6px; }
+  .opts { font-size: 10px; color: var(--muted); }
+  .opts i { display: inline-block; width: 9px; height: 9px; border: 1px solid var(--muted); border-radius: 50%; margin: 0 2px -1px 6px; }
+  .opts i:first-child { margin-left: 0; }
+
+  .notes { margin-top: 10px; border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; break-inside: avoid; }
+  .notes b { font-size: 12px; }
+  .notes .lines { height: 432px; background: repeating-linear-gradient(#fff 0 23px, var(--line) 23px 24px); }
+  footer { margin-top: 8px; font-size: 9.5px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Checklist para el paso a producción</h1>
+    <p class="sub">Visita a la bodega · viernes 6 de noviembre de 2026 · WMS Bodegas Asociadas</p>
+  </div>
+  <div class="meta">
+    <div>Responsable <span></span></div>
+    <div style="margin-top:6px">Asistentes <span></span></div>
+  </div>
+</header>
+
+<div class="how">
+  <div><b>A · Bloqueantes</b>Con la gerencia y Facturación. Sin esto no se sale a producción.</div>
+  <div><b>B · Verificar en sitio</b>Solo se puede hacer presencialmente. Revisar puesto por puesto.</div>
+  <div><b>C · Decisiones por área</b>Cada operario responde su bloque, después de practicar (unos 10 min).</div>
+  <div><b>Cómo anotar</b>Marque la casilla al cerrar. Si responden «como está», marque <b style="display:inline">Así</b>. El código sirve para pasarlo luego a <i>decisiones.md</i>.</div>
+</div>
+
+<!-- ───────────── A ───────────── -->
+<h2 class="a">A · Bloqueantes para producción</h2>
+<table>
+  <tr><td class="box"><i></i></td><td class="q"><b>Cronometrar la báscula</b> con el operario: registro de un camión en <b>30 s o menos</b>. Hasta «Guardar» y hasta el primer peso (tabla en la §10 de la guía de operarios).</td><td class="code">PRF-002</td><td class="ans">Intento 1: ______ s · ______ s<br><br>Intento 2: ______ s · ______ s</td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Hoja de convenios validada</b> por Facturación: 43 clientes con «Validado», «% acordado» y «Báscula sin cobro».</td><td class="code">Fase 4b</td><td class="ans">Fecha de entrega:</td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Tarifa base de almacenamiento</b>: porcentaje prorrateado, o se queda la T1 (0,295 %).</td><td class="code">DEC-029</td><td class="ans">% ______ <span class="opts"><i></i>Queda T1</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Mínimo de importación</b>: ¿$184.000 con 0,255 %?</td><td class="code">WMS-32</td><td class="ans"><span class="opts"><i></i>Sí <i></i>No, es: ____________</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Mes de facturación en paralelo</b> con el legacy: desde cuándo y quién compara.</td><td class="code">DEC-029</td><td class="ans">Inicio: __________ Quién: __________</td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Fecha del corte (T0)</b>: cierre de un día sin camiones en planta, idealmente el de menos movimiento.</td><td class="code">Corte</td><td class="ans">Fecha y hora:</td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Responsables del corte por área</b> (terminan o anulan lo suyo antes de T0):<br>Vigilancia y Báscula: camiones en planta, pesajes sin depósito (C1, C2) · Comercio Exterior: órdenes abiertas, salidas y guías (C3, C4) · Facturación: cobros de báscula y períodos sin facturar (C5, C6).</td><td class="code">C1–C6</td><td class="ans">Vig./Básc.:<br><br>Com. Ext.:<br><br>Factur.:</td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Legacy congelado desde T0</b>: solo consulta y cartera.</td><td class="code">Corte</td><td class="ans"><span class="opts"><i></i>Acordado <i></i>Con condiciones</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Usuarios reales para producción</b>: nombre, rol y correo de cada persona (en staging hay una cuenta por rol).</td><td class="code">Usuarios</td><td class="ans"><span class="opts"><i></i>Lista entregada <i></i>La envían el: ______</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Criterios de aceptación con la gerencia</b>: cada rol completa su flujo dos veces sin ayuda y no queda ningún bloqueante abierto. Aval por escrito.</td><td class="code">Gerencia</td><td class="ans"><span class="opts"><i></i>Aceptados <i></i>Ajustados:</span></td></tr>
+</table>
+
+<!-- ───────────── B ───────────── -->
+<h2 class="b">B · Verificar en sitio</h2>
+<table>
+  <tr><td class="box"><i></i></td><td class="q">El sistema carga desde <b>cada puesto</b>. ¿Hay internet de respaldo?</td><td class="code">Red</td><td class="ans">Vig. <span class="opts"><i></i></span> Básc. <span class="opts"><i></i></span> Bod. <span class="opts"><i></i></span> C. Ext. <span class="opts"><i></i></span> Fact. <span class="opts"><i></i></span><br>Respaldo:</td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Impresoras</b>: tiquete, tarjeta del depósito, guía de salida y factura. ¿El papel coincide?</td><td class="code">Impresión</td><td class="ans">Tiquete <span class="opts"><i></i></span> Tarjeta <span class="opts"><i></i></span> Guía <span class="opts"><i></i></span> Factura <span class="opts"><i></i></span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">El <b>código QR de la guía</b> se lee con el celular del personal de salida.</td><td class="code">QR</td><td class="ans"><span class="opts"><i></i>Sí <i></i>No</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Usan <b>lectores de código de barras</b>? El nuevo usa Code 39 en el depósito y la guía; el legacy, Code 128.</td><td class="code">BR-07-012</td><td class="ans"><span class="opts"><i></i>No usan <i></i>Sí, funciona <i></i>Sí, falla</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Báscula</b>: cómo se toma el peso hoy y si funciona igual con el sistema nuevo.</td><td class="code">Báscula</td><td class="ans"></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿El operario de báscula usaba <b>Alt+K</b> para la salida? En el nuevo ya no funciona.</td><td class="code">BR-02-016</td><td class="ans"><span class="opts"><i></i>No lo usa <i></i>Lo necesita</span></td></tr>
+</table>
+
+<!-- ───────────── C ───────────── -->
+<h2 class="c">C · Decisiones por área <small>«¿Lo necesitan o se acepta como está?»</small></h2>
+
+<h3 class="vig">Vigilancia</h3>
+<table>
+  <tr><td class="box"><i></i></td><td class="q">¿Usaban las <b>autorizaciones de salida</b> y los <b>manifiestos de Vigilancia</b>?</td><td class="code">BR-03-003</td><td class="ans"><span class="opts"><i></i>No se usan <i></i>Sí, los necesitan</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Entran <b>vehículos de otro país con la misma placa</b> que uno colombiano? Hoy la placa es única, sin país.</td><td class="code">BR-01-005</td><td class="ans"><span class="opts"><i></i>No pasa <i></i>Sí pasa</span></td></tr>
+</table>
+
+<h3 class="bas">Báscula</h3>
+<table>
+  <tr><td class="box"><i></i></td><td class="q">¿Cobraban <b>otros servicios</b> en báscula además del pesaje? ¿Cuáles?</td><td class="code">BR-02-004</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí:</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">Si un servicio no tiene tarifa, ¿se debe poder <b>digitar el valor</b>?</td><td class="code">BR-02-003</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí, digitar</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Hacían <b>repesajes después de cerrar</b> el ciclo?</td><td class="code">BR-02-015</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Quieren el aviso <b>«este vehículo ya ingresó con este documento»</b>?</td><td class="code">BR-02-011</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí, el aviso</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Necesitan <b>contar cuántas veces se imprime el tiquete</b>?</td><td class="code">BR-02-009</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Usan el <b>reporte por documento (CPI)</b>?</td><td class="code">BR-02-014</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Aceptan las <b>guardas nuevas al anular un pesaje</b>, que el legacy no tenía?</td><td class="code">BR-02-012</td><td class="ans"><span class="opts"><i></i>Aceptan <i></i>No:</span></td></tr>
+</table>
+
+<h3 class="bod">Bodega</h3>
+<table>
+  <tr><td class="box"><i></i></td><td class="q">Las <b>posiciones de bodega del legacy no se migran</b>. ¿Se reubica a mano después del corte, o hay que migrarlas?</td><td class="code">BR-03-006</td><td class="ans"><span class="opts"><i></i>A mano <i></i>Migrarlas</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Necesitan una vista de <b>toda la mercancía pendiente por ubicar</b>?</td><td class="code">BR-03-004</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">El «Reporte de mercancías»: ¿debe imprimir el <b>CPI, el número de salida y el tipo de novedad</b>?</td><td class="code">BR-03-005</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí:</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Está bien que <b>anular una novedad pida motivo</b>?</td><td class="code">BR-03-010</td><td class="ans"><span class="opts"><i></i>Sí <i></i>No</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Crean <b>ubicaciones en lote</b> (pasillo, filas y columnas)?</td><td class="code">BR-01-007</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí</span></td></tr>
+</table>
+
+<h3 class="com">Comercio Exterior</h3>
+<table>
+  <tr><td class="box"><i></i></td><td class="q"><b>Abandono</b>: ¿aceptan que la alerta incluya los vencidos, que la prórroga se registre a cualquier edad del depósito y que el aviso diario llegue solo a Comercio Exterior?</td><td class="code">BR-04-010</td><td class="ans"><span class="opts"><i></i>Aceptan <i></i>Ajustar:</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿La pantalla de abandono debe abrir mostrando <b>también los vencidos</b>?</td><td class="code">BR-04-003</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Necesitan ver y <b>buscar por el número del legacy</b> del depósito durante la transición?</td><td class="code">BR-08-006</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Usan <b>seriales por unidad</b> (por ejemplo, con Colmotores)?</td><td class="code">BR-04-009</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Necesitan <b>corregir la cabecera de una orden de cargue</b> (vehículo, ciudad)?</td><td class="code">BR-05-005</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">Un levante de un depósito anulado bloquea su número: ¿se debe poder <b>reutilizar</b>?</td><td class="code">BR-05-003</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Se usa la <b>guía de exportación automática</b>?</td><td class="code">BR-05-009</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Necesitan el <b>número de impresión</b> en la etiqueta y el <b>conteo de impresiones</b> de la guía?</td><td class="code">BR-04-004<br>BR-05-010</td><td class="ans"><span class="opts"><i></i>Así <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Usan los campos de <b>volumen y condiciones del ingreso</b>?</td><td class="code">BR-04-005</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">Listas de empaque: ¿quieren <b>aviso de archivo repetido</b>? ¿Está bien que <b>no se pueda borrar</b> una lista con artículos asociados?</td><td class="code">BR-04-006</td><td class="ans">Aviso <span class="opts"><i></i>Sí <i></i>No</span> · Bloqueo <span class="opts"><i></i>Sí <i></i>No</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">Reportes: ¿necesitan uno por producto de lo <b>nacionalizado o pendiente</b>? ¿<b>Pólizas</b> con el valor de la mercancía? ¿<b>Inventario</b> con la cantidad por ubicación?</td><td class="code">BR-07-008<br>BR-07-009<br>BR-07-010</td><td class="ans">Nacionalizado <span class="opts"><i></i></span> Pólizas <span class="opts"><i></i></span> Inventario <span class="opts"><i></i></span></td></tr>
+</table>
+
+<h3 class="fac">Facturación</h3>
+<table>
+  <tr><td class="box"><i></i></td><td class="q"><b>Fecha de la factura</b>: ¿cuenta la de numeración, la de aprobación o una digitada? Afecta los informes mensuales.</td><td class="code">BR-06-006</td><td class="ans"><span class="opts"><i></i>Numeración <i></i>Aprobación <i></i>Digitada</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Cobro de la guía</b>: ¿por guía o por depósito?</td><td class="code">BR-05-011</td><td class="ans"><span class="opts"><i></i>Por guía <i></i>Por depósito</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Facturación debe poder <b>editar tarifas base, mínimos y tarifas de montacargas</b>, o solo el administrador?</td><td class="code">BR-06-002</td><td class="ans"><span class="opts"><i></i>Facturación <i></i>Solo admin</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Cuál es el <b>ciclo de facturación por defecto</b>? Si se cambia, ¿rige desde el período abierto?</td><td class="code">BR-06-010</td><td class="ans">Ciclo: ________ <span class="opts"><i></i>Desde el abierto <i></i>Desde el siguiente</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Qué <b>informes se imprimen con firmas</b>?</td><td class="code">BR-07-006</td><td class="ans"></td></tr>
+</table>
+
+<h3 class="ger">Gerencia o administración</h3>
+<table>
+  <tr><td class="box"><i></i></td><td class="q">Desactivar un cliente que tiene depósitos abiertos: ¿se <b>bloquea o solo se advierte</b>?</td><td class="code">BR-01-006</td><td class="ans"><span class="opts"><i></i>Bloquear <i></i>Advertir</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q">¿Hacen falta los <b>datos de las fichas del legacy</b> que no se migraron?</td><td class="code">BR-01-004</td><td class="ans"><span class="opts"><i></i>No <i></i>Sí:</span></td></tr>
+  <tr><td class="box"><i></i></td><td class="q"><b>Videos tutoriales</b> (serie F7): ¿aprobados? ¿Visto bueno para dar de baja el ambiente Azure de pruebas?</td><td class="code">Videos<br>Azure</td><td class="ans">Videos <span class="opts"><i></i>Sí <i></i>No</span> · Azure <span class="opts"><i></i>Sí <i></i>No</span></td></tr>
+</table>
+
+<div class="notes">
+  <b>Notas y compromisos (qué, quién, cuándo)</b>
+  <div class="lines"></div>
+</div>
+
+<footer>Fuentes: docs/contexto/estado.md (corte 27/10/2026), auditoría de paridad (06-brechas-priorizadas.md) y procedimiento de corte. Cada código BR-… corresponde a una brecha de esa auditoría.</footer>
+
+</body>
+</html>

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Tareas de la visita</title>
+<style>
+  @page { size: A4 portrait; margin: 10mm 10mm 11mm; }
+  :root {
+    --ink: #111827; --muted: #4b5563; --line: #d1d5db; --soft: #f3f4f6;
+    --pre: #1d4ed8; --day: #15803d; --end: #b45309; --post: #7e22ce; --key: #b91c1c;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: var(--ink); font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { font-size: 11px; line-height: 1.3; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 3px solid var(--ink); padding-bottom: 5px; margin-bottom: 7px; }
+  h1 { margin: 0; font-size: 21px; }
+  .sub { margin: 2px 0 0; color: var(--muted); font-size: 11.5px; }
+  .goal { font-size: 10.5px; color: var(--muted); text-align: right; max-width: 280px; }
+  .goal b { color: var(--ink); }
+
+  .must { display: flex; gap: 6px; margin-bottom: 8px; }
+  .must div { flex: 1; padding: 5px 7px; border: 2px solid var(--key); border-radius: 6px; background: #fef2f2; font-size: 10.5px; }
+  .must b { display: block; color: var(--key); font-size: 11px; }
+
+  h2 { margin: 9px 0 4px; padding: 4px 8px; font-size: 13px; color: #fff; border-radius: 5px; break-after: avoid; }
+  h2 small { font-weight: 400; font-size: 10.5px; opacity: .92; margin-left: 6px; }
+  h2.pre { background: var(--pre); } h2.day { background: var(--day); } h2.end { background: var(--end); } h2.post { background: var(--post); }
+
+  table { width: 100%; border-collapse: collapse; }
+  tr { break-inside: avoid; }
+  td { border-bottom: 1px solid var(--line); padding: 3px 4px; vertical-align: top; }
+  td.box { width: 18px; padding-top: 4px; }
+  td.box i { display: block; width: 11px; height: 11px; border: 1.5px solid var(--ink); border-radius: 2px; }
+  td.time { width: 64px; font-weight: 700; white-space: nowrap; color: var(--day); }
+  td.task b { font-weight: 700; }
+  td.with { width: 150px; font-size: 10px; color: var(--muted); }
+  tr.block td { background: var(--soft); }
+  tr.block td.task { font-weight: 700; }
+  .star { color: var(--key); font-weight: 700; }
+
+  .cols { display: flex; gap: 10px; }
+  .cols > div { flex: 1; }
+  .notes { margin-top: 8px; border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; break-inside: avoid; }
+  .notes .lines { height: 96px; background: repeating-linear-gradient(#fff 0 23px, var(--line) 23px 24px); }
+  footer { margin-top: 6px; font-size: 9px; color: var(--muted); }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>Tareas de la visita a la bodega</h1>
+    <p class="sub">Viernes 6 de noviembre de 2026 · WMS Bodegas Asociadas · única jornada presencial</p>
+  </div>
+  <p class="goal"><b>Objetivo:</b> que cada rol trabaje solo, que el soporte virtual funcione y que queden cerrados los pendientes para producción.</p>
+</header>
+
+<div class="must">
+  <div><b>1 · Medir la báscula</b>PRF-002: registro de un camión en 30 s o menos. Es la única condición pendiente del GO.</div>
+  <div><b>2 · Entregar los convenios</b>Hoja prellenada a Facturación, explicada en persona y con fecha de devolución.</div>
+  <div><b>3 · Decidir el corte</b>Fecha T0, responsables por área, usuarios reales y criterios de aceptación con la gerencia.</div>
+  <div><b>4 · Dejar el soporte remoto</b>Canal, videollamada y aliados por área probados antes de irse.</div>
+</div>
+
+<!-- ───────────── Hoy jueves ───────────── -->
+<h2 class="pre">Antes de salir <small>hoy jueves o mañana temprano</small></h2>
+<div class="cols">
+<div>
+<table>
+  <tr><td class="box"><i></i></td><td class="task"><b>Abrir en Excel la hoja de convenios</b>: comprobar que los selectores se despliegan y que el documento se llena solo en «Convenios».</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Llevar la hoja en el portátil y en una USB. <b>No enviarla por WhatsApp.</b></td></tr>
+  <tr><td class="box"><i></i></td><td class="task"><b>Imprimir:</b> mapa del flujo en A3 (2 copias), checklist de producción, tabla de PRF-002 (guía §10, 2 copias), sección de cada rol de la guía de operarios (5).</td></tr>
+  <tr><td class="box"><i></i></td><td class="task"><b>Staging:</b> prueba de humo, sin despliegues desde hoy. Hacer un respaldo manual antes de la jornada.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Confirmar que entran las 5 cuentas <code>operario.*</code> y tener a mano las contraseñas iniciales para restablecerlas.</td></tr>
+</table>
+</div>
+<div>
+<table>
+  <tr><td class="box"><i></i></td><td class="task">Anotar placas y conductores migrados para cada recorrido (A, B, C) y los prefijos <code>PRAC-</code> que se usarán.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task"><b>Gerencia:</b> confirmar asistencia de los 5 roles, sala, proyector o TV, horario y turnos si la operación no puede parar.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task"><b>Pedir 30–45 min con Facturación</b> y 30 min con la gerencia al final del día.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Crear el canal de soporte (grupo u hoja de reportes) y un enlace fijo de videollamada.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task"><b>Maleta:</b> portátil y cargador, hotspot, cable HDMI, regleta, celular con cronómetro, hojas impresas, esferos.</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ───────────── Viernes ───────────── -->
+<h2 class="day">En la bodega <small>agenda sugerida; ajústela a la operación</small></h2>
+<table>
+  <tr class="block"><td class="box"><i></i></td><td class="time">7:30</td><td class="task">Montaje y verificación en sitio</td><td class="with">Usted</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Por cada puesto: el sistema carga, la red responde, la impresora imprime (tiquete, tarjeta, guía, factura) y el QR de la guía se lee con un celular. Usar el bloque B del checklist y tomar fotos de los equipos.</td><td class="with">Checklist de producción · B</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Iniciar la grabación de la jornada (con permiso): será el tutorial actualizado.</td><td class="with"></td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">8:00</td><td class="task">Apertura (20 min)</td><td class="with">Gerencia + 5 roles</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Habla la gerencia. Usted explica por qué, qué cambia y las reglas del día («yo no toco el teclado», «cada fallo reportado es útil»). Presentar el <b>mapa del flujo</b> y nombrar un <b>aliado por área</b>.</td><td class="with">Mapa del flujo A3</td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">8:20</td><td class="task">Recorrido guiado: «yo hago, hacemos» (75 min)</td><td class="with">Todos, proyectado</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Un camión por el recorrido B (descargue de importación) y otro por el C (cargue). Cada operario toma el teclado en su paso. Explicar «Volver a la cola» frente a «Soltar camión».</td><td class="with">Recorridos B y C</td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">10:00</td><td class="task">Práctica por rol en su puesto (90 min)</td><td class="with">Cada rol + aliado</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Cada operario hace 2 camiones con su hoja. Usted rota y anota dudas (para las preguntas frecuentes) y fallos (pantalla, hora, qué hizo, qué pasó).</td><td class="with">Guía de operarios por rol</td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">11:30</td><td class="task"><span class="star">★</span> Reunión con Facturación (45 min) · los aliados guían los casos de error</td><td class="with">Facturación</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task"><b>Entregar la hoja de convenios</b> y recorrer juntos «Lo mínimo, si tiene poco tiempo». Hacer 3 o 4 filas con ellos. <b>Acordar la fecha de devolución.</b></td><td class="with">Hoja de convenios</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Bloque A del checklist que le toca a Facturación: tarifa base, mínimo de importación, mes en paralelo. Y su bloque C: fecha de la factura, cobro de la guía, quién edita tarifas, ciclo por defecto.</td><td class="with">Checklist de producción · A y C</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Mientras tanto, los demás practican casos de error: doble ingreso, manifiesto faltante, corregir un peso, báscula en $0, salida con cargue.</td><td class="with">Aliados</td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">12:15</td><td class="task">Almuerzo: escuchar, no explicar. Aquí salen las resistencias reales.</td><td class="with"></td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">13:30</td><td class="task"><span class="star">★</span> Prueba de autonomía y medición de la báscula (90 min)</td><td class="with">5 roles · usted no ayuda</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">2 camiones completos <b>sin ayuda</b>. Anotar tiempos y dónde se traban.</td><td class="with"></td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task"><b>PRF-002:</b> un ensayo y luego cronometrar al menos 2 intentos: hasta «Guardar» (F3-REG-024) y hasta el primer peso (F3-PES-015), con las cartas porte <code>PRAC-CP-PRF1</code> y <code>PRF2</code>. Preguntar por el atajo Alt+K.</td><td class="with">Tabla PRF-002 · Báscula</td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">15:00</td><td class="task">Ensayo de soporte remoto (30 min)</td><td class="with">5 roles</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Cada operario reporta un problema ficticio por el canal y comparte pantalla en la videollamada desde su PC. Confirmar quién responde primero en cada área (el aliado).</td><td class="with">Canal + videollamada</td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">15:30</td><td class="task">Decisiones por área (10 min por rol)</td><td class="with">Cada rol</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Bloque C del checklist: Vigilancia, Báscula, Bodega y Comercio Exterior responden sí o no a sus preguntas. Anotar cada respuesta junto a su código.</td><td class="with">Checklist de producción · C</td></tr>
+
+  <tr class="block"><td class="box"><i></i></td><td class="time">16:15</td><td class="task"><span class="star">★</span> Cierre con todos y reunión con la gerencia</td><td class="with">Gerencia</td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Con todos: leer los hallazgos clasificados (bloqueante, molesto, deseable) y los compromisos con fecha.</td><td class="with"></td></tr>
+  <tr><td class="box"><i></i></td><td class="time"></td><td class="task">Con la gerencia: <b>fecha del corte (T0)</b>, <b>responsables por área</b> (C1–C6), legacy congelado desde T0, <b>lista de usuarios reales</b>, <b>criterios de aceptación</b>, calendario de sesiones virtuales y aprobación de los videos.</td><td class="with">Checklist de producción · A</td></tr>
+</table>
+
+<!-- ───────────── Antes de irse ───────────── -->
+<h2 class="end">Antes de irse</h2>
+<div class="cols">
+<div>
+<table>
+  <tr><td class="box"><i></i></td><td class="task">Recoger todas las hojas llenas y tomarles foto.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Confirmar la fecha de devolución de la hoja de convenios.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Dejar pegado el mapa del flujo en la bodega.</td></tr>
+</table>
+</div>
+<div>
+<table>
+  <tr><td class="box"><i></i></td><td class="task">Confirmar la primera sesión virtual (fecha, hora y enlace).</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Verificar que cada operario sabe entrar y cambió su contraseña.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Detener la grabación y guardarla.</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ───────────── Después ───────────── -->
+<h2 class="post">Después <small>lunes y martes</small></h2>
+<div class="cols">
+<div>
+<table>
+  <tr><td class="box"><i></i></td><td class="task">Pasar las respuestas del checklist a <code>contexto/decisiones.md</code> (una DEC por tema).</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Registrar los fallos como fichas de defecto y las dudas en <code>preguntas-frecuentes-operarios.md</code>.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Registrar el resultado de PRF-002 y actualizar <code>contexto/estado.md</code>.</td></tr>
+</table>
+</div>
+<div>
+<table>
+  <tr><td class="box"><i></i></td><td class="task">Enviar en 48 horas la nota «ustedes dijeron, nosotros hicimos», con fechas.</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Agendar las sesiones virtuales por rol (30 min, lunes, miércoles y viernes durante 2 semanas).</td></tr>
+  <tr><td class="box"><i></i></td><td class="task">Hacer seguimiento a la hoja de convenios en la fecha acordada.</td></tr>
+</table>
+</div>
+</div>
+
+<div class="notes">
+  <b>Compromisos del día (qué, quién, cuándo)</b>
+  <div class="lines"></div>
+</div>
+
+<footer>Materiales: mapa-flujo-camion.pdf · checklist-produccion-visita-2026-11-06.pdf · guía de pruebas de operarios (§5–§10) · hoja de convenios en db_legacy/trabajo/convenios/.</footer>
+
+</body>
+</html>

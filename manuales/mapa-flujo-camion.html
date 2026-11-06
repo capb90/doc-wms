@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Mapa del recorrido de un camión</title>
+<style>
+  @page { size: A3 landscape; margin: 7mm; }
+  :root {
+    --vig: #1d4ed8; --vig-bg: #dbeafe;
+    --bas: #b45309; --bas-bg: #fef3c7;
+    --bod: #15803d; --bod-bg: #dcfce7;
+    --com: #7e22ce; --com-bg: #f3e8ff;
+    --fac: #be123c; --fac-bg: #ffe4e6;
+    --ink: #111827; --muted: #4b5563; --line: #9ca3af;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: #fff; color: var(--ink); font-family: "Helvetica Neue", Arial, sans-serif; }
+  body { width: 1520px; margin: 0 auto; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 8px; }
+  h1 { margin: 0; font-size: 34px; line-height: 1.1; }
+  .sub { margin: 4px 0 0; font-size: 16px; color: var(--muted); }
+  .legend { display: flex; gap: 8px; }
+  .chip { padding: 5px 12px; border-radius: 999px; font-size: 14px; font-weight: 700; border: 2px solid; }
+  .chip.vig, .who.vig { color: var(--vig); border-color: var(--vig); background: var(--vig-bg); }
+  .chip.bas, .who.bas { color: var(--bas); border-color: var(--bas); background: var(--bas-bg); }
+  .chip.bod, .who.bod { color: var(--bod); border-color: var(--bod); background: var(--bod-bg); }
+  .chip.com, .who.com { color: var(--com); border-color: var(--com); background: var(--com-bg); }
+  .chip.fac, .who.fac { color: var(--fac); border-color: var(--fac); background: var(--fac-bg); }
+
+  .start { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; padding: 6px 14px; border: 2px dashed var(--line); border-radius: 10px; font-size: 16px; }
+  .start b { font-size: 18px; }
+
+  .route { display: flex; align-items: stretch; margin-bottom: 8px; border: 2px solid var(--line); border-radius: 12px; overflow: hidden; }
+  .label { flex: 0 0 128px; padding: 10px; background: #f3f4f6; border-right: 2px solid var(--line); display: flex; flex-direction: column; justify-content: center; }
+  .label .tag { font-size: 28px; font-weight: 800; line-height: 1; }
+  .label h2 { margin: 6px 0 4px; font-size: 18px; line-height: 1.15; }
+  .label p { margin: 0; font-size: 13px; color: var(--muted); }
+  .steps { flex: 1; display: flex; align-items: center; padding: 8px 6px 8px 8px; }
+
+  .arr { flex: 0 0 26px; text-align: center; font-size: 26px; color: var(--muted); font-weight: 700; }
+  .card { flex: 1 1 0; position: relative; align-self: stretch; padding: 8px 10px 6px 12px; border: 2px solid; border-left-width: 8px; border-radius: 8px; background: #fff; display: flex; flex-direction: column; min-width: 0; }
+  .card.vig { border-color: var(--vig); } .card.bas { border-color: var(--bas); }
+  .card.bod { border-color: var(--bod); } .card.com { border-color: var(--com); }
+  .card.fac { border-color: var(--fac); }
+  .card.later { border-style: dashed; border-left-style: solid; }
+  .n { position: absolute; top: -2px; right: -2px; background: var(--ink); color: #fff; font-weight: 800; font-size: 15px; width: 26px; height: 26px; border-radius: 0 6px 0 8px; display: grid; place-items: center; }
+  .who { align-self: flex-start; font-size: 12px; font-weight: 800; padding: 2px 8px; border-radius: 999px; border: 1.5px solid; text-transform: uppercase; letter-spacing: .03em; }
+  .card h3 { margin: 6px 0 3px; font-size: 17px; line-height: 1.15; }
+  .card p { margin: 0 0 4px; font-size: 14px; line-height: 1.3; }
+  .card small { margin-top: auto; font-size: 12px; color: var(--muted); }
+  .card .pay { display: inline-block; margin-top: 2px; padding: 1px 7px; border-radius: 6px; background: #fef9c3; border: 1px solid #ca8a04; font-weight: 700; font-size: 13px; }
+  .card .out { display: block; margin-top: 4px; font-size: 13px; font-weight: 700; color: var(--ink); }
+
+  .stack { flex: 2.1 1 0; display: flex; flex-direction: row; gap: 6px; min-width: 0; position: relative; padding-top: 20px; }
+  .stack .par { position: absolute; top: 0; left: 0; right: 0; text-align: center; font-size: 12px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; }
+  .stack .card { flex: 1 1 0; }
+
+  .fac-row .label { background: var(--fac-bg); }
+  .fac-in { flex: 1 1 0; min-width: 0; }
+  .fac-in { flex: 1.7 1 0; }
+  .fac-in ul { margin: 4px 0 0; padding-left: 18px; font-size: 14px; line-height: 1.3; columns: 2; column-gap: 18px; }
+  .fac-in li { break-inside: avoid; }
+
+  footer { display: flex; gap: 12px; margin-top: 4px; }
+  .box { flex: 1; padding: 8px 12px; border: 2px solid var(--line); border-radius: 10px; font-size: 14px; line-height: 1.35; }
+  .box b { display: block; margin-bottom: 2px; font-size: 15px; }
+  .box.warn { background: #fffbeb; border-color: #d97706; }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <h1>El recorrido de un camión en el WMS</h1>
+    <p class="sub">Quién hace qué y en qué orden · sistema nuevo (staging)</p>
+  </div>
+  <div class="legend">
+    <span class="chip vig">Vigilancia</span>
+    <span class="chip bas">Báscula</span>
+    <span class="chip bod">Bodega</span>
+    <span class="chip com">Comercio Exterior</span>
+    <span class="chip fac">Facturación</span>
+  </div>
+</header>
+
+<div class="start">
+  <b>Todo empieza en Vigilancia:</b>
+  <span>el camión no existe para los demás hasta que Vigilancia registra el ingreso y escoge el <strong>motivo</strong>. El motivo decide por cuál recorrido va.</span>
+</div>
+
+<!-- A. Solo báscula -->
+<section class="route">
+  <div class="label">
+    <div class="tag" style="color:var(--bas)">A</div>
+    <h2>Solo báscula</h2>
+    <p>Pesar y salir. Motivo «Solo Báscula».</p>
+  </div>
+  <div class="steps">
+    <div class="card vig"><span class="n">1</span><span class="who vig">Vigilancia</span>
+      <h3>Registra el ingreso</h3>
+      <p>Placa, conductor y motivo «Solo Báscula».</p>
+      <small>Vigilancia → Ingreso</small></div>
+    <div class="arr">→</div>
+    <div class="card bas"><span class="n">2</span><span class="who bas">Báscula</span>
+      <h3>Cobra, pesa y da el tiquete</h3>
+      <p>Toma el camión de la cola, cobra de contado y registra el peso.</p>
+      <span class="pay">$20.000 con IVA</span>
+      <small>Báscula → Proceso de Pesaje</small></div>
+    <div class="arr">→</div>
+    <div class="card vig"><span class="n">3</span><span class="who vig">Vigilancia</span>
+      <h3>Registra la salida</h3>
+      <p>El camión sale de la lista y queda en el historial.</p>
+      <small>Vigilancia → Salida</small></div>
+    <div class="arr"></div>
+    <div class="card" style="border:2px dashed var(--line); border-left-width:2px; background:#f9fafb;"><h3 style="margin-top:0">Motivo «Solo bodega»</h3>
+      <p>No pasa por báscula: va directo a Bodega y luego a la salida de Vigilancia.</p></div>
+  </div>
+</section>
+
+<!-- B. Descargue de importación -->
+<section class="route">
+  <div class="label">
+    <div class="tag" style="color:var(--bod)">B</div>
+    <h2>Descargue de importación</h2>
+    <p>El camión trae mercancía y se crea el depósito.</p>
+  </div>
+  <div class="steps">
+    <div class="card vig"><span class="n">1</span><span class="who vig">Vigilancia</span>
+      <h3>Registra el ingreso</h3>
+      <p>Motivo «Descargue mercancía importación».</p>
+      <small>Vigilancia → Ingreso</small></div>
+    <div class="arr">→</div>
+    <div class="card bas"><span class="n">2</span><span class="who bas">Báscula</span>
+      <h3>Datos, cobro y 1.er peso</h3>
+      <p>Ingreso con depósito → Importación. Carta porte, <b>manifiesto</b> (obligatorio), cliente, producto y cantidades.</p>
+      <span class="pay">$20.000 con IVA</span>
+      <span class="out">Nace el depósito y avisa a Comercio Exterior.</span>
+      <small>Primer peso = bruto</small></div>
+    <div class="arr">→</div>
+    <div class="stack">
+      <div class="par">Al mismo tiempo</div>
+      <div class="card bod"><span class="n">3</span><span class="who bod">Bodega</span>
+        <h3>Recibe la mercancía</h3>
+        <p>Llegada, cantidad contada, foto y ubicación. Montacargas: horómetro y cobro.</p>
+        <small>Bodega → Recepciones / Montacargas</small></div>
+      <div class="card com"><span class="n">3</span><span class="who com">Comercio Exterior</span>
+        <h3>Confirma el depósito</h3>
+        <p>Asigna cliente, registra manifiesto DIAN, confirma e imprime la tarjeta.</p>
+        <span class="out">Nace la factura de almacenamiento.</span>
+        <small>Comercio Exterior → Depósitos</small></div>
+    </div>
+    <div class="arr">→</div>
+    <div class="card bas"><span class="n">4</span><span class="who bas">Báscula</span>
+      <h3>2.º peso y tiquete</h3>
+      <p>Camión vacío. El sistema calcula el neto. Bodega debe haber registrado la llegada antes.</p>
+      <small>Segundo peso = tara</small></div>
+    <div class="arr">→</div>
+    <div class="card vig"><span class="n">5</span><span class="who vig">Vigilancia</span>
+      <h3>Registra la salida</h3>
+      <p>El camión sale de planta.</p>
+      <small>Vigilancia → Salida</small></div>
+    <div class="arr">⇢</div>
+    <div class="card com later"><span class="n">6</span><span class="who com">Comercio Exterior</span>
+      <h3>Después: levante</h3>
+      <p>Registra el levante (valor CIF). Al cubrir toda la cantidad el depósito pasa a «Nacionalizado».</p>
+      <small>Cuando llegue el levante</small></div>
+  </div>
+</section>
+
+<!-- C. Cargue -->
+<section class="route">
+  <div class="label">
+    <div class="tag" style="color:var(--com)">C</div>
+    <h2>Cargue de un depósito</h2>
+    <p>Sale mercancía nacionalizada. Motivo «Cargue mercancía importación».</p>
+  </div>
+  <div class="steps">
+    <div class="card vig"><span class="n">1</span><span class="who vig">Vigilancia</span>
+      <h3>Registra el ingreso</h3>
+      <p>Motivo «Cargue mercancía importación».</p>
+      <small>Vigilancia → Ingreso</small></div>
+    <div class="arr">→</div>
+    <div class="card com"><span class="n">2</span><span class="who com">Comercio Exterior</span>
+      <h3>Orden y guía de salida</h3>
+      <p>Crea la orden de cargue (orden externa y camión) y emite la guía <b>antes</b> del cargue.</p>
+      <span class="pay">Guía $15.000</span>
+      <small>Órdenes de Cargue · Guías de Salida</small></div>
+    <div class="arr">→</div>
+    <div class="card bas"><span class="n">3</span><span class="who bas">Báscula</span>
+      <h3>Peso del camión vacío</h3>
+      <p>«Salida de mercancía» con esa orden. Cobra y registra el peso.</p>
+      <small>Báscula → Proceso de Pesaje</small></div>
+    <div class="arr">→</div>
+    <div class="card bod"><span class="n">4</span><span class="who bod">Bodega</span>
+      <h3>Carga la orden</h3>
+      <p>Verifica y carga las unidades. <b>Sin guía vigente no se carga.</b> El saldo del depósito baja.</p>
+      <small>Bodega → Órdenes de Cargue</small></div>
+    <div class="arr">→</div>
+    <div class="card bas"><span class="n">5</span><span class="who bas">Báscula</span>
+      <h3>Repesaje y tiquete</h3>
+      <p>Pesa el camión ya cargado.</p>
+      <small>Báscula → Proceso de Pesaje</small></div>
+    <div class="arr">→</div>
+    <div class="card vig"><span class="n">6</span><span class="who vig">Vigilancia</span>
+      <h3>Registra la salida</h3>
+      <p>El camión sale de planta.</p>
+      <small>Vigilancia → Salida</small></div>
+  </div>
+</section>
+
+<!-- Facturación -->
+<section class="route fac-row">
+  <div class="label">
+    <div class="tag" style="color:var(--fac)">$</div>
+    <h2>Facturación</h2>
+    <p>Todo cobro de A, B y C termina aquí.</p>
+  </div>
+  <div class="steps">
+    <div class="card fac fac-in"><span class="who fac">Llegan los cobros</span>
+      <ul>
+        <li>Báscula: $20.000</li>
+        <li>Montacargas</li>
+        <li>Guía de salida: $15.000</li>
+        <li>Almacenamiento</li>
+      </ul></div>
+    <div class="arr">→</div>
+    <div class="card fac"><span class="n">1</span><span class="who fac">Facturación</span>
+      <h3>Revisa la factura</h3>
+      <p>Cliente, valores y líneas correctos.</p>
+      <small>Facturación → Facturas</small></div>
+    <div class="arr">→</div>
+    <div class="card fac"><span class="n">2</span><span class="who fac">Facturación</span>
+      <h3>Asigna el N.º SIIGO</h3>
+      <p>El sistema no deja repetir un número.</p>
+      <small>Acciones → Asignar N.º SIIGO</small></div>
+    <div class="arr">→</div>
+    <div class="card fac"><span class="n">3</span><span class="who fac">Facturación</span>
+      <h3>Aprueba</h3>
+      <p>Aprobada: el N.º SIIGO ya no se cambia.</p></div>
+    <div class="arr">→</div>
+    <div class="card fac"><span class="n">4</span><span class="who fac">Facturación</span>
+      <h3>Registra el pago</h3>
+      <p>Total o parcial, con referencia.</p></div>
+  </div>
+</section>
+
+<footer>
+  <div class="box"><b>Mientras practican</b>
+    Todo documento inventado empieza por <b style="display:inline">PRAC-</b> (por ejemplo <b style="display:inline">PRAC-CP-0001</b>). No use estos datos para operar de verdad.</div>
+  <div class="box warn"><b>Si algo falla o no lo entiende</b>
+    Anote la pantalla, la hora, qué hizo, qué esperaba y qué pasó, con captura si puede. Envíelo por el canal de reportes que se acordó para las pruebas.</div>
+  <div class="box"><b>Avisos del sistema</b>
+    Báscula avisa a Comercio Exterior al crear el depósito. Bodega avisa si lo contado difiere de lo declarado.</div>
+</footer>
+
+</body>
+</html>
