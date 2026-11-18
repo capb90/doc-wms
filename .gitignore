@@ -6,3 +6,7 @@ credenciales*
 
 # Sistema
 .DS_Store
+
+# Videos de levantamiento
+levantamiento_staging/*.MOV
+levantamiento_staging/*.mov
