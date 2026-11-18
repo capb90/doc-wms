@@ -1,0 +1,466 @@
+<!DOCTYPE html><html lang="es" data-lt-installed="true"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Báscula - Registro de Pesaje</title>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<!-- PrimeIcons & Fonts -->
+<link href="https://unpkg.com/primeicons/primeicons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f0f7ff',
+              100: '#e0effe',
+              500: '#0284c7',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Clean, unobtrusive form styling */
+    .field-label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #64748b;
+      margin-bottom: 0.35rem;
+    }
+    .field-input {
+      width: 100%;
+      height: 38px;
+      padding: 0 0.75rem;
+      background-color: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      color: #0f172a;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .field-input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15);
+    }
+    .field-input[readonly] {
+      background-color: #f8fafc;
+      color: #475569;
+    }
+    .tabular-numbers {
+      font-variant-numeric: tabular-nums;
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+<!-- Minimal Top Header Bar -->
+<header class="bg-white h-13 border-b border-slate-200 px-6 flex items-center justify-between shadow-[0_1px_2px_rgba(0,0,0,0.03)]">
+<div class="flex items-center gap-3">
+<button class="w-8 h-8 rounded-lg hover:bg-slate-100 flex items-center justify-center text-slate-500 transition-colors">
+<i class="pi pi-bars text-sm"></i>
+</button>
+<div class="flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span class="text-xs font-bold tracking-tight uppercase text-slate-700">Bodegas Asociadas LTDA</span>
+<span class="text-xs text-slate-400">· Operaciones Báscula</span>
+</div>
+</div>
+<div class="flex items-center gap-3 text-slate-500 text-sm">
+<div class="relative">
+<button class="p-1.5 hover:bg-slate-100 rounded-md transition-colors text-slate-600">
+<i class="pi pi-bell text-sm"></i>
+</button>
+<span class="absolute top-1 right-1 w-2 h-2 bg-sky-600 rounded-full"></span>
+</div>
+<div class="h-4 w-[1px] bg-slate-200"></div>
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-slate-800 text-white flex items-center justify-center text-xs font-semibold">
+          OP
+        </div>
+<div class="text-xs leading-tight">
+<span class="font-semibold text-slate-700 block">Báscula Entrada</span>
+</div>
+</div>
+</div>
+</header>
+<div class="flex flex-1">
+<!-- Main Content Area -->
+<main class="flex-1 p-5 md:p-7 max-w-6xl mx-auto w-full space-y-4">
+<!-- Breadcrumbs -->
+<nav class="flex items-center gap-1.5 text-xs text-slate-400">
+<a class="hover:text-slate-600" href="#">Báscula</a>
+<span>/</span>
+<a class="hover:text-slate-600" href="#">Proceso de pesaje</a>
+<span>/</span>
+<span class="text-slate-700 font-medium">UGV869</span>
+</nav>
+<!-- Clean Header Container: Vehicle info, Stepper & Quick Actions -->
+<div class="bg-white border border-slate-200 rounded-xl px-5 py-3.5 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div class="flex flex-col sm:flex-row sm:items-center gap-4">
+<div class="flex items-center gap-3">
+<span class="font-mono text-2xl font-black text-slate-900 tracking-tight bg-slate-100 px-2.5 py-1 rounded-md border border-slate-200">UGV869</span>
+<div>
+<div class="text-xs font-medium text-slate-700">Descargue mercancía importación</div>
+<div class="text-[11px] text-slate-400">Ingreso: 10/11/2026 · 21:35</div>
+</div>
+</div>
+<div class="hidden sm:block h-6 w-[1px] bg-slate-200"></div>
+<!-- Discrete Stepper -->
+<div class="flex items-center gap-2 text-xs">
+<div class="flex items-center gap-1.5 font-semibold text-sky-700 bg-sky-50 px-2 py-1 rounded">
+<span class="w-4 h-4 rounded-full bg-sky-600 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+<span>Registro</span>
+</div>
+<i class="pi pi-angle-right text-[10px] text-slate-300"></i>
+<div class="flex items-center gap-1.5 text-slate-400 font-medium px-2 py-1">
+<span class="w-4 h-4 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px]">2</span>
+<span>Cobro</span>
+</div>
+<i class="pi pi-angle-right text-[10px] text-slate-300"></i>
+<div class="flex items-center gap-1.5 text-slate-400 font-medium px-2 py-1">
+<span class="w-4 h-4 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center text-[10px]">3</span>
+<span>Tiquete</span>
+</div>
+</div>
+</div>
+<!-- Quick actions -->
+<div class="flex items-center gap-2 justify-end"><div class="flex items-center gap-2 mr-2 pr-3 border-r border-slate-200"><label class="inline-flex items-center gap-2 cursor-pointer"><span class="text-xs font-medium text-slate-600">Req. 2° pesaje</span><div class="relative inline-flex items-center"><input checked="" class="sr-only peer" type="checkbox"><div class="w-9 h-5 bg-sky-600 rounded-full transition-colors relative after:content-[''] after:absolute after:top-[2px] after:right-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all"></div></div></label></div><button class="text-xs font-medium text-slate-700 bg-slate-50 hover:bg-slate-100 border border-slate-200 px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1.5" type="button"><i class="pi pi-arrow-left text-[10px]"></i><span>Volver a la cola</span></button></div>
+</div>
+<!-- SECCIÓN 1: VIGILANCIA / CAMIÓN Y CONDUCTOR (Ultra compacta y limpia) -->
+<section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm"><div class="px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 bg-white"><div class="flex items-center gap-3"><span class="text-xs font-bold uppercase tracking-wider text-slate-500">1. Vigilancia</span></div><div class="flex-1 max-w-2xl hidden md:flex items-center justify-start gap-4 text-xs text-slate-600 pl-4 border-l border-slate-100" id="vigilanciaMainSummary"><div><span class="text-slate-400 font-medium">MOTIVO:</span><span class="font-semibold text-slate-800 ml-1">Descargue mercancía importación</span><span class="text-slate-400"> (Ingreso con depósito)</span></div><span class="text-slate-300">|</span><div><span class="text-slate-400 font-medium">FECHA:</span><span class="font-medium text-slate-700 ml-1">10/11/2026 21:35</span></div><span class="text-slate-300">|</span><div><span class="text-slate-400 font-medium">PLACA:</span><span class="font-mono font-bold text-slate-800 ml-1">UGV869</span></div></div><button class="text-xs font-medium text-slate-600 hover:text-sky-700 hover:bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 transition-colors flex items-center gap-1.5" onclick="document.getElementById('vigilanciaDetalleBody').classList.toggle('hidden')" type="button"><i class="pi pi-pencil text-[11px] text-slate-400"></i><span>Editar</span></button></div><div class="border-t border-slate-100 p-5 bg-slate-50/50 hidden" id="vigilanciaDetalleBody"><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="field-label">Tipo / Motivo de ingreso *</label><select class="field-input"><option selected="">Descargue mercancía importación (Ingreso con depósito)</option><option>Cargue mercancía exportación (Salida)</option><option>Solo báscula / Pesaje particular</option><option>Ingreso vacío para cargue nacional</option></select></div><div><label class="field-label">Fecha de ingreso *</label><input class="field-input" type="text" value="10/11/2026 21:35"></div><div><label class="field-label">Placa del vehículo *</label><input class="field-input font-mono font-bold uppercase" type="text" value="UGV869"></div></div><p class="text-[11px] text-slate-400 mt-2">Nota: Modificar estos datos actualiza de inmediato la clasificación del turno en garita y báscula.</p></div></section><section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+<!-- Compact Summary Header -->
+<div class="px-5 py-3.5 flex flex-wrap items-center justify-between gap-3 bg-white">
+<div class="flex items-center gap-3">
+<span class="text-xs font-bold uppercase tracking-wider text-slate-500">2. Camión y conductor</span>
+
+</div>
+<!-- Summary info row (IMAGE_1 style) -->
+<div class="flex-1 max-w-2xl hidden md:flex items-center justify-start gap-4 text-xs text-slate-600 pl-4 border-l border-slate-100" id="vigilanciaSummary">
+<div>
+<span class="text-slate-400 font-medium">CAMIÓN:</span>
+<span class="font-semibold text-slate-800 ml-1">COMODIN SAS</span>
+<span class="text-slate-400">· Ecuador · Sencillo</span>
+</div>
+<span class="text-slate-300">|</span>
+<div>
+<span class="text-slate-400 font-medium">CONDUCTOR:</span>
+<span class="font-semibold text-slate-800 ml-1">ABELARDO SUAREZ</span>
+<span class="text-slate-400 font-mono">· CC 79699097</span>
+</div>
+</div>
+<!-- Edit button toggle -->
+<button class="text-xs font-medium text-slate-600 hover:text-sky-700 hover:bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200 transition-colors flex items-center gap-1.5" onclick="toggleVigilancia()" type="button">
+<i class="pi pi-pencil text-[11px] text-slate-400"></i>
+<span id="btnEditarVigilanciaText">Editar</span>
+</button>
+</div>
+<!-- Editable Form Dropdown (IMAGE_2 style) -->
+<div class="border-t border-slate-100 p-5 bg-slate-50/50 hidden" id="vigilanciaBody">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Camión Column -->
+<div class="space-y-3">
+<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 pb-1 border-b border-slate-200">
+                Camión
+              </div>
+<div>
+<label class="field-label">Empresa *</label>
+<input class="field-input" type="text" value="COMODIN SAS">
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div>
+<label class="field-label">País *</label>
+<select class="field-input">
+<option selected="">Ecuador</option>
+<option>Colombia</option>
+<option>Perú</option>
+<option>Venezuela</option>
+</select>
+</div>
+<div>
+<label class="field-label">Tipo de vehículo *</label>
+<select class="field-input">
+<option selected="">Sencillo</option>
+<option>Tractomula (3S3)</option>
+<option>Doble Troque</option>
+<option>Turbo</option>
+</select>
+</div>
+</div>
+</div>
+<!-- Conductor Column -->
+<div class="space-y-3">
+<div class="text-[11px] font-bold uppercase tracking-wider text-slate-400 pb-1 border-b border-slate-200">
+                Conductor
+              </div>
+<div>
+<label class="field-label">Buscar conductor *</label>
+<div class="flex items-center gap-2">
+<input class="field-input" type="text" value="ABELARDO SUAREZ (CC 79699097)">
+<button class="h-[38px] px-3 bg-white border border-slate-300 hover:border-slate-400 rounded-md text-slate-600 transition-colors" title="Agregar nuevo" type="button">
+<i class="pi pi-plus text-xs"></i>
+</button>
+<button class="h-[38px] px-3 bg-white border border-slate-300 hover:border-slate-400 rounded-md text-slate-600 transition-colors" title="Editar conductor" type="button">
+<i class="pi pi-pencil text-xs"></i>
+</button>
+</div>
+</div>
+<div>
+<label class="field-label">Observaciones registradas en garita</label>
+<input class="field-input text-xs text-slate-600" type="text" value="Ingreso autorizado con precinto DIAN intacto #8892">
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- SECCIÓN 2: REGISTRO DE OPERACIÓN Y DOCUMENTOS -->
+<section class="bg-white border border-slate-200 rounded-xl p-5 shadow-sm space-y-4">
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<div>
+<h3 class="text-sm font-bold text-slate-800">3. Registro de Operación</h3>
+<p class="text-xs text-slate-400">Modalidad aduanera y documentos de despacho</p>
+</div>
+<span class="text-[11px] text-slate-400 font-mono bg-slate-50 px-2 py-1 rounded border border-slate-200 hidden sm:inline-block">
+            Atajo: <span class="font-semibold text-slate-600">Tab</span> para navegar campos
+          </span>
+</div>
+<!-- Modalidad pills / selector -->
+<div class="flex flex-wrap items-center gap-3">
+<span class="text-xs font-medium text-slate-500 mr-2">Modalidad:</span>
+<label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-sky-600 bg-sky-50 text-sky-800 text-xs font-medium cursor-pointer shadow-xs">
+<input checked="" class="text-sky-600 focus:ring-0 focus:ring-offset-0" name="modalidad_pill" type="radio">
+<span>Importación</span>
+</label>
+<label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium cursor-pointer">
+<input class="text-sky-600 focus:ring-0 focus:ring-offset-0" name="modalidad_pill" type="radio">
+<span>Exportación</span>
+</label>
+<label class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 hover:bg-slate-50 text-slate-700 text-xs font-medium cursor-pointer">
+<input class="text-sky-600 focus:ring-0 focus:ring-offset-0" name="modalidad_pill" type="radio">
+<span>Inspección física</span>
+</label>
+</div>
+<!-- Documents row: Exactly 3 aligned columns -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5 pt-1">
+<div>
+<label class="field-label">Tipo de documento *</label>
+<select class="field-input">
+<option selected="">B/L - Bill of Lading (Conocimiento)</option>
+<option>Carta de Porte Internacional (CPI)</option>
+<option>Declaración de Tránsito Aduanero (DTA)</option>
+<option>Guía Aérea</option>
+</select>
+</div>
+<div>
+<label class="field-label">Número de documento *</label>
+<input class="field-input font-medium" type="text" value="CO-MED-994820">
+</div>
+<div>
+<label class="field-label">N.° de manifiesto *</label>
+<input class="field-input font-medium" type="text" value="MNF-2026-004491">
+</div>
+</div>
+<!-- Mercancía de este camión -->
+<div class="pt-3 border-t border-slate-100">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Mercancía declarada</span>
+<span class="text-[11px] text-slate-400">· 1 ítem registrado</span>
+</div>
+<button class="text-xs font-medium text-sky-700 hover:bg-sky-50 px-2.5 py-1 rounded-md border border-sky-200 transition-colors flex items-center gap-1" type="button">
+<i class="pi pi-plus text-[10px]"></i>
+<span>Agregar producto</span>
+</button>
+</div>
+<!-- Product item row -->
+<div class="space-y-2">
+<div class="grid grid-cols-12 gap-2.5 items-center bg-slate-50/70 p-2 rounded-lg border border-slate-200"><div class="col-span-12 sm:col-span-6"><input class="field-input bg-white text-xs" placeholder="Producto del catálogo" type="text" value="Polietileno de Alta Densidad (HDPE Grado Inyección)"></div><div class="col-span-6 sm:col-span-3"><select class="field-input bg-white text-xs"><option selected="">Sacos (Big Bags)</option><option>Estibas</option><option>Tambores</option><option>Granel</option></select></div><div class="col-span-5 sm:col-span-2"><input class="field-input bg-white text-xs text-right tabular-numbers font-medium" placeholder="Cantidad" type="number" value="28400"></div><div class="col-span-1 flex justify-center"><button class="text-slate-400 hover:text-rose-600 p-1 transition-colors" title="Eliminar ítem" type="button"><i class="pi pi-trash text-xs"></i></button></div></div>
+</div>
+</div>
+</section>
+<!-- SECCIÓN 3: PESAJE EN BÁSCULA (KG) - Core High-Speed Area -->
+<section class="bg-white rounded-xl p-5 shadow-sm space-y-4 border border-slate-200">
+<!-- Scale Header -->
+<div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-100">
+<div>
+<h3 class="text-sm font-bold text-slate-900 flex items-center gap-2">
+<span>4. Pesaje en Báscula (kg)</span>
+
+</h3>
+<p class="text-xs text-slate-400">Captura directa del indicador o digitación de pesos</p>
+</div>
+<!-- Capture button -->
+<div class="flex items-center gap-2">
+
+
+</div>
+</div>
+<!-- 2x2 Matrix for weights -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Row 1, Col 1: P. Indicador -->
+<div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold text-slate-700" for="pIndicador">P. Indicador (kg) *</label>
+<span class="text-[10px] uppercase font-bold text-sky-700 bg-sky-100/60 px-1.5 py-0.5 rounded">Primer pesaje (Bruto)</span>
+</div>
+<input class="field-input h-11 text-lg font-bold font-mono text-slate-900 bg-white" id="pIndicador" type="number" value="52480">
+<span class="block text-[11px] text-slate-400 mt-1">Peso directo de báscula en plataforma</span>
+</div>
+<!-- Row 1, Col 2: P. Vehículo / Tara -->
+<div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold text-slate-700" for="pVehiculo">P. Vehículo / Tara (kg) *</label>
+<span class="text-[10px] text-slate-400">Calculado o histórico</span>
+</div>
+<input class="field-input h-11 text-lg font-bold font-mono text-slate-900 bg-white" id="pVehiculo" type="number" value="24080">
+<span class="block text-[11px] text-slate-400 mt-1">P. Indicador - P. Mercancía</span>
+</div>
+<!-- Row 2, Col 1: P. Manifiesto -->
+<div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold text-slate-700" for="pManifiesto">P. Manifiesto (kg) *</label>
+<span class="text-[10px] text-slate-400">Documento de transporte</span>
+</div>
+<input class="field-input h-11 text-lg font-bold font-mono text-slate-900 bg-white" id="pManifiesto" type="number" value="28400">
+<span class="block text-[11px] text-slate-400 mt-1">Peso reportado en la documentación</span>
+</div>
+<!-- Row 2, Col 2: P. Mercancía / Neto -->
+<div class="bg-slate-50 p-3.5 rounded-lg border border-slate-200">
+<div class="flex items-center justify-between mb-1.5">
+<label class="text-xs font-bold text-emerald-800" for="pMercancia">P. Mercancía / Neto (kg) *</label>
+<span class="text-[10px] font-semibold text-emerald-700 bg-emerald-100/60 px-1.5 py-0.5 rounded">Neto actual</span>
+</div>
+<input class="field-input h-11 text-lg font-bold font-mono text-emerald-700 bg-white" id="pMercancia" type="number" value="28400">
+<span class="block text-[11px] text-slate-400 mt-1">Resultado de pesaje de carga neta</span>
+</div>
+</div>
+<!-- Subtle tolerance validation -->
+
+</section>
+<!-- SECCIÓN 4: DATOS PARA COMERCIO EXTERIOR (Acordeón discreto) -->
+<section class="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+<button class="w-full px-5 py-3.5 flex items-center justify-between hover:bg-slate-50 transition-colors text-left" onclick="toggleComercioExterior()" type="button">
+<div class="flex items-center gap-2.5">
+<i class="pi pi-globe text-slate-400 text-sm"></i>
+<span class="text-xs font-semibold text-slate-700">5. Datos para Comercio Exterior</span>
+<span class="text-[11px] text-slate-400 font-normal">(Opcional en báscula)</span>
+</div>
+<div class="flex items-center gap-2 text-slate-400 text-xs">
+<span id="txtComercioExt">Desplegar</span>
+<i class="pi pi-chevron-down text-[10px] transition-transform" id="chevronComercioExt"></i>
+</div>
+</button>
+<div class="border-t border-slate-100 p-5 bg-white hidden" id="bodyComercioExt">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+<div>
+<label class="field-label">Agencia de Aduanas / SIA</label>
+<input class="field-input" placeholder="Ej. Hub Aduanero" type="text">
+</div>
+<div>
+<label class="field-label">No. Declaración Importación</label>
+<input class="field-input" placeholder="Ej. DI-99201" type="text">
+</div>
+<div>
+<label class="field-label">Número de Precinto / Candado</label>
+<input class="field-input" placeholder="Ej. 8892" type="text">
+</div>
+<div>
+<label class="field-label">Subpartida Arancelaria</label>
+<input class="field-input" placeholder="Ej. 3901.20.00.00" type="text">
+</div>
+<div>
+<label class="field-label">Lugar de Ingreso Aduanero</label>
+<input class="field-input" placeholder="Ej. Zona Primaria" type="text">
+</div>
+<div>
+<label class="field-label">Registro Sanitario INVIMA/ICA</label>
+<input class="field-input" placeholder="Opcional" type="text">
+</div>
+<div class="sm:col-span-3">
+<label class="field-label">Notas complementarias</label>
+<input class="field-input" placeholder="Observaciones adicionales para el depósito..." type="text">
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Actions Bar: Ultra Clean & Uncluttered -->
+<div class="pt-4 pb-12 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-200">
+<div class="text-xs text-slate-400">
+          Modo báscula activa · <span class="text-slate-600 font-medium">UGV869</span>
+</div>
+<div class="flex items-center gap-2.5 w-full sm:w-auto justify-end">
+
+<button class="text-xs font-semibold text-slate-700 hover:text-slate-900 px-4 py-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 shadow-xs transition-colors" type="button">
+            Guardar sin pesaje
+          </button>
+<button class="text-xs font-semibold text-white bg-sky-600 hover:bg-sky-700 px-5 py-2 rounded-lg shadow-sm transition-colors flex items-center gap-1.5" type="button">
+<i class="pi pi-check text-xs"></i>
+<span>Guardar (Pesar y continuar)</span>
+</button>
+</div>
+</div>
+</main>
+</div>
+<script>
+    // Toggle Vigilancia Body (Camión & Conductor)
+    function toggleVigilancia() {
+      const body = document.getElementById('vigilanciaBody');
+      const btnText = document.getElementById('btnEditarVigilanciaText');
+      const isHidden = body.classList.contains('hidden');
+
+      if (isHidden) {
+        body.classList.remove('hidden');
+        btnText.innerText = 'Compactar';
+      } else {
+        body.classList.add('hidden');
+        btnText.innerText = 'Editar';
+      }
+    }
+
+    // Toggle Comercio Exterior
+    function toggleComercioExterior() {
+      const body = document.getElementById('bodyComercioExt');
+      const chevron = document.getElementById('chevronComercioExt');
+      const txt = document.getElementById('txtComercioExt');
+
+      if (body.classList.contains('hidden')) {
+        body.classList.remove('hidden');
+        chevron.classList.add('rotate-180');
+        txt.innerText = 'Contraer';
+      } else {
+        body.classList.add('hidden');
+        chevron.classList.remove('rotate-180');
+        txt.innerText = 'Desplegar';
+      }
+    }
+
+    // Weight calculation
+    const pInd = document.getElementById('pIndicador');
+    const pVeh = document.getElementById('pVehiculo');
+    const pMer = document.getElementById('pMercancia');
+
+    function recalcularPesos() {
+      const ind = parseFloat(pInd.value) || 0;
+      const veh = parseFloat(pVeh.value) || 0;
+      if (ind > 0 && veh > 0) {
+        const neto = ind - veh;
+        pMer.value = neto >= 0 ? neto : 0;
+      }
+    }
+
+    pInd.addEventListener('input', recalcularPesos);
+    pVeh.addEventListener('input', recalcularPesos);
+  </script>
+
+
+</body></html>

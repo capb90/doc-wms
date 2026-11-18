@@ -38,6 +38,7 @@ Si el código contradice una decisión, no «corrijas» ninguno de los dos sin p
 | `procesos/` | Flujo de trabajo, QA y defectos, verificación local, despliegue a staging |
 | `planes/` | Planes cerrados con su estado (índice en `planes/README.md`); paridad con el legacy y migración a staging |
 | `analisis/` | Análisis previos a decisiones |
+| `levantamiento-2026-11/` | Visita de noviembre de 2026: hallazgos de los videos de Comercio Exterior y paridad del flujo de depósitos y levantes (índice en su `README.md`) |
 | `qa/` | Campaña QA: plan, casos, plan de corrección, informes, fichas de defecto y evidencias (índice en `qa/README.md`) |
 | `videos/` | Guiones y plan de producción de los video tutoriales |
 | `manuales/` | Manuales de usuario (revisa su aviso de vigencia) |

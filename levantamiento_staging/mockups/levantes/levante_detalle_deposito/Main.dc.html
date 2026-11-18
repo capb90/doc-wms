@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Levantes del depósito BA1443</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f1f5f9}
+a{color:#1d4ed8}a:hover{color:#1e3a8a}
+input,button{font:inherit}
+input:focus-visible,button:focus-visible{outline:2px solid #1d4ed8;outline-offset:1px}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #0f172a; background: #f1f5f9; padding: 24px; box-sizing: border-box; font-variant-numeric: tabular-nums; font-size: 14px; line-height: 1.4">
+<div style="max-width: 1360px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px">
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px 20px 0; display: flex; flex-direction: column; gap: 10px">
+<div style="font-size: 13px; color: #475569">Comercio exterior / Depósitos / <span style="color: #0f172a; font-weight: 500">BA1443</span></div>
+<div style="display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 20px">
+<h1 style="margin: 0; font-size: 22px; font-weight: 700">Depósito BA1443</h1>
+<span style="font-size: 13px; color: #475569">Carta porte <strong style="color: #0f172a; font-weight: 600">EC0014728</strong> · 06/06/2024</span>
+<span style="font-size: 13px; color: #475569">Importador <strong style="color: #0f172a; font-weight: 600">DISTRIBUIDORA DE EMPAQUES DEL CAUCA S.A.S.</strong></span>
+<span style="font-size: 13px; color: #475569">Manifiesto DIAN <strong style="color: #0f172a; font-weight: 600">116575014467919</strong></span>
+<span style="font-size: 13px; color: #475569">Tasa ingreso <strong style="color: #0f172a; font-weight: 600">3.874,32</strong></span>
+</div>
+<nav aria-label="Secciones del depósito" style="display: flex; flex-wrap: wrap; gap: 4px">
+<button type="button" style="border: 0; background: transparent; padding: 10px 14px; min-height: 44px; color: #475569; border-bottom: 2px solid transparent; cursor: pointer">Información general</button>
+<button type="button" style="border: 0; background: transparent; padding: 10px 14px; min-height: 44px; color: #475569; border-bottom: 2px solid transparent; cursor: pointer">Mercancía</button>
+<button type="button" aria-current="page" style="border: 0; background: transparent; padding: 10px 14px; min-height: 44px; color: #1d4ed8; font-weight: 600; border-bottom: 2px solid #1d4ed8; cursor: pointer; display: flex; align-items: center; gap: 8px">Levantes <span style="background: #dbeafe; color: #1e3a8a; border-radius: 999px; padding: 1px 8px; font-size: 12px">{{levCount}}</span></button>
+<button type="button" style="border: 0; background: transparent; padding: 10px 14px; min-height: 44px; color: #475569; border-bottom: 2px solid transparent; cursor: pointer">Etiquetas</button>
+<button type="button" style="border: 0; background: transparent; padding: 10px 14px; min-height: 44px; color: #475569; border-bottom: 2px solid transparent; cursor: pointer">Órdenes de cargue</button>
+</nav>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<h2 style="margin: 0; font-size: 18px; font-weight: 700">Levantes</h2>
+<p style="margin: 0; color: #475569; font-size: 13px">Agrupados por mercancía. Cada fila es un levante emitido por la DIAN; nacionalizado y saldo se calculan solos.</p>
+</div>
+<div style="display: flex; gap: 8px">
+<button type="button" style="min-height: 40px; padding: 0 14px; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; border-radius: 8px; cursor: pointer; font-weight: 500">Exportar</button>
+<button type="button" onClick="{{openFirst}}" style="min-height: 40px; padding: 0 16px; border: 0; background: #1d4ed8; color: #ffffff; border-radius: 8px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Nuevo levante</button>
+</div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #475569">Ingreso</div>
+<div style="font-size: 22px; font-weight: 700">{{k.ingCant}} <span style="font-size: 13px; font-weight: 500; color: #475569">bultos</span></div>
+<div style="font-size: 13px; color: #475569">{{k.ingPeso}} kg</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #475569"><span>Nacionalizado</span><span style="color: #1e3a8a">{{k.pct}}</span></div>
+<div style="font-size: 22px; font-weight: 700">{{k.nacCant}} <span style="font-size: 13px; font-weight: 500; color: #475569">bultos</span></div>
+<div style="font-size: 13px; color: #475569">{{k.nacPeso}} kg</div>
+<div style="height: 6px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-top: 4px"><div style="height: 6px; width: {{k.pctW}}; background: #1d4ed8; border-radius: 999px"></div></div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #475569">Saldo en bodega</div>
+<div style="font-size: 22px; font-weight: 700; color: {{k.saldoCantColor}}">{{k.saldoCant}} <span style="font-size: 13px; font-weight: 500; color: #475569">bultos</span></div>
+<div style="font-size: 13px; color: {{k.saldoPesoColor}}; font-weight: 500">{{k.saldoPeso}} kg</div>
+</div>
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px 16px; display: flex; flex-direction: column; gap: 4px">
+<div style="font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #475569">Levantes</div>
+<div style="font-size: 22px; font-weight: 700">{{levCount}} <span style="font-size: 13px; font-weight: 500; color: #475569">registrados</span></div>
+<div style="font-size: 13px; color: #475569">{{k.prodCount}} mercancías · {{k.prodDone}} completas</div>
+</div>
+</div>
+
+<sc-if value="{{showBanner}}" hint-placeholder-val="{{ true }}">
+<div role="status" style="display: flex; align-items: flex-start; gap: 10px; background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; border-radius: 10px; padding: 12px 14px; font-size: 13px">
+<svg aria-hidden="true" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0; margin-top: 1px"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path><path d="M12 9v4M12 17h.01"></path></svg>
+<div><strong style="font-weight: 600">Diferencia de peso.</strong> {{bannerTxt}}</div>
+</div>
+</sc-if>
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow-x: auto">
+<div style="min-width: 1060px">
+
+<div style="display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(150px, 1.4fr) 112px 96px 116px 100px 124px 116px; column-gap: 12px; align-items: center; padding: 0 16px; height: 40px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #475569">
+<div>Nº levante</div>
+<div>Nº aceptación</div>
+<div>Fecha levante</div>
+<div style="text-align: right">Tasa</div>
+<div style="text-align: right">CIF (USD)</div>
+<div style="text-align: right">Cantidad</div>
+<div style="text-align: right">Peso (kg)</div>
+<div style="text-align: right">Acciones</div>
+</div>
+
+<sc-for list="{{products}}" as="p" hint-placeholder-count="2">
+<section aria-label="{{p.name}}" style="border-bottom: 1px solid #e2e8f0">
+
+<div style="display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(150px, 1.4fr) 112px 96px 116px 100px 124px 116px; column-gap: 12px; align-items: center; padding: 0 16px; min-height: 52px; background: #eff6ff">
+<div style="grid-column: 1 / 6; display: flex; align-items: center; gap: 10px; flex-wrap: wrap">
+<span style="font-size: 15px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.01em">{{p.name}}</span>
+<span style="font-size: 12px; color: #334155; border: 1px solid #cbd5e1; border-radius: 6px; padding: 1px 7px; background: #ffffff">{{p.unitLabel}}</span>
+<span style="font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 10px; background: {{p.pillBg}}; color: {{p.pillFg}}">{{p.status}}</span>
+<span style="margin-left: auto; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #1e40af">Ingreso</span>
+</div>
+<div style="text-align: right; font-weight: 700; color: #1e3a8a">{{p.ingCant}}</div>
+<div style="text-align: right; font-weight: 700; color: #1e3a8a">{{p.ingPeso}}</div>
+<div></div>
+</div>
+
+<sc-for list="{{p.rows}}" as="r" hint-placeholder-count="1">
+<div style="display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(150px, 1.4fr) 112px 96px 116px 100px 124px 116px; column-gap: 12px; align-items: center; padding: 0 16px; min-height: 52px; border-top: 1px solid #f1f5f9">
+<div style="font-weight: 600">{{r.lev}}</div>
+<div style="color: #475569">{{r.acep}}</div>
+<div style="color: #334155">{{r.fecha}}</div>
+<div style="text-align: right; color: #334155">{{r.tasa}}</div>
+<div style="text-align: right; color: #334155">{{r.cif}}</div>
+<div style="text-align: right; font-weight: 600">{{r.cant}}</div>
+<div style="text-align: right; font-weight: 600">{{r.peso}}</div>
+<div style="display: flex; justify-content: flex-end; gap: 2px">
+<button type="button" aria-label="{{r.docLabel}}" style="width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; color: #475569; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><path d="M14 3v6h6M8 13h8M8 17h5"></path></svg></button>
+<button type="button" aria-label="{{r.editLabel}}" style="width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; color: #475569; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button>
+<button type="button" onClick="{{r.remove}}" aria-label="{{r.delLabel}}" style="width: 36px; height: 36px; border: 0; background: transparent; border-radius: 6px; color: #b91c1c; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"></path></svg></button>
+</div>
+</div>
+</sc-for>
+
+<sc-if value="{{p.isEmpty}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 14px 16px; border-top: 1px solid #f1f5f9; color: #475569; font-size: 13px">Aún no hay levantes para esta mercancía.</div>
+</sc-if>
+
+<sc-if value="{{p.adding}}" hint-placeholder-val="{{ false }}">
+<div style="border-top: 1px dashed #93c5fd; background: #f8fbff">
+<div style="display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(150px, 1.4fr) 112px 96px 116px 100px 124px 116px; column-gap: 12px; align-items: center; padding: 10px 16px">
+<input type="text" inputmode="numeric" placeholder="Nº levante" aria-label="Número de levante" value="{{p.d.lev}}" onChange="{{p.h.lev}}" onKeyDown="{{p.h.key}}" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a">
+<input type="text" inputmode="numeric" placeholder="Nº aceptación" aria-label="Número de aceptación" value="{{p.d.acep}}" onChange="{{p.h.acep}}" onKeyDown="{{p.h.key}}" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a">
+<input type="date" aria-label="Fecha del levante" value="{{p.d.fecha}}" onChange="{{p.h.fecha}}" onKeyDown="{{p.h.key}}" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 6px; background: #ffffff; color: #0f172a">
+<input type="text" inputmode="decimal" aria-label="Tasa del levante" value="{{p.d.tasa}}" onChange="{{p.h.tasa}}" onKeyDown="{{p.h.key}}" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right">
+<input type="text" inputmode="decimal" placeholder="0,00" aria-label="Valor CIF en dólares" value="{{p.d.cif}}" onChange="{{p.h.cif}}" onKeyDown="{{p.h.key}}" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right">
+<input type="text" inputmode="decimal" aria-label="Cantidad nacionalizada" value="{{p.d.cant}}" onChange="{{p.h.cant}}" onKeyDown="{{p.h.key}}" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right; font-weight: 600">
+<input type="text" inputmode="decimal" aria-label="Peso nacionalizado en kilos" value="{{p.d.peso}}" onChange="{{p.h.peso}}" onKeyDown="{{p.h.key}}" style="height: 36px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right; font-weight: 600">
+<div style="display: flex; justify-content: flex-end; gap: 4px">
+<button type="button" onClick="{{p.h.save}}" aria-label="Guardar levante" style="height: 36px; padding: 0 10px; border: 0; background: #1d4ed8; color: #ffffff; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px">Guardar</button>
+<button type="button" onClick="{{p.h.cancel}}" aria-label="Cancelar" style="width: 36px; height: 36px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; border-radius: 6px; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+</div>
+<sc-if value="{{p.hasError}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="padding: 0 16px 10px; color: #b91c1c; font-size: 13px; font-weight: 500">{{p.d.error}}</div>
+</sc-if>
+<div style="padding: 0 16px 10px; color: #475569; font-size: 12px">Cantidad y peso se proponen con el saldo disponible. Enter guarda · Esc cancela.</div>
+</div>
+</sc-if>
+
+<sc-if value="{{p.showAddBtn}}" hint-placeholder-val="{{ false }}">
+<div style="border-top: 1px solid #f1f5f9; padding: 6px 10px">
+<button type="button" onClick="{{p.open}}" style="min-height: 40px; padding: 0 10px; border: 0; background: transparent; color: #1d4ed8; border-radius: 6px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Agregar levante <span style="color: #475569; font-weight: 400">· {{p.addHint}}</span></button>
+</div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(150px, 1.4fr) 112px 96px 116px 100px 124px 116px; column-gap: 12px; align-items: center; padding: 0 16px; min-height: 40px; background: #f8fafc; border-top: 1px solid #e2e8f0">
+<div style="grid-column: 1 / 6; text-align: right; font-size: 12px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #475569">Nacionalizado</div>
+<div style="text-align: right; font-weight: 600">{{p.nacCant}}</div>
+<div style="text-align: right; font-weight: 600">{{p.nacPeso}}</div>
+<div></div>
+</div>
+<div style="display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(150px, 1.4fr) 112px 96px 116px 100px 124px 116px; column-gap: 12px; align-items: center; padding: 0 16px; min-height: 44px; background: #f8fafc; border-top: 1px solid #e2e8f0">
+<div style="grid-column: 1 / 6; display: flex; justify-content: flex-end; align-items: center; gap: 12px">
+<sc-if value="{{p.hasDiff}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 12px; color: #b91c1c; font-weight: 500">{{p.diffTxt}}</span>
+</sc-if>
+<span style="font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; color: #0f172a">Saldo</span>
+</div>
+<div style="text-align: right; font-weight: 700; color: {{p.saldoCantColor}}">{{p.saldoCant}}</div>
+<div style="text-align: right; font-weight: 700; color: {{p.saldoPesoColor}}">{{p.saldoPeso}}</div>
+<div></div>
+</div>
+
+</section>
+</sc-for>
+
+</div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1120}}'>
+class Component extends DCLogic {
+  f2(n){ return new Intl.NumberFormat('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n); }
+  fq(n){ return new Intl.NumberFormat('es-CO',{maximumFractionDigits:2}).format(n); }
+  r2(n){ return Math.round(n*100)/100; }
+  parse(v){ var s=String(v==null?'':v).replace(/\s/g,''); if(!s) return NaN; if(s.indexOf(',')>=0){ s=s.replace(/\./g,'').replace(',','.'); } return Number(s); }
+  fd(iso){ var p=String(iso||'').split('-'); return p.length===3 ? p[2]+'/'+p[1]+'/'+p[0] : String(iso||''); }
+  init(){
+    return [
+      { id:'p1', name:'Sacos de polipropileno', unit:'bultos', ingCant:193, ingPeso:7060,
+        levantes:[{ id:'l1', lev:'372024000009475', acep:'372024000009748', fecha:'2024-06-07', tasa:3874.32, cif:16574.95, cant:193, peso:7065.38 }] },
+      { id:'p2', name:'Reata de polipropileno', unit:'bultos', ingCant:32, ingPeso:1170, levantes:[] }
+    ];
+  }
+  blank(sc, sp){ return { lev:'', acep:'', fecha:'2024-06-07', tasa:'3874,32', cif:'', cant:String(Math.max(sc,0)), peso:this.f2(Math.max(sp,0)).replace(/\./g,''), error:'' }; }
+  cur(){ var st=this.state||{}; return { products: st.products||this.init(), drafts: st.drafts||{ p2: this.blank(32,1170) } }; }
+  sums(p){ var c=0,w=0; p.levantes.forEach(function(l){ c+=l.cant; w+=l.peso; }); return { nacCant:this.r2(c), nacPeso:this.r2(w), saldoCant:this.r2(p.ingCant-c), saldoPeso:this.r2(p.ingPeso-w) }; }
+  commit(products, drafts){ this.setState({ products: products, drafts: drafts }); }
+  openAdd(pid){ var s=this.cur(); var p=s.products.find(function(x){return x.id===pid;}); if(!p) return; var t=this.sums(p); var d=Object.assign({}, s.drafts); d[pid]=this.blank(t.saldoCant,t.saldoPeso); this.commit(s.products,d); }
+  cancel(pid){ var s=this.cur(); var d=Object.assign({}, s.drafts); delete d[pid]; this.commit(s.products,d); }
+  setF(pid,f,v){ var s=this.cur(); var d=Object.assign({}, s.drafts); var n=Object.assign({}, d[pid]); n[f]=v; n.error=''; d[pid]=n; this.commit(s.products,d); }
+  save(pid){
+    var s=this.cur(); var p=s.products.find(function(x){return x.id===pid;}); var dr=s.drafts[pid]; if(!p||!dr) return;
+    var t=this.sums(p); var cant=this.parse(dr.cant); var peso=this.parse(dr.peso); var err='';
+    if(!String(dr.lev||'').trim()) err='Ingresa el número de levante.';
+    else if(!(cant>0)) err='La cantidad debe ser mayor a 0.';
+    else if(cant>t.saldoCant) err='La cantidad supera el saldo disponible ('+this.fq(t.saldoCant)+' '+p.unit+').';
+    else if(!(peso>0)) err='Ingresa el peso nacionalizado.';
+    var d=Object.assign({}, s.drafts);
+    if(err){ d[pid]=Object.assign({}, dr, { error: err }); this.commit(s.products,d); return; }
+    var lv={ id:'l'+Date.now(), lev:String(dr.lev).trim(), acep:String(dr.acep||'').trim(), fecha:dr.fecha, tasa:this.parse(dr.tasa)||0, cif:this.parse(dr.cif)||0, cant:cant, peso:this.r2(peso) };
+    var products=s.products.map(function(x){ return x.id===pid ? Object.assign({}, x, { levantes: x.levantes.concat([lv]) }) : x; });
+    delete d[pid]; this.commit(products,d);
+  }
+  remove(pid,lid){ var s=this.cur(); var products=s.products.map(function(x){ return x.id===pid ? Object.assign({}, x, { levantes: x.levantes.filter(function(l){ return l.id!==lid; }) }) : x; }); this.commit(products,s.drafts); }
+  openFirst(){ var self=this; var s=this.cur(); var p=s.products.find(function(x){ return self.sums(x).saldoCant>0 && !s.drafts[x.id]; }); if(p) this.openAdd(p.id); }
+  tone(k){ return { ok:{bg:'#dcfce7',fg:'#166534'}, warn:{bg:'#fef3c7',fg:'#92400e'}, bad:{bg:'#fee2e2',fg:'#b91c1c'}, neutral:{bg:'#e2e8f0',fg:'#334155'} }[k]; }
+  renderVals(){
+    var self=this; var s=this.cur();
+    var ic=0, ip=0, nc=0, np=0, nl=0, done=0, diffs=[];
+    var products=s.products.map(function(p){
+      var t=self.sums(p); ic+=p.ingCant; ip+=p.ingPeso; nc+=t.nacCant; np+=t.nacPeso; nl+=p.levantes.length;
+      var dr=s.drafts[p.id]; var status, tk;
+      if(p.levantes.length===0){ status='Sin levante'; tk='neutral'; }
+      else if(t.saldoCant>0){ status='Parcial'; tk='warn'; }
+      else if(t.saldoCant===0){ status='Nacionalizado'; tk='ok'; done++; }
+      else { status='Excedido'; tk='bad'; }
+      var T=self.tone(tk);
+      var hasDiff=(t.saldoCant<=0 && t.saldoPeso!==0) || t.saldoPeso<0;
+      var diffTxt = t.saldoPeso<0 ? self.f2(-t.saldoPeso)+' kg nacionalizados por encima del ingreso' : self.f2(t.saldoPeso)+' kg sin nacionalizar';
+      if(hasDiff) diffs.push(p.name.toLowerCase()+' ('+(t.saldoPeso<0?'+':'-')+self.f2(Math.abs(t.saldoPeso))+' kg)');
+      var mk=function(f){ return function(e){ self.setF(p.id,f,e.target.value); }; };
+      return {
+        name:p.name, unitLabel:p.unit.charAt(0).toUpperCase()+p.unit.slice(1), status:status, pillBg:T.bg, pillFg:T.fg,
+        ingCant:self.fq(p.ingCant), ingPeso:self.f2(p.ingPeso),
+        rows:p.levantes.map(function(l){ return { lev:l.lev, acep:l.acep||'—', fecha:self.fd(l.fecha), tasa:self.f2(l.tasa), cif:self.f2(l.cif), cant:self.fq(l.cant), peso:self.f2(l.peso),
+          docLabel:'Ver documento del levante '+l.lev, editLabel:'Editar levante '+l.lev, delLabel:'Eliminar levante '+l.lev, remove:function(){ self.remove(p.id,l.id); } }; }),
+        isEmpty:p.levantes.length===0 && !dr, adding:!!dr, hasError:!!(dr && dr.error),
+        d:dr||{lev:'',acep:'',fecha:'',tasa:'',cif:'',cant:'',peso:'',error:''},
+        h:{ lev:mk('lev'), acep:mk('acep'), fecha:mk('fecha'), tasa:mk('tasa'), cif:mk('cif'), cant:mk('cant'), peso:mk('peso'),
+            save:function(){ self.save(p.id); }, cancel:function(){ self.cancel(p.id); },
+            key:function(e){ if(e.key==='Enter'){ e.preventDefault(); self.save(p.id); } else if(e.key==='Escape'){ self.cancel(p.id); } } },
+        showAddBtn:!dr && t.saldoCant>0, open:function(){ self.openAdd(p.id); },
+        addHint:'saldo '+self.fq(t.saldoCant)+' '+p.unit+' · '+self.f2(Math.max(t.saldoPeso,0))+' kg',
+        nacCant:self.fq(t.nacCant), nacPeso:self.f2(t.nacPeso), saldoCant:self.fq(t.saldoCant), saldoPeso:self.f2(t.saldoPeso),
+        saldoCantColor: t.saldoCant===0 ? '#166534' : (t.saldoCant>0 ? '#92400e' : '#b91c1c'),
+        saldoPesoColor: t.saldoPeso===0 ? '#166534' : ((t.saldoCant>0 && t.saldoPeso>0) ? '#92400e' : '#b91c1c'),
+        hasDiff:hasDiff, diffTxt:diffTxt
+      };
+    });
+    var sc=this.r2(ic-nc), sp=this.r2(ip-np); var pct=ic>0?Math.round(nc/ic*100):0;
+    return {
+      products:products, levCount:nl, openFirst:function(){ self.openFirst(); },
+      showBanner:diffs.length>0, bannerTxt:'Revisa ' + diffs.join(' y ') + '. El ingreso total es '+this.f2(ip)+' kg y lo nacionalizado suma '+this.f2(np)+' kg.',
+      k:{ ingCant:this.fq(ic), ingPeso:this.f2(ip), nacCant:this.fq(nc), nacPeso:this.f2(np), pct:pct+'%', pctW:pct+'%',
+          saldoCant:this.fq(sc), saldoPeso:this.f2(sp), prodCount:products.length, prodDone:done,
+          saldoCantColor: sc===0 ? '#166534' : (sc>0 ? '#92400e' : '#b91c1c'),
+          saldoPesoColor: sp===0 ? '#166534' : ((sc>0 && sp>0) ? '#92400e' : '#b91c1c') }
+    };
+  }
+}
+</script>
+</body>
+</html>

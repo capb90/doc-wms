@@ -1,0 +1,833 @@
+# Consolidación de hallazgos – Visita a cliente WMS
+
+## 1. Información general
+
+**Objetivo de la recopilación.** Reunir en un único documento, organizado por módulo, las observaciones, necesidades, dificultades e inconsistencias expresadas por los operarios durante las pruebas de la nueva versión del WMS en el ambiente de staging, como base documental para una fase posterior de análisis funcional.
+
+**Contexto de la visita.** Visita presencial al cliente (bodega que opera como depósito aduanero en Ipiales) realizada el 6 de noviembre de 2026, durante la cual se revisaron con los operarios las pruebas que están realizando. Se grabaron audios de las conversaciones con las áreas de Báscula, Comercio Exterior y Facturación (en las que también intervienen temas de Bodega y Vigilancia) y se tomaron notas en un documento de Word.
+
+**Fuentes de información utilizadas.**
+
+| Archivo | Tipo | Contenido |
+|---|---|---|
+| `bascula.txt` | Transcripción automática (iPhone) | 11 audios con el área de Báscula: órdenes de cargue, multidepósito, cambios de interfaz, edición de placa, salida de mercancía, exportación, inspección (2 partes), eliminación de ticket, tara de vehículos sin descargar y báscula. |
+| `Comercio_exterior.txt` | Transcripción automática (iPhone) | 13 audios con el área de Comercio Exterior: cuadrar pesos, levantes (varios audios), inventario, guías de salida, cargues actuales, edición y cálculo de pesos, productos, tarjetas de depósito y cambio de tablas. |
+| `facturacion.txt` | Transcripción automática (iPhone) | 5 audios con el área de Facturación: acuerdos, almacenamiento y pagos, guías de salida, montacargas y báscula. |
+| `Hallazgos.docx` | Notas manuales / documento inicial de hallazgos | 74 hallazgos organizados en Báscula (28), Bodegas (2), Facturación (21), Comercio Exterior (20) y Transversales (3). |
+| `CONVENIO_23-24-25-26.xlsx` | Archivo compartido por Facturación | Convenios por responsable (hojas 2022, 2023-2024, 2025, 2026, Bascula y EXPO). Se usó como evidencia de los hallazgos transversales; no se reproducen datos de contacto. |
+
+No se recibió un archivo de notas manuales separado del documento inicial; `Hallazgos.docx` se trató como las notas tomadas durante la visita y, a la vez, como el documento inicial de hallazgos. El archivo de instrucciones de esta tarea no se consideró fuente de hallazgos.
+
+**Alcance de este documento.** Es exclusivamente documental: organiza, depura y clasifica lo expresado en las fuentes. No propone soluciones, no define cambios, no asigna prioridades ni criticidad y no determina si cada hallazgo es un error, una mejora o un cambio de alcance. Cuando las transcripciones registran respuestas o compromisos del desarrollador durante la visita, se anotan en el campo **Contexto** como parte de lo conversado, no como decisiones de este documento.
+
+**Criterios aplicados.**
+
+- Se unificaron hallazgos que describen la misma situación aunque aparezcan en varias fuentes o en varios ítems del documento inicial; en **Origen** se listan todas las referencias.
+- Las transcripciones contienen errores de reconocimiento de voz (por ejemplo, «Levantis», «cataporte», «la DA» o «la di» por DIAN, «Sigo/Cigo» por SIGO). Se corrigieron solo cuando el término era inequívoco por el contexto; las cifras y frases dudosas se citan tal como aparecen y se marcan como pendientes de aclaración.
+- Se omitieron fragmentos sin relación con la aplicación (saludos, llamadas telefónicas, coordinación de horarios y una conversación operativa sobre un contenedor en inspección).
+- Las explicaciones del desarrollador sobre cómo funciona el sistema se usan solo como contexto.
+- Los hallazgos que afectan a más de un módulo se registran una sola vez, en la sección de transversales.
+
+## 2. Resumen de la consolidación
+
+| Concepto | Cantidad |
+|---|---:|
+| **Total de hallazgos consolidados** | **78** |
+| Hallazgos de Báscula | 23 |
+| Hallazgos de Bodega | 2 |
+| Hallazgos de Comercio Exterior | 20 |
+| Hallazgos de Facturación | 23 |
+| Hallazgos transversales | 9 |
+| Hallazgos pendientes de clasificación | 1 |
+| Puntos pendientes de aclaración | 25 |
+
+Los 78 hallazgos provienen de los 74 ítems del documento inicial (todos quedaron cubiertos) más 15 hallazgos identificados solo en las transcripciones. La diferencia entre ítems y hallazgos se debe a la unificación de ítems que describen la misma situación.
+
+## 3. Hallazgos por módulo
+
+### 3.1. Báscula
+
+#### H-001 – Registro de inspecciones: normalmente solo se pesa y los vehículos llegan sin documentos
+
+- **Descripción:** En las inspecciones, por lo regular, solo se registra el peso. Los vehículos suelen llegar sin documentos (por ejemplo, los de Logitrans vienen solo a pesar y envían los documentos después). En el sistema anterior, para inspecciones se registraba únicamente placa, conductor, información necesaria, peso y mercancía, sin crear depósito, porque el documento indica entrega en el lugar de arribo en el puente. El sistema nuevo crea un depósito de inspección. El operario preguntó cómo distinguir un depósito de inspección de otro cuando no trae documento ni producto; indicó que en el sistema anterior escribe en la descripción de quién es la inspección (por ejemplo, inspección de logística). Señaló que la cantidad le serviría para elaborar la tarjeta. También mencionó que en inspección se manejan tarjetas manuales.
+- **Contexto:** Durante la visita, el desarrollador indicó que el depósito de inspección se crearía con documentos opcionales (tipo y número si se desea), descripción del producto opcional y un campo para describir la inspección. Se mencionó que el depósito de inspección podría servir a facturación (Jennifer), lo cual quedó por confirmar con esa área. El hallazgo aparece dos veces en el documento inicial (Báscula #1 y #17).
+- **Origen:** `Hallazgos.docx` › Báscula #1; `Hallazgos.docx` › Báscula #17; `bascula.txt` › Inspaccion parte 1; `bascula.txt` › Inspaccion 2 - Conclusion; `bascula.txt` › Bascula
+- **Estado de la información:** Pendiente de aclaración (ver PA-01)
+
+#### H-002 – Cerrar el ciclo de báscula sin segundo pesaje o agregar un segundo pesaje
+
+- **Descripción:** Cuando un vehículo se registra con ciclo de dos pesajes y finalmente no descarga (no hay segundo pesaje), el registro queda en la fila y no aparece en el historial hasta cerrar el ciclo. El operario no encontró cómo cambiar el ciclo después de registrado. Se solicita poder cerrar el ciclo sin segundo pesaje o, en sentido contrario, poder agregarle un segundo pesaje.
+- **Contexto:** Ejemplo mencionado: un vehículo que llega con cebollas y no las descarga. El desarrollador indicó que no había dejado esa opción en la edición y que agregaría una opción de cerrar el ciclo.
+- **Origen:** `Hallazgos.docx` › Báscula #2; `bascula.txt` › Bascula
+- **Estado de la información:** Consolidado
+
+#### H-003 – Columnas de la vista de báscula iguales a las de entradas del sistema anterior
+
+- **Descripción:** En la interfaz de báscula (/operations/weighbridge) se requiere ver las mismas columnas que la vista de entradas del sistema anterior: fecha, hora, vehículo (placa), conductor e identificación del conductor, peso bruto, peso de la mercancía, tara del vehículo y cantidad que lleva el vehículo. El operario señaló como más importantes el peso bruto, el peso de la mercancía y la tara del vehículo.
+- **Contexto:** El operario indicó que en el sistema anterior esta información aparece igual en entradas, salidas y solo pesaje.
+- **Origen:** `Hallazgos.docx` › Báscula #3; `bascula.txt` › Bascula
+- **Estado de la información:** Consolidado
+
+#### H-004 – El listado abre el registro al hacer clic en cualquier parte de la fila
+
+- **Descripción:** En el listado de báscula, al hacer clic en cualquier parte de la fila se abre el registro. Se solicita que se abra solo con el botón, porque los operarios necesitan copiar información de la tabla.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Báscula #4; `bascula.txt` › Bascula
+- **Estado de la información:** Consolidado
+
+#### H-005 – Imprimir ticket sin repesaje: solo tara, solo entrada y recibo
+
+- **Descripción:** En el sistema anterior se puede imprimir el ticket sin hacer el repesaje: ticket de entrada con el peso bruto (capturado del indicador), ticket con la tara que el sistema toma automáticamente, y un recibo. En el sistema nuevo es necesario hacer el repesaje para imprimir. El recibo (servicio de báscula, ticket de entrada) muestra la información y el valor del ticket; los conductores lo piden antes del repesaje para demostrar a los dueños del vehículo cuánto pagaron.
+- **Contexto:** El operario mencionó que esos tickets son de los que más se usan. Relacionado con el hallazgo sobre la tara de vehículos que no descargan (el ticket con tara se entrega a la DIAN).
+- **Origen:** `Hallazgos.docx` › Báscula #5; `bascula.txt` › Bascula
+- **Estado de la información:** Consolidado
+
+#### H-006 – El ticket de báscula no muestra producto, embalaje ni cantidad
+
+- **Descripción:** En el ticket de báscula solo aparece la descripción del producto. Se solicita que aparezcan la descripción del producto, el embalaje y la cantidad (por ejemplo: arroz, sacos y cantidad), tanto en los tickets de entrada como en los que salen al final.
+- **Contexto:** El operario indicó que esa información se necesita para saber cuántas unidades se entregaron en bodega. En la conversación sobre órdenes de cargue también se pidió que al imprimir el ticket salgan los productos y las cantidades.
+- **Origen:** `Hallazgos.docx` › Báscula #6; `bascula.txt` › Bascula; `bascula.txt` › Ordenes de cargue
+- **Estado de la información:** Consolidado
+
+#### H-007 – Orden de los tickets: del más reciente al más antiguo
+
+- **Descripción:** Los tickets aparecen del más antiguo al más reciente. Se solicita que aparezcan del más reciente al más antiguo.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Báscula #8; `bascula.txt` › Bascula
+- **Estado de la información:** Consolidado
+
+#### H-008 – Tara de vehículos que no descargan (oleína, contenedores)
+
+- **Descripción:** En vehículos como los de oleína, se desengancha el tanque y se pesa solo el cabezote; en contenedores, el vehículo llega con el contenedor, se pesa y el contenedor se baja. Al registrar la repesa, el peso de la mercancía resulta sobredimensionado (ejemplo mencionado: alrededor de 7 toneladas más; en otro momento se habló de unas 40 toneladas). Cuando la DIAN pide el ticket de báscula, el operario entrega el ticket con la tara que toma el sistema, porque no se tiene el peso del tanque o del contenedor vacío. El operario indicó que en algunos casos (perecederos) ajusta pesos desde su módulo y que necesita que eso se pueda corregir.
+- **Contexto:** Cifras mencionadas en el audio: ingreso de unas 30 toneladas, repesa de 9.080, resultado de 37.480 y 27.480, vehículo de 16.560. La relación entre estas cifras no queda clara en la transcripción.
+- **Origen:** `Hallazgos.docx` › Báscula #9 (indica «Audio»); `bascula.txt` › Tara de vehiculo sin descargar; `bascula.txt` › Bascula
+- **Estado de la información:** Pendiente de aclaración (ver PA-02)
+
+#### H-009 – Vehículo ingresado sin peso y editado posteriormente para agregar el peso
+
+- **Descripción:** Según el documento inicial: «El día de ayer ingresó un vehículo, el operario registra pero sin peso; posteriormente el operario edita e ingresa el peso».
+- **Contexto:** No se encontró este caso en las transcripciones.
+- **Origen:** `Hallazgos.docx` › Báscula #10
+- **Estado de la información:** Pendiente de aclaración (ver PA-03)
+
+#### H-010 – Eliminación de tickets
+
+- **Descripción:** Se solicita poder eliminar tickets. En el sistema anterior existe la opción: se muestra la información del ticket a eliminar, se pide la razón y el registro queda marcado (el operario lo ve en rojo). Motivos mencionados: en ocasiones el sistema duplica tickets, y cuando varios vehículos llegan con la misma carta porte y el arrastre queda en otra carta porte, no se puede editar, por lo que es necesario eliminar.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Báscula #11; `bascula.txt` › Eliminación de ticket
+- **Estado de la información:** Consolidado
+
+#### H-011 – Búsqueda de coincidencias de la carta porte al digitar
+
+- **Descripción:** En el sistema anterior, al digitar la carta porte aparece un listado de coincidencias en el select a partir de los caracteres iniciales; al terminar de digitar o seleccionar uno del listado, se continúa mostrando el detalle del depósito como está abajo y se agrega el número en el detalle. Se solicita el mismo comportamiento. Según el documento inicial, al repetir una carta porte solo se cargan los depósitos en estado borrador y no los confirmados.
+- **Contexto:** El operario expresó dudas: cuando llegan varias cartas porte intercaladas, cómo se verá la interfaz con más de tres depósitos en borrador; con coincidencias parciales (por ejemplo «000») aparecerían muchos resultados; y las coincidencias muestran el número de depósito, pero el operario se guía por el número de carta porte. El desarrollador explicó que las coincidencias muestran solo depósitos en borrador.
+- **Origen:** `Hallazgos.docx` › Báscula #12; `Hallazgos.docx` › Báscula #22; `bascula.txt` › Cambios Interfaz
+- **Estado de la información:** Pendiente de aclaración (ver PA-04)
+
+#### H-012 – Edición de la fecha y hora de ingreso
+
+- **Descripción:** El sistema no deja editar la fecha y la hora: la restablece. Se solicita poder editarla libremente y mover la edición de la fecha al encabezado (header).
+- **Contexto:** La fecha de ingreso del depósito se toma por defecto del ingreso en vigilancia. En la visita el operario indicó que en una prueba anterior no le permitió cambiarla.
+- **Origen:** `Hallazgos.docx` › Báscula #13; `Hallazgos.docx` › Báscula #14; `bascula.txt` › Bascula
+- **Estado de la información:** Consolidado
+
+#### H-013 – Búsqueda de la empresa de transporte por número de documento
+
+- **Descripción:** Se solicita que la empresa de transporte se pueda buscar por número de documento.
+- **Contexto:** El fragmento correspondiente de la transcripción es poco legible.
+- **Origen:** `Hallazgos.docx` › Báscula #15; `bascula.txt` › Inspaccion parte 1
+- **Estado de la información:** Consolidado
+
+#### H-014 – Conductores distintos con el mismo número de documento
+
+- **Descripción:** En los documentos a veces vienen números de cédula repetidos con nombres diferentes (del mismo país). El sistema valida número de documento y país y no permite crear otro conductor con el mismo número. En el sistema anterior se agregaba un punto al final del número para diferenciarlo.
+- **Contexto:** Durante la visita el desarrollador indicó que quitaría la validación para permitir más de un conductor con el mismo número de documento. Este caso no aparece en el documento inicial.
+- **Origen:** `bascula.txt` › Inspaccion parte 1
+- **Estado de la información:** Consolidado
+
+#### H-015 – Manifiesto obligatorio solo cuando el documento es carta porte
+
+- **Descripción:** El número de manifiesto es obligatorio para cualquier tipo de documento comercial. El operario indicó que solo debería ser obligatorio con carta porte, porque cuando la mercancía viene con factura comercial o remisión solo traen ese documento.
+- **Contexto:** Se mencionó en el registro de exportación.
+- **Origen:** `Hallazgos.docx` › Báscula #18; `bascula.txt` › Exportacion
+- **Estado de la información:** Consolidado
+
+#### H-016 – Carta porte seleccionada por defecto como documento comercial
+
+- **Descripción:** Se solicita que el documento comercial venga seleccionado por defecto como carta porte, por comodidad, para no cambiarlo en cada registro.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Báscula #19; `bascula.txt` › Exportacion
+- **Estado de la información:** Consolidado
+
+#### H-017 – Salida de mercancía: traer la placa de vigilancia y precargar la orden de cargue
+
+- **Descripción:** Para la salida de mercancía, se solicita que la placa ingresada en vigilancia se cargue automáticamente en báscula y que, con esa placa, se precargue la orden de cargue asociada. El conductor de la orden puede cambiar (a veces vienen los dueños de los vehículos), por lo que el conductor debe poder modificarse en báscula.
+- **Contexto:** Explicación durante la visita: comercio exterior crea la orden de cargue amarrada a una placa; en báscula se busca por número de orden o por placa; los datos de la orden se precargan. Cambiar el conductor en báscula no modifica la orden; la guía toma los datos de la orden, por lo que comercio exterior tendría que editar la orden. El desarrollador mencionó una alerta a comercio exterior cuando se cambie el conductor.
+- **Origen:** `Hallazgos.docx` › Báscula #20; `bascula.txt` › Salida Mcia
+- **Estado de la información:** Consolidado
+
+#### H-018 – Unidad no editable al agregar un producto
+
+- **Descripción:** Al agregar un producto existente, el sistema trae automáticamente la unidad (por ejemplo, kilogramos) y la cantidad, y no permite editar la unidad. Se solicita poder editarla.
+- **Contexto:** En la visita se preguntó quién necesita la unidad; se mencionó que podría ser facturación, sin confirmarlo. El operario indicó que el arroz se ingresa solo como «Arroz» (en sacos), sin variantes.
+- **Origen:** `Hallazgos.docx` › Báscula #23; `bascula.txt` › Cambios Interfaz
+- **Estado de la información:** Pendiente de aclaración (ver PA-05)
+
+#### H-019 – Paso 2 del registro: mostrar y editar toda la información del paso 1
+
+- **Descripción:** En el paso 2 del registro, se solicita que el detalle del paso 1 muestre toda la información y que sea posible editarla.
+- **Contexto:** No se encontró el detalle en las transcripciones.
+- **Origen:** `Hallazgos.docx` › Báscula #24
+- **Estado de la información:** Consolidado
+
+#### H-020 – Conductor en el paso de cobro
+
+- **Descripción:** Cuando se cambia el conductor en el paso 1, en el paso 2 (cobro) no se actualiza. Se solicita que en el cobro también esté el select con el listado de conductores, preseleccionado con el conductor del paso 1, como en el paso 1.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Báscula #25; `Hallazgos.docx` › Báscula #26
+- **Estado de la información:** Consolidado
+
+#### H-021 – Camiones con más de una mercancía (pesos intermedios)
+
+- **Descripción:** En el sistema anterior, por cada depósito adicional del mismo camión se ingresaba un nuevo registro. En el sistema nuevo se piden los documentos entre un pesaje y otro. Se solicita llenar toda la documentación al inicio y, después de cada descargue, solo repesar. El operario preguntó a qué producto queda asignado el peso bruto, ya que no se sabe qué mercancía se descargará primero.
+- **Contexto:** El desarrollador explicó que el peso bruto queda asignado a todo el camión y que en cada peso intermedio el operario escoge el producto que se está pesando. Relacionado con el hallazgo de Bodega sobre ingresos duplicados y con el hallazgo transversal sobre el registro de llegada a bodega.
+- **Origen:** `Hallazgos.docx` › Báscula #27; `bascula.txt` › Multideposito (Importante)
+- **Estado de la información:** Consolidado
+
+#### H-022 – Historial único frente a vistas separadas de entradas y salidas
+
+- **Descripción:** El sistema anterior tiene vistas separadas de entradas, salidas y solo pesaje. En el sistema nuevo el historial muestra todo junto (completados o anulados) con entradas a un lado y salidas al otro. El operario comparó el historial con el reporte que usan.
+- **Contexto:** La respuesta final del operario quedó cortada en la transcripción («No, sí, sí que me molestaría como para…»).
+- **Origen:** `bascula.txt` › Multideposito (Importante)
+- **Estado de la información:** Pendiente de aclaración (ver PA-06)
+
+#### H-023 – Impresión del ticket mediante descarga
+
+- **Descripción:** El ticket no se imprime directamente desde la página: se descarga para imprimirlo. El operario comentó que hay que revisar la configuración de la impresora y que el formato debe quedar cuadrado en la hoja.
+- **Contexto:** Frase del operario en la transcripción: «La opción de guardar sí sería buena, pero en blanco». El sentido no es claro.
+- **Origen:** `bascula.txt` › Multideposito (Importante)
+- **Estado de la información:** Pendiente de aclaración (ver PA-07)
+
+### 3.2. Bodega
+
+#### H-024 – Ingreso duplicado en bodega cuando el camión trae más de un producto
+
+- **Descripción:** Cuando un camión trae más de un producto, en bodega aparecen dos ingresos del mismo camión (por ejemplo, uno para arroz blanco y otro para otro producto). Se indica que debería ser un solo ingreso y que el operario escoja el producto que descarga.
+- **Contexto:** Observado durante la prueba de pesos intermedios.
+- **Origen:** `Hallazgos.docx` › Bodegas #1; `bascula.txt` › Multideposito (Importante)
+- **Estado de la información:** Consolidado
+
+#### H-025 – Selección de la cuadrilla de bodega al ejecutar el cargue
+
+- **Descripción:** Al ejecutar el cargue en bodega (cantidad, cuadrilla, observaciones, firma del conductor, fotos), el operario preguntó si es posible indicar qué cuadrilla de la bodega cargó (cuadrilla uno, dos, tres).
+- **Contexto:** El desarrollador explicó que las cuadrillas se administran en el sistema y que las mostradas eran de ejemplo; el campo de cuadrilla es opcional.
+- **Origen:** `bascula.txt` › Ordenes de cargue
+- **Estado de la información:** Consolidado
+
+### 3.3. Comercio Exterior
+
+#### H-026 – Vistas de entradas, salidas y solo pesaje con las columnas de báscula del sistema anterior
+
+- **Descripción:** Se solicita en comercio exterior la vista de entradas, salidas y solo pesaje con las mismas columnas del sistema anterior de báscula (peso bruto, tara, entre otras). El operario indicó que revisa los pesos de los vehículos y que los clientes le piden a él (no a báscula) los tickets.
+- **Contexto:** El operario indicó que lo que hoy se muestra en báscula para esta consulta no le sirve.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #1; `Comercio_exterior.txt` › Cambio tablas
+- **Estado de la información:** Consolidado
+
+#### H-027 – Información del depósito: tarjetas frente a tabla del sistema anterior
+
+- **Descripción:** En /foreign-trade/deposits la información se muestra en tarjetas y no aparece toda; por ejemplo, para ver la cantidad hay que abrir el depósito. En el sistema anterior la tabla muestra a la vista: fecha de ingreso, depósito, carta porte, importador, transportadora, manifiesto (lo más importante), producto, placa, cantidad, peso y número de etiqueta. El operario prefería inicialmente una tabla.
+- **Contexto:** El desarrollador explicó que dejó tarjetas para dar claridad sobre los estados (borrador, anulado, cerrado) y propuso un panel lateral (drawer) que muestre toda la información al hacer clic en cada tarjeta; los operarios respondieron que sí. El documento inicial registra el drawer con la información de la tabla del sistema anterior, incluido el número de manifiesto DIAN.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #2; `Comercio_exterior.txt` › Tarjetas de deposito
+- **Estado de la información:** Consolidado
+
+#### H-028 – Edición de la fecha de llegada de la mercancía y del manifiesto
+
+- **Descripción:** Se solicita poder editar la fecha de llegada de la mercancía (no la fecha de creación del depósito) y el manifiesto, que el operario agrega.
+- **Contexto:** La edición de la carta porte se consolidó en el hallazgo transversal sobre corrección de datos del ingreso.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #3; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Consolidado
+
+#### H-029 – Creación rápida de terceros, clientes, importadores y agencias desde el depósito
+
+- **Descripción:** Se solicita poder editar y agregar importadores, agencias de aduanas y clientes desde el detalle del depósito, también después de confirmarlo, mediante botones rápidos de creación. Hoy en borrador se pueden asignar, pero no crear.
+- **Contexto:** Se mencionó que normalmente la creación la hace otra persona (Vanessa) y que el usuario ya tiene habilitada la opción en la sección de terceros.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #5; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Consolidado
+
+#### H-030 – Edición de la sección de transporte
+
+- **Descripción:** Se solicita poder editar toda la información de la sección de transporte del depósito.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #6; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Consolidado
+
+#### H-031 – Edición de productos después de confirmar el depósito
+
+- **Descripción:** Una vez confirmado el depósito no se pueden hacer cambios en los productos; solo en borrador se pueden agregar o quitar. Se solicita poder seguir editando, agregando o quitando productos después de confirmar, mientras la mercancía no haya salido (por ejemplo, si se confirmó con la mercancía equivocada).
+- **Contexto:** El operario indicó que en el sistema anterior sí se podía; allí, cuando la mercancía ya salió, no permite agregar ni quitar.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #7; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Consolidado
+
+#### H-032 – Crear productos desde el modal de agregar productos
+
+- **Descripción:** Siguen llegando productos nuevos y en el modal de agregar productos (ni siquiera en borrador) no hay opción para crear un producto. Se solicita poder crearlo desde ese modal.
+- **Contexto:** Se mencionó que en bodega sí se puede crear.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #8; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Consolidado
+
+#### H-033 – Mostrar el embalaje junto al nombre del producto
+
+- **Descripción:** En el modal de agregar productos aparece solo el nombre (por ejemplo, «Flores») y hay varias referencias con el mismo nombre; los operarios tuvieron que adivinar cuáles eran cajas y cuáles bultos. Se solicita que aparezcan las características junto al nombre: embalaje y unidad.
+- **Contexto:** Ejemplos mencionados: flores en cajas o envueltas; piña en banastas o cajas; coco rallado en sacos o bultos.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #9; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Consolidado
+
+#### H-034 – Tasa de cambio ingresada manualmente y visible en los levantes
+
+- **Descripción:** Comercio exterior maneja diferentes declaraciones de importación; la declaración anticipada usa la tasa de cambio anterior, por lo que si el sistema toma la tasa actual el valor de la mercancía queda mal. La tasa de cambio la ingresan ellos semanalmente (cada lunes) en una sección de configuración del sistema anterior. Se solicita dejarla manual (no consultarla a la DIAN) y que se muestre en los levantes, con posibilidad de cambiarla ahí.
+- **Contexto:** El desarrollador propuso consultarla automáticamente los lunes; el operario prefirió que quede manual. En otro audio se mencionó que hay levantes hechos una o dos semanas antes y mercancía del año anterior, por lo que «toca ir actualizando para cada salida».
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #10; `Hallazgos.docx` › Comercio Exterior #11; `Comercio_exterior.txt` › Levante 1; `Comercio_exterior.txt` › Levantes 2
+- **Estado de la información:** Pendiente de aclaración (ver PA-08)
+
+#### H-035 – Prefijos para números de levante, aceptación y manifiesto
+
+- **Descripción:** Al registrar levantes hay que digitar números largos (por ejemplo, que empiezan por «37 2026…») y los operarios se equivocan. Se solicita poder configurar prefijos, como en el sistema anterior, que se usen luego en los formularios de levante, aceptación y manifiesto DIAN, y que los operarios los puedan editar.
+- **Contexto:** El operario indicó que el motivo es principalmente el tiempo.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #12; `Comercio_exterior.txt` › Levante 1
+- **Estado de la información:** Consolidado
+
+#### H-036 – Interfaz de levantes similar al sistema anterior
+
+- **Descripción:** Se solicita, si es posible, que la interfaz de los levantes sea similar a la del sistema anterior. En el sistema nuevo se escoge el producto al que se le hace el levante; en el anterior aparecen los productos en columnas. El operario indicó que le gusta como está en el sistema anterior y que quiere «el cuadrito… no tan para abajo».
+- **Contexto:** La conversación alterna entre dos opciones (desplegar los productos o escoger el producto) sin conclusión explícita; el desarrollador dijo que evaluaría cuál queda mejor.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #13; `Comercio_exterior.txt` › Levantes calculos
+- **Estado de la información:** Pendiente de aclaración (ver PA-09)
+
+#### H-037 – Valor CIF / valor en aduanas obligatorio en levantes
+
+- **Descripción:** En el levante, el campo de valor CIF aparece como opcional, pero el operario indicó que es obligatorio. Se mencionó que la etiqueta debería decir «Valor en aduanas» en lugar de «Valor CIF».
+- **Contexto:** El desarrollador comentó que internamente el dato se guarda como FOB; el operario señaló que FOB es un incoterm. El documento inicial registra «Dejar el CIF obligatorio o Valor en Aduanas».
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #14; `Comercio_exterior.txt` › Levantes 2
+- **Estado de la información:** Pendiente de aclaración (ver PA-10)
+
+#### H-038 – Datos de aceptación en levantes
+
+- **Descripción:** El documento inicial indica quitar la fecha de aceptación en los levantes. En la transcripción el operario dijo: «el número de aceptación, la fecha de aceptación no la necesito, solo la fecha de levante».
+- **Contexto:** En otro audio el operario pidió prefijos para el número de aceptación (ver hallazgo de prefijos).
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #15; `Comercio_exterior.txt` › Levantes calcular cantidades automaticamente; `Comercio_exterior.txt` › Levante 1
+- **Estado de la información:** Pendiente de aclaración (ver PA-11)
+
+#### H-039 – Cálculo automático de la cantidad al hacer el levante
+
+- **Descripción:** En el sistema anterior, al hacer el levante se calcula automáticamente la cantidad a partir del peso. En el sistema nuevo no se calcula, lo que genera inconvenientes cuando hay varias declaraciones: se conoce el peso (ejemplo: 380) pero no la cantidad.
+- **Contexto:** Durante la prueba el desarrollador indicó que no se calculaba porque el depósito estaba pendiente de confirmación del descargue en bodega o por no haber peso documental suficiente; el operario indicó que ya habían confirmado (caso de las flores). En otro audio el operario y el desarrollador discuten si el sistema calcula o no las cantidades, con respuestas contradictorias.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #16; `Comercio_exterior.txt` › Levantes calcular cantidades automaticamente; `Comercio_exterior.txt` › Levantes calculos
+- **Estado de la información:** Pendiente de aclaración (ver PA-12)
+
+#### H-040 – Levantes sucesivos mostrando pesos y cantidades restantes hasta quedar en cero
+
+- **Descripción:** El levante debe funcionar como en el sistema anterior: se agrega un levante e inmediatamente se puede agregar otro, mostrando los pesos y cantidades que van quedando hasta llegar a cero. En el sistema anterior, en la sección de levantes de importación aparecen los productos en columnas y se pone cero en el peso que no corresponde; el depósito se va separando por producto (ejemplo: chía 800, pimienta 80). Al guardar, se genera ahí mismo otra declaración; en el sistema nuevo hay que guardar y volver a abrir.
+- **Contexto:** El operario indicó que lo más importante son los pesos y que al final no debe sobrar peso.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #17; `Comercio_exterior.txt` › Levantes varios productos; `Comercio_exterior.txt` › Levantes calculos; `Comercio_exterior.txt` › Levantes calcular cantidades automaticamente
+- **Estado de la información:** Consolidado
+
+#### H-041 – Edición de pesos y tabla de tickets de ingreso en comercio exterior
+
+- **Descripción:** Se solicita dejar en comercio exterior la tabla de tickets de ingreso y la sección de pesajes para editar todos los pesos, como en el sistema anterior. Proceso descrito: báscula registra el peso del manifiesto (peso bruto, ejemplo 34.240); la mercancía (por ejemplo, cebolla) pasa revisión del ICA; luego se pesan algunos bultos (45,8 / 45,9 / 46 kg) y se calcula el peso (ejemplo: 34.040), que se usa para la planilla en el sistema de la DIAN. El operario edita el peso del manifiesto y, a veces, el peso del indicador para que cuadre, y ese peso aparece luego en el depósito y en el levante. Lo mismo ocurre con arroz y coco. Se mencionó que se maneja un rango de pesos para los clientes y que las repesas las pasa báscula.
+- **Contexto:** El operario indicó que el peso calculado no siempre coincide con el neto. En algunos casos (arroz) sí se descarga todo y se hace repesa. Este hallazgo está marcado como «Importante» en el título del audio.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #18; `Comercio_exterior.txt` › Edicion y calculo de pesos (Importante); `Comercio_exterior.txt` › Levantes 2; `Comercio_exterior.txt` › cuadrar pesos
+- **Estado de la información:** Pendiente de aclaración (ver PA-13)
+
+#### H-042 – Modalidades de salida: por tiquete de entrada, por número de depósito y global
+
+- **Descripción:** Según el documento inicial, en salidas se utilizan las modalidades «Usando tiquete de entrada», «Usando Nro. de depósito» y «Salida global»; solo en la de depósito se cobra báscula. Las salidas por tiquete y globales corresponden a vehículos que ingresan y hacen todo el proceso pero no descargan: la mercancía se nacionaliza y se genera la guía de salida mientras el camión permanece en la instalación; al generarse la guía, el camión sale y ya no pasa por báscula.
+- **Contexto:** En la transcripción de báscula se menciona que en el sistema anterior, para salidas, se usaba el mismo tiquete varias veces («usar tiquete»), registrando productos en cada duplicado, y que en el sistema nuevo la salida se hace con la orden de cargue.
+- **Origen:** `Hallazgos.docx` › Comercio Exterior #19; `Hallazgos.docx` › Comercio Exterior #20; `bascula.txt` › Ordenes de cargue
+- **Estado de la información:** Pendiente de aclaración (ver PA-14)
+
+#### H-043 – Registro de levantes e inventario de mercancía nacionalizada
+
+- **Descripción:** Hoy el inventario de mercancía nacionalizada se lleva de forma manual y en la tarjeta el levante se coloca a mano. El operario necesita poder registrar el levante y que la mercancía aparezca como nacionalizada en el inventario y en la tarjeta, y que cuando la DIAN pida el inventario de mercancía nacionalizada en depósito (por ejemplo, desde enero de 2025 a la fecha) se pueda sacar del sistema. Hay mercancía ya nacionalizada que no sale el mismo día.
+- **Contexto:** El desarrollador indicó que, en el sistema nuevo, al registrar cualquier levante la mercancía aparece como nacionalizada en la etiqueta; el operario indicó que debe hacer pruebas. Se aclaró el significado de «amparado» (total de la carta porte) y «saldo» (lo que queda en bodega). Este hallazgo no aparece en el documento inicial.
+- **Origen:** `Comercio_exterior.txt` › Levante inventario
+- **Estado de la información:** Pendiente de aclaración (ver PA-15)
+
+#### H-044 – Pruebas detenidas en levantes con varias declaraciones
+
+- **Descripción:** El operario quería probar todo el proceso hasta la salida, pero quedó detenido en el levante de un depósito con varias declaraciones. En facturación se indicó que en las pruebas nunca se ha llegado a una guía de salida.
+- **Contexto:** El desarrollador sugirió hacer un levante sencillo para continuar las pruebas mientras se resuelve.
+- **Origen:** `Comercio_exterior.txt` › Guias de salida; `facturacion.txt` › Facturacion almacenamiento
+- **Estado de la información:** Consolidado
+
+#### H-045 – Lentitud al seleccionar el vehículo en la orden de cargue
+
+- **Descripción:** Durante la demostración de creación de órdenes de cargue, la selección del vehículo fue lenta.
+- **Contexto:** Lo comentó el desarrollador en dos sesiones («tengo que revisarlo»).
+- **Origen:** `Comercio_exterior.txt` › Guias de salida; `facturacion.txt` › Facturacion almacenamiento
+- **Estado de la información:** Consolidado
+
+### 3.4. Facturación
+
+#### H-046 – Editar el número SIGO
+
+- **Descripción:** Una vez asignado el número SIGO a una factura no se puede editar. Se solicita poder editarlo, porque a veces se digita mal.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Facturación #1; `facturacion.txt` › Facturacion Bascula
+- **Estado de la información:** Consolidado
+
+#### H-047 – Información de báscula en las facturas (detalle y columnas)
+
+- **Descripción:** En el detalle de las facturas de báscula no aparece la información que se necesita para facturar. Se solicita que muestre número de ticket, modalidad y placa, y que la tabla de facturas de báscula en /billing/invoices tenga las columnas de las entradas del sistema anterior (bodegas/entrada.php): número de ticket, fecha y hora, modalidad, vehículo, conductor, pesos y valor. El operario indicó que todo es importante excepto dos columnas que señaló en pantalla.
+- **Contexto:** Los clientes piden la factura indicando la placa y la fecha de ingreso, o el número de ticket.
+- **Origen:** `Hallazgos.docx` › Facturación #2; `Hallazgos.docx` › Facturación #3; `facturacion.txt` › Facturacion Bascula
+- **Estado de la información:** Consolidado
+
+#### H-048 – Filtros de búsqueda en facturas
+
+- **Descripción:** Se solicita ampliar los filtros en /billing/invoices para buscar por carta porte, placa, tipo de servicio, número de ticket, conductor, fecha, número de factura, número de factura SIGO, número de depósito y cliente. Hoy se busca principalmente por identificación (NIT).
+- **Contexto:** Los clientes piden la factura por carta porte (almacenamiento), por placa o ticket (báscula). En el sistema anterior existe la vista de facturas emitidas con búsqueda por carta porte, factura, número de depósito, número de factura SIGO y cliente.
+- **Origen:** `Hallazgos.docx` › Facturación #13; `facturacion.txt` › Facturacion Bascula; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-049 – Reportes de facturación en PDF con suma al final
+
+- **Descripción:** Los reportes de facturación solo se exportan en Excel. Se solicita poder imprimirlos en PDF, para todos los servicios (el operario escoge el servicio), con la suma al final y con las columnas del sistema anterior. El operario indicó que prefiere que salgan directamente del sistema.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Facturación #4; `facturacion.txt` › Facturacion Bascula
+- **Estado de la información:** Consolidado
+
+#### H-050 – Separar lo pagado de contado y lo que queda por cobrar
+
+- **Descripción:** En la exportación (PDF o Excel) se solicita separar lo que está por cobrar (crédito) de lo pagado (contado) y hacer una suma independiente de cada uno. Hoy el total no distingue cuánto es de crédito y cuánto de contado.
+- **Contexto:** Se mencionó que lo pagado en efectivo en báscula es lo que se debe entregar.
+- **Origen:** `Hallazgos.docx` › Facturación #5; `facturacion.txt` › Facturacion Bascula
+- **Estado de la información:** Consolidado
+
+#### H-051 – Montacargas: identificar qué servicios requieren factura
+
+- **Descripción:** En montacargas, lo que se paga directamente al operario de montacargas va sin IVA y no se factura; cuando el cliente pide factura electrónica va con IVA, queda a crédito (se paga después por transferencia) y se le asigna número SIGO. Facturación necesita identificar cuáles se facturan. El documento inicial registra dos solicitudes: una columna «IVA Sí/No» y que al registrar el servicio se pregunte si requiere factura (si requiere, carga IVA y queda pendiente; si no, no carga IVA, no lleva número SIGO y aparece como «No aplica»).
+- **Contexto:** En la transcripción, el operario de facturación indicó que prefiere que la casilla diga «con factura / sin factura» en lugar de «con IVA / sin IVA», por claridad para el operario de montacargas. Hoy el operario de montacargas marca en el reporte físico cuáles se facturan.
+- **Origen:** `Hallazgos.docx` › Facturación #6; `Hallazgos.docx` › Facturación #7; `facturacion.txt` › Facturacion montacargas
+- **Estado de la información:** Pendiente de aclaración (ver PA-16)
+
+#### H-052 – Reporte de montacargas en reemplazo de los reportes físicos
+
+- **Descripción:** Hoy el operario de montacargas usa reportes físicos numerados, los suma y entrega el dinero. Si deja de usarlos, facturación necesita un reporte del sistema para saber cuánto dinero se recibe, con filtro por días o rangos de fechas.
+- **Contexto:** El operario preguntó si el reporte del sistema tendría un número de reporte; no hubo respuesta concluyente.
+- **Origen:** `facturacion.txt` › Facturacion montacargas
+- **Estado de la información:** Pendiente de aclaración (ver PA-17)
+
+#### H-053 – Registro del horómetro de montacargas
+
+- **Descripción:** Al iniciar y finalizar el uso del montacargas se registra el horómetro inicial y final en horas. Durante la demostración hubo confusión sobre cómo registrar fracciones (por ejemplo, 30 o 15 minutos) y cuánto marca el horómetro.
+- **Contexto:** El desarrollador indicó que se registra lo que marca el horómetro y que el sistema calcula las horas trabajadas. Se mencionó que el registro de montacargas lo hacen en bodega y que hay que explicárselo a ellos.
+- **Origen:** `facturacion.txt` › Facturacion montacargas
+- **Estado de la información:** Pendiente de aclaración (ver PA-18)
+
+#### H-054 – Destinatario de las guías de salida sin la opción «cliente»
+
+- **Descripción:** En el cobro de la guía de salida se solicita quitar la opción de destinatario «clientes», porque se confunden, y dejar solo tercero registrado, conductor del vehículo y consumidor final.
+- **Contexto:** El operario indicó que en tercero registrado se puede elegir a cualquiera.
+- **Origen:** `Hallazgos.docx` › Facturación #8; `facturacion.txt` › Facturacion almacenamiento
+- **Estado de la información:** Consolidado
+
+#### H-055 – Información y búsqueda en las facturas de guías de salida
+
+- **Descripción:** Se solicita agregar en las guías de salida el número de guía, el depósito, la placa y el ticket (orden de cargue), y poder filtrar por ellos y por CPI. Cuando piden la factura de una guía, el cliente da la placa, el número de guía, el ticket o la CPI. Hoy el operario busca la placa en el reporte de báscula para confirmar que es una salida y luego busca en el reporte de guías. El reporte de guías del sistema anterior muestra fecha y hora, número de guía, depósito, placa, mercancía, embalaje, cantidad y CPI.
+- **Contexto:** El desarrollador indicó que en el sistema nuevo el equivalente al ticket es el número de orden de cargue. Se discutió si facturación necesita mercancía y embalaje en esta vista.
+- **Origen:** `Hallazgos.docx` › Facturación #9; `facturacion.txt` › Facturacion almacenamiento
+- **Estado de la información:** Pendiente de aclaración (ver PA-19)
+
+#### H-056 – Ciclo de facturación abierto en la configuración del cliente
+
+- **Descripción:** En la configuración de facturación del cliente el ciclo solo permite opciones definidas (semanal, quincenal, mensual). Hay convenios con otros plazos (por ejemplo, 20 días o cuatro meses / 120 días). Se solicita dejar el ciclo abierto para definir el número de días.
+- **Contexto:** El operario indicó que es un cambio que ya se pedía porque se hicieron convenios que el sistema anterior no permitía configurar.
+- **Origen:** `Hallazgos.docx` › Facturación #10; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-057 – Conteo de los periodos de facturación
+
+- **Descripción:** Los periodos no cuentan desde el día de ingreso. El periodo debe empezar a contar desde el día en que ingresa la mercancía (por ejemplo, 15 días: si ingresa el 1, del 1 al 15; si ingresa el 6, desde el 6) y el siguiente periodo empieza el día siguiente al que termina el anterior.
+- **Contexto:** El operario lo detectó en una factura que generó en la prueba.
+- **Origen:** `Hallazgos.docx` › Facturación #11; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-058 – Depósitos pendientes por facturar: mostrar solo los que cumplieron el periodo
+
+- **Descripción:** En /billing/pending-deposits aparecen todos los depósitos activos y se deben expandir para ver los periodos. Se solicita que, como en el sistema anterior, aparezcan solo los pendientes por facturar: el depósito aparece cuando se cumple el periodo, desaparece al facturarlo y vuelve a aparecer cuando se cumple el siguiente periodo (15 días o el tiempo del convenio). Si no, la vista se llena.
+- **Contexto:** El desarrollador explicó que la vista tiene paginación de 10 registros y filtros; el operario mantuvo la solicitud.
+- **Origen:** `Hallazgos.docx` › Facturación #12; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-059 – Facturación por CPI con el valor de la mercancía
+
+- **Descripción:** El informe de facturación por CPI (/billing/reports/deposit-billing) debe quedar igual al del sistema anterior y además incluir el valor de la mercancía, que hoy no aparece y es importante. Ya permite imprimir en PDF o Excel.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Facturación #14; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-060 – Estado de los pagos registrados
+
+- **Descripción:** Según el documento inicial, los pagos deben aparecer siempre verificados. En la conversación se acordó que los pagos de báscula y guías registrados de contado aparezcan como verificados, porque el operario sí recibió el dinero. Para almacenamiento, el desarrollador explicó que los pagos que registra facturación ya quedan verificados y que la opción de verificar era para pagos recibidos por terceros; el operario respondió que en almacenamiento no reciben pagos terceros.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Facturación #15; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Pendiente de aclaración (ver PA-20)
+
+#### H-061 – Reporte de facturación anual con detalle de facturas
+
+- **Descripción:** El reporte de facturación anual (/billing/reports/anual) muestra por mes y día solo la cantidad de facturas (por ejemplo, 17 facturas el martes 3 de noviembre). Se solicita un reporte más detallado: listado de facturas con el consecutivo, a quién se facturó y el valor, cuya suma coincida con el total.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Hallazgos.docx` › Facturación #16; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-062 – Informe de póliza
+
+- **Descripción:** El informe de póliza debe habilitarse para los usuarios de facturación y debe generarse con los valores de la mercancía según la declaración (la del levante) y no según la carta porte.
+- **Contexto:** No se encontró en las transcripciones.
+- **Origen:** `Hallazgos.docx` › Facturación #17; `Hallazgos.docx` › Facturación #18
+- **Estado de la información:** Consolidado
+
+#### H-063 – Simulador de previsualización de la fórmula
+
+- **Descripción:** En el simulador de previsualización se solicita que aplique la fórmula que se seleccionó.
+- **Contexto:** No se encontró en las transcripciones.
+- **Origen:** `Hallazgos.docx` › Facturación #19
+- **Estado de la información:** Pendiente de aclaración (ver PA-21)
+
+#### H-064 – Destinatario de las facturas de almacenamiento y bloqueo al cliente del depósito
+
+- **Descripción:** Las facturas de almacenamiento deben tener la opción de escoger el destinatario, pero el bloqueo (de salida) se aplica al cliente del depósito.
+- **Contexto:** Relacionado con los hallazgos transversales sobre la figura de cliente/responsable.
+- **Origen:** `Hallazgos.docx` › Facturación #20; `facturacion.txt` › Facturacion montacargas
+- **Estado de la información:** Consolidado
+
+#### H-065 – Registro rápido del pago completo
+
+- **Descripción:** Se solicita facilitar al operario el registro del pago: una acción rápida con un botón para registrar el pago completo sin tener que digitar el valor; los pagos parciales se conservan como están.
+- **Contexto:** En la visita se mostró que ya existen acciones rápidas para registrar pagos sin entrar al detalle.
+- **Origen:** `Hallazgos.docx` › Facturación #21; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-066 – Factura de almacenamiento calculada con un valor incorrecto en la prueba
+
+- **Descripción:** El operario generó una factura de almacenamiento en la prueba y el valor no fue correcto («no sé de dónde salió ese valor»).
+- **Contexto:** El desarrollador indicó que los convenios no estaban cargados.
+- **Origen:** `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+#### H-067 – Comprensión del nuevo flujo de facturas (valor automático, aprobar, registrar pago)
+
+- **Descripción:** En el sistema anterior el valor de la factura se ingresaba manualmente; en el nuevo se calcula a partir de los convenios y se puede cambiar mientras la factura está en borrador. Durante la demostración hubo confusión entre aprobar la factura y registrar el pago (el operario aprobó facturas sin comprender el efecto).
+- **Contexto:** Se explicó el flujo: asignar número SIGO, aprobar y registrar pagos parciales o totales.
+- **Origen:** `facturacion.txt` › Facturacion almacenamiento y pagos; `facturacion.txt` › Facturacion montacargas
+- **Estado de la información:** Consolidado
+
+#### H-068 – El documento entregado en báscula no debe presentarse como factura
+
+- **Descripción:** El documento que se entrega al conductor en báscula no puede decir en ningún lado que es una factura, porque la factura se realiza en SIGO. En una versión anterior el documento impreso decía «factura».
+- **Contexto:** Durante la visita se mostró que el documento ya dice «documento interno de control de pesaje, no es una factura de venta».
+- **Origen:** `facturacion.txt` › Facturacion Bascula
+- **Estado de la información:** Consolidado
+
+## 4. Hallazgos transversales
+
+### H-069 – Figura de «cliente» frente a «responsable» y destinatario de la factura de almacenamiento
+
+- **Módulos involucrados:** Facturación, Comercio Exterior, Báscula
+- **Descripción:** Dentro del negocio no existe la figura de «cliente», sino la de responsable. La mercancía que llega para importación se conoce por el importador; se realiza todo el proceso de ingreso, pesaje y comercio exterior y en algún punto se agrega el responsable. La factura de almacenamiento no sale a nombre del responsable sino a nombre de la «razón social en factura» del Excel de convenios; el bloqueo de salida sí se aplica al responsable. El responsable se puede seguir manejando como «cliente». En facturación se explicó que ese tercero es para control interno y que las facturas salen a nombre del importador, la agencia u otro.
+- **Contexto:** En facturación de guías se pidió quitar la opción «cliente» porque se confunden.
+- **Origen:** `Hallazgos.docx` › Transversales #1; `facturacion.txt` › Facturacion montacargas; `facturacion.txt` › Facturacion almacenamiento; `CONVENIO_23-24-25-26.xlsx` › Columnas RESPONSABLE / RAZON SOCIAL EN FACTURA
+- **Estado de la información:** Consolidado
+
+### H-070 – Excel de convenios como fuente de responsables, razón social y fórmulas de tarifa
+
+- **Módulos involucrados:** Facturación, Comercio Exterior
+- **Descripción:** El Excel que comparte facturación establece el responsable («cliente»), el importador asociado, la razón social en factura (destinatario de la factura de almacenamiento), el tipo de mercancía y la fórmula con la que se calcula la tarifa de almacenamiento. Con base en esto se establecen los convenios de cada responsable. Según el documento inicial, es preferible que todo el sistema quede cargado con los clientes y sus fórmulas, idealmente por importación del Excel.
+- **Contexto:** El archivo tiene hojas 2022 (101 filas), 2023-2024 (249), 2025 (212) y 2026 (216) con las columnas Responsable, Contacto, Vendedor (desde 2023), Importador, Razón social en factura, Tipo de mercancía, Tarifa, Observación y Fecha (2025 agrega «Modificación» y 2026 «Tarifas 2026»), además de una hoja «Bascula» (55 filas: empresa de transporte, NIT/RUC, razón social en factura, correo, observación) y una hoja «EXPO» (45 filas: intermediario, exportador, razón social de factura). Las tarifas están escritas como texto libre (por ejemplo, «0,3% del v/r de m/cia + 9.000 + IVA», «180.000 Todo incluido»). En la prueba de facturación los convenios no estaban cargados.
+- **Origen:** `Hallazgos.docx` › Transversales #2; `CONVENIO_23-24-25-26.xlsx` › Todas las hojas; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Consolidado
+
+### H-071 – Mercancía con responsable desconocido o nuevo al momento del ingreso
+
+- **Módulos involucrados:** Comercio Exterior, Facturación
+- **Descripción:** A veces llega mercancía de la que se conoce el importador pero no el responsable, incluso hasta un día después del ingreso; o el responsable es nuevo y no tiene tarifa en el Excel. Esto no afecta el flujo de ingreso (vigilancia, báscula, bodega, comercio exterior), pero facturación no puede emitir la factura de almacenamiento hasta conocer el responsable y la tarifa. Comercio exterior solicita poder confirmar el depósito sin cliente (el cliente quedaría opcional) y que se facture desde que se asigna el cliente. Mientras no aparece el responsable, facturación no despacha la mercancía. Las tarifas se actualizan por lo regular cada año.
+- **Contexto:** En la visita se mencionó que, si el responsable es nuevo, en ese momento habría que crearle el acuerdo.
+- **Origen:** `Hallazgos.docx` › Transversales #3; `Hallazgos.docx` › Comercio Exterior #4; `facturacion.txt` › Facturacion-acuerdos; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Consolidado
+
+### H-072 – Vehículos que llegan a cargar sin orden de cargue
+
+- **Módulos involucrados:** Báscula, Comercio Exterior, Bodega
+- **Descripción:** En el sistema nuevo la salida de mercancía requiere una orden de cargue creada por comercio exterior antes de pesar en báscula. En la operación, la mayoría de los vehículos llegan sin orden de cargue: algunos clientes son autorizados a cargar antes, porque no saben si toda la mercancía cabrá o si excederán el peso (ejemplos: Pecuaria con rollos, tubos/matas de zinc, palillos en contenedor); la orden se envía cuando el vehículo ya está cargado y puede cambiar (por ejemplo, de 55 a 54 rollos). En otros casos la cantidad es exacta (por ejemplo, 80 bultos de pimienta) y la orden llega antes. Báscula indicó que sin orden no podría registrar el ingreso del vehículo, y que devolverlo a comercio exterior retrasa la operación.
+- **Contexto:** Durante la visita el desarrollador planteó que, si no existe orden de cargue al pesar la salida, se cree automáticamente en estado borrador para que comercio exterior la confirme después; a partir de la orden confirmada se genera la guía de salida y bodega ejecuta el cargue (solo cuando la guía está generada).
+- **Origen:** `bascula.txt` › Ordenes de cargue; `Comercio_exterior.txt` › Guias de salida; `Comercio_exterior.txt` › Cargues actuales
+- **Estado de la información:** Consolidado
+
+### H-073 – Pesaje intermedio bloqueado hasta que bodega registre la llegada del camión
+
+- **Módulos involucrados:** Báscula, Bodega, Comercio Exterior
+- **Descripción:** Al registrar un peso intermedio aparece el mensaje: «El camión IAI3204 no tiene registrada su llegada a Bodega (depósito 2026BA00004). Bodega debe registrar la llegada antes del segundo pesaje». No es un error del sistema, sino la validación de ingreso en bodega. Báscula y comercio exterior indicaron que bodega suele demorarse (el encargado puede estar en inspecciones del ICA o INVIMA, las cuadrillas ocupadas, hay mucho flujo) y que esperar detiene la operación, especialmente cuando llegan muchos vehículos a la vez (ejemplo: 19 de espumas). Según el documento inicial, bodega no debe bloquear las operaciones de otros módulos, y se debe validar el tiempo de los ingresos y recepciones pendientes en bodega para emitir una alerta de retraso a comercio exterior.
+- **Contexto:** Se diferenció entre «ingreso» en bodega (confirmar que el camión llegó, un clic) y «recepción» (cuando termina el descargue: firma, cuadrilla, ubicación). El desarrollador indicó que quitaría el bloqueo para báscula y que agregaría una alerta por tiempo; se mencionó como destinatario comercio exterior. Antes también se había retirado la obligación de recepción en bodega para confirmar el depósito.
+- **Origen:** `Hallazgos.docx` › Báscula #28; `Hallazgos.docx` › Bodegas #2; `bascula.txt` › Multideposito (Importante)
+- **Estado de la información:** Consolidado
+
+### H-074 – Corrección de la carta porte y demás datos del ingreso
+
+- **Módulos involucrados:** Báscula, Comercio Exterior
+- **Descripción:** Cuando se digita mal un número de la carta porte u otro dato, no se puede corregir: báscula intentó corregirlo desde comercio exterior y no pudo. Báscula solicita poder editar todo desde báscula (carta porte, documento, placa, conductor, empresa de transporte), para corregir errores cuando comercio exterior tiene mucho trabajo. Comercio exterior también solicita poder editar la carta porte. En el caso de varios vehículos con la misma carta porte (arrastre) la edición no es posible.
+- **Contexto:** El desarrollador indicó que mientras el depósito está en borrador se puede cambiar toda la información desde comercio exterior; el operario indicó que no pudo editarla.
+- **Origen:** `Hallazgos.docx` › Báscula #7; `Hallazgos.docx` › Comercio Exterior #3; `bascula.txt` › Bascula; `bascula.txt` › Eliminación de ticket; `Comercio_exterior.txt` › Productos
+- **Estado de la información:** Pendiente de aclaración (ver PA-22)
+
+### H-075 – Edición de la placa desde báscula además de vigilancia
+
+- **Módulos involucrados:** Vigilancia, Báscula
+- **Descripción:** Vigilancia a veces se equivoca en las placas cuando hay mucho flujo y no tiene tiempo de corregirlas. Báscula solicita poder editar la placa directamente desde el encabezado de báscula (solo la placa; la modalidad se cambiaría desde vigilancia). En una prueba, un registro ingresado desde vigilancia no permitió editar la modalidad, mientras que otros sí.
+- **Contexto:** Se le asignó al operario de báscula el rol de vigilancia y se explicó que es mejor cambiar la placa desde vigilancia, porque el cambio se propaga en cascada; el desarrollador indicó que podría habilitar la edición de la placa en báscula. El comportamiento distinto entre registros quedó por revisar.
+- **Origen:** `Hallazgos.docx` › Báscula #21; `bascula.txt` › Editar placa bascula; `bascula.txt` › Salida Mcia
+- **Estado de la información:** Consolidado
+
+### H-076 – Obligatoriedad del tipo de vehículo
+
+- **Módulos involucrados:** Báscula, Bodega, Facturación
+- **Descripción:** Según el documento inicial, el tipo de vehículo debe ser opcional en báscula y obligatorio en bodega. Báscula indicó que no lo necesita; se mencionó que lo podría necesitar facturación (Jennifer).
+- **Contexto:** El desarrollador indicó que lo confirmaría con facturación. En la sesión de facturación se preguntó si usan el tipo de vehículo y la respuesta transcrita fue «Lo requiere. Cuando se captura de almacenamiento…», sin más detalle.
+- **Origen:** `Hallazgos.docx` › Báscula #16; `bascula.txt` › Inspaccion parte 1; `facturacion.txt` › Facturacion montacargas
+- **Estado de la información:** Pendiente de aclaración (ver PA-23)
+
+### H-077 – Origen de la tasa de cambio: manual en comercio exterior y consulta a la DIAN en facturación
+
+- **Módulos involucrados:** Comercio Exterior, Facturación
+- **Descripción:** Comercio exterior solicita que la tasa de cambio sea manual (ingresada cada lunes) y no consultada a la DIAN. En la sesión de facturación, el desarrollador indicó que la TRM se está consultando automáticamente a un servicio de la DIAN.
+- **Contexto:** Sin información adicional en las fuentes.
+- **Origen:** `Comercio_exterior.txt` › Levante 1; `facturacion.txt` › Facturacion almacenamiento y pagos
+- **Estado de la información:** Pendiente de aclaración (ver PA-24)
+
+**Temas recurrentes entre módulos (referencia, no son hallazgos adicionales).**
+
+- *Vistas y columnas equivalentes al sistema anterior de báscula:* se solicitan en Báscula, Comercio Exterior y Facturación (ver H-003, H-026, H-047).
+- *Edición de datos después del registro inicial:* H-012, H-018, H-019, H-028, H-030, H-031, H-041, H-046, H-074, H-075.
+- *Orden de cargue y guías de salida:* H-017, H-025, H-042, H-045, H-054, H-055, H-072.
+
+## 5. Hallazgos pendientes de clasificación
+
+### H-078 – Destinatarios de las notificaciones (repesaje)
+
+- **Módulos involucrados:** Báscula (posible), Administración (posible)
+- **Descripción:** Las notificaciones de repesaje (orden cargada, cliente, vehículo, ítems) llegan solo al usuario de administración. El operario comentó que sería bueno que también le llegaran a él.
+- **Contexto:** El desarrollador indicó que actualmente solo llegan a administración y que se pueden configurar más usuarios para ciertas notificaciones.
+- **Origen:** `bascula.txt` › Ordenes de cargue
+- **Estado de la información:** Pendiente de aclaración (ver PA-25)
+
+## 6. Puntos pendientes de aclaración
+
+| Punto | Hallazgo | Información disponible | Qué no está claro | Qué se debe confirmar |
+|---|---|---|---|---|
+| PA-01 | H-001 – Registro de inspecciones: normalmente solo se pesa y los vehículos llegan sin documentos | Las inspecciones normalmente solo se pesan y llegan sin documentos; el sistema nuevo crea un depósito de inspección; en la visita se habló de documentos y producto opcionales y de un campo de descripción. | Si el depósito de inspección es necesario para alguna área y cómo lo usa facturación; si las inspecciones sin documentos deben quedar pendientes hasta recibir documentos; si se requiere registrar cantidades (el operario dijo que le serviría y también que en general no). | Uso del depósito de inspección por facturación y comercio exterior; tratamiento de inspecciones que llegan sin documentos; si la cantidad debe registrarse. |
+| PA-02 | H-008 – Tara de vehículos que no descargan (oleína, contenedores) | Descripción del caso de oleína y contenedores, el uso del ticket con tara del sistema ante la DIAN y cifras de ejemplo. | Cómo se relacionan las cifras mencionadas (30 t, 9.080, 37.480, 27.480, 16.560); qué peso exacto se considera incorrecto; qué ajuste de pesos hace el operario «desde su módulo» y en qué módulo. | Un caso real con sus pesos completos (entrada, repesa, tara esperada) y quién ajusta los pesos. |
+| PA-03 | H-009 – Vehículo ingresado sin peso y editado posteriormente para agregar el peso | Solo la nota del documento inicial. | Si se trata de un incidente observado (el sistema permitió registrar sin peso) o de una forma de trabajo que se necesita conservar. | Placa o registro del caso y qué se espera del sistema en esta situación. |
+| PA-04 | H-011 – Búsqueda de coincidencias de la carta porte al digitar | Solicitud de listado de coincidencias como en el sistema anterior; explicación de que solo aparecen depósitos en borrador. | Si el ítem #12 del documento inicial describe el comportamiento actual o una solicitud; si el listado debe mostrar el número de carta porte en lugar del número de depósito; cuántos caracteres o qué criterio de coincidencia se espera. | Comportamiento esperado al haber varias coincidencias y qué dato identifica cada opción. |
+| PA-05 | H-018 – Unidad no editable al agregar un producto | La unidad viene precargada y no se puede editar; se pide poder editarla. | Qué área utiliza la unidad de medida. | Con facturación u otras áreas si la unidad se usa en algún cálculo o reporte. |
+| PA-06 | H-022 – Historial único frente a vistas separadas de entradas y salidas | Pregunta del desarrollador sobre si el historial único es adecuado y comparación con el reporte. | La opinión final del operario quedó incompleta en el audio. | Si el historial actual cubre la necesidad o se requieren vistas separadas. |
+| PA-07 | H-023 – Impresión del ticket mediante descarga | El ticket se descarga en lugar de imprimirse directamente; se probó la impresión durante la visita. | Si el operario reporta un problema con la descarga, con el formato o con la impresora, y qué significa «en blanco». | Resultado de la prueba de impresión y lo que espera el operario. |
+| PA-08 | H-034 – Tasa de cambio ingresada manualmente y visible en los levantes | La tasa se ingresa manualmente cada lunes; debe verse en los levantes y poder cambiarse ahí. | Qué significa «toca ir actualizando para cada salida»: si la tasa de un levante se actualiza en cada salida o se conserva la del levante. | Qué tasa aplica a cada levante y en qué momento puede cambiar. |
+| PA-09 | H-036 – Interfaz de levantes similar al sistema anterior | Preferencia por la interfaz del sistema anterior; dos alternativas discutidas. | Cuál de las dos alternativas prefiere el operario y a qué se refiere con «el cuadrito… no tan para abajo». | Pantalla de referencia del sistema anterior y elementos que deben conservarse. |
+| PA-10 | H-037 – Valor CIF / valor en aduanas obligatorio en levantes | El campo es obligatorio para el operario y se sugiere el nombre «Valor en aduanas». | Si «valor CIF» y «valor en aduanas» se refieren al mismo dato para el operario y cómo se relaciona con el valor FOB mencionado. | Nombre y definición del valor que se registra en el levante. |
+| PA-11 | H-038 – Datos de aceptación en levantes | Se pide quitar la fecha de aceptación; la frase del audio puede incluir también el número de aceptación. | Si se debe quitar solo la fecha de aceptación o también el número de aceptación, dado que en otro audio se piden prefijos para el número de aceptación. | Qué datos de aceptación se usan en el levante. |
+| PA-12 | H-039 – Cálculo automático de la cantidad al hacer el levante | La cantidad no se calculó en la prueba; se dieron posibles motivos durante la visita. | En qué casos el sistema calcula y en cuáles no; las transcripciones contienen afirmaciones contradictorias («sí las calcula» / «no las calcula»). | Casos de prueba concretos (depósito, declaraciones, pesos) donde no se calculó la cantidad. |
+| PA-13 | H-041 – Edición de pesos y tabla de tickets de ingreso en comercio exterior | Descripción del proceso de cálculo por bultos y necesidad de editar todos los pesos. | Durante la conversación se alterna entre «peso bruto», «peso del manifiesto», «peso de la mercancía» y «neto»; no queda claro exactamente qué campos se editan ni la relación del peso calculado con el neto. El desarrollador también expresó no entender por qué se hace. | Qué campos de peso edita comercio exterior, en qué casos y con qué propósito. |
+| PA-14 | H-042 – Modalidades de salida: por tiquete de entrada, por número de depósito y global | Descripción de las tres modalidades del sistema anterior y del uso de tickets duplicados. | Qué significa «solo en depósito se cobra báscula»; cómo se relacionan estas modalidades con la salida mediante orden de cargue del sistema nuevo. | Ejemplo de cada modalidad y en cuáles se cobra báscula. |
+| PA-15 | H-043 – Registro de levantes e inventario de mercancía nacionalizada | Necesidad de registrar levantes y obtener el inventario de mercancía nacionalizada; explicación de que un levante marca la mercancía como nacionalizada. | Si lo existente cubre la necesidad (pendiente de pruebas del operario) y si se requiere un reporte específico para la DIAN. | Resultado de las pruebas del operario y formato del inventario que solicita la DIAN. |
+| PA-16 | H-051 – Montacargas: identificar qué servicios requieren factura | Dos formulaciones en el documento inicial (columna IVA Sí/No; pregunta de si requiere factura) y la preferencia expresada en el audio por «con factura / sin factura». | Cuál de las formulaciones refleja lo acordado; si se requieren ambas (columna y pregunta). | Etiqueta y comportamiento esperados para el registro de montacargas. |
+| PA-17 | H-052 – Reporte de montacargas en reemplazo de los reportes físicos | Necesidad de un reporte de montacargas filtrable por fechas para conciliar el dinero. | Si el reporte debe tener numeración como los reportes físicos y quién lo genera (facturación o el operario de montacargas). | Formato y numeración del reporte de montacargas. |
+| PA-18 | H-053 – Registro del horómetro de montacargas | El registro se hace en horas según el horómetro. | Si el horómetro del equipo marca horas decimales o minutos y cómo lo leen los operarios de bodega. | Con el operario de montacargas cómo se lee el horómetro. |
+| PA-19 | H-055 – Información y búsqueda en las facturas de guías de salida | Datos y filtros solicitados; forma actual de búsqueda del operario. | Si el número de orden de cargue reemplaza al número de ticket para los clientes, que hoy piden la factura por ticket; si mercancía y embalaje deben aparecer. | Datos con los que el cliente solicita la factura de una guía en el sistema nuevo. |
+| PA-20 | H-060 – Estado de los pagos registrados | Pagos de báscula y guías de contado como verificados; en almacenamiento los registra facturación. | El intercambio sobre almacenamiento termina con «En almacenamiento no», sin precisar si se refiere a que no hay pagos de terceros o a que no se requiere la opción de verificar. | Si debe existir algún caso de pago no verificado. |
+| PA-21 | H-063 – Simulador de previsualización de la fórmula | Solo la nota del documento inicial. | En qué pantalla está el simulador y qué ocurre hoy al seleccionar una fórmula. | Pasos para reproducir el comportamiento observado. |
+| PA-22 | H-074 – Corrección de la carta porte y demás datos del ingreso | Ambos módulos solicitan editar la carta porte; báscula no pudo corregirla en la prueba. | Hay una diferencia entre lo explicado (en borrador todo es editable) y lo que experimentó el operario. No se sabe en qué estado estaba el depósito ni qué pantalla se usó. | El caso concreto (depósito, estado, pantalla) en el que no se pudo editar. |
+| PA-23 | H-076 – Obligatoriedad del tipo de vehículo | Opcional en báscula y obligatorio en bodega según el documento inicial; posible uso en facturación. | Qué área usa el tipo de vehículo y para qué; la respuesta de facturación quedó incompleta. | Con facturación si el tipo de vehículo es necesario y en qué servicio (almacenamiento, montacargas u otro). |
+| PA-24 | H-077 – Origen de la tasa de cambio: manual en comercio exterior y consulta a la DIAN en facturación | Comercio exterior pide tasa manual; facturación usa la TRM consultada a la DIAN. | Si se trata del mismo dato y si facturación debe usar la tasa manual de comercio exterior. | Qué tasa de cambio usa cada proceso. |
+| PA-25 | H-078 – Destinatarios de las notificaciones (repesaje) | Las notificaciones de repesaje llegan solo a administración. | A qué usuarios o roles deben llegar y si es un tema de báscula o de la configuración en administración. | Lista de notificaciones y destinatarios esperados. |
+
+**Discrepancias entre fuentes registradas en los puntos anteriores:** PA-11 (H-038), PA-12 (H-039), PA-16 (H-051), PA-20 (H-060), PA-22 (H-074), PA-24 (H-077).
+
+## 7. Trazabilidad de la información
+
+Los audios no identifican explícitamente a cada operario que habla; por eso se indica el área entrevistada según el archivo. Los nombres de personas que aparecen en el contexto se mencionan tal como figuran en las transcripciones.
+
+| Hallazgo | Archivo de origen | Área entrevistada | Sección / ítem de referencia |
+|---|---|---|---|
+| H-001 | `Hallazgos.docx` | — (notas de la visita) | Báscula #1 |
+| H-001 | `Hallazgos.docx` | — (notas de la visita) | Báscula #17 |
+| H-001 | `bascula.txt` | Báscula | Audio «Inspaccion parte 1» |
+| H-001 | `bascula.txt` | Báscula | Audio «Inspaccion 2 - Conclusion» |
+| H-001 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-002 | `Hallazgos.docx` | — (notas de la visita) | Báscula #2 |
+| H-002 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-003 | `Hallazgos.docx` | — (notas de la visita) | Báscula #3 |
+| H-003 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-004 | `Hallazgos.docx` | — (notas de la visita) | Báscula #4 |
+| H-004 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-005 | `Hallazgos.docx` | — (notas de la visita) | Báscula #5 |
+| H-005 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-006 | `Hallazgos.docx` | — (notas de la visita) | Báscula #6 |
+| H-006 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-006 | `bascula.txt` | Báscula | Audio «Ordenes de cargue» |
+| H-007 | `Hallazgos.docx` | — (notas de la visita) | Báscula #8 |
+| H-007 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-008 | `Hallazgos.docx` | — (notas de la visita) | Báscula #9 (indica «Audio») |
+| H-008 | `bascula.txt` | Báscula | Audio «Tara de vehiculo sin descargar» |
+| H-008 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-009 | `Hallazgos.docx` | — (notas de la visita) | Báscula #10 |
+| H-010 | `Hallazgos.docx` | — (notas de la visita) | Báscula #11 |
+| H-010 | `bascula.txt` | Báscula | Audio «Eliminación de ticket» |
+| H-011 | `Hallazgos.docx` | — (notas de la visita) | Báscula #12 |
+| H-011 | `Hallazgos.docx` | — (notas de la visita) | Báscula #22 |
+| H-011 | `bascula.txt` | Báscula | Audio «Cambios Interfaz» |
+| H-012 | `Hallazgos.docx` | — (notas de la visita) | Báscula #13 |
+| H-012 | `Hallazgos.docx` | — (notas de la visita) | Báscula #14 |
+| H-012 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-013 | `Hallazgos.docx` | — (notas de la visita) | Báscula #15 |
+| H-013 | `bascula.txt` | Báscula | Audio «Inspaccion parte 1» |
+| H-014 | `bascula.txt` | Báscula | Audio «Inspaccion parte 1» |
+| H-015 | `Hallazgos.docx` | — (notas de la visita) | Báscula #18 |
+| H-015 | `bascula.txt` | Báscula | Audio «Exportacion» |
+| H-016 | `Hallazgos.docx` | — (notas de la visita) | Báscula #19 |
+| H-016 | `bascula.txt` | Báscula | Audio «Exportacion» |
+| H-017 | `Hallazgos.docx` | — (notas de la visita) | Báscula #20 |
+| H-017 | `bascula.txt` | Báscula | Audio «Salida Mcia» |
+| H-018 | `Hallazgos.docx` | — (notas de la visita) | Báscula #23 |
+| H-018 | `bascula.txt` | Báscula | Audio «Cambios Interfaz» |
+| H-019 | `Hallazgos.docx` | — (notas de la visita) | Báscula #24 |
+| H-020 | `Hallazgos.docx` | — (notas de la visita) | Báscula #25 |
+| H-020 | `Hallazgos.docx` | — (notas de la visita) | Báscula #26 |
+| H-021 | `Hallazgos.docx` | — (notas de la visita) | Báscula #27 |
+| H-021 | `bascula.txt` | Báscula | Audio «Multideposito (Importante)» |
+| H-022 | `bascula.txt` | Báscula | Audio «Multideposito (Importante)» |
+| H-023 | `bascula.txt` | Báscula | Audio «Multideposito (Importante)» |
+| H-024 | `Hallazgos.docx` | — (notas de la visita) | Bodegas #1 |
+| H-024 | `bascula.txt` | Báscula | Audio «Multideposito (Importante)» |
+| H-025 | `bascula.txt` | Báscula | Audio «Ordenes de cargue» |
+| H-026 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #1 |
+| H-026 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Cambio tablas» |
+| H-027 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #2 |
+| H-027 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Tarjetas de deposito» |
+| H-028 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #3 |
+| H-028 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-029 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #5 |
+| H-029 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-030 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #6 |
+| H-030 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-031 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #7 |
+| H-031 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-032 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #8 |
+| H-032 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-033 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #9 |
+| H-033 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-034 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #10 |
+| H-034 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #11 |
+| H-034 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levante 1» |
+| H-034 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes 2» |
+| H-035 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #12 |
+| H-035 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levante 1» |
+| H-036 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #13 |
+| H-036 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes calculos» |
+| H-037 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #14 |
+| H-037 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes 2» |
+| H-038 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #15 |
+| H-038 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes calcular cantidades automaticamente» |
+| H-038 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levante 1» |
+| H-039 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #16 |
+| H-039 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes calcular cantidades automaticamente» |
+| H-039 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes calculos» |
+| H-040 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #17 |
+| H-040 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes varios productos» |
+| H-040 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes calculos» |
+| H-040 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes calcular cantidades automaticamente» |
+| H-041 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #18 |
+| H-041 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Edicion y calculo de pesos (Importante)» |
+| H-041 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levantes 2» |
+| H-041 | `Comercio_exterior.txt` | Comercio Exterior | Audio «cuadrar pesos» |
+| H-042 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #19 |
+| H-042 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #20 |
+| H-042 | `bascula.txt` | Báscula | Audio «Ordenes de cargue» |
+| H-043 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levante inventario» |
+| H-044 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Guias de salida» |
+| H-044 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento» |
+| H-045 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Guias de salida» |
+| H-045 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento» |
+| H-046 | `Hallazgos.docx` | — (notas de la visita) | Facturación #1 |
+| H-046 | `facturacion.txt` | Facturación | Audio «Facturacion Bascula» |
+| H-047 | `Hallazgos.docx` | — (notas de la visita) | Facturación #2 |
+| H-047 | `Hallazgos.docx` | — (notas de la visita) | Facturación #3 |
+| H-047 | `facturacion.txt` | Facturación | Audio «Facturacion Bascula» |
+| H-048 | `Hallazgos.docx` | — (notas de la visita) | Facturación #13 |
+| H-048 | `facturacion.txt` | Facturación | Audio «Facturacion Bascula» |
+| H-048 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-049 | `Hallazgos.docx` | — (notas de la visita) | Facturación #4 |
+| H-049 | `facturacion.txt` | Facturación | Audio «Facturacion Bascula» |
+| H-050 | `Hallazgos.docx` | — (notas de la visita) | Facturación #5 |
+| H-050 | `facturacion.txt` | Facturación | Audio «Facturacion Bascula» |
+| H-051 | `Hallazgos.docx` | — (notas de la visita) | Facturación #6 |
+| H-051 | `Hallazgos.docx` | — (notas de la visita) | Facturación #7 |
+| H-051 | `facturacion.txt` | Facturación | Audio «Facturacion montacargas» |
+| H-052 | `facturacion.txt` | Facturación | Audio «Facturacion montacargas» |
+| H-053 | `facturacion.txt` | Facturación | Audio «Facturacion montacargas» |
+| H-054 | `Hallazgos.docx` | — (notas de la visita) | Facturación #8 |
+| H-054 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento» |
+| H-055 | `Hallazgos.docx` | — (notas de la visita) | Facturación #9 |
+| H-055 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento» |
+| H-056 | `Hallazgos.docx` | — (notas de la visita) | Facturación #10 |
+| H-056 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-057 | `Hallazgos.docx` | — (notas de la visita) | Facturación #11 |
+| H-057 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-058 | `Hallazgos.docx` | — (notas de la visita) | Facturación #12 |
+| H-058 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-059 | `Hallazgos.docx` | — (notas de la visita) | Facturación #14 |
+| H-059 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-060 | `Hallazgos.docx` | — (notas de la visita) | Facturación #15 |
+| H-060 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-061 | `Hallazgos.docx` | — (notas de la visita) | Facturación #16 |
+| H-061 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-062 | `Hallazgos.docx` | — (notas de la visita) | Facturación #17 |
+| H-062 | `Hallazgos.docx` | — (notas de la visita) | Facturación #18 |
+| H-063 | `Hallazgos.docx` | — (notas de la visita) | Facturación #19 |
+| H-064 | `Hallazgos.docx` | — (notas de la visita) | Facturación #20 |
+| H-064 | `facturacion.txt` | Facturación | Audio «Facturacion montacargas» |
+| H-065 | `Hallazgos.docx` | — (notas de la visita) | Facturación #21 |
+| H-065 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-066 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-067 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-067 | `facturacion.txt` | Facturación | Audio «Facturacion montacargas» |
+| H-068 | `facturacion.txt` | Facturación | Audio «Facturacion Bascula» |
+| H-069 | `Hallazgos.docx` | — (notas de la visita) | Transversales #1 |
+| H-069 | `facturacion.txt` | Facturación | Audio «Facturacion montacargas» |
+| H-069 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento» |
+| H-069 | `CONVENIO_23-24-25-26.xlsx` | — (archivo de Facturación) | Columnas RESPONSABLE / RAZON SOCIAL EN FACTURA |
+| H-070 | `Hallazgos.docx` | — (notas de la visita) | Transversales #2 |
+| H-070 | `CONVENIO_23-24-25-26.xlsx` | — (archivo de Facturación) | Todas las hojas |
+| H-070 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-071 | `Hallazgos.docx` | — (notas de la visita) | Transversales #3 |
+| H-071 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #4 |
+| H-071 | `facturacion.txt` | Facturación | Audio «Facturacion-acuerdos» |
+| H-071 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-072 | `bascula.txt` | Báscula | Audio «Ordenes de cargue» |
+| H-072 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Guias de salida» |
+| H-072 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Cargues actuales» |
+| H-073 | `Hallazgos.docx` | — (notas de la visita) | Báscula #28 |
+| H-073 | `Hallazgos.docx` | — (notas de la visita) | Bodegas #2 |
+| H-073 | `bascula.txt` | Báscula | Audio «Multideposito (Importante)» |
+| H-074 | `Hallazgos.docx` | — (notas de la visita) | Báscula #7 |
+| H-074 | `Hallazgos.docx` | — (notas de la visita) | Comercio Exterior #3 |
+| H-074 | `bascula.txt` | Báscula | Audio «Bascula» |
+| H-074 | `bascula.txt` | Báscula | Audio «Eliminación de ticket» |
+| H-074 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Productos» |
+| H-075 | `Hallazgos.docx` | — (notas de la visita) | Báscula #21 |
+| H-075 | `bascula.txt` | Báscula | Audio «Editar placa bascula» |
+| H-075 | `bascula.txt` | Báscula | Audio «Salida Mcia» |
+| H-076 | `Hallazgos.docx` | — (notas de la visita) | Báscula #16 |
+| H-076 | `bascula.txt` | Báscula | Audio «Inspaccion parte 1» |
+| H-076 | `facturacion.txt` | Facturación | Audio «Facturacion montacargas» |
+| H-077 | `Comercio_exterior.txt` | Comercio Exterior | Audio «Levante 1» |
+| H-077 | `facturacion.txt` | Facturación | Audio «Facturacion almacenamiento y pagos» |
+| H-078 | `bascula.txt` | Báscula | Audio «Ordenes de cargue» |

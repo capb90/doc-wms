@@ -29,6 +29,7 @@
 | `planes/paridad-legacy/` | Plan backend, plan frontend y contrato API de la paridad con el legacy (fases 1–6) |
 | `planes/migracion-staging/` | Plan de migración del legacy a staging y sus resultados (informes, `DEF-MIG-*`, guía de operarios) y el procedimiento de congelamiento del corte real (`procedimiento-corte-operaciones-abiertas.md`) |
 | `analisis/` | Análisis previos a una decisión (motor de acuerdos, permisos granulares, FOB/CIF) |
+| `levantamiento-2026-11/` | Visita de noviembre de 2026 ya procesada: lo que muestran los videos de Comercio Exterior (sin volver a verlos) y la paridad del flujo de depósitos y levantes. Las fuentes originales están en `documentos/Levantamiento staging/`, fuera del repo |
 | `qa/` | Campaña QA de octubre: plan maestro, fases F0–F11, plan de corrección, plantillas, informes, fichas `DEF-*` y evidencias |
 | `videos/` | Guiones de los video tutoriales, plan de producción y PDF de guiones |
 | `manuales/` | Manual de usuario (PDF de julio), manual de báscula y manual de facturación (con avisos de vigencia) |

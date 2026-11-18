@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Depósitos y levantes</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body{margin:0;background:#f1f5f9}
+a{color:#1d4ed8}a:hover{color:#1e3a8a}
+input,button{font:inherit}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid #1d4ed8;outline-offset:1px}
+</style>
+</helmet>
+<div style="font-family: Inter, system-ui, sans-serif; color: #0f172a; background: #f1f5f9; padding: 24px; box-sizing: border-box; font-variant-numeric: tabular-nums; font-size: 14px; line-height: 1.4">
+<div style="max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px">
+
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px">
+<div style="display: flex; flex-direction: column; gap: 2px">
+<div style="font-size: 13px; color: #475569">Comercio exterior</div>
+<h1 style="margin: 0; font-size: 22px; font-weight: 700">Depósitos y levantes</h1>
+<p style="margin: 0; color: #475569; font-size: 13px">Expande un depósito para ver y registrar sus levantes por mercancía.</p>
+</div>
+<button type="button" style="min-height: 40px; padding: 0 14px; border: 1px solid #cbd5e1; background: #ffffff; color: #0f172a; border-radius: 8px; cursor: pointer; font-weight: 500">Exportar</button>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; padding: 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px">
+<label style="flex: 1 1 320px; display: flex; align-items: center; gap: 8px; height: 40px; border: 1px solid #cbd5e1; border-radius: 8px; padding: 0 10px; color: #475569">
+<svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<span style="position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0)">Buscar</span>
+<input type="search" value="{{q}}" onChange="{{onQ}}" placeholder="Depósito, carta porte, importador, mercancía o Nº de levante" style="border: 0; outline: none; flex: 1; min-width: 0; height: 36px; color: #0f172a; background: transparent">
+</label>
+<div role="group" aria-label="Filtrar por estado" style="display: flex; flex-wrap: wrap; gap: 4px; background: #f1f5f9; border-radius: 8px; padding: 3px">
+<sc-for list="{{chips}}" as="c" hint-placeholder-count="4">
+<button type="button" aria-pressed="{{c.pressed}}" onClick="{{c.pick}}" style="min-height: 34px; padding: 0 12px; border: 0; border-radius: 6px; cursor: pointer; font-weight: 500; font-size: 13px; background: {{c.bg}}; color: {{c.fg}}; box-shadow: {{c.shadow}}">{{c.label}} <span style="color: #475569; font-weight: 400">{{c.count}}</span></button>
+</sc-for>
+</div>
+<button type="button" aria-pressed="{{diffPressed}}" onClick="{{toggleDiff}}" style="min-height: 40px; padding: 0 12px; border: 1px solid {{diffBorder}}; background: {{diffBg}}; color: {{diffFg}}; border-radius: 8px; cursor: pointer; font-weight: 500; font-size: 13px; display: flex; align-items: center; gap: 6px"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path><path d="M12 9v4M12 17h.01"></path></svg>Con diferencia de peso</button>
+</div>
+
+<div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 10px; overflow-x: auto">
+<div style="min-width: 1366px">
+
+<div style="display: grid; grid-template-columns: 44px 112px minmax(150px, 1fr) minmax(230px, 1.8fr) minmax(150px, 1.1fr) 120px 170px 120px 150px; column-gap: 12px; align-items: center; padding: 0 12px; height: 42px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; font-size: 12px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #475569">
+<div></div>
+<div>Depósito</div>
+<div>Documento comercial</div>
+<div>Terceros</div>
+<div>Mercancía</div>
+<div style="text-align: right">Ingreso</div>
+<div>Nacionalizado</div>
+<div style="text-align: right">Saldo</div>
+<div>Estado</div>
+</div>
+
+<sc-for list="{{deps}}" as="dp" hint-placeholder-count="5">
+<div style="border-bottom: 1px solid #e2e8f0; background: {{dp.rowBg}}">
+<div style="display: grid; grid-template-columns: 44px 112px minmax(150px, 1fr) minmax(230px, 1.8fr) minmax(150px, 1.1fr) 120px 170px 120px 150px; column-gap: 12px; align-items: center; padding: 10px 12px">
+<button type="button" onClick="{{dp.toggle}}" aria-expanded="{{dp.expandedAttr}}" aria-label="{{dp.toggleLabel}}" style="width: 36px; height: 36px; border: 1px solid #e2e8f0; background: #ffffff; border-radius: 8px; cursor: pointer; color: #334155; display: grid; place-items: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="transform: {{dp.chevron}}; transition: transform .15s"><path d="m9 6 6 6-6 6"></path></svg></button>
+<div style="display: flex; flex-direction: column">
+<a href="#" style="font-weight: 700; text-decoration: none">{{dp.id}}</a>
+<span style="font-size: 12px; color: #475569">{{dp.fecha}}</span>
+</div>
+<div style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-size: 12px; color: #475569">{{dp.docTipo}}</span>
+<span style="font-weight: 600">{{dp.doc}}</span>
+<span style="font-size: 12px; color: #475569">Manif. {{dp.manif}}</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 2px; min-width: 0">
+<span style="font-size: 13px"><span style="color: #475569">Imp.</span> <span style="font-weight: 600">{{dp.imp}}</span></span>
+<span style="font-size: 12px; color: #475569">NIT {{dp.impNit}} · Transp. {{dp.trans}}</span>
+</div>
+<div style="display: flex; flex-direction: column; min-width: 0">
+<span style="font-weight: 500">{{dp.merc}}</span>
+<span style="font-size: 12px; color: #475569">{{dp.mercMore}}</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end">
+<span style="font-weight: 700; color: #1e3a8a">{{dp.ingCant}}</span>
+<span style="font-size: 12px; color: #475569">{{dp.ingPeso}} kg</span>
+</div>
+<div style="display: flex; flex-direction: column; gap: 5px">
+<div style="display: flex; justify-content: space-between; font-size: 12px; color: #334155"><span>{{dp.nacTxt}}</span><span style="font-weight: 600">{{dp.pct}}</span></div>
+<div style="height: 6px; background: #e2e8f0; border-radius: 999px; overflow: hidden"><div style="height: 6px; width: {{dp.pct}}; background: #1d4ed8; border-radius: 999px"></div></div>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-end">
+<span style="font-weight: 700; color: {{dp.saldoCantColor}}">{{dp.saldoCant}}</span>
+<span style="font-size: 12px; font-weight: 500; color: {{dp.saldoPesoColor}}">{{dp.saldoPeso}} kg</span>
+</div>
+<div style="display: flex; flex-direction: column; align-items: flex-start; gap: 4px">
+<span style="font-size: 12px; font-weight: 600; border-radius: 999px; padding: 2px 10px; background: {{dp.pillBg}}; color: {{dp.pillFg}}">{{dp.status}}</span>
+<sc-if value="{{dp.hasDiff}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 12px; color: #b91c1c; font-weight: 500">Δ peso {{dp.diff}} kg</span>
+</sc-if>
+<sc-if value="{{dp.noDiff}}" hint-placeholder-val="{{ true }}">
+<span style="font-size: 12px; color: #475569">{{dp.levTxt}}</span>
+</sc-if>
+</div>
+</div>
+
+<sc-if value="{{dp.expanded}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 0 16px 16px 68px">
+<div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; overflow: hidden">
+<div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; padding: 10px 14px; border-bottom: 1px solid #e2e8f0">
+<span style="font-weight: 600">Levantes de {{dp.id}} <span style="color: #475569; font-weight: 400">· {{dp.levTxt}} · tasa ingreso {{dp.tasa}}</span></span>
+<a href="#" style="font-size: 13px; font-weight: 600; text-decoration: none; padding: 8px 4px">Ver detalle del depósito</a>
+</div>
+<div style="display: grid; grid-template-columns: minmax(140px, 1.3fr) minmax(140px, 1.3fr) 108px 92px 112px 92px 116px 112px; column-gap: 12px; align-items: center; padding: 0 14px; height: 34px; background: #f8fafc; font-size: 11px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: #475569">
+<div>Nº levante</div><div>Nº aceptación</div><div>Fecha</div><div style="text-align: right">Tasa</div><div style="text-align: right">CIF (USD)</div><div style="text-align: right">Cantidad</div><div style="text-align: right">Peso (kg)</div><div></div>
+</div>
+
+<sc-for list="{{dp.products}}" as="p" hint-placeholder-count="1">
+<div style="border-top: 1px solid #e2e8f0">
+<div style="display: grid; grid-template-columns: minmax(140px, 1.3fr) minmax(140px, 1.3fr) 108px 92px 112px 92px 116px 112px; column-gap: 12px; align-items: center; padding: 0 14px; min-height: 44px; background: #eff6ff">
+<div style="grid-column: 1 / 6; display: flex; align-items: center; gap: 8px; flex-wrap: wrap">
+<span style="font-weight: 700; text-transform: uppercase; font-size: 13px">{{p.name}}</span>
+<span style="font-size: 12px; color: #334155; border: 1px solid #cbd5e1; border-radius: 6px; padding: 0 6px; background: #ffffff">{{p.unitLabel}}</span>
+<span style="font-size: 11px; font-weight: 600; border-radius: 999px; padding: 1px 8px; background: {{p.pillBg}}; color: {{p.pillFg}}">{{p.status}}</span>
+<span style="margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #1e40af">Ingreso</span>
+</div>
+<div style="text-align: right; font-weight: 700; color: #1e3a8a">{{p.ingCant}}</div>
+<div style="text-align: right; font-weight: 700; color: #1e3a8a">{{p.ingPeso}}</div>
+<div></div>
+</div>
+
+<sc-for list="{{p.rows}}" as="r" hint-placeholder-count="1">
+<div style="display: grid; grid-template-columns: minmax(140px, 1.3fr) minmax(140px, 1.3fr) 108px 92px 112px 92px 116px 112px; column-gap: 12px; align-items: center; padding: 0 14px; min-height: 44px; border-top: 1px solid #f1f5f9; font-size: 13px">
+<div style="font-weight: 600">{{r.lev}}</div>
+<div style="color: #475569">{{r.acep}}</div>
+<div style="color: #334155">{{r.fecha}}</div>
+<div style="text-align: right; color: #334155">{{r.tasa}}</div>
+<div style="text-align: right; color: #334155">{{r.cif}}</div>
+<div style="text-align: right; font-weight: 600">{{r.cant}}</div>
+<div style="text-align: right; font-weight: 600">{{r.peso}}</div>
+<div style="display: flex; justify-content: flex-end; gap: 2px">
+<button type="button" aria-label="{{r.docLabel}}" style="width: 34px; height: 34px; border: 0; background: transparent; border-radius: 6px; color: #475569; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><path d="M14 3v6h6M8 13h8M8 17h5"></path></svg></button>
+<button type="button" aria-label="{{r.editLabel}}" style="width: 34px; height: 34px; border: 0; background: transparent; border-radius: 6px; color: #475569; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"></path></svg></button>
+<button type="button" onClick="{{r.remove}}" aria-label="{{r.delLabel}}" style="width: 34px; height: 34px; border: 0; background: transparent; border-radius: 6px; color: #b91c1c; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"></path></svg></button>
+</div>
+</div>
+</sc-for>
+
+<sc-if value="{{p.isEmpty}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 10px 14px; border-top: 1px solid #f1f5f9; color: #475569; font-size: 13px">Aún no hay levantes para esta mercancía.</div>
+</sc-if>
+
+<sc-if value="{{p.adding}}" hint-placeholder-val="{{ false }}">
+<div style="border-top: 1px dashed #93c5fd; background: #f8fbff">
+<div style="display: grid; grid-template-columns: minmax(140px, 1.3fr) minmax(140px, 1.3fr) 108px 92px 112px 92px 116px 112px; column-gap: 12px; align-items: center; padding: 8px 14px">
+<input type="text" inputmode="numeric" placeholder="Nº levante" aria-label="Número de levante" value="{{p.d.lev}}" onChange="{{p.h.lev}}" onKeyDown="{{p.h.key}}" style="height: 34px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; font-size: 13px">
+<input type="text" inputmode="numeric" placeholder="Nº aceptación" aria-label="Número de aceptación" value="{{p.d.acep}}" onChange="{{p.h.acep}}" onKeyDown="{{p.h.key}}" style="height: 34px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; font-size: 13px">
+<input type="date" aria-label="Fecha del levante" value="{{p.d.fecha}}" onChange="{{p.h.fecha}}" onKeyDown="{{p.h.key}}" style="height: 34px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 4px; background: #ffffff; color: #0f172a; font-size: 13px">
+<input type="text" inputmode="decimal" aria-label="Tasa del levante" value="{{p.d.tasa}}" onChange="{{p.h.tasa}}" onKeyDown="{{p.h.key}}" style="height: 34px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right; font-size: 13px">
+<input type="text" inputmode="decimal" placeholder="0,00" aria-label="Valor CIF en dólares" value="{{p.d.cif}}" onChange="{{p.h.cif}}" onKeyDown="{{p.h.key}}" style="height: 34px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right; font-size: 13px">
+<input type="text" inputmode="decimal" aria-label="Cantidad nacionalizada" value="{{p.d.cant}}" onChange="{{p.h.cant}}" onKeyDown="{{p.h.key}}" style="height: 34px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right; font-weight: 600; font-size: 13px">
+<input type="text" inputmode="decimal" aria-label="Peso nacionalizado en kilos" value="{{p.d.peso}}" onChange="{{p.h.peso}}" onKeyDown="{{p.h.key}}" style="height: 34px; width: 100%; box-sizing: border-box; border: 1px solid #94a3b8; border-radius: 6px; padding: 0 8px; background: #ffffff; color: #0f172a; text-align: right; font-weight: 600; font-size: 13px">
+<div style="display: flex; justify-content: flex-end; gap: 4px">
+<button type="button" onClick="{{p.h.save}}" style="height: 34px; padding: 0 10px; border: 0; background: #1d4ed8; color: #ffffff; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px">Guardar</button>
+<button type="button" onClick="{{p.h.cancel}}" aria-label="Cancelar" style="width: 34px; height: 34px; border: 1px solid #cbd5e1; background: #ffffff; color: #475569; border-radius: 6px; cursor: pointer; display: grid; place-items: center"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</div>
+</div>
+<sc-if value="{{p.hasError}}" hint-placeholder-val="{{ false }}">
+<div role="alert" style="padding: 0 14px 8px; color: #b91c1c; font-size: 13px; font-weight: 500">{{p.d.error}}</div>
+</sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{p.showAddBtn}}" hint-placeholder-val="{{ false }}">
+<div style="border-top: 1px solid #f1f5f9; padding: 4px 8px">
+<button type="button" onClick="{{p.open}}" style="min-height: 36px; padding: 0 8px; border: 0; background: transparent; color: #1d4ed8; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 6px"><svg aria-hidden="true" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg>Agregar levante <span style="color: #475569; font-weight: 400">· {{p.addHint}}</span></button>
+</div>
+</sc-if>
+
+<div style="display: grid; grid-template-columns: minmax(140px, 1.3fr) minmax(140px, 1.3fr) 108px 92px 112px 92px 116px 112px; column-gap: 12px; align-items: center; padding: 0 14px; min-height: 36px; background: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 13px">
+<div style="grid-column: 1 / 6; text-align: right; font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; color: #475569">Nacionalizado</div>
+<div style="text-align: right; font-weight: 600">{{p.nacCant}}</div>
+<div style="text-align: right; font-weight: 600">{{p.nacPeso}}</div>
+<div></div>
+</div>
+<div style="display: grid; grid-template-columns: minmax(140px, 1.3fr) minmax(140px, 1.3fr) 108px 92px 112px 92px 116px 112px; column-gap: 12px; align-items: center; padding: 0 14px; min-height: 38px; background: #f8fafc; border-top: 1px solid #e2e8f0; font-size: 13px">
+<div style="grid-column: 1 / 6; display: flex; justify-content: flex-end; align-items: center; gap: 12px">
+<sc-if value="{{p.hasDiff}}" hint-placeholder-val="{{ false }}">
+<span style="font-size: 12px; color: #b91c1c; font-weight: 500">{{p.diffTxt}}</span>
+</sc-if>
+<span style="font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase">Saldo</span>
+</div>
+<div style="text-align: right; font-weight: 700; color: {{p.saldoCantColor}}">{{p.saldoCant}}</div>
+<div style="text-align: right; font-weight: 700; color: {{p.saldoPesoColor}}">{{p.saldoPeso}}</div>
+<div></div>
+</div>
+</div>
+</sc-for>
+
+</div>
+</div>
+</sc-if>
+</div>
+</sc-for>
+
+<sc-if value="{{noResults}}" hint-placeholder-val="{{ false }}">
+<div style="padding: 32px 16px; text-align: center; color: #475569">Ningún depósito coincide con los filtros.</div>
+</sc-if>
+
+</div>
+</div>
+
+<div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 8px; font-size: 13px; color: #475569">
+<span>Mostrando {{shown}} de {{total}} depósitos</span>
+<div style="display: flex; gap: 4px">
+<button type="button" style="min-height: 36px; padding: 0 12px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; color: #334155; cursor: pointer">Anterior</button>
+<button type="button" style="min-height: 36px; padding: 0 12px; border: 1px solid #cbd5e1; background: #ffffff; border-radius: 8px; color: #334155; cursor: pointer">Siguiente</button>
+</div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1280}}'>
+class Component extends DCLogic {
+  f2(n){ return new Intl.NumberFormat('es-CO',{minimumFractionDigits:2,maximumFractionDigits:2}).format(n); }
+  fq(n){ return new Intl.NumberFormat('es-CO',{maximumFractionDigits:2}).format(n); }
+  r2(n){ return Math.round(n*100)/100; }
+  parse(v){ var s=String(v==null?'':v).replace(/\s/g,''); if(!s) return NaN; if(s.indexOf(',')>=0){ s=s.replace(/\./g,'').replace(',','.'); } return Number(s); }
+  fd(iso){ var p=String(iso||'').split('-'); return p.length===3 ? p[2]+'/'+p[1]+'/'+p[0] : String(iso||''); }
+  init(){
+    var ON={nit:'901653132', name:'OPERADOR LOGISTICO INTERNAL ONIUS S.A.S.'};
+    var DE={nit:'901506007', name:'DISTRIBUIDORA DE EMPAQUES DEL CAUCA S.A.S.'};
+    return [
+      { id:'BA1446', fecha:'2024-06-10', docTipo:'Carta porte', doc:'PE004781', manif:'116575014469120', imp:ON, trans:'NUEVO TRANSPORTE DE AMERICA CIA LTDA', tasa:3874.32,
+        products:[{ id:'a', name:'Cebolla fresca', unit:'sacos', ingCant:720, ingPeso:32940, levantes:[] }] },
+      { id:'BA1445', fecha:'2024-06-08', docTipo:'Carta porte', doc:'EC0014802', manif:'116575014468305', imp:DE, trans:'BILBAO SANCHEZ MENDOZA TRANSBISAM S.A', tasa:3874.32,
+        products:[
+          { id:'a', name:'Sacos de polipropileno', unit:'bultos', ingCant:300, ingPeso:10980, levantes:[{ id:'x1', lev:'372024000009512', acep:'372024000009790', fecha:'2024-06-12', tasa:3874.32, cif:17180.40, cant:200, peso:7320 }] },
+          { id:'b', name:'Reata de polipropileno', unit:'bultos', ingCant:40, ingPeso:1460, levantes:[] }] },
+      { id:'BA1444', fecha:'2024-06-03', docTipo:'Carta porte', doc:'PE004710', manif:'116575014466469', imp:ON, trans:'NUEVO TRANSPORTE DE AMERICA CIA LTDA', tasa:3874.32,
+        products:[{ id:'a', name:'Cebolla fresca', unit:'sacos', ingCant:720, ingPeso:32900, levantes:[{ id:'x2', lev:'372024000009458', acep:'372024000009806', fecha:'2024-06-07', tasa:3874.32, cif:11250.25, cant:720, peso:32900 }] }] },
+      { id:'BA1443', fecha:'2024-06-06', docTipo:'Carta porte', doc:'EC0014728', manif:'116575014467919', imp:DE, trans:'BILBAO SANCHEZ MENDOZA TRANSBISAM S.A', tasa:3874.32,
+        products:[
+          { id:'a', name:'Sacos de polipropileno', unit:'bultos', ingCant:193, ingPeso:7060, levantes:[{ id:'x3', lev:'372024000009475', acep:'372024000009748', fecha:'2024-06-07', tasa:3874.32, cif:16574.95, cant:193, peso:7065.38 }] },
+          { id:'b', name:'Reata de polipropileno', unit:'bultos', ingCant:32, ingPeso:1170, levantes:[{ id:'x4', lev:'372024000009414', acep:'372024000009747', fecha:'2024-06-07', tasa:3874.32, cif:4600.68, cant:32, peso:1172.24 }] }] },
+      { id:'BA1440', fecha:'2024-06-04', docTipo:'Carta porte', doc:'PFL-C24-013', manif:'116575014464851', imp:ON, trans:'TRANSPORTES FUENTES LANDAZURI S.A', tasa:3874.32,
+        products:[{ id:'a', name:'Cebolla fresca', unit:'sacos', ingCant:720, ingPeso:32980, levantes:[{ id:'x5', lev:'372024000009459', acep:'372024000009788', fecha:'2024-06-07', tasa:3874.32, cif:11250.25, cant:720, peso:32980 }] }] }
+    ];
+  }
+  cur(){ var st=this.state||{}; return { deps: st.deps||this.init(), expanded: st.expanded||{ BA1443:true }, drafts: st.drafts||{}, q: st.q||'', filter: st.filter||'all', onlyDiff: !!st.onlyDiff }; }
+  sums(p){ var c=0,w=0; p.levantes.forEach(function(l){ c+=l.cant; w+=l.peso; }); return { nacCant:this.r2(c), nacPeso:this.r2(w), saldoCant:this.r2(p.ingCant-c), saldoPeso:this.r2(p.ingPeso-w) }; }
+  blank(dp, sc, sp){ return { lev:'', acep:'', fecha:'2024-06-12', tasa:this.f2(dp.tasa).replace(/\./g,''), cif:'', cant:String(Math.max(sc,0)), peso:this.f2(Math.max(sp,0)).replace(/\./g,''), error:'' }; }
+  findP(s, did, pid){ var dp=s.deps.find(function(x){return x.id===did;}); var p=dp ? dp.products.find(function(x){return x.id===pid;}) : null; return { dp:dp, p:p }; }
+  mapP(deps, did, pid, fn){ return deps.map(function(dp){ return dp.id!==did ? dp : Object.assign({}, dp, { products: dp.products.map(function(p){ return p.id!==pid ? p : fn(p); }) }); }); }
+  openAdd(did,pid){ var s=this.cur(); var f=this.findP(s,did,pid); if(!f.p) return; var t=this.sums(f.p); var d=Object.assign({}, s.drafts); d[did+'|'+pid]=this.blank(f.dp,t.saldoCant,t.saldoPeso); this.setState({ deps:s.deps, drafts:d }); }
+  cancel(did,pid){ var s=this.cur(); var d=Object.assign({}, s.drafts); delete d[did+'|'+pid]; this.setState({ deps:s.deps, drafts:d }); }
+  setF(did,pid,f,v){ var s=this.cur(); var k=did+'|'+pid; var d=Object.assign({}, s.drafts); var n=Object.assign({}, d[k]); n[f]=v; n.error=''; d[k]=n; this.setState({ deps:s.deps, drafts:d }); }
+  save(did,pid){
+    var s=this.cur(); var k=did+'|'+pid; var f=this.findP(s,did,pid); var dr=s.drafts[k]; if(!f.p||!dr) return;
+    var t=this.sums(f.p); var cant=this.parse(dr.cant); var peso=this.parse(dr.peso); var err='';
+    if(!String(dr.lev||'').trim()) err='Ingresa el número de levante.';
+    else if(!(cant>0)) err='La cantidad debe ser mayor a 0.';
+    else if(cant>t.saldoCant) err='La cantidad supera el saldo disponible ('+this.fq(t.saldoCant)+' '+f.p.unit+').';
+    else if(!(peso>0)) err='Ingresa el peso nacionalizado.';
+    var d=Object.assign({}, s.drafts);
+    if(err){ d[k]=Object.assign({}, dr, { error: err }); this.setState({ deps:s.deps, drafts:d }); return; }
+    var lv={ id:'n'+Date.now(), lev:String(dr.lev).trim(), acep:String(dr.acep||'').trim(), fecha:dr.fecha, tasa:this.parse(dr.tasa)||0, cif:this.parse(dr.cif)||0, cant:cant, peso:this.r2(peso) };
+    var deps=this.mapP(s.deps, did, pid, function(p){ return Object.assign({}, p, { levantes: p.levantes.concat([lv]) }); });
+    delete d[k]; this.setState({ deps:deps, drafts:d });
+  }
+  remove(did,pid,lid){ var s=this.cur(); var deps=this.mapP(s.deps, did, pid, function(p){ return Object.assign({}, p, { levantes: p.levantes.filter(function(l){ return l.id!==lid; }) }); }); this.setState({ deps:deps, drafts:s.drafts }); }
+  toggle(did){ var s=this.cur(); var e=Object.assign({}, s.expanded); e[did]=!e[did]; this.setState({ expanded:e }); }
+  tone(k){ return { ok:{bg:'#dcfce7',fg:'#166534'}, warn:{bg:'#fef3c7',fg:'#92400e'}, bad:{bg:'#fee2e2',fg:'#b91c1c'}, neutral:{bg:'#e2e8f0',fg:'#334155'} }[k]; }
+  cap(s){ return s.charAt(0).toUpperCase()+s.slice(1); }
+  renderVals(){
+    var self=this; var s=this.cur();
+    var all=s.deps.map(function(dp){
+      var ic=0, ip=0, nc=0, np=0, nl=0, prodDiff=false;
+      var products=dp.products.map(function(p){
+        var t=self.sums(p); ic+=p.ingCant; ip+=p.ingPeso; nc+=t.nacCant; np+=t.nacPeso; nl+=p.levantes.length;
+        var k=dp.id+'|'+p.id; var dr=s.drafts[k]; var status, tk;
+        if(p.levantes.length===0){ status='Sin levante'; tk='neutral'; }
+        else if(t.saldoCant>0){ status='Parcial'; tk='warn'; }
+        else if(t.saldoCant===0){ status='Nacionalizado'; tk='ok'; }
+        else { status='Excedido'; tk='bad'; }
+        var T=self.tone(tk);
+        var hasDiff=(t.saldoCant<=0 && t.saldoPeso!==0) || t.saldoPeso<0; if(hasDiff) prodDiff=true;
+        var mk=function(f){ return function(e){ self.setF(dp.id,p.id,f,e.target.value); }; };
+        return {
+          name:p.name, unitLabel:self.cap(p.unit), status:status, pillBg:T.bg, pillFg:T.fg,
+          ingCant:self.fq(p.ingCant), ingPeso:self.f2(p.ingPeso),
+          rows:p.levantes.map(function(l){ return { lev:l.lev, acep:l.acep||'—', fecha:self.fd(l.fecha), tasa:self.f2(l.tasa), cif:self.f2(l.cif), cant:self.fq(l.cant), peso:self.f2(l.peso),
+            docLabel:'Ver documento del levante '+l.lev, editLabel:'Editar levante '+l.lev, delLabel:'Eliminar levante '+l.lev, remove:function(){ self.remove(dp.id,p.id,l.id); } }; }),
+          isEmpty:p.levantes.length===0 && !dr, adding:!!dr, hasError:!!(dr && dr.error),
+          d:dr||{lev:'',acep:'',fecha:'',tasa:'',cif:'',cant:'',peso:'',error:''},
+          h:{ lev:mk('lev'), acep:mk('acep'), fecha:mk('fecha'), tasa:mk('tasa'), cif:mk('cif'), cant:mk('cant'), peso:mk('peso'),
+              save:function(){ self.save(dp.id,p.id); }, cancel:function(){ self.cancel(dp.id,p.id); },
+              key:function(e){ if(e.key==='Enter'){ e.preventDefault(); self.save(dp.id,p.id); } else if(e.key==='Escape'){ self.cancel(dp.id,p.id); } } },
+          showAddBtn:!dr && t.saldoCant>0, open:function(){ self.openAdd(dp.id,p.id); },
+          addHint:'saldo '+self.fq(t.saldoCant)+' '+p.unit+' · '+self.f2(Math.max(t.saldoPeso,0))+' kg',
+          nacCant:self.fq(t.nacCant), nacPeso:self.f2(t.nacPeso), saldoCant:self.fq(t.saldoCant), saldoPeso:self.f2(t.saldoPeso),
+          saldoCantColor: t.saldoCant===0 ? '#166534' : (t.saldoCant>0 ? '#92400e' : '#b91c1c'),
+          saldoPesoColor: t.saldoPeso===0 ? '#166534' : ((t.saldoCant>0 && t.saldoPeso>0) ? '#92400e' : '#b91c1c'),
+          hasDiff:hasDiff, diffTxt: t.saldoPeso<0 ? self.f2(-t.saldoPeso)+' kg por encima del ingreso' : self.f2(t.saldoPeso)+' kg sin nacionalizar'
+        };
+      });
+      var sc=self.r2(ic-nc), sp=self.r2(ip-np); var pct=ic>0?Math.round(nc/ic*100):0;
+      var key, status, tk;
+      if(nl===0){ key='none'; status='Sin nacionalizar'; tk='neutral'; }
+      else if(sc>0){ key='partial'; status='Parcial'; tk='warn'; }
+      else if(sc===0){ key='done'; status='Nacionalizado'; tk='ok'; }
+      else { key='partial'; status='Excedido'; tk='bad'; }
+      var T=self.tone(tk); var unit=dp.products[0].unit; var exp=!!s.expanded[dp.id];
+      var hasDiff=prodDiff || (sc===0 && sp!==0);
+      var text=[dp.id, dp.doc, dp.manif, dp.imp.name, dp.imp.nit, dp.trans].concat(dp.products.map(function(p){ return p.name+' '+p.levantes.map(function(l){ return l.lev+' '+l.acep; }).join(' '); })).join(' ').toLowerCase();
+      return { key:key, diff:hasDiff, text:text, view:{
+        id:dp.id, fecha:self.fd(dp.fecha), docTipo:dp.docTipo, doc:dp.doc, manif:dp.manif, imp:dp.imp.name, impNit:dp.imp.nit, trans:dp.trans, tasa:self.f2(dp.tasa),
+        merc:dp.products[0].name + (dp.products.length>1 ? ' +'+(dp.products.length-1) : ''),
+        mercMore: dp.products.length>1 ? dp.products.slice(1).map(function(p){ return p.name; }).join(', ') : self.cap(unit),
+        ingCant:self.fq(ic)+' '+unit, ingPeso:self.f2(ip), nacTxt:self.fq(nc)+' / '+self.fq(ic)+' '+unit, pct:pct+'%',
+        saldoCant:self.fq(sc)+' '+unit, saldoPeso:self.f2(sp),
+        saldoCantColor: sc===0 ? '#166534' : (sc>0 ? '#92400e' : '#b91c1c'),
+        saldoPesoColor: sp===0 ? '#166534' : ((sc>0 && sp>0) ? '#92400e' : '#b91c1c'),
+        status:status, pillBg:T.bg, pillFg:T.fg, hasDiff:hasDiff, noDiff:!hasDiff, diff:(sp>0?'+':'')+self.f2(sp),
+        levTxt: nl===1 ? '1 levante' : nl+' levantes',
+        expanded:exp, expandedAttr: exp ? 'true' : 'false', chevron: exp ? 'rotate(90deg)' : 'none', rowBg: exp ? '#f8fbff' : '#ffffff',
+        toggleLabel:(exp?'Contraer ':'Expandir ')+'levantes de '+dp.id, toggle:function(){ self.toggle(dp.id); },
+        products:products } };
+    });
+    var q=s.q.trim().toLowerCase();
+    var byQ=all.filter(function(x){ return !q || x.text.indexOf(q)>=0; });
+    var count=function(k){ return byQ.filter(function(x){ return (k==='all' || x.key===k) && (!s.onlyDiff || x.diff); }).length; };
+    var shown=byQ.filter(function(x){ return (s.filter==='all' || x.key===s.filter) && (!s.onlyDiff || x.diff); });
+    var chips=[['all','Todos'],['none','Sin nacionalizar'],['partial','Parcial'],['done','Nacionalizados']].map(function(c){
+      var on=s.filter===c[0];
+      return { label:c[1], count:String(count(c[0])), pressed:on?'true':'false', bg:on?'#ffffff':'transparent', fg:on?'#0f172a':'#334155', shadow:on?'0 1px 2px rgba(15,23,42,.15)':'none', pick:function(){ self.setState({ filter:c[0] }); } };
+    });
+    return {
+      q:s.q, onQ:function(e){ self.setState({ q:e.target.value }); }, chips:chips,
+      diffPressed:s.onlyDiff?'true':'false', toggleDiff:function(){ self.setState({ onlyDiff:!s.onlyDiff }); },
+      diffBg:s.onlyDiff?'#fef2f2':'#ffffff', diffFg:s.onlyDiff?'#991b1b':'#334155', diffBorder:s.onlyDiff?'#fca5a5':'#cbd5e1',
+      deps:shown.map(function(x){ return x.view; }), noResults:shown.length===0, shown:shown.length, total:all.length
+    };
+  }
+}
+</script>
+</body>
+</html>
