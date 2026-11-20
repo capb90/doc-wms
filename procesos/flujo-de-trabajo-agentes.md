@@ -26,8 +26,8 @@ Todo cambio que no sea trivial empieza con un **plan cerrado y sin ambigüedades
 
 ## 3. Implementación por fases
 
-- Se trabaja en `develop` de los dos repos, **sin ramas** (`DEC-003`).
-- **El agente no ejecuta `git add`, `git commit`, `git push` ni `git merge`.** Al cerrar cada fase se detiene con un resumen y el usuario hace el commit. Para borrar archivos usa `rm`, no `git rm`.
+- En la fase 2 se trabaja con ramas (`DEC-081`): `fase-2` en cada repo de código y una rama `f2/fNN-<tema>` por feature. El resto de los cambios sale de `develop` en su propia rama y vuelve a `develop`.
+- El agente hace commit al cerrar cada fase, push de su rama y las fusiones que fija el plan maestro de la fase 2 §5.3. `fase-2` pasa a `develop` solo después de la QA del usuario.
 - Una fase a la vez, en el orden del plan. Cada fase parte del código que dejó la anterior.
 - Si el texto del plan choca con una de sus decisiones en un caso borde, gana la decisión. Se aplica y se menciona en una línea, sin pedir aprobación (`DEC-002`).
 - Los defectos bloqueantes que aparezcan se corrigen antes de pasar a la fase siguiente.

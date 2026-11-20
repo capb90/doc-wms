@@ -23,7 +23,7 @@
 
 **DEC-002 — Las decisiones del plan mandan** (2026-09-15). Si el texto de un plan choca con una de sus decisiones `Dn` en un caso borde, gana la decisión. Se aplica y se menciona en una línea, sin pedir aprobación. Solo se pregunta lo que ninguna decisión resuelve. *Por qué:* reabrir un punto que una decisión cubre cuesta una ronda.
 
-**DEC-003 — `develop`, sin ramas y sin commits del agente** (2026-09-17). Se trabaja en `develop` de los dos repos. El agente no crea ramas ni ejecuta `git add`, `commit`, `push` o `merge`. Se detiene al final de cada fase y el usuario hace el commit. *Por qué:* el usuario revisa fase por fase con sus propios commits; la Ola 1 usó ramas y PR, y no quiere repetirlo.
+**DEC-003 — `develop`, sin ramas y sin commits del agente** (2026-09-17). Se trabaja en `develop` de los dos repos. El agente no crea ramas ni ejecuta `git add`, `commit`, `push` o `merge`. Se detiene al final de cada fase y el usuario hace el commit. *Por qué:* el usuario revisa fase por fase con sus propios commits; la Ola 1 usó ramas y PR, y no quiere repetirlo. *Ramas y commits del agente, reemplazados por `DEC-081` para la fase 2.*
 
 **DEC-004 — Migraciones con `dotnet ef`, por el agente** (2026-10-04; reemplaza la regla anterior de que las generaba el usuario). El agente genera, aplica, revierte o elimina migraciones y recrea la base **local** solo con comandos `dotnet ef`. Nunca edita a mano los archivos generados ni usa SQL manual. Staging y producción, solo con aprobación del usuario. *Por qué:* el historial anterior acumuló migraciones con nombres engañosos y una migración inválida; el 2026-10-01 se consolidó todo en `InitialParityLegacy`.
 
@@ -111,10 +111,10 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 
 **DEC-027 — Tarifa base por producto y modalidad** (2026-07). Cuando no hay convenio, la tarifa sale de `ServicePricingRule`, espejo de `AgreementService`. «Tipo de depósito» es `OperationModality`, no un concepto aparte. El cálculo existe una sola vez.
 
-**DEC-028 — Cantidad facturable en el recálculo** (2026-10-06, DEF-F11-017). El recálculo cobra el stock más las salidas netas por cargue desde que el período tomó su stock (`StorageBillableQuantity`), no el stock actual.
+**DEC-028 — Cantidad facturable en el recálculo** (2026-10-06, DEF-F11-017). El recálculo cobra el stock más las salidas netas por cargue desde que el período tomó su stock (`StorageBillableQuantity`), no el stock actual. *Precisada por `DEC-081`: las salidas se cuentan por guía emitida.*
 
 **DEC-029 — FOB, CIF y tarifas del almacenamiento por porcentaje** (2026-10-25). Respuestas del usuario a las 10 decisiones del §7 de `analisis/analisis-fob-cif-legacy-v2-2026-10-24.md`. Precisa `DEC-025` y `DEC-041`. Lo marcado **«Se construye»** necesita plan cerrado (`DEC-001`).
-- **Base del cobro: el FOB del ingreso** (§7.1). El porcentaje se cobra sobre el valor que se captura en el depósito, que en los migrados es `ingreso.preciomercancia` (FOB). No se captura el CIF al ingreso. *Por qué:* el historial no distingue las bases (0,7 % de diferencia), el CIF no se conoce al ingreso y los porcentajes se calibran sobre lo que ya está en los datos.
+- **Base del cobro: el FOB del ingreso** (§7.1). El porcentaje se cobra sobre el valor que se captura en el depósito, que en los migrados es `ingreso.preciomercancia` (FOB). No se captura el CIF al ingreso. *Por qué:* el historial no distingue las bases (0,7 % de diferencia), el CIF no se conoce al ingreso y los porcentajes se calibran sobre lo que ya está en los datos. *Precisada por `DEC-081` para la fórmula «descargada o sobre vehículo».*
 - **El levante es CIF, como en el legacy** (§7.2). **Se construye.** El valor del levante se pide y se rotula «CIF» en el formulario, los listados, el detalle del depósito, el kárdex y la póliza («CIF UAP» y «CIF no UAP»). La póliza se liquida sobre ese CIF. Se corrige la premisa «el legacy rotula CIF pero suma el FOB» de `PolicySummaryCalculator` y `pages/reports/policies.vue`. Los datos migrados no cambian: `levante.fob_dolares` ya es el CIF. Los nombres de columna (`FobUsd`, `FobCop`) se pueden conservar. *El rótulo «CIF», reemplazado por `DEC-080` (AF-81).*
 - **El depósito guarda un solo valor, con nombre neutro** (§7.3). **Se construye** (solo textos). Se rotula «Valor de la mercancía» en captura, detalle, fórmula, umbral, glosario y textos de facturación. Se documenta que equivale al FOB del ingreso. Desaparecen «Valor Comercial», «Valor declarado», «Umbral CIF» y «CIF» referidos al depósito. Sin campo nuevo ni migración.
 - **El valor solo se corrige en Borrador** (§7.4). Se mantiene como hoy: CE devuelve el depósito a Borrador y la factura del período se recalcula (`DEC-056`). *Reemplazada por `DEC-080` (AF-76).*
@@ -265,3 +265,12 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Precisa:** `DEC-010` (2) (AF-77), `DEC-053` BR-06-003 (AF-109) y `DEC-057` H3 (AF-09, AF-41).
 - **También cambia:** P16 del plan de paridad, CHG-36 del plan de corrección, lo construido para `DEC-014` en BAS-07 y la regla de WMS-29 de `contexto-negocio-wms-para-ia.md` §5.11 (sección 5 del análisis).
 - **Fuente:** el usuario, sección por sección (AF-55, AF-71, AF-103, AF-126 y AF-137).
+
+**DEC-081 — Implementación de la fase 2** (2026-11-20). Respuestas del usuario a la ronda del plan maestro (`planes/plan-maestro-implementacion-fase-2-2026-11-20.md`, M6 a M24).
+- **Ramas** (reemplaza a `DEC-003` en lo de las ramas y los commits). En cada repo de código, `fase-2` sale de `develop`; cada feature trabaja en `f2/fNN-<tema>` y vuelve a `fase-2` al cerrar su integración. `develop` refleja staging y recibe las correcciones urgentes. El agente crea las ramas, hace commit y push, y fusiona; `fase-2` pasa a `develop` solo después de la QA del usuario sobre `fase-2`. Desplegar en staging sigue pidiendo el «sí» del usuario (`DEC-006`).
+- **Un agente por repo a la vez.** El back y el front de una feature van en paralelo; la integración ocupa los dos.
+- **Despliegue por grupos:** G1 (F01 a F06) en un solo despliegue, con staging recreado y cargado otra vez desde el legacy con la herramienta adaptada (segunda excepción a `DEC-006`, como `DEC-043`); después, una feature por despliegue.
+- **Cantidad facturable por guía** (precisa `DEC-028`, `DEC-053` BR-06-005 y `DEC-055`): cuenta las salidas que bajaron el stock al emitir la guía, o al confirmar una salida de inspección, y resta las anulaciones de guía.
+- **Fórmula «descargada o sobre vehículo»** (precisa `DEC-029` §7.1 para esa fórmula): el % va sobre el precio de cada camión descargado (AF-120), no sobre el valor CPI.
+- **La salida en Borrador reserva stock** (precisa AF-30): lo disponible para otra salida ya descuenta lo que reservan las salidas en Borrador; confirmar emite la guía y descuenta el stock (AF-36).
+- **Fuente:** el usuario, en la sesión del 2026-11-20.

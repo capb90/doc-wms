@@ -54,12 +54,12 @@ Si el código contradice una decisión, no «corrijas» ninguno de los dos sin p
 - Todo documento de estado lleva fecha de corte y los commits BE/FE a los que se refiere.
 - **Sin secretos ni datos de personas reales.** Las credenciales se citan por su ruta (`contexto/mapa-de-fuentes.md` §6). Los informes usan códigos, números de depósito y conteos. `.gitignore` excluye `*.local.*`, `.env*` y `credenciales*`.
 - Al cerrar un trabajo, actualiza `contexto/estado.md`, `planes/README.md` y, si hubo una decisión nueva, `contexto/decisiones.md`.
-- Los commits los hace el usuario (`DEC-003`).
+- Este repo trabaja en `main`, sin ramas. El agente hace commit y push de los documentos de su fase (`DEC-081`; `planes/plan-maestro-implementacion-fase-2-2026-11-20.md` §5.3).
 
 ## Repos relacionados
 
 | Repo | Ruta | Rama |
 | --- | --- | --- |
-| API .NET | `code_workspace/Backend/wms-api` | `develop` |
-| SPA Nuxt | `code_workspace/Frontend/wms` | `develop` |
+| API .NET | `code_workspace/Backend/wms-api` | `develop`; la fase 2, en `fase-2` (`DEC-081`) |
+| SPA Nuxt | `code_workspace/Frontend/wms` | `develop`; la fase 2, en `fase-2` (`DEC-081`) |
 | Legacy PHP | `code_workspace/bodegas-legacy` | — |

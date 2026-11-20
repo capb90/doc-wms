@@ -3,7 +3,7 @@
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/Backend/wms-api` y agrega `docs` como directorio adicional.
 > 2. Copia el bloque de abajo.
-> 3. Al terminar, el agente entrega el resumen y los mensajes de commit. Tú haces los commits (`DEC-003`).
+> 3. Al terminar, el agente hace commit y push de su rama, te avisa para tu QA y, con tu visto bueno, la fusiona en `develop` (`DEC-081`).
 > 4. Este prompt cubre solo la fase 1. La fase 2 (staging) se pide aparte, en una sesión con el plan abierto y con tu «sí» en cada paso (`DEC-006`).
 >
 > **Plan:** `docs/planes/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`, aprobado el 2026-11-05.
@@ -20,7 +20,7 @@ Eres el ejecutor de la fase indicada arriba del plan cerrado «Correos de notifi
 
 ## Rutas
 - Raíz: /Volumes/Dock/Projects/bodegas_asociadas/code_workspace. Las rutas son relativas a ella.
-- Backend: Backend/wms-api (rama develop). Hub de documentación: docs/ (rama main).
+- Backend: Backend/wms-api (rama p0/correos-por-rol, desde develop). Hub de documentación: docs/ (rama main).
 
 ## Lee primero
 1. docs/README.md y Backend/wms-api/AGENTS.md.
@@ -42,7 +42,7 @@ Sigue el orden de §3, «Fase 1»:
 - No hay migración. No cambies permisos ni frontend. No toques el aviso de respaldo fallido (N4) ni los métodos tipados (N8).
 - Errores de negocio y mensajes en español; las reglas se extraen a clases puras y se prueban en Wms.Tests.
 - No abras .env*, deploy/staging/.env.* ni infra/terraform.tfvars. No imprimas credenciales.
-- Git: trabajas en develop (BE) y main (docs), sin ramas. NO ejecutes git add, commit, push ni merge. Para borrar usa rm.
+- Git: trabaja en la rama `p0/correos-por-rol`, que sale de `develop` (BE), y en `main` de docs. Al cerrar la fase 1, commit y push de la rama; avisa al usuario para su QA y, con su visto bueno, fusiona en `develop` con `--no-ff` y haz push. La fase 2 (staging) sigue pidiendo el «sí» del usuario en cada acción. Para borrar usa rm.
 - Staging y su despliegue NO son de esta fase.
 
 ## Criterio de salida
@@ -55,6 +55,6 @@ Sigue el orden de §3, «Fase 1»:
 Al terminar, detente con:
 1. Un resumen de lo hecho y de las cifras de pruebas.
 2. Lo que no pudiste verificar.
-3. Los mensajes de commit propuestos, uno por repo (BE y docs), tomados de §6 del plan.
+3. Los commits hechos, uno por repo (BE y docs), con los mensajes de §6 del plan, y el aviso para la QA del usuario antes de fusionar en develop.
 4. Recuerda que el efecto en facturación (R1) y el correo de cada Admin de staging se confirman antes de la fase 2.
 ```
