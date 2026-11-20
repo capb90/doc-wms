@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fase 2 · Transversales</title>
+<link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<h1>Fase 2 · Transversales — wireframes</h1>
+<p class="muted">Baja fidelidad: qué va dónde y qué campos lleva. Datos ficticios. Documento: <code>../fase_2-analisis-funcional-2026-11-19.md</code> §3. Las pantallas de tasa, edición del ingreso y salidas de los módulos están en sus propios wireframes.</p>
+<p class="toc"><a href="#P-TR-01">01 Menú por rol</a><a href="#P-TR-02">02 Patrón de listado</a><a href="#P-TR-03">03 Modal y drawer</a><a href="#P-TR-04">04 Motivos de ingreso</a><a href="#P-TR-05">05 Prefijos</a><a href="#P-TR-06">06 Tasas de cambio</a><a href="#P-TR-07">07 Notificaciones</a><a href="#P-TR-08">08 Umbrales de alertas</a><a href="#P-TR-09">09 Cobro</a><a href="#P-TR-10">10 Login y sidebar</a><a href="#P-TR-11">11 Selector con búsqueda</a><a href="#P-TR-12">12 Corregir salida o solo pesaje</a></p>
+
+<section class="screen" id="P-TR-01">
+<h2>P-TR-01 · Menú por rol (propuesta)</h2>
+<div class="layout">
+<div>
+<table>
+<tr><th>Sección</th><th>Ítems (un solo nivel; los grupos son los acordados)</th><th>Roles</th></tr>
+<tr><td>Notificaciones</td><td>Notificaciones</td><td>Todos</td></tr>
+<tr><td>Dashboards</td><td>Trazabilidad</td><td>Admin, CE</td></tr>
+<tr><td>Vigilancia</td><td>Ingreso · Salida · Historial</td><td>Admin, Vigilancia</td></tr>
+<tr><td>Báscula</td><td>Dashboard · Proceso de pesaje · Historial ▸ Entradas, Salidas, Solo báscula</td><td>Admin, Báscula</td></tr>
+<tr><td>Bodega</td><td>Dashboard · Entradas ▸ Recepción, Historial · Salidas ▸ Órdenes de salida, Historial · Montacargas · Inventario · Novedades</td><td>Admin, Bodega</td></tr>
+<tr><td>Comercio Exterior</td><td>Dashboard · Depósitos ▸ Importación, Exportación, Inspección · Tickets de ingreso · Levantes · Salidas · Abandono y prórrogas · Listas de empaque</td><td>Admin, CE</td></tr>
+<tr><td>Facturación</td><td>Dashboard · Facturas · Depósitos pendientes · Pagos</td><td>Admin, Facturación</td></tr>
+<tr><td>Reportes</td><td>Cada reporte visible para los roles que lo usan (ver nota)</td><td>Según el reporte</td></tr>
+<tr><td>Tarifas y acuerdos</td><td>Acuerdos · Configuración de facturación · Tarifas de servicios · Tarifas de montacargas</td><td>Admin, Facturación</td></tr>
+<tr><td>Configuración</td><td>Terceros · Productos · Tipos de embalaje · Tipos de unidad de carga · Servicios · Conductores · Vehículos · Motivos de ingreso · Ubicaciones · Ciudades · Cuadrillas · Prefijos · Tasas de cambio · Parámetros</td><td>Admin, CE, Facturación (prefijos: Admin y CE; parámetros: Admin)</td></tr>
+<tr><td>Administración</td><td>Usuarios · Auditoría · Notificaciones · Umbrales de alertas</td><td>Admin</td></tr>
+<tr><td>Ayuda</td><td>Centro de ayuda</td><td>Todos</td></tr>
+</table>
+<div class="note">Reportes: Reporte de báscula (Báscula) · Diario de ingresos, Diario de salidas, Mercancía en abandono, Salidas a destino de abandono, Ingresos por producto, Ingresos por agencia, Inventario nacionalizado (CE) · Movimientos por depósito (CE, Facturación) · Inventario general (Bodega, CE, Facturación) · Póliza (CE, Facturación) · Cobros por servicio, Facturación por CPI, Facturación anual (Facturación).</div>
+</div>
+<div class="side">
+ <div class="box"><strong>Sidebar · usuario CE</strong>
+  <p>Notificaciones<br>Dashboards ▸ Trazabilidad<br><strong>Comercio Exterior</strong><br>&nbsp;· Dashboard<br>&nbsp;· Depósitos ▾<br>&nbsp;&nbsp;&nbsp;Importación<br>&nbsp;&nbsp;&nbsp;Exportación<br>&nbsp;&nbsp;&nbsp;Inspección<br>&nbsp;· Tickets de ingreso<br>&nbsp;· Levantes<br>&nbsp;· Salidas<br>&nbsp;· Abandono y prórrogas<br>&nbsp;· Listas de empaque<br><strong>Reportes</strong> ▸ (los de CE)<br><strong>Configuración</strong> ▸ (sin parámetros)<br>Ayuda</p>
+ </div>
+</div>
+</div>
+<div class="note">PR-28 aprobada; menú propuesto por mí (AF-127). Salen «Terceros» de CE y «Clientes» y «Configuraciones» de Facturación; salen «Órdenes de cargue», «Guías de salida» (AF-97) y «Unidades de medida» (AF-22). Vigilancia, Báscula y Bodega no entran a Configuración, pero conservan el «+» de alta rápida en sus formularios (DEC-005).</div>
+</section>
+
+<section class="screen" id="P-TR-02">
+<h2>P-TR-02 · Patrón de listado (ejemplo: Configuración › Conductores)</h2>
+<div class="box"><div class="row"><div class="field"><span>Estado</span><div class="in sel">Activos</div></div><span class="muted">Tarjeta de filtros globales: solo si la página los necesita (RV-06)</span></div></div>
+<div class="box">
+ <div class="head"><span><span class="btn pri">+ Nuevo conductor</span> <span class="btn">Exportar</span></span><span class="muted">Barra de la tabla (RV-04)</span></div>
+ <table>
+ <tr><th>Documento ↕</th><th>Nombre ↕</th><th>Empresa de transporte ↕</th><th>Teléfono</th><th>Estado</th><th>Acciones</th></tr>
+ <tr class="flt"><td>documento</td><td>nombre</td><td>empresa</td><td></td><td>lista</td><td></td></tr>
+ <tr><td>1000001</td><td>Conductor 1</td><td>Transportes Ejemplo</td><td>300 000 0001</td><td><span class="tag">Activo</span></td><td><span class="btn">Ver</span> <span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+ <tr><td>1000002</td><td>Conductor 2</td><td>Transportes Muestra</td><td>300 000 0002</td><td><span class="tag">Activo</span></td><td><span class="btn">Ver</span> <span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+ </table>
+ <div class="row"><span class="muted">1–2 de 2</span><span class="f"></span><span class="btn">‹</span><span class="btn">1</span><span class="btn">›</span></div>
+</div>
+<div class="note">Sin tarjeta de título ni subtítulo (AF-129; reabre DEC-058). Filtros por columna (RV-05) y orden ↕, en el servidor si es paginado. Acciones solo con botones; la fila no abre nada al hacer clic (H-004). Ningún botón de solo texto (AF-99).</div>
+</section>
+
+<section class="screen" id="P-TR-03">
+<h2>P-TR-03 · CRUD en modal y detalle en drawer</h2>
+<div class="layout2">
+ <div class="modal">
+  <div class="head"><strong>Nueva ubicación</strong><span class="btn">✕</span></div>
+  <div class="layout2">
+   <div><div class="field req"><span>Bodega</span><div class="in sel">BOD-02</div></div><div class="field req"><span>Código</span><div class="in">A-14</div></div><div class="field"><span>Pasillo</span><div class="in">A</div></div></div>
+   <div><div class="field req"><span>Capacidad</span><div class="in">1 200</div></div><div class="field"><span>Tipo</span><div class="in sel">Piso</div></div><div class="field"><span>Observaciones</span><div class="in">&nbsp;</div></div></div>
+  </div>
+  <div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="btn pri">Guardar</span></div>
+  <div class="note">Modal a dos columnas en lugar del modal largo de hoy (AF-130).</div>
+ </div>
+ <div class="drawer">
+  <div class="head"><strong>Conductor 1 · CC 1000001</strong><span class="btn">✕</span></div>
+  <div class="row"><div class="field f"><span>Empresa de transporte</span><div class="in ro">Transportes Ejemplo</div></div><div class="field f"><span>Teléfono</span><div class="in ro">300 000 0001</div></div></div>
+  <div class="box"><h3>Últimos ingresos</h3><table><tr><th>Fecha</th><th>Placa</th><th>Tiquete</th></tr><tr><td>18/11/2026</td><td>ABC123</td><td>T-48211</td></tr></table></div>
+  <span class="btn">✎ Editar</span>
+  <div class="note">Detalle en drawer sobre el listado, como MK-07 (AF-130).</div>
+ </div>
+</div>
+<div class="note">Regla: catálogos en modal; detalle en drawer; formularios de operación largos en página propia; modal con mucho scroll → dos columnas (como MK-08) o página. Clasificación de los modales grandes en §3.3.</div>
+</section>
+
+<section class="screen" id="P-TR-04">
+<h2>P-TR-04 · Configuración › Motivos de ingreso</h2>
+<div class="head"><span><span class="btn pri">+ Nuevo motivo</span> <span class="btn">Exportar</span></span></div>
+<table>
+<tr><th>Motivo ↕</th><th>Categoría ↕</th><th>Estado</th><th>Acciones</th></tr>
+<tr class="flt"><td>motivo</td><td>lista</td><td>lista</td><td></td></tr>
+<tr><td>Descargue de importación</td><td><span class="tag">Ingreso</span></td><td>Activo</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+<tr><td>Cargue de mercancía</td><td><span class="tag">Salida</span></td><td>Activo</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+<tr><td>Pesaje particular</td><td><span class="tag">Solo báscula</span></td><td>Activo</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+</table>
+<div class="modal" style="max-width:420px"><div class="head"><strong>Editar motivo</strong><span class="btn">✕</span></div>
+ <div class="field req"><span>Motivo</span><div class="in">Descargue de importación</div></div>
+ <div class="field req"><span>Categoría</span><div class="row"><span class="radio on">Ingreso</span><span class="radio">Salida</span><span class="radio">Solo báscula</span></div></div>
+ <div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="btn pri">Guardar</span></div></div>
+<div class="note">La categoría decide qué formulario abre Báscula y reemplaza el selector de tipo de operación (AF-08, PR-02).</div>
+</section>
+
+<section class="screen" id="P-TR-05">
+<h2>P-TR-05 · Configuración › Prefijos</h2>
+<table>
+<tr><th>Campo</th><th>Prefijo</th><th>Ejemplo al digitar</th><th>Acciones</th></tr>
+<tr><td>N.º de levante</td><td>4820260</td><td>4820260<strong>001234</strong></td><td><span class="btn">✎</span></td></tr>
+<tr><td>N.º de aceptación</td><td>9120260</td><td>9120260<strong>005678</strong></td><td><span class="btn">✎</span></td></tr>
+<tr><td>Manifiesto DIAN</td><td>1120260</td><td>1120260<strong>009012</strong></td><td><span class="btn">✎</span></td></tr>
+</table>
+<div class="note">Un prefijo por campo; el campo llega con él y el operario lo completa o lo cambia en ese registro (AF-79). Admin y CE (AF-128).</div>
+</section>
+
+<section class="screen" id="P-TR-06">
+<h2>P-TR-06 · Configuración › Tasas de cambio</h2>
+<div class="head"><span><span class="btn pri">+ Nueva tasa</span> <span class="btn">Exportar</span></span></div>
+<table>
+<tr><th>Desde ↕</th><th>Hasta</th><th>Valor (COP por USD)</th><th>Registrada por</th><th>Acciones</th></tr>
+<tr class="flt"><td>rango</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>16/11/2026</td><td>22/11/2026</td><td>4 050,00</td><td>Usuario CE 1</td><td><span class="btn">✎</span></td></tr>
+<tr><td>09/11/2026</td><td>15/11/2026</td><td>4 080,00</td><td>Usuario Facturación 1</td><td><span class="btn">✎</span></td></tr>
+<tr><td>02/11/2026</td><td>08/11/2026</td><td>4 110,00</td><td>Usuario CE 1</td><td><span class="btn">✎</span></td></tr>
+</table>
+<div class="note">Tasa semanal manual y compartida, sin DIAN (AF-85; reabre DEC-023). La registran CE, Facturación o Admin (AF-86). El levante precarga la de la semana de su fecha; la factura del período, la de la semana de ingreso. Semana sin tasa: se usa la última registrada, con aviso; al registrarla se recalcula la factura en Borrador (AF-136). Corregir una tasa no cambia los levantes ya registrados.</div>
+</section>
+
+<section class="screen" id="P-TR-07">
+<h2>P-TR-07 · Administración › Notificaciones</h2>
+<table>
+<tr><th>Notificación ↕</th><th>Módulo</th><th>Roles que la reciben</th><th>También por correo</th></tr>
+<tr class="flt"><td>nombre</td><td>lista</td><td></td><td></td></tr>
+<tr><td>Modificación de peso o repesaje</td><td>Báscula</td><td><span class="in sel">Admin, Báscula</span></td><td><span class="sw off"></span></td></tr>
+<tr><td>Atraso de Bodega (amarillo y rojo)</td><td>Bodega</td><td><span class="in sel">Admin, Bodega</span></td><td><span class="sw"></span></td></tr>
+<tr><td>Camión tardío en depósito confirmado</td><td>CE</td><td><span class="in sel">CE</span></td><td><span class="sw off"></span></td></tr>
+<tr><td>Cambio de placa o conductor en salida con guía</td><td>CE</td><td><span class="in sel">CE</span></td><td><span class="sw off"></span></td></tr>
+<tr><td>Semana sin tasa registrada</td><td>Configuración</td><td><span class="in sel">CE, Facturación</span></td><td><span class="sw"></span></td></tr>
+<tr><td>Factura de almacenamiento con advertencia</td><td>Facturación</td><td><span class="in sel">Facturación</span></td><td><span class="sw off"></span></td></tr>
+</table>
+<div class="row"><span class="f"></span><span class="btn pri">Guardar</span></div>
+<div class="note">Una fila por tipo de notificación; arranca con los roles y el canal de hoy (AF-133). Solo el Admin (AF-128). En la imagen, H-078: el repesaje llega también a Báscula.</div>
+</section>
+
+<section class="screen" id="P-TR-08">
+<h2>P-TR-08 · Administración › Umbrales de alertas</h2>
+<table>
+<tr><th>Registro vigilado</th><th>Cuenta desde</th><th>Amarillo a los</th><th>Rojo a los</th></tr>
+<tr><td>Recepción (por entrada)</td><td>El pesaje</td><td><span class="in">30 min</span></td><td><span class="in">60 min</span></td></tr>
+<tr><td>Cargue (por número de depósito y consolidada)</td><td>La guía</td><td><span class="in">45 min</span></td><td><span class="in">90 min</span></td></tr>
+<tr><td>Salida de patio (por tiquete y global)</td><td>La guía</td><td><span class="in">30 min</span></td><td><span class="in">60 min</span></td></tr>
+</table>
+<div class="row"><span class="f"></span><span class="btn pri">Guardar</span></div>
+<div class="note">Dos umbrales por registro vigilado (AF-57); valores de ejemplo: los iniciales los da el cliente. La fila de Bodega se pinta y se envía «Atraso de Bodega» al cruzar cada umbral (P-TR-07).</div>
+</section>
+
+<section class="screen" id="P-TR-09">
+<h2>P-TR-09 · Formulario de cobro (báscula, montacargas y guía)</h2>
+<div class="layout2">
+ <div class="box"><h3>Con efectivo</h3>
+  <div class="row"><div class="field req f"><span>Método de pago</span><div class="in sel">Efectivo</div></div><div class="field f"><span>Total</span><div class="in ro">$ 45 000</div></div></div>
+  <span class="btn pri">Cobrar</span>
+ </div>
+ <div class="box"><h3>Con otro método</h3>
+  <div class="row"><div class="field req f"><span>Método de pago</span><div class="in sel">Transferencia</div></div><div class="field f"><span>Referencia</span><div class="in">TRF-558120</div></div><div class="field f"><span>Total</span><div class="in ro">$ 45 000</div></div></div>
+  <span class="btn pri">Cobrar</span>
+ </div>
+</div>
+<div class="note">Solo la parte de pago del formulario; destinatarios y modo de pago como en P-BAS-05. Método precargado en «Efectivo»; «Referencia» solo con otro método; sale «Nota» (AF-132). Facturación conserva los tres en su registro de pagos (P-FAC-06).</div>
+</section>
+
+<section class="screen" id="P-TR-10">
+<h2>P-TR-10 · Login y sidebar con varios roles</h2>
+<div class="layout2">
+ <div class="modal" style="max-width:320px"><strong>Iniciar sesión</strong>
+  <div class="field"><span>Usuario</span><div class="in">usuario.ejemplo</div></div>
+  <div class="field"><span>Contraseña</span><div class="row"><div class="in f">••••••••</div><span class="btn">👁</span></div></div>
+  <span class="btn pri">Ingresar</span>
+  <div class="note">Botón de ver contraseña (PR-31).</div>
+ </div>
+ <div class="box" style="max-width:260px">
+  <div class="row"><div class="in ro" style="width:36px;height:36px">AV</div><div><strong>Usuario Ejemplo</strong><br><span class="tag">CE</span> <span class="tag">Facturación</span><br><span class="tag">Bodega</span></div></div>
+  <div class="note">Los roles pasan a otra línea; el avatar no se corta (H-079).</div>
+ </div>
+</div>
+<div class="note">Además: el switch de tema responde al clic sobre él (H-080) y el encabezado del modal no tapa las alertas (H-081).</div>
+</section>
+
+<section class="screen" id="P-TR-11">
+<h2>P-TR-11 · Selector de lista grande con búsqueda</h2>
+<div class="row"><div class="field f"><span>Importador</span><div class="in sel">Buscar por nombre o NIT…</div></div><span class="btn">+</span></div>
+<div class="box" style="max-width:420px">
+ <div class="in">impor</div>
+ <table><tr><td>Importador X SAS · NIT 900000010</td></tr><tr><td>Importadora Muestra · NIT 900000011</td></tr><tr><td>Importaciones Ejemplo · NIT 900000012</td></tr></table>
+ <span class="muted">Mostrando 3 de 27 · desplace para cargar más</span>
+</div>
+<div class="note">Búsqueda y paginación en el servidor para terceros, productos, conductores, vehículos y depósitos (PR-27). «+» de alta rápida al lado (AF-54, AF-92). Etiqueta encima del campo (AF-131).</div>
+</section>
+
+<section class="screen" id="P-TR-12">
+<h2>P-TR-12 · Corregir una salida o un solo pesaje (desde el historial)</h2>
+<div class="modal">
+ <div class="head"><strong>Corregir · Tiquete 2026T00050 · Salida 0040</strong><span class="tag">Completado</span><span class="btn">✕</span></div>
+ <div class="row"><div class="field f"><span>Placa</span><div class="in">GHI321</div></div><div class="field f"><span>Conductor</span><div class="in sel">Conductor 5 · CC 1000005</div></div><span class="btn">+</span><div class="field f"><span>Transportadora</span><div class="in sel">Transportes Ejemplo</div></div><span class="btn">+</span></div>
+ <div class="row"><div class="field f"><span>Fecha y hora</span><div class="in">11/11/2026 08:10</div></div><div class="field f"><span>Peso vehículo</span><div class="in">12 500</div></div><div class="field f"><span>Peso al salir</span><div class="in">21 500</div></div><div class="field f"><span>Peso mercancía</span><div class="in ro">9 000</div></div></div>
+ <div class="field req"><span>Motivo de la corrección</span><div class="in">Placa digitada con error en Vigilancia</div></div>
+ <div class="note">La salida tiene la guía G-7712: al cambiar placa o conductor se avisa a CE para reemitirla (AF-34).</div>
+ <div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="btn pri">Guardar corrección</span></div>
+</div>
+<div class="note">Se abre con «Editar» en P-BAS-09 y P-BAS-10, también con el ciclo cerrado (AF-135, H-084). En solo pesaje, en lugar de transportadora va «Tercero». Queda en la auditoría y avisa según P-TR-07.</div>
+</section>
+</body>
+</html>

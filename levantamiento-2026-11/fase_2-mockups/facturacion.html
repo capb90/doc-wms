@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fase 2 · Facturación</title>
+<link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<h1>Fase 2 · Facturación — wireframes</h1>
+<p class="muted">Baja fidelidad: qué va dónde y qué campos lleva. Datos ficticios. Documento: <code>../fase_2-analisis-funcional-2026-11-19.md</code> §2.4. El lugar de cada ítem en el menú y la sección «Tarifas y acuerdos» se definen en §3.2 (PR-28).</p>
+<p class="toc"><a href="#P-FAC-01">01 Facturas › Báscula</a><a href="#P-FAC-02">02 Otras pestañas</a><a href="#P-FAC-03">03 Detalle</a><a href="#P-FAC-04">04 Facturar</a><a href="#P-FAC-05">05 Corregir SIGO</a><a href="#P-FAC-06">06 Pago completo</a><a href="#P-FAC-07">07 Depósitos pendientes</a><a href="#P-FAC-08">08 Cobros por servicio</a><a href="#P-FAC-09">09 Por CPI</a><a href="#P-FAC-10">10 Anual</a><a href="#P-FAC-11">11 Configuración del cliente</a><a href="#P-FAC-12">12 Acuerdo del cliente</a><a href="#P-FAC-13">13 Agregar tarifa</a><a href="#P-FAC-14">14 Importar plantilla</a></p>
+
+<section class="screen" id="P-FAC-01">
+<h2>P-FAC-01 · Facturas › Báscula (/billing/invoices)</h2>
+<div class="head"><strong>Facturas</strong><span class="muted">Estado: <span class="in sel" style="display:inline-block;min-width:120px">Todos</span></span></div>
+<div class="steps"><span class="cur">Báscula</span><span>Guía de salida</span><span>Montacargas</span><span>Almacenamiento</span></div>
+<table>
+<tr><th>N.º factura (SIGO) ↕</th><th>Tiquete ↕</th><th>Fecha y hora ↕</th><th>Modalidad</th><th>Placa</th><th>Conductor</th><th>Bruto</th><th>Tara</th><th>Neto</th><th>Valor ↕</th><th>Destinatario</th><th>Estado</th><th>Saldo</th><th>Acciones</th></tr>
+<tr class="flt"><td>número</td><td>tiquete</td><td>desde–hasta</td><td>lista</td><td>placa</td><td>nombre</td><td></td><td></td><td></td><td></td><td>nombre o NIT</td><td>lista</td><td></td><td></td></tr>
+<tr><td>Pendiente</td><td>T-48211</td><td>18/11/2026 07:42</td><td>Importación</td><td>ABC123</td><td>Conductor 1</td><td>32 400</td><td>14 200</td><td>18 200</td><td>$ 45 000</td><td>Cliente A</td><td><span class="tag">Borrador</span></td><td>$ 45 000</td><td><span class="btn pri">Facturar</span> <span class="btn">Ver</span></td></tr>
+<tr><td>FE-10233</td><td>T-48207</td><td>18/11/2026 07:10</td><td>Solo báscula</td><td>XYZ987</td><td>Conductor 2</td><td>21 000</td><td>9 800</td><td>11 200</td><td>$ 45 000</td><td>Consumidor final</td><td><span class="tag">Pagada</span></td><td>$ 0</td><td><span class="btn">Ver</span></td></tr>
+<tr><td>FE-10229</td><td>T-48190</td><td>17/11/2026 16:55</td><td>Exportación</td><td>KLM456</td><td>Conductor 3</td><td>28 600</td><td>13 100</td><td>15 500</td><td>$ 45 000</td><td>Cliente B</td><td><span class="tag">Enviada</span></td><td>$ 45 000</td><td><span class="btn">Pago completo</span> <span class="btn">Ver</span></td></tr>
+</table>
+<div class="row"><span class="muted">Filtros adicionales por columna en el panel: carta porte, N.º de depósito, cliente, SIGO.</span></div>
+<div class="note">Columnas de entradas del legacy (H-047, AF-110). Filtros por columna y orden (H-048, AF-99). «Facturar» abre P-FAC-04; «Pago completo» abre P-FAC-06 (H-065).</div>
+</section>
+
+<section class="screen" id="P-FAC-02">
+<h2>P-FAC-02 · Facturas › Guía de salida, Montacargas y Almacenamiento</h2>
+<h3>Guía de salida</h3>
+<table>
+<tr><th>N.º factura</th><th>N.º guía ↕</th><th>N.º salida</th><th>Tiquete</th><th>Depósitos</th><th>Placas</th><th>CPI</th><th>Mercancía</th><th>Embalaje</th><th>Valor</th><th>Destinatario</th><th>Estado</th><th>Acciones</th></tr>
+<tr class="flt"><td>número</td><td>guía</td><td>salida</td><td>tiquete</td><td>depósito</td><td>placa</td><td>CPI</td><td>mercancía</td><td>embalaje</td><td></td><td>nombre o NIT</td><td>lista</td><td></td></tr>
+<tr><td>FE-10240</td><td>G-7712</td><td>S-0391</td><td>T-48215</td><td>2026BA00012</td><td>ABC123</td><td>CPI-2210</td><td>Cebolla</td><td>Sacos</td><td>$ 38 000</td><td>Conductor del vehículo</td><td><span class="tag">Pagada</span></td><td><span class="btn">Ver</span></td></tr>
+<tr><td>Pendiente</td><td>G-7715</td><td>S-0394</td><td>—</td><td>2026BA00014, 2026BA00015</td><td>XYZ987</td><td>CPI-2214, CPI-2215</td><td>Harina, Ajo</td><td>Sacos, Cajas</td><td>$ 38 000</td><td>Cliente C</td><td><span class="tag">Borrador</span></td><td><span class="btn pri">Facturar</span></td></tr>
+</table>
+<div class="note">Todo, con mercancía y embalaje (AF-107). El tiquete aparece solo si la salida pesó (AF-33). Un cobro por guía, también en la global.</div>
+<h3>Montacargas</h3>
+<table>
+<tr><th>Requiere factura</th><th>N.º factura</th><th>Fecha</th><th>Placa</th><th>Tipo de vehículo</th><th>Horas</th><th>Valor</th><th>IVA</th><th>Destinatario</th><th>Estado</th><th>Acciones</th></tr>
+<tr><td>Sí</td><td>Pendiente de número</td><td>18/11/2026</td><td>ABC123</td><td>Tractomula</td><td>1,5</td><td>$ 120 000</td><td>$ 22 800</td><td>Cliente A</td><td><span class="tag">Borrador</span></td><td><span class="btn pri">Facturar</span></td></tr>
+<tr><td>No</td><td>No aplica</td><td>18/11/2026</td><td>XYZ987</td><td>Sencillo</td><td>0,5</td><td>$ 60 000</td><td>—</td><td>Conductor del vehículo</td><td><span class="tag">Pagada</span></td><td><span class="btn">Ver</span></td></tr>
+</table>
+<div class="note">PR-24 aprobada (AF-105): sin factura no hay IVA ni N.º; es registro de la operación.</div>
+<h3>Almacenamiento</h3>
+<table>
+<tr><th>N.º factura</th><th>N.º depósito</th><th>Período</th><th>Fecha límite</th><th>Cliente</th><th>Facturar a</th><th>Valor</th><th>Estado</th><th>Saldo</th><th>Acciones</th></tr>
+<tr><td>Pendiente</td><td>2026BA00012</td><td>06/11/2026 – 06/12/2026</td><td>09/12/2026</td><td>Cliente A</td><td>Importador X SAS</td><td>$ 272 600</td><td><span class="tag">Borrador</span></td><td>$ 272 600</td><td><span class="btn pri">Facturar</span> <span class="btn">Ver</span></td></tr>
+</table>
+<div class="note">«Facturar a» del importador del depósito o, si no hay, el general del cliente (AF-123).</div>
+</section>
+
+<section class="screen" id="P-FAC-03">
+<h2>P-FAC-03 · Detalle de la factura (báscula)</h2>
+<div class="head"><span><strong>Factura FE-10229</strong> <span class="tag">Enviada</span><br><span class="muted">Cliente B · NIT 900000002 · Vence 17/12/2026</span></span><span><span class="btn">Registrar pago</span> <span class="btn">Corregir N.º SIGO</span> <span class="btn">Anular</span></span></div>
+<div class="layout2">
+ <div class="box"><h3>Servicio</h3>
+  <div class="row"><div class="field f"><span>Tiquete</span><div class="in ro">T-48190</div></div><div class="field f"><span>Modalidad</span><div class="in ro">Exportación</div></div><div class="field f"><span>Placa</span><div class="in ro">KLM456</div></div></div>
+  <div class="row"><div class="field f"><span>Conductor</span><div class="in ro">Conductor 3</div></div><div class="field f"><span>Fecha y hora</span><div class="in ro">17/11/2026 16:55</div></div></div>
+ </div>
+ <div class="box"><h3>Valores</h3>
+  <table><tr><th>Concepto</th><th>Valor</th></tr><tr><td>Servicio de báscula</td><td>$ 37 815</td></tr><tr><td>IVA 19 %</td><td>$ 7 185</td></tr><tr><td><strong>Total</strong></td><td><strong>$ 45 000</strong></td></tr><tr><td>Pagado</td><td>$ 0</td></tr></table>
+ </div>
+</div>
+<div class="box"><h3>Pagos</h3><table><tr><th>Fecha</th><th>Monto</th><th>Método</th><th>Estado</th></tr><tr><td colspan="4" class="muted">Sin pagos</td></tr></table></div>
+<div class="note">Tiquete, modalidad y placa en el detalle (H-047). En guías, el bloque «Servicio» muestra guía, salida, depósitos, placas y CPI. «Corregir N.º SIGO» abre P-FAC-05 (AF-104).</div>
+</section>
+
+<section class="screen" id="P-FAC-04">
+<h2>P-FAC-04 · Diálogo «Facturar»</h2>
+<div class="modal">
+ <div class="head"><strong>Facturar · Depósito 2026BA00012 · 06/11 – 06/12/2026</strong><span class="btn lnk">✕</span></div>
+ <div class="row"><div class="field req f"><span>N.º SIGO</span><div class="in">FE-10251</div></div><div class="field req f"><span>Fecha de la factura</span><div class="in">19/11/2026</div></div></div>
+ <div class="row"><div class="field req f"><span>Destinatario</span><div class="in sel">Importador X SAS · NIT 900000010 (Facturar a)</div></div><span class="btn">+</span></div>
+ <div class="row"><div class="field f"><span>Valor calculado con el acuerdo</span><div class="in ro">$ 272 600</div></div><div class="field req f"><span>Valor a facturar</span><div class="in">$ 272 600</div></div></div>
+ <div class="field"><span>Observaciones</span><div class="in">&nbsp;</div></div>
+ <p class="muted">Vence el 19/12/2026 (30 días de pago del cliente).</p>
+ <div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="btn pri">Facturar</span></div>
+</div>
+<div class="note">Un solo paso, como el legacy (AF-122): al guardar queda Aprobada (emitida) y se fija el vencimiento; ya no hay «Aprobar» aparte. Si el valor a facturar difiere del calculado, la diferencia queda como ajuste de línea. Factura no fiscal: sin N.º SIGO (DEC-024).</div>
+</section>
+
+<section class="screen" id="P-FAC-05">
+<h2>P-FAC-05 · Corregir N.º SIGO</h2>
+<div class="modal" style="max-width:420px">
+ <div class="head"><strong>Corregir N.º SIGO</strong><span class="btn lnk">✕</span></div>
+ <div class="field"><span>N.º actual</span><div class="in ro">FE-10229</div></div>
+ <div class="field req"><span>N.º nuevo</span><div class="in">FE-10292</div></div>
+ <div class="field req"><span>Motivo</span><div class="in">Se digitaron invertidos los dos últimos dígitos</div></div>
+ <div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="btn pri">Guardar</span></div>
+</div>
+<div class="note">En cualquier estado salvo Anulada; queda en la auditoría (AF-104).</div>
+</section>
+
+<section class="screen" id="P-FAC-06">
+<h2>P-FAC-06 · Pago completo</h2>
+<div class="modal" style="max-width:420px">
+ <div class="head"><strong>Registrar pago completo · FE-10229</strong><span class="btn lnk">✕</span></div>
+ <div class="field"><span>Saldo a pagar</span><div class="in ro">$ 45 000</div></div>
+ <div class="row"><div class="field req f"><span>Fecha de pago</span><div class="in">19/11/2026</div></div><div class="field req f"><span>Método de pago</span><div class="in sel">Transferencia</div></div></div>
+ <div class="row"><div class="field f"><span>Referencia</span><div class="in">TRF-558120</div></div><div class="field f"><span>Nota</span><div class="in">&nbsp;</div></div></div>
+ <div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="btn pri">Registrar</span></div>
+</div>
+<div class="note">Sin digitar el valor (H-065). El pago queda verificado, como todos (H-060). Facturación conserva método, referencia y nota (AF-132).</div>
+</section>
+
+<section class="screen" id="P-FAC-07">
+<h2>P-FAC-07 · Depósitos pendientes (/billing/pending-deposits)</h2>
+<table>
+<tr><th></th><th>N.º depósito ↕</th><th>Días</th><th>Doc. comercial</th><th>Cliente</th><th>Facturar a</th><th>Valor de la mercancía</th><th>Motivo</th><th>Pendiente</th><th>Acciones</th></tr>
+<tr class="flt"><td></td><td>número</td><td></td><td>documento</td><td>nombre</td><td>nombre</td><td></td><td>lista</td><td></td><td></td></tr>
+<tr><td>▾</td><td>2026BA00012</td><td>43</td><td>CP 4410</td><td>Cliente A</td><td>Importador X SAS</td><td>USD 90 000</td><td><span class="tag">Período cumplido</span></td><td>$ 272 600</td><td><span class="btn pri">Facturar</span></td></tr>
+<tr class="exp"><td colspan="10"><table><tr><th>Período</th><th>Fecha límite</th><th>Factura</th><th>Estado</th><th>Valor</th></tr><tr><td>06/10 – 05/11/2026</td><td>08/11/2026</td><td>FE-10101</td><td>Pagada</td><td>$ 272 600</td></tr><tr><td>06/11 – 06/12/2026</td><td>09/12/2026</td><td>Pendiente</td><td>Borrador</td><td>$ 272 600</td></tr></table></td></tr>
+<tr><td>▸</td><td>2026BA00007</td><td>61</td><td>FC 8812</td><td>Cliente D</td><td>Cliente D</td><td>USD 12 500</td><td><span class="tag">Anulada sin refacturar</span></td><td>$ 272 600</td><td><span class="btn pri">Facturar</span></td></tr>
+<tr><td>▸</td><td>2026BA00003</td><td>75</td><td>CP 3999</td><td>Cliente E</td><td>Cliente E</td><td>USD 40 000</td><td><span class="tag">Borrador sin SIGO</span></td><td>$ 280 000</td><td><span class="btn pri">Facturar</span></td></tr>
+</table>
+<div class="note">Solo depósitos con trabajo pendiente: período cumplido sin facturar, o factura en Borrador sin SIGO o anulada sin refacturar (AF-109, DEC-053). La tabla interna respeta el tema oscuro (H-082).</div>
+</section>
+
+<section class="screen" id="P-FAC-08">
+<h2>P-FAC-08 · Reporte de cobros por servicio</h2>
+<div class="row"><div class="field"><span>Servicio</span><div class="in sel">Báscula</div></div><div class="field"><span>Desde</span><div class="in">18/11/2026</div></div><div class="field"><span>Hasta</span><div class="in">18/11/2026</div></div><span class="btn pri">Generar</span><span class="btn">PDF</span><span class="btn">Excel</span></div>
+<div class="box"><h3>Contado (pagado)</h3>
+<table><tr><th>Tiquete</th><th>Fecha y hora</th><th>Modalidad</th><th>Placa</th><th>Conductor</th><th>Neto</th><th>Destinatario</th><th>Valor</th></tr>
+<tr><td>T-48207</td><td>18/11/2026 07:10</td><td>Solo báscula</td><td>XYZ987</td><td>Conductor 2</td><td>11 200</td><td>Consumidor final</td><td>$ 45 000</td></tr>
+<tr><td colspan="7"><strong>Total contado</strong></td><td><strong>$ 45 000</strong></td></tr></table></div>
+<div class="box"><h3>Por cobrar (pendiente por facturar)</h3>
+<table><tr><th>Tiquete</th><th>Fecha y hora</th><th>Modalidad</th><th>Placa</th><th>Conductor</th><th>Neto</th><th>Destinatario</th><th>Valor</th></tr>
+<tr><td>T-48211</td><td>18/11/2026 07:42</td><td>Importación</td><td>ABC123</td><td>Conductor 1</td><td>18 200</td><td>Cliente A</td><td>$ 45 000</td></tr>
+<tr><td colspan="7"><strong>Total por cobrar</strong></td><td><strong>$ 45 000</strong></td></tr></table></div>
+<div class="note">Báscula, guía o montacargas, con las columnas del legacy y suma por bloque (H-049, H-050). En montacargas los bloques son «Facturado» y «No facturado» (H-052). Reemplaza los reportes físicos numerados.</div>
+</section>
+
+<section class="screen" id="P-FAC-09">
+<h2>P-FAC-09 · Facturación por CPI (/billing/reports/deposit-billing)</h2>
+<div class="row"><div class="field"><span>N.º depósito o CPI</span><div class="in">2026BA00012</div></div><span class="btn pri">Consultar</span><span class="btn">PDF</span><span class="btn">Excel</span></div>
+<div class="box"><div class="row"><span><strong>Depósito:</strong> 2026BA00012 · Carta porte 4410</span><span><strong>Importador:</strong> Importador X SAS</span><span><strong>Ingreso:</strong> 06/10/2026 08:15</span><span><strong>Manifiesto:</strong> M-77821</span><span><strong>Tasa ingreso:</strong> 4 050</span><span><strong>Valor de la mercancía:</strong> USD 90 000</span></div>
+<table><tr><th>Mercancía</th><th>Ingreso cant.</th><th>Ingreso peso</th><th>Despachados cant.</th><th>Despachados peso</th><th>Existencias cant.</th><th>Existencias peso</th></tr>
+<tr><td>Cebolla · Sacos</td><td>600</td><td>18 000</td><td>200</td><td>6 000</td><td>400</td><td>12 000</td></tr></table>
+<table><tr><th>#</th><th>N.º factura</th><th>Fecha factura</th><th>Fecha límite</th><th>Facturado a</th><th>Valor factura</th><th>Observaciones</th></tr>
+<tr><td>1</td><td>FE-10101</td><td>09/11/2026</td><td>08/11/2026</td><td>Importador X SAS</td><td>$ 272 600</td><td></td></tr></table></div>
+<div class="note">Formato del legacy (<code>mod_facturacion/informecpi.php</code>) con el valor de la mercancía (H-059).</div>
+</section>
+
+<section class="screen" id="P-FAC-10">
+<h2>P-FAC-10 · Facturación anual (/billing/reports/annual)</h2>
+<div class="row"><div class="field"><span>Año</span><div class="in sel">2026</div></div><span class="btn">PDF</span><span class="btn">Excel</span></div>
+<table><tr><th>Mes</th><th>Facturas</th><th>Total</th></tr><tr><td>▾ Noviembre</td><td>3</td><td>$ 362 600</td></tr>
+<tr class="exp"><td colspan="3"><table><tr><th>Consecutivo</th><th>Fecha</th><th>Facturado a</th><th>Servicio</th><th>Valor</th></tr>
+<tr><td>FE-10101</td><td>09/11/2026</td><td>Importador X SAS</td><td>Almacenamiento</td><td>$ 272 600</td></tr>
+<tr><td>FE-10207</td><td>14/11/2026</td><td>Cliente B</td><td>Báscula</td><td>$ 45 000</td></tr>
+<tr><td>FE-10229</td><td>17/11/2026</td><td>Cliente B</td><td>Báscula</td><td>$ 45 000</td></tr>
+<tr><td colspan="4"><strong>Suma</strong></td><td><strong>$ 362 600</strong></td></tr></table></td></tr></table>
+<div class="note">El listado de facturas suma igual al total del mes (H-061).</div>
+</section>
+
+<section class="screen" id="P-FAC-11">
+<h2>P-FAC-11 · Configuración de facturación del cliente</h2>
+<div class="head"><span><strong>Cliente A</strong> · NIT 900000001</span><span><span class="btn">Volver</span> <span class="btn pri">Guardar</span></span></div>
+<div class="row">
+ <div class="field req"><span>Ciclo</span><div class="in sel">Otro: N días</div></div>
+ <div class="field req"><span>Días del ciclo</span><div class="in">20</div></div>
+ <div class="field req"><span>Días de pago</span><div class="in">30</div></div>
+ <div class="field"><span>Límite de crédito</span><div class="in">$ 5 000 000</div></div>
+ <div class="field"><span>Preferencia</span><div class="in sel">Por servicio</div></div>
+</div>
+<p class="muted">Ciclos: Semanal (7) · Quincenal (14) · Quincenal (15) · Mensual (30) · Trimestral (90) · Semestral (180) · Anual (360) · Otro: N días. Sin «mes calendario».</p>
+<div class="row"><div class="field req f"><span>Facturar a (general)</span><div class="in sel">Cliente A · NIT 900000001</div></div><span class="btn">+</span></div>
+<div class="box"><div class="head"><strong>Excepciones por importador</strong><span class="btn">+ Agregar</span></div>
+<table><tr><th>Importador</th><th>Facturar a</th><th>Acciones</th></tr>
+<tr><td>Importador X SAS</td><td>Importador X SAS</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+<tr><td>Importador Y SAS</td><td>Comercial Z SAS</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr></table></div>
+<div class="note">Ciclo libre en días (AF-108); sin mes calendario (AF-115). «Facturar a» por cliente e importador (AF-123); la mora cuenta para el cliente (AF-112). Fin del período = inicio + N días, como el legacy.</div>
+</section>
+
+<section class="screen" id="P-FAC-12">
+<h2>P-FAC-12 · Tarifas y acuerdos › Acuerdo del cliente</h2>
+<div class="head"><span><strong>Acuerdo 2026 · Cliente A</strong> <span class="tag">Vigente desde 01/01/2026</span></span><span><span class="btn">Descargar plantilla</span> <span class="btn">Importar plantilla</span> <span class="btn pri">+ Agregar tarifa</span></span></div>
+<table>
+<tr><th>Producto</th><th>Perecedero</th><th>Modalidad</th><th>Servicio</th><th>Fórmula</th><th>Parámetros</th><th>Papelería</th><th>IVA incluido</th><th>Vigencia</th><th>Acciones</th></tr>
+<tr class="flt"><td>producto</td><td>lista</td><td>lista</td><td>lista</td><td>lista</td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Todos</td><td>No</td><td>Importación</td><td>Almacenamiento</td><td>% del valor</td><td>0,3 % · mín. $ 257 600</td><td>$ 15 000</td><td>No</td><td>01/01/2026</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+<tr><td>Todos</td><td>Sí</td><td>Importación</td><td>Almacenamiento</td><td>Por tonelada con mínimo</td><td>$ 4 700 / t · mín. $ 55 000</td><td>$ 15 000</td><td>Sí</td><td>01/01/2026</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+<tr><td>Cebolla</td><td>Todos</td><td>Importación</td><td>Almacenamiento</td><td>Descargada o sobre vehículo</td><td>0,3 % · $ 168 000 / vehículo</td><td>$ 15 000</td><td>No</td><td>01/01/2026</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+<tr><td>Todos</td><td>Todos</td><td>Todas</td><td>Báscula</td><td>Fijo</td><td>$ 0 (báscula incluida)</td><td>—</td><td>Sí</td><td>01/01/2026</td><td><span class="btn">✎</span> <span class="btn">🗑</span></td></tr>
+</table>
+<div class="note">Una fila por tarifa, como el Excel (AF-114, AF-118). La tarifa se distingue por producto, perecedero y modalidad, como hoy; gana la más específica. Las que en el Excel cambian por importador se configuran por mercancía (AF-125). «+ báscula» del Excel = báscula en $0 por convenio (AF-117). Ya no se configura en el detalle del tercero (PR-28, §3.2).</div>
+</section>
+
+<section class="screen" id="P-FAC-13">
+<h2>P-FAC-13 · Agregar tarifa</h2>
+<div class="modal" style="max-width:820px">
+ <div class="head"><strong>Agregar tarifa · Cliente A</strong><span class="btn lnk">✕</span></div>
+ <div class="row">
+  <div class="field req f"><span>Servicio</span><div class="in sel">Almacenamiento</div></div>
+  <div class="field f"><span>Producto</span><div class="in sel">Todos</div></div>
+  <div class="field f"><span>Perecedero</span><div class="in sel">Todos</div></div>
+  <div class="field f"><span>Modalidad</span><div class="in sel">Importación</div></div>
+ </div>
+ <div class="row"><div class="field req f"><span>Fórmula</span><div class="in sel">Según el valor</div></div><span class="sw">Papelería ($ 15 000)</span><span class="sw off">IVA incluido</span><div class="field"><span>Vigente desde</span><div class="in">01/01/2027</div></div></div>
+ <div class="box"><h3>Parámetros de «Según el valor»</h3>
+  <div class="row"><div class="field req f"><span>Límite de valor (COP)</span><div class="in">300 000 000</div></div></div>
+  <div class="row"><div class="field req f"><span>Hasta el límite</span><div class="in sel">Por unidad de carga · Contenedor</div></div><div class="field req f"><span>Tarifa</span><div class="in">$ 276 000</div></div></div>
+  <div class="row"><div class="field req f"><span>Por encima del límite</span><div class="in ro">% del valor</div></div><div class="field req f"><span>Porcentaje</span><div class="in">0,2 %</div></div></div>
+ </div>
+ <div class="box"><h3>Simulador</h3>
+  <div class="row"><div class="field f"><span>Valor CPI (COP)</span><div class="in">250 000 000</div></div><div class="field f"><span>Contenedores</span><div class="in">2</div></div><span class="btn">Calcular</span></div>
+  <p class="muted">Resultado: $ 552 000 + papelería $ 15 000 + IVA</p>
+ </div>
+ <div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="btn pri">Guardar tarifa</span></div>
+</div>
+<div class="layout2">
+ <div class="box"><h3>Otras fórmulas nuevas: parámetros</h3>
+  <table><tr><th>Fórmula</th><th>Parámetros</th><th>Simulador pide</th></tr>
+  <tr><td>Descargada o sobre vehículo</td><td>% del valor, mínimo (opcional), tarifa por vehículo</td><td>Precio de los camiones descargados y número de camiones sobre el vehículo</td></tr>
+  <tr><td>Por tonelada o kilo con mínimo</td><td>Tarifa, unidad (t o kg), mínimo</td><td>Peso de mercancía</td></tr>
+  <tr><td>Por tramos de peso</td><td>Límite (kg), tarifa hasta, tarifa desde</td><td>Peso de mercancía</td></tr></table></div>
+ <div class="note">Solo se muestran los parámetros de la fórmula elegida y el simulador pide solo los datos que usa (H-063, AF-118). Fórmulas nuevas de AF-116. El peso es la suma del peso de mercancía de las entradas (AF-113).</div>
+</div>
+</section>
+
+<section class="screen" id="P-FAC-14">
+<h2>P-FAC-14 · Importar plantilla de acuerdos</h2>
+<div class="steps"><span>1 Cargar archivo</span><span class="cur">2 Vista previa</span><span>3 Confirmar</span></div>
+<div class="row"><span class="muted">Archivo: acuerdos-2027.xlsx · Hojas: Clientes (12) · Facturar a (5) · Tarifas (31)</span><span class="f"></span><span class="btn">Descargar plantilla vacía</span></div>
+<table>
+<tr><th>Hoja</th><th>Fila</th><th>Cliente (NIT)</th><th>Producto</th><th>Servicio</th><th>Fórmula</th><th>Vigente desde</th><th>Resultado</th></tr>
+<tr><td>Tarifas</td><td>2</td><td>900000001</td><td>Todos</td><td>Almacenamiento</td><td>% del valor</td><td>01/01/2027</td><td><span class="tag">Nueva, programada</span></td></tr>
+<tr><td>Tarifas</td><td>3</td><td>900000001</td><td>Cebolla</td><td>Almacenamiento</td><td>Descargada o sobre vehículo</td><td>01/01/2027</td><td><span class="tag">Reemplaza desde 01/01/2027</span></td></tr>
+<tr class="void"><td>Tarifas</td><td>4</td><td>900000099</td><td>Todos</td><td>Almacenamiento</td><td>Por tonelada con mínimo</td><td>01/01/2027</td><td><span class="tag">Error: el NIT no existe</span></td></tr>
+<tr><td>Clientes</td><td>5</td><td>900000002</td><td>—</td><td>—</td><td>—</td><td>—</td><td><span class="tag">Ciclo 20 días, Facturar a general</span></td></tr>
+</table>
+<div class="row"><span class="btn">Cancelar</span><span class="f"></span><span class="muted">30 filas válidas · 1 con error (no se carga)</span><span class="btn pri">Confirmar importación</span></div>
+<div class="note">Propuesta (AF-114, AF-118). La plantilla se descarga desde «Tarifas y acuerdos» con tres hojas (Clientes, Facturar a, Tarifas) e instrucciones. Nada se guarda hasta confirmar. Un NIT que no existe es error: el tercero se crea antes en Configuración. La carga inicial de la hoja 2026 usa esta misma plantilla.</div>
+</section>
+</body>
+</html>

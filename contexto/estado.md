@@ -33,6 +33,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 2026-10-26 | **DEC-057 construido** (6 fases): el operario elige el depósito de la carta porte, manifiesto obligatorio en Báscula y DIAN al confirmar la importación, pesos del legacy (tara y mercancía según manifiesto), báscula en $0 por convenio, tarjeta como el legacy y por camión (migración `AddLabelPrintEntry`) y cambio de destinatario de la factura; verificado en local. Sin desplegar en staging; nota para operarios en `manuales/nota-operarios-hallazgos-2026-10-26.md` y videos por regrabar en `videos/videos-desactualizados-dec-057.md` | `a8d06dd` / `18f79f1` |
 | 2026-10-27 | **Fase 13 del plan P1: despliegue y QA en staging.** 7 migraciones aplicadas, destino de respaldo externo `s3-externo` y QR de la guía verificados con celular; QA en staging con 21 PASA y 1 no ejecutado, sin defectos (`qa/resultados/PRE-informe-2026-10-25.md` §13). Veredicto: listo para el reinicio limpio de `DEC-043` | `911399c` / `33fbeba` |
 | 2026-10-27 | **Staging limpio (`DEC-043`, fase 4):** base recreada con 19 migraciones y el legacy migrado de nuevo con la herramienta actual (conjunto v4, corte en el 2026-10-26), con conteos idénticos al ensayo local; tarifas T1 a T4 y de montacargas; 5 cuentas `operario.*`; respaldos `local-staging` y `s3-externo`; sin datos de QA ni de práctica. Convenios y `open-billing` quedan para la fase 4b (`planes/migracion-staging/resultados/informe-staging-limpio-fase-4.md`) | `911399c` / `33fbeba` (sin cambios de código) |
+| 2026-11-17 → 19 | **Levantamiento de noviembre:** fase 1 (consolidación de hallazgos) y fase 2 (análisis funcional, 137 decisiones, `DEC-080`), sin código | — |
 
 ## 3. Staging
 
@@ -85,12 +86,15 @@ Los documentos con estado atrasado se pusieron al día el 2026-10-23: la fase 6 
 | --- | --- | --- |
 | Mínimos de almacenamiento (WMS-32) | ¿El mínimo de importación es $184.000 con 0,255 %? (El umbral de $72.156.863 = $184.000 ÷ 0,255 %.) | Los mínimos son configurables, con o sin IVA (`minimumIncludesVat`). Para la migración se aprobó T1/T2 (`DEC-041`) |
 | Tarifas de almacenamiento para producción | ¿Qué porcentaje tiene la tarifa base prorrateada y qué acuerdos por cliente se validan? (`DEC-029`) | Lo define Facturación; staging sigue con T1 (`DEC-041`). Ver pendiente 8 |
+| Umbrales de las alertas de Bodega | ¿Cuántos minutos para amarillo y rojo en recepción, cargue y salida de patio? (`DEC-080`, AF-57) | Se configuran al construir; sin valores |
+| Tarifas por tramos de peso y depósito mixto | ¿Dónde está el límite de los tramos y la segunda tarifa va a todo el peso o al exceso? ¿Cómo se aplica el mínimo de la parte porcentual con camiones sobre el vehículo? (`DEC-080`, AF-116, AF-120) | Facturación ajusta la línea (`DEC-020`) |
+| Datos de arranque | ¿Qué prefijo lleva cada campo y cuál es la tasa de la semana de arranque? (`DEC-080`, AF-79, AF-86) | — |
 
 Ya resueltas, aunque documentos antiguos las den por abiertas:
 
 - **WMS-30:** la unidad de carga es un concepto propio (`DEC-014`).
-- **WMS-18/27:** unidad y embalaje se imprimen por separado (`DEC-015`).
-- **WMS-17:** la orden de cargue se conserva y registra la orden externa (`DEC-016`).
+- **WMS-18/27:** la unidad de medida sale de la app; se imprime el embalaje (`DEC-080`, AF-22).
+- **WMS-17:** la orden de cargue se reemplaza por la salida de mercancía, con tipo y estado (`DEC-080`, AF-30).
 - **WMS-33:** el período cuenta desde el ingreso (`DEC-012`).
 - **Quincenal de 14 o 15 días:** existen ambos ciclos.
 

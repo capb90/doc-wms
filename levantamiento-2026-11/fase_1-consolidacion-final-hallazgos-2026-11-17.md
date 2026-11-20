@@ -858,7 +858,7 @@ Fuente: F3. Los videos muestran a la operaria de Comercio Exterior en el legacy 
 
 | ID | Observación | Video y tiempo | Relaciona |
 |---|---|---|---|
-| OV-01 | El levante calcula la cantidad desde el peso bruto digitado, en proporción al saldo del depósito | RV-07, 0:40 | H-039, PA-12, D-19 |
+| OV-01 | El levante calcula la cantidad desde el peso bruto digitado, en proporción a lo ingresado (Σ cantidad ÷ Σ manifiesto), solo si el depósito tiene un producto | RV-07, 0:40 | H-039, PA-12, D-19 |
 | OV-02 | La tasa de cambio llega precargada con la tasa semanal y es editable en el formulario de levante | RV-07, 0:28 | H-034, H-077, PA-08, PA-24, D-22 |
 | OV-03 | El levante pide número de levante, número de aceptación y solo la fecha del levante (sin fecha de aceptación) | RV-07, 0:28 | H-038, PA-11, D-20 |
 | OV-04 | El registro de levante muestra una matriz Ingreso / Nacionalizados / Saldo con columnas Cant., Peso y una columna por producto | RV-07, 0:28–0:56 | H-036, H-040, PA-09, D-18 |
@@ -894,7 +894,7 @@ Se registran tal como las describen las fuentes, sin interpretación. Cuando una
 | D-16 | Productos tras confirmar | Se agregan o quitan mientras la mercancía no haya salido; amparados registrados aparte | Solo en borrador | F1 H-031; F3 OV-10 | H-031, PR-17 |
 | D-17 | Prefijos de números | Prefijos configurables para levante, aceptación y manifiesto | Sin prefijos | F1 H-035 | H-035 |
 | D-18 | Productos en el levante | Una columna por producto; se pone cero en el que no corresponde | Se escoge el producto con un select | F1 H-036; F2 PA-09; F3 OV-04 | H-036, PR-19 |
-| D-19 | Cantidad del levante | Se calcula desde el peso, en proporción al saldo | No se calcula | F2 PA-12; F3 OV-01 | H-039 |
+| D-19 | Cantidad del levante | Se calcula desde el peso, en proporción a lo ingresado, solo con un producto (`registrarlevante.php:246-254`, `:611`) | No se calcula | F2 PA-12; F3 OV-01 | H-039 |
 | D-20 | Datos de aceptación | Número de levante, número de aceptación y fecha del levante | Pide además la fecha de aceptación | F1 H-038; F2 PA-11; F3 OV-03 | H-038 |
 | D-21 | Levantes sucesivos | Al guardar se puede registrar otro de inmediato, viendo lo que queda | Hay que guardar y volver a abrir | F1 H-040 | H-040, PR-19 |
 | D-22 | Tasa de cambio | Manual, semanal, precargada y editable en el levante | Consultada automáticamente a la DIAN | F1 H-034, H-077; F2 PA-08, PA-24; F3 OV-02 | PR-23 |

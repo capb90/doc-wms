@@ -15,6 +15,7 @@
 | DEC-040…049 | Migración del legacy y staging |
 | DEC-050…059 | Respuestas a la auditoría de paridad (2026-10-23) |
 | DEC-060…069 | Documentos impresos |
+| DEC-080…089 | Levantamiento de noviembre de 2026 |
 
 ## 1. Forma de trabajo
 
@@ -36,7 +37,7 @@
 
 **DEC-010 — Premisas de pruebas** (2026-09-10, tras las pruebas con operarios). Rigen todos los ajustes:
 1. **Báscula rápida:** la meta son ~30 s por camión, como en el legacy. Pantalla única con cola (WMS-31). *Precisada por `DEC-058` (2026-10-26): la cola ocupa la página y el proceso se abre en un panel propio sobre ella; la meta de ~30 s sigue.*
-2. **Las cantidades del depósito son las declaradas en báscula.** Bodega solo informa y confirma. Comercio Exterior confirma e imprime la etiqueta sin esperar a Bodega (WMS-9).
+2. **Las cantidades del depósito son las declaradas en báscula.** Bodega solo informa y confirma. Comercio Exterior confirma e imprime la etiqueta sin esperar a Bodega (WMS-9). *Precisada por `DEC-080` (AF-77).*
 3. **La unidad de carga es un concepto propio** (contenedor, tanquero, remolque). Bodega la recibe completa, sin contar producto por producto (WMS-30).
 4. **Fechas editables:** si el camión entra el sábado y se procesa el lunes, todo lleva la fecha del sábado (WMS-33).
 
@@ -50,7 +51,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - Consecutivos de 5 dígitos, con reinicio anual y sin saltos: `2026T00001`, `2026BA00001` (solo importación), `2026EXP00001`, `2026INSP00001`, `2026S00001` (una serie para todas las guías) y `2026OC00001`.
 - Tiquetes y depósitos toman el año de la fecha de ingreso; guías y órdenes, el de su emisión.
 
-**DEC-013 — Varios camiones por documento** (Ola 1, WMS-26). Completar el ciclo de un camión no cierra el servicio. Comercio Exterior cierra el ingreso de camiones de forma explícita, sin reapertura. Un camión tardío se registra, entra al stock, se recalcula la factura del período (DEC-022) y se avisa para reimprimir la etiqueta. Un error de facturación nunca bloquea báscula.
+**DEC-013 — Varios camiones por documento** (Ola 1, WMS-26). Completar el ciclo de un camión no cierra el servicio. Comercio Exterior cierra el ingreso de camiones de forma explícita, sin reapertura. Un camión tardío se registra, entra al stock, se recalcula la factura del período (DEC-022) y se avisa para reimprimir la etiqueta. Un error de facturación nunca bloquea báscula. *Cierre explícito del ingreso de camiones, reemplazado por `DEC-080` (AF-95).*
 
 **DEC-014 — Unidad de carga** (Ola 2, comentarios de Linear del 2026-09-17).
 - La mercancía se declara por unidad de carga, sin mezclar mercancía suelta con unidades en un mismo depósito.
@@ -59,25 +60,25 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - Los tipos de unidad son un catálogo global que amplía el administrador.
 - El tanquero es un tipo de unidad, no un embalaje.
 
-**DEC-015 — Unidad de medida y embalaje** (Ola 2, WMS-18). Se imprimen como campos separados. Las unidades de medida son un catálogo que administra el Admin (el enum desapareció). *Precisada por `DEC-057` (2026-10-26): la tarjeta va como el legacy (Ampara · Saldo · Mercancía, embalaje dentro del texto, sin unidad); el PDF del depósito y la guía siguen igual.*
+**DEC-015 — Unidad de medida y embalaje** (Ola 2, WMS-18). Se imprimen como campos separados. Las unidades de medida son un catálogo que administra el Admin (el enum desapareció). *Precisada por `DEC-057` (2026-10-26): la tarjeta va como el legacy (Ampara · Saldo · Mercancía, embalaje dentro del texto, sin unidad); el PDF del depósito y la guía siguen igual.* *Reemplazada por `DEC-080` (AF-22).*
 
 **DEC-016 — Alcances recortados de la Ola 3** (comentarios de Linear del 2026-09-21):
 - **WMS-12 no se implementa.** La etiqueta sigue solo en Comercio Exterior: nada de `LabelAccess` ni de marca «PRELIMINAR».
 - **WMS-10 elimina los pesos por producto.** Báscula captura un único peso bruto del manifiesto. Las columnas de peso por producto quedan en `null`, no se borran.
-- **WMS-17 conserva la orden de cargue y su flujo.** Solo deja de emitirse su PDF y se registran los datos de la orden externa. No se fusionan las pantallas de orden y guía.
+- **WMS-17 conserva la orden de cargue y su flujo.** Solo deja de emitirse su PDF y se registran los datos de la orden externa. No se fusionan las pantallas de orden y guía. *Reemplazada por `DEC-080` (AF-30).*
 
 **DEC-017 — Conductor** (QA, 2026-10-05; selector, 2026-10-08).
-- En báscula, el conductor se identifica por documento: el mismo documento corrige al conductor, uno distinto busca o crea otro y lo reasigna. Nunca se reescribe al conductor anterior.
+- En báscula, el conductor se identifica por documento: el mismo documento corrige al conductor, uno distinto busca o crea otro y lo reasigna. Nunca se reescribe al conductor anterior. *Reemplazada por `DEC-080` (AF-18).*
 - Báscula y Bodega eligen al conductor con un selector paginado. Desde ahí se puede crear o corregir uno en un modal (lápiz con `PATCH /drivers/{id}` y el documento bloqueado).
 - No se editan los conductores migrados para probar.
 
-**DEC-018 — Montacargas con IVA opcional** (Ola 1, WMS-28). El servicio `MONTACARGAS` no lleva impuestos configurados. El cobro trae un check «Agregar IVA», desmarcado por defecto, que suma el IVA sobre el valor digitado.
+**DEC-018 — Montacargas con IVA opcional** (Ola 1, WMS-28). El servicio `MONTACARGAS` no lleva impuestos configurados. El cobro trae un check «Agregar IVA», desmarcado por defecto, que suma el IVA sobre el valor digitado. *Reemplazada por `DEC-080` (AF-105).*
 
 **DEC-019 — Ajustes del plan de corrección** (2026-10-03).
 - **D-1:** no se consolidan los cobros «por facturar» de báscula y montacargas.
 - **D-2:** se retira «Cambiar modo de pago» del historial de báscula. El modo de pago de una guía sí se puede cambiar (corrección del 2026-10-08).
 - CE-7 (ajuste de cantidad) es una operación de Comercio Exterior, no de Bodega, y registra kárdex.
-- Repesar la salida responde 409 mientras alguna orden de cargue del camión no esté cargada.
+- Repesar la salida responde 409 mientras alguna orden de cargue del camión no esté cargada. *Reemplazada por `DEC-080` (AF-14).*
 - Un descartado sin salida aparece como «Cancelado» en trazabilidad.
 
 ## 3. Facturación
@@ -92,12 +93,12 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - Anulada: no se toca.
 - Las líneas sobrescritas se reemplazan y la notificación lista el valor descartado.
 
-**DEC-023 — TRM fuera de báscula** (Ola 1, WMS-24).
+**DEC-023 — TRM fuera de báscula** (Ola 1, WMS-24). *Reemplazada por `DEC-080` (AF-85).*
 - Se consulta a la DIAN con la fecha de ingreso al crear la factura del período.
 - Si falla, el depósito queda con TRM pendiente y la factura se genera igual. Facturación digita la TRM manual (con motivo) antes de asignar el N.º SIIGO y aprobar.
 - Una TRM manual nunca la reemplaza la DIAN, y una de la DIAN no se reemplaza a mano.
 
-**DEC-024 — N.º SIIGO** (Ola 1, WMS-20; QA, 2026-10-05). El número de la factura legal lo asigna Facturación y queda fijo al aprobar. Una factura no fiscal (`IsZeroValue` o total 0) no lleva número fiscal. El diálogo de acciones incluye Enviar y Registrar pago.
+**DEC-024 — N.º SIIGO** (Ola 1, WMS-20; QA, 2026-10-05). El número de la factura legal lo asigna Facturación y queda fijo al aprobar. Una factura no fiscal (`IsZeroValue` o total 0) no lleva número fiscal. El diálogo de acciones incluye Enviar y Registrar pago. *«Queda fijo al aprobar», reemplazado por `DEC-080` (AF-104).*
 
 **DEC-025 — Fórmulas de almacenamiento** (2026-07-09).
 - `PERCENTAGE_OF_VALUE` cobra un % del CIF del lote completo y **no se multiplica por el stock**. Cambiarla alteraría convenios firmados.
@@ -114,9 +115,9 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 
 **DEC-029 — FOB, CIF y tarifas del almacenamiento por porcentaje** (2026-10-25). Respuestas del usuario a las 10 decisiones del §7 de `analisis/analisis-fob-cif-legacy-v2-2026-10-24.md`. Precisa `DEC-025` y `DEC-041`. Lo marcado **«Se construye»** necesita plan cerrado (`DEC-001`).
 - **Base del cobro: el FOB del ingreso** (§7.1). El porcentaje se cobra sobre el valor que se captura en el depósito, que en los migrados es `ingreso.preciomercancia` (FOB). No se captura el CIF al ingreso. *Por qué:* el historial no distingue las bases (0,7 % de diferencia), el CIF no se conoce al ingreso y los porcentajes se calibran sobre lo que ya está en los datos.
-- **El levante es CIF, como en el legacy** (§7.2). **Se construye.** El valor del levante se pide y se rotula «CIF» en el formulario, los listados, el detalle del depósito, el kárdex y la póliza («CIF UAP» y «CIF no UAP»). La póliza se liquida sobre ese CIF. Se corrige la premisa «el legacy rotula CIF pero suma el FOB» de `PolicySummaryCalculator` y `pages/reports/policies.vue`. Los datos migrados no cambian: `levante.fob_dolares` ya es el CIF. Los nombres de columna (`FobUsd`, `FobCop`) se pueden conservar.
+- **El levante es CIF, como en el legacy** (§7.2). **Se construye.** El valor del levante se pide y se rotula «CIF» en el formulario, los listados, el detalle del depósito, el kárdex y la póliza («CIF UAP» y «CIF no UAP»). La póliza se liquida sobre ese CIF. Se corrige la premisa «el legacy rotula CIF pero suma el FOB» de `PolicySummaryCalculator` y `pages/reports/policies.vue`. Los datos migrados no cambian: `levante.fob_dolares` ya es el CIF. Los nombres de columna (`FobUsd`, `FobCop`) se pueden conservar. *El rótulo «CIF», reemplazado por `DEC-080` (AF-81).*
 - **El depósito guarda un solo valor, con nombre neutro** (§7.3). **Se construye** (solo textos). Se rotula «Valor de la mercancía» en captura, detalle, fórmula, umbral, glosario y textos de facturación. Se documenta que equivale al FOB del ingreso. Desaparecen «Valor Comercial», «Valor declarado», «Umbral CIF» y «CIF» referidos al depósito. Sin campo nuevo ni migración.
-- **El valor solo se corrige en Borrador** (§7.4). Se mantiene como hoy: CE devuelve el depósito a Borrador y la factura del período se recalcula (`DEC-056`).
+- **El valor solo se corrige en Borrador** (§7.4). Se mantiene como hoy: CE devuelve el depósito a Borrador y la factura del período se recalcula (`DEC-056`). *Reemplazada por `DEC-080` (AF-76).*
 - **Fórmula prorrateada por defecto** (§7.5; cierra la pregunta abierta de `DEC-025`). `PERCENTAGE_OF_VALUE_PRORATED` es la fórmula de la tarifa base de almacenamiento y la de los acuerdos nuevos. `PERCENTAGE_OF_VALUE` (lote completo) sigue disponible para un convenio que lo diga expresamente.
 - **Acuerdos por cliente calibrados y validados** (§7.6). Se genera la lista de porcentajes calibrados por cliente, fuera del repo (`DEC-007`), y Facturación la coteja con los convenios reales, empezando por los 29 clientes que concentran el 80 % de las quincenas. Solo lo validado se carga como acuerdo en V2. Regenerar la lista exige consultar el volcado con aprobación del usuario.
 - **Tarifa base para clientes sin acuerdo: la define Facturación** (§7.7; precisa T1 de `DEC-041`). Prorrateada y menor que T1, con el 0,141 % neto como referencia y el mismo mínimo de $50.000 con IVA. Facturación fija el porcentaje con su tarifa pública vigente.
@@ -164,10 +165,10 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 Respuestas del usuario a las diferencias con el legacy que no tenían decisión, en `analisis/auditoria-paridad-integral-2026-10-23/06-brechas-priorizadas.md` §3.1. Lo marcado **«Se construye»** necesita un plan cerrado antes del código (`DEC-001`). Lo demás confirma el comportamiento actual de V2.
 
 **DEC-050 — Báscula** (2026-10-23).
-- **La orden de cargue va antes de la salida** (BR-02-001). Báscula no pesa la salida sin una orden de cargue existente. No se vuelve al flujo legacy de «pesar primero y completar después».
+- **La orden de cargue va antes de la salida** (BR-02-001). Báscula no pesa la salida sin una orden de cargue existente. No se vuelve al flujo legacy de «pesar primero y completar después». *Reemplazada por `DEC-080` (AF-30).*
 - **«Solo báscula» sin cliente obligatorio** (BR-02-002). **Se construye.** Como en el legacy, se puede pesar sin cliente registrado; el cobro va al conductor o al consumidor final.
-- **Qué corrige Báscula después de guardar** (BR-02-010). Solo pesos (con motivo), fecha del pesaje, observación del tiquete y datos del conductor y del vehículo. Comercio Exterior corrige documento, mercancía y cantidades mientras el depósito está en Borrador. Lo demás se anula y se repite. Se mantienen DEF-F3-018 y la D-2 de `DEC-019`.
-- **Camión con varios documentos: el operario elige** (BR-02-013). **Se construye.** Por defecto, un solo pesaje (Bruto y Tara) para todos los depósitos del camión, como en el legacy. Si descarga en puntos distintos, un pesaje intermedio por depósito, como hoy. *Lo resuelve el plan:* cómo se reparte el neto entre los depósitos cuando hay un solo pesaje.
+- **Qué corrige Báscula después de guardar** (BR-02-010). Solo pesos (con motivo), fecha del pesaje, observación del tiquete y datos del conductor y del vehículo. Comercio Exterior corrige documento, mercancía y cantidades mientras el depósito está en Borrador. Lo demás se anula y se repite. Se mantienen DEF-F3-018 y la D-2 de `DEC-019`. *Reemplazada por `DEC-080` (AF-26).*
+- **Camión con varios documentos: el operario elige** (BR-02-013). **Se construye.** Por defecto, un solo pesaje (Bruto y Tara) para todos los depósitos del camión, como en el legacy. Si descarga en puntos distintos, un pesaje intermedio por depósito, como hoy. *Lo resuelve el plan:* cómo se reparte el neto entre los depósitos cuando hay un solo pesaje. *Reemplazada por `DEC-080` (AF-44).*
 
 **DEC-051 — Depósitos** (2026-10-23).
 - **Límite de la corrección de la fecha de ingreso** (BR-04-002; precisa `DEC-012`). Se corrige solo dentro de la estadía del primer camión: no antes de su ingreso en Vigilancia ni después de su salida. Para ir más atrás se corrige primero el ingreso de Vigilancia (WMS-5). Es lo que hace hoy el código; no hay cambio.
@@ -179,7 +180,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Guía antes del cargue, con aviso** (BR-05-006). **Se construye.** La guía se sigue pudiendo emitir antes del cargue. Si lo cargado difiere de lo que dice la guía, se avisa a Comercio Exterior para que la anule y la emita de nuevo. *Precisada por `DEC-056`:* en importación la guía es obligatoria antes del cargue.
 
 **DEC-053 — Facturación** (2026-10-23).
-- **«Depósitos pendientes» incluye los cerrados con trabajo pendiente** (BR-06-003). **Se construye.** Como en el legacy, un depósito sigue en la lista mientras tenga una factura de almacenamiento en Borrador sin N.º SIIGO o una anulada sin refacturar, aunque ya no tenga un período abierto.
+- **«Depósitos pendientes» incluye los cerrados con trabajo pendiente** (BR-06-003). **Se construye.** Como en el legacy, un depósito sigue en la lista mientras tenga una factura de almacenamiento en Borrador sin N.º SIIGO o una anulada sin refacturar, aunque ya no tenga un período abierto. *Precisada por `DEC-080` (AF-109).*
 - **La renovación cobra el saldo al inicio del período** (BR-06-005). **Se construye.** El período renovado cobra la cantidad facturable al día de su inicio (fin + 1), aunque el job corra después, con el mismo criterio de `DEC-028`. Afecta a las fórmulas por cantidad; `PERCENTAGE_OF_VALUE` no cambia.
 
 **DEC-054 — Reportes y agencias** (2026-10-23).
@@ -204,19 +205,19 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 
 **DEC-057 — Hallazgos de los operarios en staging** (2026-10-26). Respuestas del usuario a las decisiones de `analisis/hallazgos-operarios-2026-10-26.md`, sobre el informe de hallazgos que Bodegas Asociadas envió tras probar staging (build del 2026-10-08). Lo marcado **«Se construye»** necesita plan cerrado (`DEC-001`).
 - **La carta porte la confirma el operario** (H7). **Se construye.** Si el número y tipo de documento ya tienen depósitos abiertos, Báscula los muestra con cliente, importador, transportadora, fecha del documento y placas. El operario elige uno o «Es otro documento: crear depósito nuevo». Nada se asocia solo. Reemplaza la decisión P1 de `planes/paridad-legacy/plan-backend-paridad-legacy.md` (asociación automática por número y tipo). *Por qué:* hoy un camión de otro cliente con el mismo número entra al depósito equivocado, y un depósito sin fecha casa con cualquier fecha.
-- **Pesos del legacy en Báscula** (H3). **Se construye.** El formulario de ingreso muestra siempre P. indicador, T. vehículo, P. manifiesto y P. mercancía, y calcula la tara al digitar el manifiesto: mercancía = manifiesto y tara = indicador − mercancía. *Por definir en el plan:* con segundo pesaje, el neto real reemplaza a la mercancía deducida (el neto por diferencia de pesajes no se pierde).
+- **Pesos del legacy en Báscula** (H3). **Se construye.** El formulario de ingreso muestra siempre P. indicador, T. vehículo, P. manifiesto y P. mercancía, y calcula la tara al digitar el manifiesto: mercancía = manifiesto y tara = indicador − mercancía. *Por definir en el plan:* con segundo pesaje, el neto real reemplaza a la mercancía deducida (el neto por diferencia de pesajes no se pierde). *Precisada por `DEC-080` (AF-09, AF-41).*
 - **Tiquete de báscula en $0 solo por convenio** (H5b). **Se construye.** Si el convenio del cliente fija la báscula en $0, el cobro sale en cero, sin número fiscal (`DEC-024`) y marcado «sin cobro por convenio». El operario no puede digitar 0 a mano.
 - **Fecha y tipo del documento en la tarjeta, y mercancía sin duplicar** (H13, H14). **Se construye.**
   - La tarjeta imprime «{tipo de documento}: {número} ({fecha del documento})», con «N/A» si no hay fecha, en lugar de la fecha de ingreso y del rótulo fijo «Carta Porte».
   - La descripción del producto no se imprime si es igual al nombre (sin importar mayúsculas, espacios ni tildes) o si el nombre ya la contiene: tarjeta, PDF del depósito y guía de salida.
-- **Manifiesto obligatorio en Báscula** (H2). **Se construye.** El número y el peso del manifiesto del camión son obligatorios al registrar un ingreso a depósito (importación, exportación e inspección). Solo báscula y Salida no lo piden. Reemplaza la decisión P2 / BAS-01 del plan de paridad (opcional en Báscula, exigido al confirmar).
+- **Manifiesto obligatorio en Báscula** (H2). **Se construye.** El número y el peso del manifiesto del camión son obligatorios al registrar un ingreso a depósito (importación, exportación e inspección). Solo báscula y Salida no lo piden. Reemplaza la decisión P2 / BAS-01 del plan de paridad (opcional en Báscula, exigido al confirmar). *Reemplazada por `DEC-080` (AF-12).*
 - **Manifiesto DIAN al confirmar la importación.** **Se construye.** Pasa a ser requisito de confirmación del depósito de importación, como en el legacy. Los migrados y los ya confirmados no cambian.
 - **El cobro de un tiquete guardado no se edita en Báscula** (H5c). Se mantiene `DEC-050` (anular y repetir; Facturación ajusta en Borrador). **Se construye:** se monta para Facturación el diálogo de cambio de destinatario de la factura (BR-06-007).
 - **Sin «Transportadora» en la tarjeta** (H10). **Se construye.** Se quita de las tarjetas de importación, exportación e inspección, como en el legacy. Reemplaza lo pedido en WMS-11; el caso F5-ETI-001 se ajusta.
 - **Tarjeta por vehículo** (H12; reabre la etiqueta única de `DEC-051`). **Se construye.** Además de la tarjeta del depósito, una por cada camión: mismo encabezado, la placa y solo la mercancía y cantidades que ingresó ese camión, como `adhesivovehiculo.php`.
-- **Columnas de la tarjeta como el legacy** (H15; precisa `DEC-015` para la tarjeta). **Se construye.** Ampara · Saldo · Mercancía, con el embalaje dentro del texto («CEBOLLA FRESCA (SACOS)») y sin unidad. El PDF del depósito y la guía siguen con unidad y embalaje separados. *Riesgo aceptado:* con unidades mixtas en un depósito, la tarjeta no dice la unidad del Ampara.
+- **Columnas de la tarjeta como el legacy** (H15; precisa `DEC-015` para la tarjeta). **Se construye.** Ampara · Saldo · Mercancía, con el embalaje dentro del texto («CEBOLLA FRESCA (SACOS)») y sin unidad. El PDF del depósito y la guía siguen con unidad y embalaje separados. *Riesgo aceptado:* con unidades mixtas en un depósito, la tarjeta no dice la unidad del Ampara. *Reemplazada por `DEC-080` (AF-22).*
 - **Orden:** un plan cerrado con todo lo anterior se ejecuta **antes** de la fase 13 del plan de brechas P1, y la fase 13 despliega todo junto. Mientras tanto se manda a los operarios una nota de capacitación con lo que ya existe (H1, H4, H5a y H6).
-- **Sin cambios** (ya existen o son de datos): el tipo de vehículo ya es obligatorio en Báscula (H1); la fecha de ingreso se corrige en Vigilancia y luego en el depósito (H4); el tiquete con error se anula o se descarta (H5a); el cliente que no aparece se habilita con el rol Cliente en «Terceros» (H6).
+- **Sin cambios** (ya existen o son de datos): el tipo de vehículo ya es obligatorio en Báscula (H1); la fecha de ingreso se corrige en Vigilancia y luego en el depósito (H4); el tiquete con error se anula o se descarta (H5a); el cliente que no aparece se habilita con el rol Cliente en «Terceros» (H6). *H1, reemplazado por `DEC-080` (AF-21).*
 - **Fuente:** el usuario, en la sesión del 2026-10-26, opción por opción.
 - **Construido** (2026-10-26) con `planes/plan-cerrado-dec-057-hallazgos-operarios-2026-10-26.md`: BE `c2239cd`, `543fe7f` y `a8d06dd` (migración `AddLabelPrintEntry`); FE `0948d62` y `18f79f1`; verificado en local sobre `wms_qa_preprod`. Sin desplegar: va con la fase 13 del plan P1.
 
@@ -226,18 +227,18 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
   - un encabezado común: tarjeta con título `h1`, subtítulo y acciones a la derecha, con el «Nuevo …» primario;
   - los filtros en su propia tarjeta, con etiquetas y búsqueda con espera;
   - la tabla con el mismo estilo y paginador.
-  Se crea un componente de encabezado compartido y una prueba que lo exige. `billing/configurations` es la referencia, corregida en sus puntos débiles. Quedan fuera los formularios de creación, los detalles y el centro de ayuda.
+  Se crea un componente de encabezado compartido y una prueba que lo exige. `billing/configurations` es la referencia, corregida en sus puntos débiles. Quedan fuera los formularios de creación, los detalles y el centro de ayuda. *Reemplazada por `DEC-080` (AF-129).*
 - **Báscula: cola a todo el ancho y proceso en un panel propio tipo modal.**
   - La cola es una tabla con placa, estado, motivo, cliente, conductor, modalidad, manifiesto, primer peso y espera.
   - Al elegir un camión, el proceso se abre en un panel grande sobre la cola, con fondo oscurecido.
   - El panel **no es un diálogo de PrimeVue**: no se desmonta, así que lo digitado no se pierde, y Enter y F2 siguen funcionando.
   - Escape no lo cierra; se cierra con «Volver a la cola», que conserva el borrador.
   - Los pasos siguen en línea dentro del panel (DF5 del plan de paridad del frontend no cambia).
-  - Reemplaza «pantalla única con cola» de `DEC-010` (1).
+  - Reemplaza «pantalla única con cola» de `DEC-010` (1). *Reemplazada por `DEC-080` (AF-05).*
 - **Tablero de depósitos de CE.**
   - Cada estado es una columna con scroll propio y carga infinita, sin paginación.
   - Cada columna tiene su buscador: documento comercial, número de depósito, tercero y producto.
-  - Arriba quedan solo el tipo de depósito y las fechas; se quitan el buscador general de número y el selector de estado.
+  - Arriba quedan solo el tipo de depósito y las fechas; se quitan el buscador general de número y el selector de estado. *Reemplazada por `DEC-080` (AF-72).*
 - **Fuente:** el usuario, en la sesión del 2026-10-26.
 - **Construido** (2026-10-26) con `planes/plan-cerrado-correccion-dec-057-2026-10-26.md`: BE `911399c` (búsqueda del tablero); FE `3d4056b` (páginas uniformes), `1fbcc8a` (báscula) y `e1e871a` (tablero); el mismo plan corrigió la revisión de `DEC-057` (BE `7189676`, FE `543502d`). Sin migración; verificado en local sobre `wms_qa_preprod`. *Precisiones del usuario al construir:* la columna «manifiesto» de la cola se rotula «Documento», porque el dato es el número del documento del servicio y no el manifiesto del camión; «Guardar» va en el encabezado del panel, sin pie pegajoso. Sin desplegar: va con la fase 13 del plan P1.
 - **Validación corregida** (2026-10-26) con `planes/plan-cerrado-correccion-validacion-dec-058-2026-10-26.md` (R1–R10): FE `345cc44` (báscula: encabezado durante la carga, teclas de la cola, foco del panel, historial, «Atrás» con ventanas y modo oscuro) y FE `a0db12b` (título de Terceros con el filtro de Roles, los botones de navegación vuelven a ser enlaces y el error del informe de báscula). Sin migración; verificado en local.
@@ -250,3 +251,17 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Valor inicial:** `QR`.
 - **Verificación:** al escanear el QR se abre una página pública, sin iniciar sesión. Muestra los datos mínimos de la guía para cotejarlos con el papel: número, fechas, estado vigente o anulada, depósito, destino, productos y cantidades, y la placa parcialmente oculta. Nunca muestra datos de personas (`DEC-007`).
 - **Fuente:** el usuario, en el plan `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` (fase 11, D35–D42).
+
+## 8. Levantamiento de noviembre de 2026
+
+**DEC-080 — Análisis funcional de la fase 2** (2026-11-19). Respuestas del usuario en `levantamiento-2026-11/fase_2-analisis-funcional-2026-11-19.md` (AF-01 a AF-137), con wireframes en `levantamiento-2026-11/fase_2-mockups/`. Todo lo acordado **se construye** y necesita plan cerrado (`DEC-001`).
+- **Reemplaza:**
+  - `DEC-013` en el cierre explícito del ingreso de camiones (AF-95) y `DEC-015`, con la precisión H15 de `DEC-057` (AF-22);
+  - `DEC-016` en WMS-17 (AF-30), `DEC-017` (AF-18), `DEC-018` (AF-105), `DEC-019` en el repesaje de salida (AF-14), `DEC-023` (AF-85) y `DEC-024` en «queda fijo al aprobar» (AF-104);
+  - `DEC-029` §7.4 (AF-76) y el rótulo de §7.2 (AF-81);
+  - `DEC-050` BR-02-001, BR-02-010 y BR-02-013 (AF-30, AF-26 y AF-44);
+  - `DEC-057` H2 (AF-12), la nota sobre el tipo de vehículo (H1, AF-21) y D5 de su plan (AF-44);
+  - `DEC-058` en el panel de báscula (AF-05), el tablero de depósitos (AF-72) y las páginas uniformes (AF-129).
+- **Precisa:** `DEC-010` (2) (AF-77), `DEC-053` BR-06-003 (AF-109) y `DEC-057` H3 (AF-09, AF-41).
+- **También cambia:** P16 del plan de paridad, CHG-36 del plan de corrección, lo construido para `DEC-014` en BAS-07 y la regla de WMS-29 de `contexto-negocio-wms-para-ia.md` §5.11 (sección 5 del análisis).
+- **Fuente:** el usuario, sección por sección (AF-55, AF-71, AF-103, AF-126 y AF-137).

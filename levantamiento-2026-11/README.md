@@ -6,9 +6,11 @@ Material de la visita a Bodegas Asociadas de noviembre de 2026, ya procesado, pa
 
 | Archivo | Qué tiene |
 | --- | --- |
-| `fase_1-consolidacion-final-hallazgos-2026-11-17.md` | **Cierre de la fase 1.** Consolidación final de hallazgos: 86 hallazgos, aclaraciones a PA-01–PA-25, observaciones de los videos, diferencias legacy/v2, 32 propuestas no aprobadas, inventario de mockups, pendientes y matriz de trazabilidad (195 filas). Solo queda abierto PA-19 (mercancía y embalaje en facturas de guías) |
+| `fase_1-consolidacion-final-hallazgos-2026-11-17.md` | **Cierre de la fase 1.** Consolidación final de hallazgos: 86 hallazgos, aclaraciones a PA-01–PA-25, observaciones de los videos, diferencias legacy/v2, 32 propuestas no aprobadas, inventario de mockups, pendientes y matriz de trazabilidad (195 filas). PA-19 (mercancía y embalaje en facturas de guías) lo cerró la fase 2 (AF-107) |
+| `fase_2-analisis-funcional-2026-11-19.md` | **Cierre de la fase 2.** Análisis funcional de Báscula, Bodega, Comercio Exterior y Facturación, y transversales (roles, menú, patrones de interfaz, notificaciones, tasa de cambio, edición del ingreso, salidas y unidad de medida). 137 decisiones del usuario (AF-01 a AF-137), 26 decisiones vigentes que se reabren o precisan (sección 5), pendientes para el cliente (sección 6) y matriz de cobertura de los 86 hallazgos, 32 propuestas, 27 diferencias y 21 temas de §12 |
+| `fase_2-mockups/` | Wireframes de baja fidelidad de la fase 2: `bascula.html`, `bodega.html`, `comercio-exterior.html`, `facturacion.html` y `transversales.html`, con `wireframe.css` |
 | `hallazgos-videos-levantamiento-2026-11-11.md` | Lo que se ve en los dos videos, pantalla por pantalla y con tiempos: edición de pesos del tiquete, datos del depósito, amparados, levante con cálculo automático y salida global con dos tiquetes |
-| `analisis-paridad-flujo-depositos-2026-11-11.md` | Paridad legacy vs v2 del flujo de depósitos en Comercio Exterior: tablas por etapa con evidencia `archivo:línea`, incluida la relación «Tickets Ingresos» – «Ingresos» (etapa 5) y las unidades de carga (etapa 6), conteo de diferencias, 12 brechas por impacto con los frentes integrados y decisiones pendientes. Anexo con la creación del depósito y la edición de un tiquete con depósito |
+| `analisis-paridad-flujo-depositos-2026-11-11.md` | Paridad legacy vs v2 del flujo de depósitos en Comercio Exterior: tablas por etapa con evidencia `archivo:línea`, incluida la relación «Tickets Ingresos» – «Ingresos» (etapa 5) y las unidades de carga (etapa 6), conteo de diferencias, 13 brechas por impacto con los frentes integrados y decisiones pendientes. Anexo con la creación del depósito y la edición de un tiquete con depósito |
 
 ## Fuentes originales (fuera del repo)
 

@@ -1,0 +1,10 @@
+# Salidas de depositos
+
+Teniendo en cuenta el analisis de los diferentes casos de salida de mercancia es necesario restructurar la arquitectura de salidas que actualmente de hace por medio de ordenes de cargue. 
+
+## Desiciones:
+
+1. El sistema debe soportar las 4 formas de salida de mercancía del legacy: "Por tiquete de entrada", "Global", "Por número de depósito" y "Consolidada".
+2. La entidad orden de cargue ya no es necesaria teniendo en cuenta los flujos de la operación, en su lugar se debe manejar una entidad "salida_mcia" (con el nombre adecuado, siguiendo las convenciones del backend); esta entidad debe contener la información de la salida de mercancía y la guía de salida que se genera debe estar asociada a esa entidad(es). Esta entidad debe tener una propiedad que indique el tipo de salida (por tiquete de entrada, global, por número de depósito o consolidada).
+3. La entidad "salida_mcia" debe tener una propiedad que indique el estado de la salida (Borrador, Confirmada, Completada, Cancelada).
+4. Para el caso de "Por número de depósito", en el cual pueden haber dos casos; 1. El camion llega y pasa a bascula sin una orden de salida previa, se crea en bascula la orden en estado borrador con los datos minimos, posteriormente CE la confirma y completa los datos restantes y la mercancia que llevaria y se genera la Guía de salida, con la guía generada Bodega puede ejecutar el cargue y en ese momento se modifica el stock de inventario. 2. El segundo caso se genera la orden de salida previamente antes de arribar el camion, se conoce tambien la mercancia y la cantidad que llevaria, el operario de CE crea la orden de salida, el camion llega y al pasar por bascula se precarga la orden como esta actualmente, pasa a bodega y cuando la guía se haya generado puede ejecutar el cargue. En ambos casos la orden de salida puede soportar mercancia de depositos diferentes. 

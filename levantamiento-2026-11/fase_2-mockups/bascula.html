@@ -1,0 +1,247 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fase 2 · Báscula</title>
+<link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<h1>Fase 2 · Báscula — wireframes</h1>
+<p class="muted">Baja fidelidad: qué va dónde y qué campos lleva. Datos ficticios. El registro sigue la estructura y la ubicación de botones de MK-01 v2 y el detalle la de MK-07 (AF-45). Documento: <code>../fase_2-analisis-funcional-2026-11-19.md</code> §2.1.</p>
+<p class="toc"><a href="#P-BAS-01">01 Cola</a><a href="#P-BAS-02">02 Registro (ingreso)</a><a href="#P-BAS-03">03 Registro (salida)</a><a href="#P-BAS-04">04 Registro (solo báscula)</a><a href="#P-BAS-05">05 Cobro</a><a href="#P-BAS-06">06 Tiquete</a><a href="#P-BAS-07">07 Repesaje</a><a href="#P-BAS-08">08 Historial · Entradas</a><a href="#P-BAS-09">09 Historial · Salidas</a><a href="#P-BAS-10">10 Historial · Solo báscula</a><a href="#P-BAS-11">11 Detalle del ciclo</a><a href="#P-BAS-12">12 Tiquete impreso</a><a href="#P-BAS-13">13 Modal de impresión</a></p>
+
+<section class="screen" id="P-BAS-01">
+<h2>P-BAS-01 · Cola de báscula (/operations/weighbridge)</h2>
+<div class="head"><strong>Báscula · Cola de camiones</strong></div>
+<div class="row"><span class="tag">Todos 6</span><span class="tag">Sin iniciar 2</span><span class="tag">Por pesar 1</span><span class="tag">Por cobrar 1</span><span class="tag">Por repesar 2</span><span class="f"></span><div class="field"><span>Buscar placa o conductor</span><div class="in">&nbsp;</div></div></div>
+<table>
+<tr><th>Placa</th><th>Estado</th><th>Motivo</th><th>Mercancía</th><th>Cliente</th><th>Conductor</th><th>Modalidad</th><th>Documento</th><th>P. bruto</th><th>P. mercancía</th><th>Tara</th><th>Espera</th><th>Acciones</th></tr>
+<tr><td>ABC123</td><td>Por cobrar</td><td>Descargue importación</td><td>Cebolla (Sacos · 18 000 kg)</td><td>Cliente A</td><td>Conductor 1</td><td>Importación</td><td>CP-001</td><td>30 000</td><td>18 000</td><td>12 000</td><td>12 min</td><td><span class="btn">Atender</span></td></tr>
+<tr><td>ABC123</td><td>Por pesar</td><td>Descargue importación</td><td>Ajo (Cajas · 5 000 kg)</td><td>Cliente B</td><td>Conductor 1</td><td>Importación</td><td>CP-002</td><td>—</td><td>—</td><td>—</td><td>12 min</td><td><span class="btn">Atender</span></td></tr>
+<tr><td>XYZ987</td><td>Por repesar</td><td>Descargue importación</td><td>Harina (Sacos · 30 000 kg)</td><td>Cliente C</td><td>Conductor 2</td><td>Importación</td><td>CP-003</td><td>45 000</td><td>30 000</td><td>15 000</td><td>1 h 05</td><td><span class="btn">Atender</span></td></tr>
+</table>
+<div class="note">Una fila por entrada: ABC123 trae dos documentos y tiene dos entradas (la segunda, duplicada). La columna «Mercancía» las distingue (AF-44). P. bruto, P. mercancía y Tara son nuevas (AF-15). La fila no abre el registro al hacer clic: solo el botón «Atender» (H-004, patrón de 3.3). Sin «Recuperar operaciones» (AF-51).</div>
+</section>
+
+<section class="screen" id="P-BAS-02">
+<h2>P-BAS-02 · Formulario de registro, ingreso con depósito (paso 1 · Registro)</h2>
+<p class="muted">Báscula / Proceso de pesaje / ABC123</p>
+<div class="head">
+ <span><strong class="tag">ABC123</strong> Descargue importación · Ingreso: 10/11/2026 21:35 <span class="btn">Duplicar entrada</span></span>
+ <span class="steps"><span class="cur">1 Registro</span><span>2 Cobro</span><span>3 Tiquete</span></span>
+ <span><span class="sw">Req. 2.º pesaje</span> <span class="btn">← Volver a la cola</span> <span class="btn pri">✓ Guardar</span></span>
+</div>
+<div class="note">«Duplicar entrada» se habilita cuando las secciones 1 y 2 están completas; abre otra entrada del mismo camión con ellas copiadas, y el operario llena la 3 y la 4 (AF-44, AF-49).</div>
+<div class="layout">
+<div>
+ <div class="box">
+  <div class="row"><strong>1. VIGILANCIA</strong><span class="muted">MOTIVO: Descargue importación (Ingreso) | FECHA: 10/11/2026 21:35 | PLACA: ABC123</span><span class="f"></span><span class="btn">✎ Editar</span></div>
+  <div class="note">Al pulsar «Editar» se despliega:</div>
+  <div class="row"><div class="field req f"><span>Tipo / Motivo de ingreso</span><div class="in sel">Descargue importación (Ingreso)</div></div><div class="field req f"><span>Fecha de ingreso</span><div class="in">10/11/2026 21:35</div></div><div class="field req f"><span>Placa del vehículo</span><div class="in">ABC123</div></div></div>
+  <p class="muted">Nota: cambiar el motivo cambia el formulario según su categoría (Ingreso, Salida, Solo báscula) (AF-08).</p>
+ </div>
+ <div class="box">
+  <div class="row"><strong>2. CAMIÓN Y CONDUCTOR</strong><span class="muted">CAMIÓN: Transportes Ejemplo · Colombia | CONDUCTOR: Conductor 1 · CC 1000001</span><span class="f"></span><span class="btn">✎ Editar</span></div>
+  <div class="note">Al pulsar «Editar» se despliega:</div>
+  <div class="layout2">
+   <div><span class="muted">CAMIÓN</span><div class="row"><div class="field req f"><span>Empresa (nombre o NIT)</span><div class="in sel">Transportes Ejemplo</div></div><span class="btn">+</span></div><div class="field req"><span>País</span><div class="in sel">Colombia</div></div></div>
+   <div><span class="muted">CONDUCTOR</span><div class="row"><div class="field req f"><span>Buscar conductor</span><div class="in sel">Conductor 1 (CC 1000001)</div></div><span class="btn">+</span><span class="btn">✎</span></div></div>
+  </div>
+  <div class="note">Sin «Tipo de vehículo» (AF-21: lo registra Bodega). Selectores paginados con buscador (H-013). «+» junto a Empresa: alta rápida de la empresa de transporte, como hoy (AF-54); «+» y «✎» junto al conductor, como hoy.</div>
+ </div>
+ <div class="box">
+  <div class="head"><span><strong>3. Registro de operación</strong><br><span class="muted">Modalidad aduanera y documentos de despacho</span></span><span class="tag">Atajo: Tab para navegar campos</span></div>
+  <div class="row"><span>Modalidad:</span><span class="radio on">Importación</span><span class="radio">Exportación</span><span class="radio">Inspección física</span></div>
+  <div class="row"><div class="field req f"><span>Tipo de documento</span><div class="in sel">Carta porte</div></div><div class="field req f"><span>Número de documento</span><div class="in">CP-001 (sugerencias al digitar)</div></div><div class="field req f"><span>N.º de manifiesto</span><div class="in">M-123</div></div></div>
+  <div class="row"><div class="field f"><span>Depósito</span><div class="in sel">2026BA00012 · Cliente A · 1 camión — o «Es otro documento: crear depósito nuevo»</div></div></div>
+  <div class="note">El selector de depósito aparece bajo el documento solo si el número tiene depósitos abiertos (DEC-057 D1); no está en MK-01 v2. N.º de manifiesto solo con carta porte (AF-12). En inspección: documento y producto opcionales y «Descripción de la inspección» obligatoria en esta sección (AF-17).</div>
+  <div class="head"><span><strong>MERCANCÍA DECLARADA</strong> <span class="muted">· 1 ítem registrado</span></span><span class="btn">+ Agregar producto</span></div>
+  <div class="row"><div class="in f">Cebolla</div><div class="in sel" style="min-width:160px">Sacos</div><div class="in" style="min-width:90px">600</div><span class="btn lnk">🗑</span></div>
+  <div class="note">Producto, embalaje y cantidad; sin unidad de medida (AF-22). Sin «Tipo de carga» ni unidades de carga (AF-27).</div>
+ </div>
+ <div class="box">
+  <div class="head"><span><strong>4. Pesaje en báscula (kg)</strong><br><span class="muted">Captura directa del indicador o digitación de pesos</span></span></div>
+  <div class="layout2">
+   <div class="box"><div class="row"><strong>P. Indicador (kg) *</strong><span class="f"></span><span class="tag">Primer pesaje (bruto)</span></div><div class="in">30 000</div><span class="muted">Peso directo de báscula en plataforma</span></div>
+   <div class="box"><div class="row"><strong>P. Vehículo / Tara (kg)</strong><span class="f"></span><span class="tag">Calculado</span></div><div class="in ro">12 000</div><span class="muted">P. Indicador − P. Mercancía</span></div>
+   <div class="box"><div class="row"><strong>P. Manifiesto (kg)</strong><span class="f"></span><span class="tag">Documento de transporte</span></div><div class="in">18 000</div><span class="muted">Peso reportado en la documentación (solo con carta porte)</span></div>
+   <div class="box"><div class="row"><strong>P. Mercancía / Neto (kg)</strong><span class="f"></span><span class="tag">Neto actual</span></div><div class="in">18 000</div><span class="muted">Precargado con el manifiesto; editable</span></div>
+  </div>
+ </div>
+ <div class="modal"><strong>Advertencia antes de guardar</strong><p>No registró los pesos. La entrada quedará «Por pesar» en la cola. ¿Guardar sin pesaje?</p><span class="btn">Volver</span> <span class="btn pri">Guardar sin pesaje</span></div>
+ <div class="note">La advertencia aparece solo si se pulsa «Guardar» sin P. indicador (AF-07).</div>
+ <p class="muted">Modo báscula activa · ABC123</p>
+</div>
+<div class="side">
+ <div class="row"><strong>CAMIONES EN COLA</strong> <span class="tag">6 en cola</span><span class="f"></span><span class="btn lnk">↻</span></div>
+ <div class="in">Buscar por placa o conductor…</div>
+ <div class="row"><span class="tag">Todos</span><span class="tag">Repesar</span><span class="tag">Por pesar</span></div>
+ <div class="box"><div class="row"><strong>ABC123</strong><span class="f"></span><span class="tag">En atención</span></div><span class="muted">Conductor 1 · Descargue</span><br><span class="muted">Cebolla (Sacos · 18 000 kg)</span><div class="row"><span class="muted">● En turno</span><span class="f"></span><span class="tag">Activo</span></div></div>
+ <div class="box"><div class="row"><strong>ABC123</strong><span class="f"></span><span class="tag">Por pesar</span></div><span class="muted">Ajo (Cajas · 5 000 kg)</span><div class="row"><span class="muted">12 min</span><span class="f"></span><span class="btn">Cargar a báscula →</span></div></div>
+ <div class="box"><div class="row"><strong>XYZ987</strong><span class="f"></span><span class="tag">Por repesar</span></div><span class="muted">Harina (Sacos · 30 000 kg)</span><div class="row"><span class="muted">1 h 05</span><span class="f"></span><span class="btn">Cargar a báscula →</span></div></div>
+ <div class="box"><div class="row"><strong>DEF456</strong><span class="f"></span><span class="tag">Sin iniciar</span></div><span class="muted">—</span><div class="row"><span class="muted">4 min</span><span class="f"></span><span class="btn">Cargar a báscula →</span></div></div>
+ <div class="note">Panel de la cola en la página (AF-05) con la mercancía de cada entrada (AF-44). Lo no guardado se pierde al cambiar de camión o volver a la cola: así se quita una entrada duplicada sin guardar (AF-48).</div>
+</div>
+</div>
+</section>
+
+<section class="screen" id="P-BAS-03">
+<h2>P-BAS-03 · Formulario de registro, salida (paso 1 · Registro)</h2>
+<div class="head"><span><strong class="tag">GHI321</strong> Cargue importación · Ingreso: 11/11/2026 08:10</span><span class="steps"><span class="cur">1 Registro</span><span>2 Cobro</span><span>3 Tiquete</span></span><span><span class="sw">Req. 2.º pesaje</span> <span class="btn">← Volver a la cola</span> <span class="btn pri">✓ Guardar</span></span></div>
+<div class="layout">
+<div>
+ <div class="box"><div class="row"><strong>1. VIGILANCIA</strong><span class="muted">MOTIVO: Cargue importación (Salida) | FECHA: 11/11/2026 08:10 | PLACA: GHI321</span><span class="f"></span><span class="btn">✎ Editar</span></div></div>
+ <div class="box"><div class="row"><strong>2. CAMIÓN Y CONDUCTOR</strong><span class="muted">CAMIÓN: Transportes Ejemplo · Colombia | CONDUCTOR: Conductor 5 · CC 1000005</span><span class="f"></span><span class="btn">✎ Editar</span></div></div>
+ <div class="box">
+  <div class="head"><span><strong>3. Salida de mercancía</strong><br><span class="muted">Salida que la placa tiene en Borrador o Confirmada</span></span></div>
+  <span class="muted">Caso A · la placa tiene una salida creada por Comercio Exterior:</span>
+  <table><tr><th>N.º salida</th><th>Tipo</th><th>Estado</th><th>Depósitos</th><th>Mercancía</th><th>Guía</th></tr><tr><td>0040</td><td>Por número de depósito</td><td>Confirmada</td><td>2026BA00010</td><td>Cebolla · Sacos · 300</td><td>2026S00033</td></tr></table>
+  <span class="muted">Caso B · la placa no tiene salida:</span>
+  <div class="note">«Se creará una salida en Borrador con la placa, el conductor y la transportadora. Comercio Exterior completa la mercancía y emite la guía.» (AF-30, AF-37)</div>
+ </div>
+ <div class="box">
+  <div class="head"><span><strong>4. Pesaje en báscula (kg)</strong><br><span class="muted">Captura directa del indicador</span></span></div>
+  <div class="box"><div class="row"><strong>P. Indicador (kg) *</strong><span class="f"></span><span class="tag">Primer pesaje (vehículo vacío)</span></div><div class="in">12 500</div></div>
+ </div>
+ <div class="note">Mismo esqueleto que P-BAS-02, sin «Duplicar entrada». Si Báscula cambia el conductor, pasa a la salida y a la guía si no se ha emitido; si ya se emitió, se avisa a Comercio Exterior (AF-34).</div>
+</div>
+<div class="side"><strong>CAMIONES EN COLA</strong><div class="note">Igual que en P-BAS-02.</div></div>
+</div>
+</section>
+
+<section class="screen" id="P-BAS-04">
+<h2>P-BAS-04 · Formulario de registro, solo báscula (paso 1 · Registro)</h2>
+<div class="head"><span><strong class="tag">JKL654</strong> Solo báscula · Ingreso: 11/11/2026 09:55</span><span class="steps"><span class="cur">1 Registro</span><span>2 Cobro</span><span>3 Tiquete</span></span><span><span class="sw off">Req. 2.º pesaje</span> <span class="btn">← Volver a la cola</span> <span class="btn pri">✓ Guardar</span></span></div>
+<div class="layout">
+<div>
+ <div class="box"><div class="row"><strong>1. VIGILANCIA</strong><span class="muted">MOTIVO: Solo báscula | FECHA: 11/11/2026 09:55 | PLACA: JKL654</span><span class="f"></span><span class="btn">✎ Editar</span></div></div>
+ <div class="box"><div class="row"><strong>2. CAMIÓN Y CONDUCTOR</strong><span class="muted">CAMIÓN: Transportes Ejemplo · Colombia | CONDUCTOR: Conductor 6 · CC 1000006</span><span class="f"></span><span class="btn">✎ Editar</span></div></div>
+ <div class="box"><div class="head"><span><strong>3. Solo báscula</strong></span></div><div class="row"><div class="field f"><span>Tercero (nombre o NIT, opcional)</span><div class="in sel">&nbsp;</div></div><span class="btn">+</span></div><div class="note">Sin «Peso esperado»; «Cliente» pasa a «Tercero» (AF-16, PR-06). «+» crea un tercero de forma rápida (AF-54).</div></div>
+ <div class="box"><div class="head"><span><strong>4. Pesaje en báscula (kg)</strong></span></div><div class="box"><div class="row"><strong>P. Indicador (kg) *</strong></div><div class="in">8 200</div></div></div>
+ <div class="note">Mismo esqueleto que P-BAS-02, sin «Duplicar entrada».</div>
+</div>
+<div class="side"><strong>CAMIONES EN COLA</strong><div class="note">Igual que en P-BAS-02.</div></div>
+</div>
+</section>
+
+<section class="screen" id="P-BAS-05">
+<h2>P-BAS-05 · Paso 2 · Cobro</h2>
+<div class="head"><span><strong class="tag">ABC123</strong> Descargue importación</span><span class="steps"><span>1 Registro</span><span class="cur">2 Cobro</span><span>3 Tiquete</span></span><span><span class="btn">← Volver a la cola</span></span></div>
+<div class="box"><div class="row"><strong>Registro</strong><span class="muted">Importación · CP-001 · Cebolla 600 sacos · Bruto 30 000 · Mercancía 18 000 · Tara 12 000</span><span class="f"></span><span class="btn">✎ Editar registro</span></div>
+<div class="note">El registro sigue visible y editable desde el cobro (H-019, AF-25); «Editar registro» vuelve al paso 1.</div></div>
+<div class="box"><div class="head"><strong>Cobro de báscula</strong></div>
+ <div class="row"><span>Destinatario:</span><span class="radio on">Tercero registrado</span><span class="radio">Conductor del vehículo</span><span class="radio">Persona no registrada</span><span class="radio">Consumidor final</span></div>
+ <div class="row"><div class="field req f"><span>Tercero registrado</span><div class="in sel">Cliente A (preseleccionado del depósito)</div></div><span class="btn">+</span></div>
+ <div class="note">Con «Conductor del vehículo» se toman los datos del conductor del registro (H-020). Con «Persona no registrada» se piden nombre, tipo y número de identificación, como hoy.</div>
+ <div class="row"><div class="field req"><span>Modo de pago</span><div class="in sel">Inmediato</div></div><div class="field req"><span>Método de pago</span><div class="in sel">Efectivo</div></div><div class="field"><span>Referencia (solo con otro método, AF-132)</span><div class="in ro">&nbsp;</div></div><span class="f"></span><div class="field"><span>Total</span><div class="in ro">$ 20.000</div></div></div>
+ <span class="btn pri">Cobrar</span>
+</div>
+<div class="note">Destinatarios de hoy, sin cambios (AF-54). Nuevo: «+» junto a «Tercero registrado» para crear uno rápido; el mismo cobro se usa en montacargas y guía de salida, que también lo reciben (AF-54). En una entrada duplicada el valor es $0 (AF-47).</div>
+</section>
+
+<section class="screen" id="P-BAS-06">
+<h2>P-BAS-06 · Paso 3 · Tiquete</h2>
+<div class="head"><span><strong class="tag">ABC123</strong></span><span class="steps"><span>1 Registro</span><span>2 Cobro</span><span class="cur">3 Tiquete</span></span></div>
+<div class="box"><strong>Pesaje registrado</strong><br><span class="muted">Tiquete 2026T00045 · Bruto 30 000 · Tara calculada 12 000 · Mercancía 18 000 · Pendiente: repesaje</span></div>
+<div class="row"><span class="btn">⎙ Imprimir</span><span class="f"></span><span class="btn pri">Finalizar</span></div>
+<div class="note">«Imprimir» abre el modal P-BAS-13, donde se elige entrada, tara, repesaje y recibo y se escribe la observación (AF-52, AF-53). Disponible desde el primer peso, también con el repesaje pendiente (AF-24).</div>
+</section>
+
+<section class="screen" id="P-BAS-07">
+<h2>P-BAS-07 · Modal de repesaje</h2>
+<div class="modal">
+ <div class="head"><strong>Repesaje · XYZ987 · Tiquete 2026T00044</strong><span class="btn lnk">✕</span></div>
+ <span class="muted">Importación · CP-003 · Harina 600 sacos · Conductor 2</span>
+ <div class="layout2">
+  <div class="field"><span>P. Indicador (bruto)</span><div class="in ro">45 000</div></div>
+  <div class="field req"><span>P. Vehículo / Tara (repesaje)</span><div class="in">14 800</div></div>
+  <div class="field"><span>P. Manifiesto</span><div class="in ro">30 000</div></div>
+  <div class="field"><span>P. Mercancía (indicador − tara real)</span><div class="in ro">30 200</div></div>
+ </div>
+ <div class="field"><span>Fecha y hora del repesaje</span><div class="in">10/11/2026 22:40</div></div>
+ <div class="note">Diferencia con el manifiesto: +200 kg (la ve Comercio Exterior, AF-41). Un solo repesaje por ciclo, sin cobro (AF-13).</div>
+ <span class="btn">Cancelar</span> <span class="btn pri">Registrar repesaje</span>
+</div>
+<div class="note">Se abre desde la cola («Por repesar») y desde el historial o el detalle para un ciclo de pesaje único cerrado (AF-11, AF-40).</div>
+</section>
+
+<section class="screen" id="P-BAS-08">
+<h2>P-BAS-08 · Historial › Entradas</h2>
+<div class="row"><span class="tag">Importación</span><span class="tag">Exportación</span><span class="tag">Inspección</span><span class="f"></span><span class="btn">Exportar Excel</span></div>
+<table>
+<tr><th>Fecha y hora ↓</th><th>Vehículo</th><th>Conductor</th><th>ID conductor</th><th>P. bruto</th><th>P. mercancía</th><th>Tara</th><th>Cantidad</th><th>Peso manifiesto</th><th>Doc. entrada</th><th>Repesa</th><th>Valor</th><th>Tiquete</th><th>Estado</th><th>Acciones</th></tr>
+<tr class="flt"><td>desde–hasta</td><td>placa</td><td>nombre</td><td>documento</td><td></td><td></td><td></td><td></td><td></td><td>tipo y número</td><td>sí/no</td><td></td><td>número</td><td>estado</td><td></td></tr>
+<tr><td>10/11/2026 21:35</td><td>ABC123</td><td>Conductor 1</td><td>1000001</td><td>30 000</td><td>18 000</td><td>12 000</td><td>600</td><td>18 000</td><td>Carta porte CP-001</td><td>No</td><td>$ 20.000</td><td>2026T00045</td><td>Por repesar</td><td><span class="btn">Ver</span> <span class="btn">Editar</span> <span class="btn">Imprimir</span> <span class="btn">Anular</span></td></tr>
+<tr><td>10/11/2026 21:35</td><td>ABC123</td><td>Conductor 1</td><td>1000001</td><td>—</td><td>—</td><td>—</td><td>250</td><td>5 000</td><td>Carta porte CP-002</td><td>No</td><td>$ 0</td><td>2026T00046</td><td>Por pesar</td><td><span class="btn">Ver</span> <span class="btn">Editar</span> <span class="btn">Anular</span></td></tr>
+<tr><td>10/11/2026 09:51</td><td>XYZ111</td><td>Conductor 3</td><td>1000003</td><td>25 000</td><td>15 000</td><td>10 000</td><td>400</td><td>15 000</td><td>Carta porte CP-004</td><td>No</td><td>$ 20.000</td><td>2026T00040</td><td>Completado</td><td><span class="btn">Ver</span> <span class="btn">Editar</span> <span class="btn">Repesar</span> <span class="btn">Imprimir</span> <span class="btn">Anular</span></td></tr>
+<tr class="void"><td>09/11/2026 15:02</td><td>MNO777</td><td>Conductor 4</td><td>1000004</td><td>20 000</td><td>9 000</td><td>11 000</td><td>200</td><td>9 000</td><td>Carta porte CP-005</td><td>Sí</td><td>$ 20.000</td><td>2026T00031</td><td>Anulado</td><td><span class="btn">Ver</span></td></tr>
+</table>
+<div class="note">Fila de filtros bajo los encabezados (PR-05; el patrón general se fija en 3.3). Orden: más reciente primero (H-007). «Editar» abre P-BAS-02 hasta que Comercio Exterior confirma el depósito (AF-26). «Repesar» solo en ciclos de pesaje único cerrados (AF-40). «Imprimir» abre P-BAS-13 (AF-53). La segunda fila de ABC123 es su entrada duplicada, con su propio tiquete y valor $0 (AF-47, AF-50). Anulado: fila resaltada con su motivo (AF-23).</div>
+</section>
+
+<section class="screen" id="P-BAS-09">
+<h2>P-BAS-09 · Historial › Salidas</h2>
+<table>
+<tr><th>Fecha y hora ↓</th><th>Vehículo</th><th>Conductor</th><th>ID conductor</th><th>Mercancía (producto · embalaje · cantidad)</th><th>Peso vehículo</th><th>Peso al salir</th><th>Peso mercancía</th><th>Repesa</th><th>Valor</th><th>Salida</th><th>Tiquete</th><th>Estado</th><th>Acciones</th></tr>
+<tr class="flt"><td>desde–hasta</td><td>placa</td><td>nombre</td><td>documento</td><td>producto</td><td></td><td></td><td></td><td>sí/no</td><td></td><td>número</td><td>número</td><td>estado</td><td></td></tr>
+<tr><td>11/11/2026 08:10</td><td>GHI321</td><td>Conductor 5</td><td>1000005</td><td>Cebolla · Sacos · 300</td><td>12 500</td><td>21 500</td><td>9 000</td><td>Sí</td><td>$ 20.000</td><td>0040</td><td>2026T00050</td><td>Completado</td><td><span class="btn">Ver</span> <span class="btn">Editar</span> <span class="btn">Anular</span></td></tr>
+</table>
+<div class="note">Columnas del legacy (<code>mod_bascula/listarsalidas.php</code>) más salida, tiquete y estado.</div>
+</section>
+
+<section class="screen" id="P-BAS-10">
+<h2>P-BAS-10 · Historial › Solo báscula</h2>
+<table>
+<tr><th>Fecha y hora ↓</th><th>Vehículo</th><th>Conductor</th><th>ID conductor</th><th>Tercero</th><th>Pesaje</th><th>Repesaje</th><th>Tara</th><th>Valor</th><th>Tiquete</th><th>Estado</th><th>Acciones</th></tr>
+<tr class="flt"><td>desde–hasta</td><td>placa</td><td>nombre</td><td>documento</td><td>nombre o NIT</td><td></td><td></td><td></td><td></td><td>número</td><td>estado</td><td></td></tr>
+<tr><td>11/11/2026 10:00</td><td>JKL654</td><td>Conductor 6</td><td>1000006</td><td>—</td><td>8 200</td><td>—</td><td>—</td><td>$ 20.000</td><td>2026T00051</td><td>Completado</td><td><span class="btn">Ver</span> <span class="btn">Editar</span> <span class="btn">Repesar</span> <span class="btn">Anular</span></td></tr>
+</table>
+<div class="note">Columnas del legacy (<code>mod_bascula/listarsolopesajes.php</code>) con «Tercero» en lugar de mercancía, más tiquete y estado.</div>
+</section>
+
+<section class="screen" id="P-BAS-11">
+<h2>P-BAS-11 · Detalle del ciclo (drawer)</h2>
+<div class="drawer">
+ <div class="head"><span><strong>Detalle del ciclo de báscula</strong> <span class="tag">Completado</span><br><span class="muted">PLACA: ABC123 • Ingreso: 10/11/2026 21:35</span></span><span><span class="btn lnk">⤢</span><span class="btn lnk">✕</span></span></div>
+ <div class="box"><div class="row"><strong>1. DATOS DEL VEHÍCULO Y ENTRADA</strong><span class="f"></span><span class="tag">ABC123</span></div>
+  <div class="layout2"><div class="box"><span class="muted">CONDUCTOR</span><br>Conductor 1<br><span class="muted">CC 1000001</span></div><div class="box"><span class="muted">EMPRESA Y TIPO</span><br>Transportes Ejemplo<br><span class="muted">Colombia · Sencillo</span></div></div>
+  <div class="row"><span class="muted">Motivo: Descargue importación</span><span class="f"></span><span class="muted">10/11/2026 21:35</span></div></div>
+ <div class="box"><div class="row"><strong>2. PESAJE EN BÁSCULA (KG)</strong><span class="f"></span><span class="btn">✎ Editar pesajes</span></div>
+  <div class="layout2">
+   <div class="box"><div class="row"><strong>P. Indicador (kg)</strong><span class="f"></span><span class="tag">Bruto (P1)</span></div><div class="in ro">30 000</div><span class="muted">10/11/2026 · 21:40</span></div>
+   <div class="box"><div class="row"><strong>P. Vehículo / Tara (kg)</strong><span class="f"></span><span class="tag">Tara (P2)</span></div><div class="in ro">11 800</div><span class="muted">10/11/2026 · 22:40</span></div>
+   <div class="box"><div class="row"><strong>P. Manifiesto (kg)</strong><span class="f"></span><span class="tag">Documento</span></div><div class="in ro">18 000</div><span class="muted">Carta porte declarado</span></div>
+   <div class="box"><div class="row"><strong>P. Mercancía / Neto (kg)</strong><span class="f"></span><span class="tag">Neto actual</span></div><div class="in ro">18 200</div><span class="muted">Resultado neto báscula</span></div>
+  </div>
+  <div class="note">Aviso si el peso del manifiesto supera la diferencia de pesajes.</div></div>
+ <div class="box"><div class="row"><strong>Tickets asociados</strong><span class="f"></span><span class="tag">Multi-depósito</span></div>
+  <div class="layout2"><div class="box"><strong>2026T00045</strong> $ 20.000<br><span class="muted">Dec: 18 000 kg</span></div></div>
+  <div class="note">El tiquete de esta entrada. Una entrada duplicada muestra el suyo, con valor $0; cada entrada tiene su fila en el historial y su propio detalle (AF-50).</div></div>
+ <div class="box"><div class="row"><strong>FACTURA Y COBRO</strong><span class="f"></span><span class="tag">Liquidado</span></div><div class="row"><span class="muted">FACTURA: F-0891<br>Cliente: Cliente A</span><span class="f"></span><span>TOTAL COBRADO<br><strong>$ 20.000 COP</strong></span></div></div>
+ <div class="row"><span class="btn">⊘ Anular pesaje</span><span class="f"></span><span class="btn">Repesar</span><span class="btn">⎙ Imprimir tiquete</span><span class="btn pri">Cerrar</span></div>
+</div>
+<div class="note">Reemplaza el modal de detalle del historial actual. Sigue MK-07 (<code>levantamiento_staging/mockups/modelo_bascula/detalle_pesaje/</code>). «Imprimir tiquete» abre P-BAS-13 (AF-53). Se agrega «Repesar», solo en ciclos de pesaje único cerrados (AF-40).</div>
+</section>
+
+<section class="screen" id="P-BAS-12">
+<h2>P-BAS-12 · Tiquete impreso (contenido)</h2>
+<div class="paper">
+EMPRESA · NIT · dirección<br>ORDEN DE PESO N.º 2026T00045<br>FECHA 10/11/2026<br>---------------------------<br>CLIENTE: Cliente A · NIT<br>PLACA: ABC123 · CONDUCTOR: Conductor 1<br>INGRESO: 10/11/2026 21:35<br>---------------------------<br>MERCANCÍA<br>Cebolla · Sacos · 600<br>---------------------------<br>ENTRADA 21:40 Bruto 30 000 kg<br>SALIDA 22:40 Tara 11 800 kg<br>P. MANIFIESTO 18 000 kg<br>PESO MERCANCÍA 18 200 kg<br>---------------------------<br>VALOR TOTAL $ 20.000<br>Documento interno de control de pesaje. No es factura de venta.
+</div>
+<div class="note">Una línea por mercancía con producto, embalaje y cantidad (H-006). La hoja toma la altura de su contenido (PR-32). Lo que imprime depende de lo marcado en P-BAS-13.</div>
+</section>
+
+<section class="screen" id="P-BAS-13">
+<h2>P-BAS-13 · Modal de impresión del tiquete</h2>
+<div class="modal">
+ <div class="head"><strong>Imprimir tiquete · ABC123 · 2026T00045</strong><span class="btn lnk">✕</span></div>
+ <div class="row"><strong>Qué imprimir:</strong><span>[x] Entrada (bruto 30 000)</span><span>[x] Tara (calculada 12 000)</span><span class="muted">[ ] Repesaje (pendiente, deshabilitada)</span></div>
+ <div class="row"><span class="sw off">Incluir recibo ($ 20.000)</span></div>
+ <div class="field"><span>Observación (opcional)</span><div class="in">&nbsp;</div></div>
+ <div class="row"><span class="f"></span><span class="btn">Cancelar</span><span class="btn pri">⎙ Imprimir</span></div>
+</div>
+<div class="note">Se abre desde «Imprimir» en el paso Tiquete, en el detalle y en la fila del historial (AF-53). Las casillas se combinan: Entrada + Tara = «Entrada y tara» del legacy. Llegan marcadas según lo que ya tiene la entrada; lo que no existe sale deshabilitado (AF-52). Un solo botón «Imprimir»: reemplaza «Imprimir sin observaciones» y «Guardar e Imprimir».</div>
+</section>
+</body>
+</html>

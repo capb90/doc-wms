@@ -1,0 +1,358 @@
+<!DOCTYPE html><html lang="es" data-lt-installed="true"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Recepción Física de Mercancía en Bodega</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/primeicons/6.0.1/primeicons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+            },
+            surface: {
+              ground: '#f8fafc',
+              section: '#f1f5f9',
+              card: '#ffffff',
+              border: '#e2e8f0',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #0f172a;
+      overflow-x: hidden;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="min-h-screen relative flex items-center justify-center p-2 sm:p-4 bg-slate-900/80 backdrop-blur-sm">
+<!-- Background App Mockup (Bodegas Asociadas Context) -->
+<div class="fixed inset-0 pointer-events-none opacity-20 z-0 overflow-hidden flex flex-col">
+<div class="h-14 bg-amber-400 border-b border-amber-500 flex items-center px-6 gap-3">
+<div class="h-8 w-28 bg-slate-900 rounded font-bold text-white flex items-center justify-center text-xs">BODEGAS ASOCIADAS</div>
+</div>
+<div class="flex-1 flex">
+<div class="w-60 bg-white border-r border-slate-200 p-4 space-y-3">
+<div class="h-6 bg-slate-200 rounded w-3/4"></div>
+<div class="h-6 bg-slate-100 rounded w-1/2"></div>
+<div class="h-6 bg-slate-100 rounded w-2/3"></div>
+</div>
+<div class="flex-1 p-6 space-y-4 bg-slate-100">
+<div class="h-10 bg-white rounded shadow-sm w-full"></div>
+<div class="h-64 bg-white rounded shadow-sm w-full"></div>
+</div>
+</div>
+</div>
+<!-- MODAL PRINCIPAL: RECEPCIÓN FÍSICA EN BODEGA -->
+<div class="relative z-10 w-full max-w-5xl bg-white rounded-2xl shadow-2xl border border-slate-200 flex flex-col max-h-[94vh] overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+<!-- HEADER MODAL FIJO -->
+<header class="px-6 py-4 bg-white border-b border-slate-200 flex items-center justify-between shrink-0">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-blue-50 border border-blue-100 flex items-center justify-center text-blue-600 shadow-sm">
+<i class="pi pi-box text-lg"></i>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-lg font-bold text-slate-900 tracking-tight">Recepción Física de Mercancía</h1>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+              En Muelle
+            </span>
+</div>
+<p class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
+<span>Vehículo: <strong class="text-blue-700 font-mono text-sm bg-blue-50 px-1.5 py-0.5 rounded border border-blue-200 font-bold">IAI3204</strong></span>
+<span class="text-slate-300">•</span>
+<span>Ingreso: 19/11/2026 06:45</span>
+<span class="text-slate-300">•</span>
+<span class="text-slate-600">Almacén Central · Bahía 04</span>
+</p>
+</div>
+</div>
+<div class="flex items-center gap-2">
+<button class="px-2.5 py-1 text-xs font-medium text-slate-500 bg-slate-100 hover:bg-slate-200 rounded border border-slate-200 transition-colors flex items-center gap-1" title="Atajo de teclado" type="button">
+<span class="font-mono text-[10px] bg-white px-1 rounded shadow-2xs border border-slate-300">Esc</span> Cerrar
+        </button>
+<button class="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 flex items-center justify-center transition-colors" type="button">
+<i class="pi pi-times text-base"></i>
+</button>
+</div>
+</header>
+<!-- CONTENIDO CON SCROLL INTELIGENTE COMPACTO -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-6 space-y-5 bg-slate-50/60">
+<!-- SECCIÓN 1: DATOS CLAVE DE TRANSPORTE Y DOCUMENTO (COMPACTO EN 4 COLUMNAS) -->
+<section class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs">
+<div class="flex items-center justify-between pb-2.5 mb-3 border-b border-slate-100">
+<div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-slate-500">
+<i class="pi pi-info-circle text-blue-600"></i>
+            Información del Depósito &amp; Manifiesto
+          </div>
+<span class="text-[11px] text-slate-400">Verificado en báscula</span>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+<!-- Conductor -->
+<div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+<span class="block text-[10px] font-semibold uppercase text-slate-400">Conductor</span>
+<div class="font-semibold text-slate-800 truncate mt-0.5">ABELARDO MONTENEGRO</div>
+<div class="text-[11px] text-slate-500 font-mono">CC 040060285</div>
+</div>
+<!-- Transportadora -->
+<div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+<span class="block text-[10px] font-semibold uppercase text-slate-400">Empresa de Transporte</span>
+<div class="font-semibold text-slate-800 truncate mt-0.5" title="AGENCIA DE ADUANAS FESIA S.A.">AGENCIA DE ADUANAS FESIA</div>
+<div class="text-[11px] text-slate-500 font-mono">NIT / ID: 000000</div>
+</div>
+<!-- Mercancía / Declarado -->
+<div class="p-2.5 rounded-lg bg-blue-50/60 border border-blue-100">
+<span class="block text-[10px] font-semibold uppercase text-blue-700">Declarado en Manifiesto</span>
+<div class="font-semibold text-blue-950 mt-0.5 flex items-center justify-between">
+<span>680 Unidades</span>
+<span class="text-[10px] font-normal bg-blue-200/60 text-blue-800 px-1 rounded">SACOS</span>
+</div>
+<div class="text-[11px] text-blue-700 font-medium">FRIJOL DE CASTILLA</div>
+</div>
+<!-- Pesos -->
+<div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100 flex flex-col justify-between">
+<span class="block text-[10px] font-semibold uppercase text-slate-400">Peso Físico Neto</span>
+<div class="flex items-baseline justify-between mt-0.5">
+<span class="text-base font-bold text-slate-900 font-mono">0 <span class="text-xs font-normal text-slate-500">kg</span></span>
+<span class="text-[10px] text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200 font-medium">Báscula lista</span>
+</div>
+<div class="text-[10px] text-slate-400">Stock actual: 680 Unidades</div>
+</div>
+</div>
+</section>
+<!-- SECCIÓN 2: REGISTRO DE DESCARGA RÁPIDO (CARD PRINCIPAL ERGONÓMICO) -->
+<section class="bg-white border border-slate-200 rounded-xl p-5 shadow-2xs">
+<div class="flex items-center justify-between mb-4">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-xs font-bold shadow-xs">1</span>
+<h2 class="text-sm font-bold text-slate-900">Productos Descargados a Bodega</h2>
+</div>
+<span class="text-xs font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 flex items-center gap-1">
+<i class="pi pi-check text-[10px]"></i> Solo cantidades mayores a cero
+          </span>
+</div>
+<!-- Fila de Producto Activo -->
+<div class="bg-slate-50/60 border border-slate-200 rounded-xl p-5 transition-all hover:border-blue-300 shadow-2xs space-y-4">
+  <!-- Header del Producto: Limpio y balanceado a todo lo ancho -->
+  <div class="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-200/80">
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2">
+        <span class="font-bold text-slate-900 text-sm tracking-tight">FRIJOL DE CASTILLA</span>
+        <span class="px-2 py-0.5 bg-slate-200 text-slate-700 text-[11px] font-semibold rounded">SACOS</span>
+      </div>
+      <span class="text-slate-300 hidden sm:inline">•</span>
+      <span class="text-xs text-slate-500">Declarado camión: <strong class="text-slate-800 font-semibold">680 Unidad</strong></span>
+    </div>
+    <div class="flex items-center gap-2">
+      
+    </div>
+  </div>
+
+  <!-- Campos Distribuidos Equitativamente en Todo el Ancho (3 Columnas Balanceadas) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-start">
+    <!-- Columna 1: Cantidad Descargada -->
+    <div class="space-y-1.5">
+      <label class="block text-xs font-semibold text-slate-700 flex items-center justify-between" for="input-cant">
+        <span>Cantidad descargada *</span>
+        <span class="text-[10px] text-slate-400 font-normal">Máx: 680</span>
+      </label>
+      <div class="relative flex items-center">
+        <input class="w-full text-base font-bold text-slate-900 bg-white border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3 py-2 text-right pr-12 transition-all shadow-2xs font-mono" id="input-cant" max="680" min="1" placeholder="0" type="number" value="680">
+        <span class="absolute right-3 text-xs font-medium text-slate-400 pointer-events-none">Unid</span>
+      </div>
+      <p class="text-[11px] text-emerald-600 flex items-center gap-1 mt-1 font-medium">
+        <i class="pi pi-check text-[10px]"></i> Coincide con lo declarado
+      </p>
+    </div>
+
+    <!-- Columna 2: Ubicación en Bodega -->
+    <div class="space-y-1.5">
+      <label class="block text-xs font-semibold text-slate-700 flex items-center justify-between">
+        <span>Ubicación en Bodega *</span>
+        <button type="button" class="text-[11px] text-blue-600 font-medium hover:underline flex items-center gap-0.5 cursor-pointer">
+          + Nueva posición
+        </button>
+      </label>
+      <div class="relative">
+        <select class="w-full text-xs font-medium text-slate-800 bg-white border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3 py-2.5 appearance-none pr-8 transition-all shadow-2xs cursor-pointer">
+          <option disabled="" value="">Seleccione ubicación...</option>
+          <option selected="" value="b2-a1">BOD-02 · Bahía A-14 (Granos &amp; Secos)</option>
+          <option value="b2-a2">BOD-02 · Bahía A-15 (Granos &amp; Secos)</option>
+          <option value="b1-c3">BOD-01 · Posición C-03 (General)</option>
+          <option value="patio">Patio Techado · Descargue Transitorio</option>
+        </select>
+        <div class="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+          <i class="pi pi-chevron-down text-xs"></i>
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-500 flex items-center gap-1 mt-1">
+        <i class="pi pi-map-marker text-[10px] text-blue-500"></i> Disp: 1.200 sacos
+      </p>
+    </div>
+
+    <!-- Columna 3: Cuadrilla de Descargue -->
+    <div class="space-y-1.5">
+      <label class="block text-xs font-semibold text-slate-700">
+        Cuadrilla de Descargue
+      </label>
+      <div class="relative">
+        <select class="w-full text-xs font-medium text-slate-800 bg-white border border-slate-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-100 rounded-lg px-3 py-2.5 appearance-none pr-8 transition-all shadow-2xs cursor-pointer">
+          <option selected="" value="c1">Cuadrilla Los Halcones (4 operarios)</option>
+          <option value="c2">Cuadrilla Bodega Turno 1</option>
+          <option value="c3">Operador Montacargas Directo</option>
+          <option value="sin">Sin cuadrilla asignada</option>
+        </select>
+        <div class="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
+          <i class="pi pi-chevron-down text-xs"></i>
+        </div>
+      </div>
+      <p class="text-[11px] text-slate-400 flex items-center gap-1 mt-1">
+        <span>Registra pago a cuadrilla</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Observaciones / Comentarios Despejado y Espacioso -->
+  <div class="pt-2">
+    <label class="block text-xs font-semibold text-slate-600 mb-1.5 flex items-center gap-1.5">
+      <i class="pi pi-comment text-[11px] text-slate-400"></i>
+      <span>Observaciones de la carga (Opcional)</span>
+    </label>
+    <input class="w-full text-xs text-slate-700 bg-white border border-slate-200 focus:border-blue-400 focus:ring-2 focus:ring-blue-100 rounded-lg px-3.5 py-2.5 placeholder-slate-400 transition-all shadow-2xs" placeholder="Ej: Embalaje en perfecto estado, estibado según norma..." type="text" value="Sacos limpios y sellados, sin humedad visible al descargar.">
+  </div>
+</div>
+</section>
+<!-- SECCIÓN 3: VALIDACIÓN EN PARALELO (FIRMA CONDUCTOR Y FOTOS DE MERCANCÍA) -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Tarjeta A: Firma del Conductor -->
+<div class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs flex flex-col justify-between">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">2</span>
+<h3 class="text-xs font-bold text-slate-800">Firma del Conductor</h3>
+</div>
+<div class="flex items-center gap-1">
+<button class="text-[11px] text-slate-500 hover:text-slate-800 px-2 py-0.5 rounded hover:bg-slate-100 transition-colors flex items-center gap-1" type="button">
+<i class="pi pi-trash text-[10px]"></i> Limpiar
+              </button>
+<button class="text-[11px] font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 px-2 py-0.5 rounded border border-blue-200 transition-colors flex items-center gap-1" type="button">
+<i class="pi pi-pencil text-[10px]"></i> Capturar
+              </button>
+</div>
+</div>
+<!-- Canvas / Pad de Firma Simulado -->
+<div class="relative bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl h-28 flex flex-col items-center justify-center p-3 text-center group cursor-pointer hover:border-blue-400 transition-colors">
+<!-- Firma trazada (vector SVG simulado de firma real) -->
+<svg class="w-48 h-16 text-slate-800 stroke-current fill-none stroke-2 opacity-90" viewBox="0 0 200 80">
+<path d="M 20,50 Q 50,10 70,45 T 100,30 T 140,55 T 170,25 T 190,50 M 50,45 L 160,45" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
+<div class="absolute bottom-1.5 left-3 text-[10px] text-slate-400 font-mono">
+              Firmado por: Abelardo Montenegro · C.C. 040060285
+            </div>
+<div class="absolute top-1.5 right-2 text-[10px] text-emerald-600 bg-emerald-50 px-1.5 rounded font-medium flex items-center gap-1">
+<i class="pi pi-check text-[9px]"></i> Registrada
+            </div>
+</div>
+<div class="text-[10px] text-slate-400 text-center mt-1.5">
+            Certifica la entrega de la totalidad de las unidades registradas.
+          </div>
+</div>
+<!-- Tarjeta B: Fotos de la Mercancía -->
+<div class="bg-white border border-slate-200 rounded-xl p-4 shadow-2xs flex flex-col justify-between">
+<div class="flex items-center justify-between pb-2 mb-2 border-b border-slate-100">
+<div class="flex items-center gap-2">
+<span class="w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px] font-bold">3</span>
+<h3 class="text-xs font-bold text-slate-800">Fotos de Mercancía</h3>
+</div>
+<span class="text-[11px] font-medium text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full">
+<strong class="text-blue-600">2</strong> / 5 cargadas
+            </span>
+</div>
+<!-- Miniaturas y Dropzone compacto -->
+<div class="grid grid-cols-4 gap-2 h-28">
+<!-- Foto 1 cargada -->
+<div class="relative rounded-lg overflow-hidden border border-slate-200 bg-slate-100 group">
+<img alt="Mercancía en camión" class="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg">
+<span class="absolute bottom-0 inset-x-0 bg-slate-900/60 text-white text-[9px] px-1 py-0.5 truncate text-center">Camión abierto</span>
+<button class="absolute top-1 right-1 w-4 h-4 rounded-full bg-red-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<i class="pi pi-times text-[8px]"></i>
+</button>
+</div>
+<!-- Foto 2 cargada -->
+<div class="relative rounded-lg overflow-hidden border border-slate-200 bg-slate-100 group">
+<img alt="Sacos estibados" class="w-full h-full object-cover" src="https://www.gstatic.com/labs-code/stitch/stitch-placeholder-300x300.svg">
+<span class="absolute bottom-0 inset-x-0 bg-slate-900/60 text-white text-[9px] px-1 py-0.5 truncate text-center">Sacos estibados</span>
+<button class="absolute top-1 right-1 w-4 h-4 rounded-full bg-red-600 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+<i class="pi pi-times text-[8px]"></i>
+</button>
+</div>
+<!-- Botón Agregar Foto -->
+<button class="col-span-2 border-2 border-dashed border-blue-200 hover:border-blue-400 bg-blue-50/40 hover:bg-blue-50/80 rounded-xl flex flex-col items-center justify-center p-2 text-center transition-all group" type="button">
+<div class="w-7 h-7 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-1 group-hover:scale-105 transition-transform">
+<i class="pi pi-camera text-xs"></i>
+</div>
+<span class="text-xs font-semibold text-blue-700">Tomar / Cargar Foto</span>
+<span class="text-[9px] text-slate-400 mt-0.5">JPG, PNG hasta 5MB</span>
+</button>
+</div>
+<div class="text-[10px] text-slate-400 text-center mt-1.5">
+            Recomendado: 1 foto de placa y bultos, 1 de precintos o estibas.
+          </div>
+</div>
+</section>
+</div>
+<!-- FOOTER FIJO CON ACCIONES PRINCIPALES PRIMEVUE -->
+<footer class="px-6 py-3.5 bg-white border-t border-slate-200 flex items-center justify-between shrink-0 shadow-lg">
+<div class="flex items-center gap-2">
+<button class="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 bg-white hover:bg-slate-100 rounded-lg border border-slate-300 transition-all flex items-center gap-1.5 active:scale-98" type="button">
+<i class="pi pi-times text-xs"></i> Cancelar
+        </button>
+
+</div>
+<div class="flex items-center gap-3">
+<div class="hidden sm:block text-right">
+<div class="text-[11px] text-slate-400">Total a recibir en bodega</div>
+<div class="text-xs font-bold text-slate-800">680 Unidades · Bodega 02</div>
+</div>
+<button class="px-6 py-2.5 text-xs font-bold text-white bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 rounded-lg shadow-sm hover:shadow transition-all flex items-center gap-2 group active:scale-98" type="button">
+<span>Completar Recepción</span>
+<i class="pi pi-check text-xs group-hover:translate-x-0.5 transition-transform font-bold"></i>
+</button>
+</div>
+</footer>
+</div>
+
+
+
+
+</body></html>

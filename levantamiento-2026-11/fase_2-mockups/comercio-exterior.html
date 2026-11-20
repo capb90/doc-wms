@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fase 2 · Comercio Exterior</title>
+<link rel="stylesheet" href="wireframe.css">
+</head>
+<body>
+<h1>Fase 2 · Comercio Exterior — wireframes</h1>
+<p class="muted">Baja fidelidad. Datos ficticios. Siguen MK-02 (tabla), MK-03 (detalle), MK-04 y MK-05 (levantes). Documento: <code>../fase_2-analisis-funcional-2026-11-19.md</code> §2.3.</p>
+<p class="muted">Menú: Dashboard · <strong>Depósitos</strong> (Importación, Exportación, Inspección) · <strong>Tickets de ingreso</strong> · <strong>Levantes</strong> · <strong>Salidas</strong> · Abandono y prórrogas · Listas de empaque.</p>
+<p class="toc"><a href="#P-CE-01">01 Depósitos</a><a href="#P-CE-02">02 Detalle y Entradas</a><a href="#P-CE-03">03 Edición del ingreso</a><a href="#P-CE-04">04 Datos principales</a><a href="#P-CE-05">05 Bodega</a><a href="#P-CE-06">06 Amparados</a><a href="#P-CE-07">07 Levantes (etapa)</a><a href="#P-CE-08">08 Salidas (etapa)</a><a href="#P-CE-09">09 Tickets de ingreso</a><a href="#P-CE-10">10 Levantes (vista 2)</a><a href="#P-CE-11">11 Salidas</a><a href="#P-CE-12">12 Inventario nacionalizado</a></p>
+
+<section class="screen" id="P-CE-01">
+<h2>P-CE-01 · Depósitos › Importación</h2>
+<div class="box"><div class="row"><span>Estado:</span><span class="radio on">Borrador</span><span class="radio">Confirmado</span><span class="radio">Cerrado</span><span class="radio">Anulado</span><div class="field"><span>Desde</span><div class="in">01/11/2026</div></div><div class="field"><span>Hasta</span><div class="in">30/11/2026</div></div><span class="f"></span><span class="btn">Exportar</span></div></div>
+<table>
+<tr><th></th><th>Fecha ↕</th><th>N.º depósito ↕</th><th>Doc. comercial ↕</th><th>Tiquetes ↕</th><th>Terceros</th><th>Mercancía ↕</th><th>Pesos</th><th>Estado</th><th>Acciones</th></tr>
+<tr class="flt"><td></td><td></td><td>número</td><td>tipo o número</td><td>tiquete</td><td></td><td>producto</td><td></td><td></td><td></td></tr>
+<tr><td>▾</td><td>02/11/2026 09:40</td><td>2026BA00003<br><span class="muted">Placa IAA111</span></td><td>Carta porte<br>EC0001</td><td>2026T00298<br>2026T00299</td><td>Cliente: Cliente A<br>Importador: Importador A</td><td>Cebolla (Sacos)</td><td>Bruto 44 820 · Mercancía 32 980 · Tara 11 840 · Manifiesto 44 980</td><td>Borrador · <span class="tag">2 etapas pendientes</span></td><td><span class="btn">Ver depósito</span></td></tr>
+<tr class="exp"><td colspan="10">
+ <div class="row"><strong>Pesajes y desglose de mercancía</strong><span class="f"></span><span class="tag">Manifiesto DIAN: 1165750</span><span class="tag">Valor: USD 20.629,20</span></div>
+ <table><tr><th>Vehículo</th><th>Mercancía (embalaje)</th><th>Cantidad</th><th>Cant. ampara</th><th>Peso (kg)</th><th>Tiquete</th><th>MPreimp</th><th>Acciones</th></tr>
+ <tr><td>IAA111</td><td>Cebolla (Sacos)</td><td>720</td><td>800</td><td>32 980</td><td>298</td><td>PE003265</td><td><span class="btn lnk">Etiqueta</span> <span class="btn lnk">Tiquete</span></td></tr>
+ <tr><td>TLM442</td><td>Cebolla (Sacos)</td><td>40</td><td>50</td><td>11 840</td><td>299</td><td>PE003268</td><td><span class="btn lnk">Etiqueta</span> <span class="btn lnk">Tiquete</span></td></tr></table>
+ <div class="row"><span class="muted">Cant. entra 760 · Cant. ampara 850 · Saldo −90 (rojo) | Peso entra 44 820 · Peso ampara 44 820 · Saldo 0</span><span class="f"></span><span class="btn">Gestionar amparados</span></div>
+</td></tr>
+</table>
+<div class="note">Filtro por estado, uno a la vez, Borrador por defecto, y fechas (PR-15, AF-72). No van los filtros «Todos / Pendientes / Facturados» de MK-02. La tabla reemplaza el tablero y el drawer de la visita. Filtros por columna en N.º de depósito, documento, tiquete y mercancía, y orden (↕) en las columnas; «Ver depósito» solo en la fila principal (AF-99). Exportación e Inspección usan la misma tabla.</div>
+</section>
+
+<section class="screen" id="P-CE-02">
+<h2>P-CE-02 · Detalle del depósito: encabezado y etapa Entradas</h2>
+<div class="head"><span><strong>Depósito 2026BA00003</strong> <span class="tag">Importación</span> <span class="tag">Sin nacionalizar</span></span><span><span class="tag">Borrador</span> <span class="btn">← Volver</span> <span class="btn">Acciones ▾</span></span></div>
+<div class="note">«Acciones»: Confirmar, Imprimir etiqueta (depósito y por vehículo), Registrar prórroga, Anular. Sin «Devolver a Borrador» ni «Cerrar ingreso de camiones» (AF-93, AF-95).</div>
+<div class="row steps"><span class="cur">1 Entradas</span><span>2 Datos principales ●</span><span>3 Bodega ● (amarillo)</span><span>4 Amparados ● (rojo)</span><span>5 Levantes</span><span>6 Salidas</span></div>
+<div class="note">● = etapa con información pendiente, en color (AF-73).</div>
+<div class="layout">
+<div>
+ <div class="box"><h3>Etapa 1 · Entradas</h3>
+ <table><tr><th>Fecha y hora</th><th>Placa</th><th>Conductor</th><th>Tiquete</th><th>Mercancía (embalaje)</th><th>P. bruto</th><th>P. mercancía</th><th>Tara</th><th>Cantidad</th><th>P. manifiesto</th><th>Dif. manif.</th><th>Acciones</th></tr>
+ <tr><td>02/11/2026 09:40</td><td>IAA111</td><td>Conductor 1</td><td>2026T00298</td><td>Cebolla (Sacos)</td><td>44 820</td><td>32 980</td><td>11 840</td><td>720</td><td>33 000</td><td>−20</td><td><span class="btn">Editar</span></td></tr></table>
+ <div class="note">«Editar» abre la edición del ingreso (P-CE-03). «Dif. manif.» compara el manifiesto con la mercancía (AF-41).</div></div>
+</div>
+<div class="side">
+ <div class="box"><h3>Información general</h3><span class="muted">Placas: IAA111, TLM442<br>Producto: Cebolla<br>Importador: Importador A · NIT<br>Manifiesto DIAN: 1165750<br>Fecha y hora: 02/11/2026 09:40</span></div>
+ <div class="box"><h3>Balance de cantidades</h3><span class="muted">Total entrada 760 · Amparado 850 · Saldo −90</span></div>
+ <div class="box"><h3>Balance de pesos</h3><span class="muted">Peso entrada 44 820 · Peso amparado 44 820 · Saldo 0</span></div>
+ <div class="box"><h3>Progreso</h3><span class="muted">1 Entradas · 2 Datos principales · 3 Bodega · 4 Amparados · 5 Levantes · 6 Salidas</span></div>
+ <div class="note">Como MK-03, sin subpartida (AF-98).</div>
+</div>
+</div>
+</section>
+
+<section class="screen" id="P-CE-03">
+<h2>P-CE-03 · Edición del ingreso (desde Entradas o Tickets de ingreso)</h2>
+<div class="head"><span><strong>Editar ingreso · IAA111 · 2026T00298</strong><br><span class="muted">Depósito 2026BA00003 · Confirmado</span></span><span><span class="btn">← Volver</span> <span class="btn pri">Guardar</span></span></div>
+<div class="box"><div class="row"><strong>1. VIGILANCIA</strong><span class="muted">MOTIVO · FECHA · PLACA</span><span class="f"></span><span class="btn">Editar</span></div></div>
+<div class="box"><div class="row"><strong>2. CAMIÓN Y CONDUCTOR</strong><span class="muted">Empresa · País | Conductor · documento</span><span class="f"></span><span class="btn">Editar</span></div></div>
+<div class="box"><h3>3. Registro de operación</h3><span class="muted">Modalidad (no cambia) · tipo y número de documento · N.º de manifiesto · mercancía declarada (+ Agregar producto)</span></div>
+<div class="box"><h3>4. Pesaje (kg)</h3><div class="layout2"><div class="field"><span>P. indicador</span><div class="in">44 820</div></div><div class="field"><span>P. vehículo / tara</span><div class="in ro">11 840</div></div><div class="field"><span>P. manifiesto</span><div class="in">33 000</div></div><div class="field"><span>P. mercancía</span><div class="in">32 980</div></div></div></div>
+<div class="box"><h3>5. Comercio Exterior</h3>
+ <div class="row"><span class="sw">Unidad de carga</span><span class="muted">(encendido: unidades de carga; apagado: mercancía suelta)</span></div>
+ <table><tr><th>Tipo de unidad</th><th>Placa</th><th></th></tr><tr><td>Contenedor</td><td>MSDU829104-1</td><td><span class="btn lnk">Quitar</span></td></tr></table><span class="btn">+ Agregar unidad</span>
+ <div class="row"><div class="field f"><span>Fecha del manifiesto</span><div class="in">01/11/2026</div></div><div class="field f"><span>Precio de la mercancía (este camión)</span><div class="in">15.000,00</div></div><div class="field"><span>Moneda (del depósito)</span><div class="in ro">USD</div></div></div>
+</div>
+<div class="note">Secciones 1 a 4 = formulario de báscula (P-BAS-02). CE edita en cualquier estado, salvo lo levantado o despachado (AF-26). Switch «Unidad de carga» en lugar de «Tipo de carga» (AF-102); con él encendido se agregan y quitan unidades mientras ningún producto tenga levante o salida (AF-27). Precio por camión que suma al valor CPI (AF-94).</div>
+</section>
+
+<section class="screen" id="P-CE-04">
+<h2>P-CE-04 · Etapa Datos principales</h2>
+<div class="box"><h3>Ingreso</h3><div class="row"><div class="field req"><span>Fecha y hora de ingreso</span><div class="in">02/11/2026 09:40</div></div></div></div>
+<div class="box"><h3>Documento comercial</h3><div class="row"><div class="field req f"><span>Tipo de documento</span><div class="in sel">Carta porte</div></div><div class="field req f"><span>Número de documento</span><div class="in">EC0001</div></div><div class="field req f"><span>Fecha del documento</span><div class="in">31/10/2026</div></div></div></div>
+<div class="box"><h3>Manifiesto DIAN</h3><div class="row"><div class="field req f"><span>N.º manifiesto DIAN (con prefijo)</span><div class="in">1165750</div></div><div class="field f"><span>Fecha del manifiesto DIAN</span><div class="in">02/11/2026</div></div></div></div>
+<div class="box"><h3>Terceros</h3>
+ <div class="layout2">
+  <div class="row"><div class="field f"><span>Cliente (opcional para confirmar)</span><div class="in sel">Cliente A</div></div><span class="btn">+</span></div>
+  <div class="row"><div class="field req f"><span>Importador</span><div class="in sel">Importador A</div></div><span class="btn">+</span></div>
+  <div class="row"><div class="field req f"><span>Agencia de aduanas</span><div class="in sel">Agencia A</div></div><span class="btn">+</span></div>
+  <div class="field"><span>Empresas de transporte (de los camiones, solo lectura)</span><div class="in ro">Transportes Ejemplo (IAA111) · Transportes Dos (TLM442)</div></div>
+ </div></div>
+<div class="box"><h3>Pesos y valor CPI</h3><div class="row"><div class="field f"><span>Peso neto CPI (kg)</span><div class="in">44 820</div></div><div class="field f"><span>Peso bruto CPI (kg)</span><div class="in">44 980</div></div><div class="field req f"><span>Valor CPI (precargado: suma por camión)</span><div class="in">20.629,20</div></div><div class="field req f"><span>Moneda</span><div class="in sel">USD</div></div></div></div>
+<div class="row"><span class="f"></span><span class="btn pri">Guardar</span></div>
+<div class="note">Bloques por categoría y cada dato del documento comercial en su propio campo (AF-100). Editable en Borrador y Confirmado; lo que afecta el cobro recalcula la factura (AF-76). «+» = alta rápida (AF-92). La transportadora se edita por camión en la edición del ingreso (AF-101). En exportación: exportador en lugar de importador y agencia; en inspección: descripción de la inspección en el bloque Documento comercial.</div>
+</section>
+
+<section class="screen" id="P-CE-05">
+<h2>P-CE-05 · Etapa Bodega</h2>
+<table><tr><th>Entrada</th><th>Estado</th><th>Tiempo</th><th>Contado</th><th>Ubicación</th><th>Cuadrilla</th></tr>
+<tr><td>IAA111 · 2026T00298</td><td>Recibida</td><td>—</td><td>720</td><td>BOD-02 · A-14</td><td>Cuadrilla 1</td></tr>
+<tr><td>TLM442 · 2026T00299</td><td>Pendiente</td><td>1 h 20 (amarillo)</td><td>—</td><td>—</td><td>—</td></tr></table>
+<div class="row"><strong>Inventario</strong><span class="muted">Cebolla · stock 760 · reservado 0 · disponible 760 · ubicaciones BOD-02 A-14</span><span class="f"></span><span class="btn">Ajustar cantidad (CE-7)</span><span class="btn">Movimientos</span><span class="btn">Novedades</span></div>
+<div class="note">Solo lectura, salvo el ajuste CE-7. El color sigue los umbrales de Bodega (AF-57).</div>
+</section>
+
+<section class="screen" id="P-CE-06">
+<h2>P-CE-06 · Etapa Amparados</h2>
+<table><tr><th>Producto (embalaje)</th><th>Cant. ingresada</th><th>Cant. del depósito</th><th>Cant. amparada</th><th>Saldo</th><th>Levantado</th><th>Despachado</th><th></th></tr>
+<tr><td>Cebolla (Sacos)</td><td>760</td><td><div class="in">760</div></td><td><div class="in">850</div></td><td>−90 (rojo)</td><td>0</td><td>0</td><td><span class="btn lnk">Quitar</span></td></tr></table>
+<div class="row"><span class="btn">+ Agregar producto</span><span class="f"></span><span class="btn pri">Guardar</span></div>
+<div class="note">Confirmar exige saldo cero en todos los productos (AF-77). Cantidad del depósito no menor que lo levantado ni lo despachado; un producto con levante o salida no se quita (AF-78). Selector de producto con «+» y embalaje junto al nombre (AF-92). Un camión tardío deja el saldo en rojo y avisa (AF-84).</div>
+</section>
+
+<section class="screen" id="P-CE-07">
+<h2>P-CE-07 · Etapa Levantes (Vista 1)</h2>
+<div class="head"><strong>Levantes</strong><span><span class="btn">Exportar</span> <span class="btn pri">Nuevo levante</span></span></div>
+<div class="row"><div class="box f">Ingreso<br>760 · 44 820 kg</div><div class="box f">Nacionalizado<br>300 · 39 % ▮▮▯▯</div><div class="box f">Saldo en bodega<br>460 · 27 100 kg</div><div class="box f">Levantes<br>2 · 1 mercancía</div></div>
+<div class="note">Alerta de diferencia de peso: aparece cuando lo nacionalizado no cuadra con el peso de ingreso.</div>
+<table>
+<tr><th>N.º levante</th><th>N.º aceptación</th><th>Fecha levante</th><th>Tasa</th><th>Valor en aduanas (USD)</th><th>Valor (COP)</th><th>Cantidad</th><th>Peso (kg)</th><th>Acciones</th></tr>
+<tr><td colspan="6"><strong>Cebolla</strong> · Sacos · <span class="tag">Parcial</span></td><td>760</td><td>44 820</td><td></td></tr>
+<tr><td>37202600011</td><td>48202600022</td><td>05/11/2026</td><td>4.020</td><td>8.000,00</td><td>32.160.000</td><td>300</td><td>17 700</td><td><span class="btn lnk">Ver</span> <span class="btn lnk">Editar</span> <span class="btn lnk">Retirar</span></td></tr>
+<tr><td><div class="in">372026 …</div></td><td><div class="in">482026 …</div></td><td><div class="in">12/11/2026</div></td><td><div class="in">4.050</div></td><td><div class="in">&nbsp;</div></td><td class="muted">calculado</td><td><div class="in">460</div></td><td><div class="in">27 120</div></td><td><span class="btn pri">Guardar</span> <span class="btn">Cancelar</span></td></tr>
+<tr><td colspan="6">Nacionalizado</td><td>300</td><td>17 700</td><td></td></tr>
+<tr><td colspan="6">Saldo</td><td>460</td><td>27 120</td><td></td></tr>
+</table>
+<div class="note">Fila editable con el saldo disponible; al guardar vuelve a ofrecerse con el nuevo saldo (AF-80, AF-82). N.º con prefijo precargado (AF-79). Tasa precargada por la semana de la fecha del levante, editable (AF-86). Cantidad calculada desde el peso con un producto; con varios, lo pendiente; siempre editable (AF-83). Valor en aduanas una vez por levante (DEC-029 §7.8). Sin fecha de aceptación (AF-82).</div>
+</section>
+
+<section class="screen" id="P-CE-08">
+<h2>P-CE-08 · Etapa Salidas</h2>
+<div class="head"><strong>Salidas</strong><span class="btn pri">Nueva salida</span></div>
+<table>
+<tr><th></th><th>Fecha</th><th>Salida</th><th>Guía</th><th>Tipo</th><th>Estado / falta</th><th>Ciudad destino</th><th>Peso despachado</th><th>Observaciones</th><th>Acciones</th></tr>
+<tr><td>▾</td><td>12/11/2026</td><td>0040</td><td>2026S00033</td><td>Por número de depósito</td><td>Confirmada · falta pesaje</td><td>Pasto</td><td>—</td><td>—</td><td><span class="btn">Anular guía</span></td></tr>
+<tr class="exp"><td colspan="10"><table><tr><th>Producto</th><th>Cant. entrada</th><th>Saldo anterior</th><th>Cantidad que sale</th><th>Nuevo saldo</th></tr><tr><td>Cebolla · Sacos</td><td>760</td><td>760</td><td>300</td><td>460</td></tr></table><span class="muted">Total de la salida: 300</span> <span class="btn lnk">Descargar guía</span></td></tr>
+</table>
+<div class="note">«Editar» solo en Borrador; confirmada, se corrige anulando la guía mientras no esté completada (AF-90). «Nueva salida» abre P-CE-11 con el depósito precargado (AF-96). Peso despachado del pesaje de salida (AF-42).</div>
+</section>
+
+<section class="screen" id="P-CE-09">
+<h2>P-CE-09 · Tickets de ingreso</h2>
+<table>
+<tr><th>Fecha y hora ↓</th><th>Placa</th><th>Conductor</th><th>Tiquete</th><th>Mercancía (embalaje)</th><th>P. bruto</th><th>P. mercancía</th><th>Tara</th><th>Cantidad</th><th>P. manifiesto</th><th>Depósito</th><th>Acciones</th></tr>
+<tr class="flt"><td>desde–hasta</td><td>placa</td><td>nombre</td><td>número</td><td>producto</td><td></td><td></td><td></td><td></td><td></td><td>número</td><td></td></tr>
+<tr><td>02/11/2026 09:40</td><td>IAA111</td><td>Conductor 1</td><td>2026T00298</td><td>Cebolla (Sacos)</td><td>44 820</td><td>32 980</td><td>11 840</td><td>720</td><td>33 000</td><td><u>2026BA00003</u></td><td><span class="btn">Editar</span></td></tr>
+</table>
+<div class="note">El número de depósito enlaza al detalle; «Editar» abre P-CE-03 (PR-18, AF-74). Salidas y solo pesaje: historial de báscula en solo lectura.</div>
+</section>
+
+<section class="screen" id="P-CE-10">
+<h2>P-CE-10 · Levantes (Vista 2)</h2>
+<div class="row"><div class="field f"><span>Buscar depósito, documento, importador, mercancía o N.º de levante</span><div class="in">&nbsp;</div></div><span class="tag">Todos 12</span><span class="tag">Sin nacionalizar 4</span><span class="tag">Parcial 5</span><span class="tag">Nacionalizados 3</span><span class="btn">Con diferencia de peso</span></div>
+<table>
+<tr><th></th><th>Depósito</th><th>Documento comercial</th><th>Terceros</th><th>Mercancía</th><th>Ingreso</th><th>Nacionalizado</th><th>Saldo</th><th>Estado</th></tr>
+<tr><td>▾</td><td>2026BA00003<br>02/11/2026</td><td>Carta porte EC0001<br>Manif. 1165750</td><td>Importador A</td><td>Cebolla</td><td>760 · 44 820 kg</td><td>300 / 760 · 39 %</td><td>460 · 27 120 kg</td><td>Parcial · 2 levantes</td></tr>
+<tr class="exp"><td colspan="9"><span class="muted">Levantes de 2026BA00003 · tabla agrupada compacta (como P-CE-07) con «Agregar levante» · <u>Ver detalle del depósito</u></span></td></tr>
+</table>
+<div class="note">Reemplaza la página «Levantes» actual (AF-80). Sigue MK-05, con «Valor en aduanas (USD)» (AF-81).</div>
+</section>
+
+<section class="screen" id="P-CE-11">
+<h2>P-CE-11 · Salidas: listado y nueva salida (propuesta)</h2>
+<div class="head"><strong>Salidas</strong><span class="btn pri">+ Nueva salida</span></div>
+<table>
+<tr><th>Salida</th><th>Fecha</th><th>Tipo</th><th>Estado</th><th>Depósitos</th><th>Placas</th><th>Guía</th><th>Falta</th><th>Acciones</th></tr>
+<tr class="flt"><td>número</td><td>desde–hasta</td><td>tipo</td><td>estado</td><td>depósito</td><td>placa</td><td>número</td><td></td><td></td></tr>
+<tr><td>0041</td><td>12/11/2026</td><td>Consolidada</td><td>Confirmada</td><td>2026BA00011, 2026BA00015</td><td>PQR555</td><td>2026S00034</td><td>Cargue</td><td><span class="btn">Ver</span> <span class="btn">Descargar guía</span> <span class="btn">ZIP por depósito</span> <span class="btn">Anular guía</span></td></tr>
+<tr><td>0043</td><td>12/11/2026</td><td>Por número de depósito</td><td>Borrador</td><td>—</td><td>VWX888</td><td>—</td><td>Completar (creada en báscula)</td><td><span class="btn">Editar</span></td></tr>
+</table>
+<div class="modal" style="max-width:900px"><div class="head"><strong>Nueva salida</strong><span class="btn lnk">✕</span></div>
+ <div class="row"><span>Tipo:</span><span class="radio">Por tiquete de entrada</span><span class="radio">Global</span><span class="radio on">Por número de depósito</span><span class="muted">(con varios depósitos queda «Consolidada»)</span></div>
+ <div class="row"><div class="field req f"><span>Depósitos (confirmados y nacionalizados)</span><div class="in sel">2026BA00003</div></div><span class="btn">+ Agregar depósito</span></div>
+ <div class="note">En tiquete y global, en lugar de depósitos se marcan los tiquetes de ingreso del depósito: [x] 2026T00298 IAA111 · [x] 2026T00299 TLM442 (OV-05).</div>
+ <table><tr><th>Depósito</th><th>Producto</th><th>Nacionalizado disp.</th><th>Saldo anterior</th><th>Cantidad que sale</th><th>Nuevo saldo</th></tr>
+ <tr><td>2026BA00003</td><td>Cebolla · Sacos</td><td>300</td><td>760</td><td><div class="in">300</div></td><td>460</td></tr></table>
+ <div class="row"><div class="field req f"><span>Vehículo</span><div class="in sel">GHI321</div></div><span class="btn">+</span><div class="field req f"><span>Conductor</span><div class="in sel">Conductor 5</div></div><span class="btn">+</span><div class="field req f"><span>Ciudad destino</span><div class="in sel">Pasto</div></div></div>
+ <div class="row"><div class="field f"><span>Orden del cliente: número · emisor · fecha · soporte (opcional)</span><div class="in">&nbsp;</div></div><div class="field f"><span>Observaciones</span><div class="in">&nbsp;</div></div></div>
+ <div class="row"><span class="f"></span><span class="btn">Guardar borrador</span><span class="btn pri">Confirmar y emitir guía</span></div>
+</div>
+<div class="note">Propuesta (AF-89). Confirmar emite la guía y descuenta el stock (AF-36, AF-68); en inspección no hay guía (AF-88). La salida que crea Báscula en Borrador (placa, conductor, transportadora) se completa aquí (AF-37). ZIP por depósito solo en consolidadas (AF-97). Selectores paginados (PR-27).</div>
+</section>
+
+<section class="screen" id="P-CE-12">
+<h2>P-CE-12 · Reporte: inventario de mercancía nacionalizada</h2>
+<div class="row"><div class="field"><span>Levantes desde</span><div class="in">01/11/2026</div></div><div class="field"><span>Hasta</span><div class="in">30/11/2026</div></div><span class="btn pri">Consultar</span><span class="f"></span><span class="btn">PDF</span><span class="btn">Excel</span></div>
+<div class="paper" style="width:auto">
+DEPÓSITO 2026BA00003 · Carta porte EC0001 · Agencia A · Cliente A<br>
+MERCANCÍA | EMBALAJE | FECHA INGRESO | MANIFIESTO | INGRESO | EXIST. | NACIONALIZADOS<br>
+Cebolla | Sacos | 02/11/2026 | 1165750 | 760 | 460 | 300<br>
+&nbsp;&nbsp;Levante 37202600011 · Acept. 48202600022 · 05/11/2026 · 300 · 17 700 kg · USD 8.000,00<br>
+<br>
+______________________ &nbsp;&nbsp; ______________________<br>
+Jefe de Bodega &nbsp;&nbsp; Recibí conforme
+</div>
+<div class="note">Formato del legacy (<code>mod_inventario/reportenacionalizados.php</code>) con el detalle de cada levante (AF-91). Firmas «Jefe de Bodega» y «Recibí conforme», como el legacy.</div>
+</section>
+</body>
+</html>

@@ -16,7 +16,7 @@ Un mismo depósito de importación, `BA3066`: 1 producto (fruta fresca en cajas)
 | --- | --- | --- |
 | 0:00–0:24 | *Comercio Exterior › Depósitos Import.* — «Listado de depósitos en bodega» | Tabla: fecha, identificador del depósito, detalles (carta porte, importador, transportadora, manifiesto DIAN), producto y una subtabla por vehículo (placa, cantidad, peso). Bajo cada depósito: «Peso Entra», «P.Bruto Ampara», «Saldo Peso» y el botón «Gestionar Amparados». Una ventana de llamada tapa parte de la pantalla. |
 | 0:28 | *Levantes Import.* — «Registro de levante» | Nro. depósito, importador, carta porte, fecha y hora de ingreso, manifiesto. Matriz con filas **Ingreso / Nacionalizados / Saldo** y columnas **Cant. / Peso / una columna por producto** (930 · 24 940 kg · 930 cajas). Campos del levante: Tasa cambio (precargada, 3166,91), CIF USD, Peso bruto (kg), Nro. levante, Nro. aceptación, Fecha (solo la del levante), y FOB CO calculado. Botón «Lista de levantes». |
-| 0:40 | Registro de levante, digitando | Al escribir el peso bruto (249…) la cantidad del producto se calcula sola en proporción al saldo (9,29). Con 24 940 kg queda 930. FOB CO = CIF USD × tasa (≈ 10,18 millones con CIF 3216,03). |
+| 0:40 | Registro de levante, digitando | Al escribir el peso bruto (249…) la cantidad del producto se calcula sola en proporción a lo ingresado: 249 × 930 ÷ 24 940 = 9,29 (`registrarlevante.php:246-254`; solo con un producto, `:611`). Con 24 940 kg queda 930. FOB CO = CIF USD × tasa (≈ 10,18 millones con CIF 3216,03). |
 | 0:56 | Registro de levante, guardado | El levante aparece en la matriz (número de levante, aceptación, fecha, FOB US). Nacionalizados 930 / 24 940; **Saldo 0**. Iconos de editar y eliminar el levante. |
 | 1:12 | *Salidas Import.* — «Registro de salida de mercancía» | Encabezado del depósito y matriz de saldos (sin nacionalizar / nacionalizados / disponibles). Abajo, **un renglón por tiquete de ingreso** (dos tiquetes, cada uno con su peso) con la cantidad que sale; campos de fecha de salida, transportadora, cuadrilla y observaciones; botón «Guardar». |
 | 1:20 | Listado de depósitos | Varios depósitos con sus vehículos y el resumen de pesos; la operaria vuelve al listado tras guardar la salida. |
@@ -25,7 +25,7 @@ Un mismo depósito de importación, `BA3066`: 1 producto (fruta fresca en cajas)
 
 Hallazgos del video 1:
 
-1. **El levante calcula la cantidad desde el peso digitado**, en proporción al saldo del depósito. Es lo que la operaria pide en PA-12.
+1. **El levante calcula la cantidad desde el peso digitado**, en proporción a lo ingresado (no al saldo), y solo cuando el depósito tiene un producto. Es lo que la operaria pide en PA-12.
 2. **La tasa de cambio llega precargada** con la tasa semanal y es editable en el formulario (PA-08, PA-24).
 3. **Solo pide la fecha del levante**; no hay fecha de aceptación (PA-11).
 4. **Una matriz con una columna por producto** muestra ingreso, nacionalizado y saldo de todos los productos a la vez (PA-09).

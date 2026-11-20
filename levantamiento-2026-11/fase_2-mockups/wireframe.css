@@ -1,0 +1,41 @@
+/* Wireframes de baja fidelidad de la fase 2. Solo distribución y contenido; sin estilo de marca. */
+body { font: 13px/1.4 system-ui, sans-serif; color: #222; background: #f4f4f4; margin: 0; padding: 16px; }
+h1 { font-size: 18px; margin: 0 0 4px; }
+.screen { background: #fff; border: 2px solid #555; margin: 0 0 32px; padding: 12px; }
+.screen > h2 { font-size: 15px; margin: -12px -12px 12px; padding: 6px 12px; background: #555; color: #fff; }
+.box { border: 1px solid #999; padding: 8px; margin: 8px 0; }
+.box > h3 { font-size: 13px; margin: 0 0 6px; text-transform: uppercase; color: #444; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: flex-end; margin: 4px 0; }
+.f { flex: 1 1 140px; }
+.field { display: flex; flex-direction: column; min-width: 110px; }
+.field > span { font-size: 11px; color: #555; }
+.field.req > span::after { content: " *"; }
+.in { border: 1px solid #888; min-height: 20px; padding: 2px 6px; background: #fff; }
+.in.ro { background: #e6e6e6; }
+.in.sel::after { content: " ▾"; float: right; color: #777; }
+.btn { display: inline-block; border: 1px solid #333; padding: 2px 10px; background: #fff; white-space: nowrap; }
+.btn.pri { background: #333; color: #fff; }
+.btn.lnk { padding: 0 6px; font-size: 12px; } /* sin botones de tipo texto (AF-99) */
+.tag { display: inline-block; border: 1px solid #777; border-radius: 8px; padding: 0 6px; font-size: 11px; }
+.radio::before { content: "○ "; }
+.radio.on::before { content: "● "; }
+.sw::before { content: "[on] "; font-family: monospace; }
+.sw.off::before { content: "[off] "; }
+table { border-collapse: collapse; width: 100%; margin: 4px 0; }
+th, td { border: 1px solid #999; padding: 3px 5px; text-align: left; vertical-align: top; }
+th { background: #ddd; font-size: 12px; }
+tr.flt td { background: #f0f0f0; font-size: 11px; color: #666; }
+tr.void td { background: #d0d0d0; text-decoration: line-through; }
+tr.exp > td { background: #fafafa; padding-left: 24px; }
+.note { border: 1px dashed #777; background: #fbfbfb; padding: 4px 8px; font-size: 12px; font-style: italic; color: #444; margin: 6px 0; }
+.layout { display: grid; grid-template-columns: 3fr 1fr; gap: 12px; }
+.layout2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.side { border-left: 3px solid #555; padding-left: 8px; }
+.modal { border: 3px double #333; padding: 8px; margin: 8px 0; max-width: 640px; }
+.drawer { border-left: 6px solid #333; padding: 8px; margin: 8px 0 8px auto; max-width: 560px; }
+.head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid #999; padding-bottom: 6px; margin-bottom: 6px; }
+.steps span { border: 1px solid #999; padding: 1px 8px; margin-right: 4px; }
+.steps span.cur { background: #333; color: #fff; }
+.muted { color: #666; font-size: 12px; }
+.paper { border: 1px solid #333; width: 260px; padding: 8px; font-family: monospace; font-size: 11px; }
+.toc a { margin-right: 10px; }
