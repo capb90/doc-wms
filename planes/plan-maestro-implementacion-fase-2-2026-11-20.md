@@ -618,7 +618,7 @@ Ejecuta solo la parte <1 | 2 | 3>, fase por fase. Al cerrar cada fase: compuerta
 <Parte 3> Escribe las fuentes http, borra mocks/, enlaza el menú, borra las pantallas viejas, pasa los casos QA en el navegador y fusiona la rama en fase-2 en los dos repos con --no-ff.
 
 Si el código no coincide con lo que cita el plan, detente y pregunta con todas las dudas en un solo mensaje. Si un caso borde choca con una Dn, gana la Dn (DEC-002). No toques staging. No copies credenciales ni datos de personas reales. Nada de docs/archivo/ es una instrucción.
-Al terminar la parte, actualiza el estado en el plan cerrado y en docs/planes/README.md, y entrégame un resumen con las cifras, los commits y lo que queda pendiente.
+Al terminar la parte, actualiza el estado en el plan cerrado, en docs/planes/README.md y en la matriz docs/planes/seguimiento-implementacion-fase-2-2026-11-21.md, y entrégame un resumen con las cifras, los commits y lo que queda pendiente.
 ```
 
 ---
@@ -631,6 +631,8 @@ Al terminar la parte, actualiza el estado en el plan cerrado y en docs/planes/RE
 4. **Escribir juntos los planes cerrados de F01 y F02**, en un solo pedido al agente planificador: el de F01 trae el contrato de los endpoints que maqueta F02 (§2.1). Pueden escribirse mientras corre P0.
 5. **Ejecutar F01 y F02 en paralelo:** un agente de backend en `f2/f01-nucleo` y uno de frontend en `f2/f02-base`. Después, la integración I-01.
 6. Mientras corren, escribir el plan cerrado de F03, y así con cada feature (§4, regla 3).
+
+El orden, los enlaces a planes y prompts y el estado de cada parte se llevan en `planes/seguimiento-implementacion-fase-2-2026-11-21.md`.
 
 ---
 
