@@ -52,7 +52,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 
 | ID | 0 · Contrato | 1 · Backend | 2 · Maquetación | 3 · Integración | Commits (BE / FE) | Grupo | Estado |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| P0 | — | Hecho el 2026-11-21 en `p0/correos-por-rol`; falta la QA del usuario y la fusión en `develop` | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f` / — | Antes de G1 | En QA del usuario |
+| P0 | — | Hecho el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f`, fusión `529bda7` / — | Antes de G1 | Fase 1 en `develop`; falta staging |
 | F01 | Pendiente (con el plan) | Pendiente | — | Con I-01: Pendiente | — | G1 | Pendiente |
 | F02 | En el plan de F01 | — | Pendiente | Con I-01: Pendiente | — | G1 | Pendiente |
 | F03 | Pendiente | Pendiente | Pendiente | Pendiente | — | G1 | Pendiente |

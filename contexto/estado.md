@@ -35,7 +35,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 2026-10-27 | **Staging limpio (`DEC-043`, fase 4):** base recreada con 19 migraciones y el legacy migrado de nuevo con la herramienta actual (conjunto v4, corte en el 2026-10-26), con conteos idénticos al ensayo local; tarifas T1 a T4 y de montacargas; 5 cuentas `operario.*`; respaldos `local-staging` y `s3-externo`; sin datos de QA ni de práctica. Convenios y `open-billing` quedan para la fase 4b (`planes/migracion-staging/resultados/informe-staging-limpio-fase-4.md`) | `911399c` / `33fbeba` (sin cambios de código) |
 | 2026-11-17 → 19 | **Levantamiento de noviembre:** fase 1 (consolidación de hallazgos) y fase 2 (análisis funcional, 137 decisiones, `DEC-080`), sin código | — |
 | 2026-11-20 | **Plan maestro de la implementación de la fase 2** (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`): 9 features más P0, despliegue por grupos y ramas `fase-2` (`DEC-081`), sin código | — |
-| 2026-11-21 | **P0, fase 1: correos de aviso a los usuarios activos del rol** (`DEC-070`; `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`). Rama BE `p0/correos-por-rol`, pendiente de la QA del usuario y de la fusión en `develop`; sin desplegar (fase 2) | `1b2f09f` (rama `p0/correos-por-rol`) / — |
+| 2026-11-21 | **P0, fase 1: correos de aviso a los usuarios activos del rol** (`DEC-070`; `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`). QA del usuario y fusión en `develop`; sin desplegar (fase 2) | `529bda7` (fusión de `1b2f09f`) / — |
 
 ## 3. Staging
 
