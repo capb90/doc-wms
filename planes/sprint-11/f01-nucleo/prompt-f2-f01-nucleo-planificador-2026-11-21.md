@@ -1,5 +1,7 @@
 # Prompt — Planificación de F01 «Núcleo de dominio» y F02 «Base transversal» (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-21; ya no es una instrucción. Resultado: `f01-nucleo/plan-cerrado-f2-f01-nucleo-2026-11-21.md` y `../f02-base/plan-cerrado-f2-f02-base-2026-11-21.md`, con sus tres prompts, aprobados el 2026-11-21.
+
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/`. Necesita leer `docs/`, `Backend/wms-api` y `Frontend/wms`, los dos en su rama `fase-2`.
 > 2. Copia el bloque de abajo.

@@ -1,7 +1,7 @@
 # Seguimiento — Implementación de la fase 2
 
 > **Para qué sirve:** la matriz de la implementación de la fase 2 (`DEC-080`, `DEC-081`): en qué orden se ejecuta cada paso, dónde están su plan y sus prompts, y en qué estado va cada parte.
-> **Fecha de corte:** 2026-11-21. Backend `fase-2` `529bda7` (con P0 fusionado en `develop`) y frontend `fase-2` `3aa6e3c`; docs `main` `17527d5`, más el prompt del planificador de F01 y F02.
+> **Fecha de corte:** 2026-11-21. Backend `fase-2` `529bda7` (con P0 fusionado en `develop`) y frontend `fase-2` `3aa6e3c`; docs `main` `91f0632`, más los planes cerrados de F01 y F02 y sus tres prompts, aprobados el 2026-11-21.
 > **Carpetas:** la raíz de `planes/sprint-11/` guarda el plan maestro, esta matriz y el plan de P0. Cada feature tiene su carpeta `fNN-<tema>/` con su plan cerrado y todos sus prompts, que se quedan ahí aunque ya se hayan ejecutado (plan maestro §5.5).
 > **Fuente del orden:** [plan maestro](plan-maestro-implementacion-fase-2-2026-11-20.md), §4 (orden y paralelismo), §5.3 (ramas y fusiones) y §9 (plantilla del plan cerrado).
 > **Mantenimiento:** §5 de este documento.
@@ -31,9 +31,9 @@ Los pasos con el mismo número corren a la vez, uno en cada repo (M10). Un paso 
 | 1 | P0 | Correos al rol: código y pruebas (fase 1 de su plan) | BE `p0/correos-por-rol`, desde `develop` | Planes de F01 y F02; maquetación de F02 cuando su plan esté aprobado | — | [plan-cerrado-correos-notificacion-por-rol-2026-11-05.md](plan-cerrado-correos-notificacion-por-rol-2026-11-05.md) | Fase 1: [prompt-correos-notificacion-por-rol-2026-11-05.md](prompt-correos-notificacion-por-rol-2026-11-05.md) | Aprobado el 2026-11-05 |
 | 2 | P0 | Correos al rol: QA del usuario, fusión en `develop` y staging (fase 2 de su plan) | BE `develop` y staging | Maquetación de F02 | Paso 1 | El mismo | Fase 2: se pide aparte, con el «sí» del usuario en cada acción | Fusión hecha (`529bda7`); staging aplazado por el usuario el 2026-11-21 (los operarios no usan la app): va con el próximo despliegue de `develop` |
 | 3 | RAMAS | Crear `fase-2` en BE y FE | BE y FE, desde `develop` | — | P0 en `develop`; commit de los `AGENTS.md` | Plan maestro §5.3 | — | Hecho el 2026-11-21, con push: BE `fase-2` en `529bda7`, FE `fase-2` en `3aa6e3c` |
-| 4 | F01 | Núcleo de dominio (partes 0 y 1) | BE `f2/f01-nucleo` | F02 | Paso 3 | `f01-nucleo/plan-cerrado-f2-f01-nucleo-AAAA-MM-DD.md`, por escribir junto con F02 | Planificador (F01 y F02): [prompt-f2-f01-nucleo-planificador-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-planificador-2026-11-21.md). Backend: por escribir | Por escribir |
-| 4 | F02 | Base transversal (parte 2) | FE `f2/f02-base` | F01 (y P0, si aún corre) | Paso 3 en FE | `f02-base/plan-cerrado-f2-f02-base-AAAA-MM-DD.md`, por escribir junto con F01 | `f02-base/`: maquetación, por escribir | Por escribir |
-| 5 | I-01 | Integración de F01 y F02 (parte 3) | BE `f2/f01-nucleo` y FE `f2/f02-base` | — | F01 y F02 | Los de F01 y F02 | `f01-nucleo/`: integración, por escribir | — |
+| 4 | F01 | Núcleo de dominio (partes 0 y 1) | BE `f2/f01-nucleo` | F02 | Paso 3 | [plan-cerrado-f2-f01-nucleo-2026-11-21.md](f01-nucleo/plan-cerrado-f2-f01-nucleo-2026-11-21.md) | Planificador (F01 y F02): [prompt-f2-f01-nucleo-planificador-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-planificador-2026-11-21.md) (ejecutado). Backend: [prompt-f2-f01-nucleo-backend-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-backend-2026-11-21.md) | Aprobado el 2026-11-21 |
+| 4 | F02 | Base transversal (parte 2) | FE `f2/f02-base` | F01 (y P0, si aún corre) | Paso 3 en FE | [plan-cerrado-f2-f02-base-2026-11-21.md](f02-base/plan-cerrado-f2-f02-base-2026-11-21.md) | Maquetación: [prompt-f2-f02-base-maquetacion-2026-11-21.md](f02-base/prompt-f2-f02-base-maquetacion-2026-11-21.md) | Aprobado el 2026-11-21 |
+| 5 | I-01 | Integración de F01 y F02 (parte 3) | BE `f2/f01-nucleo` y FE `f2/f02-base` | — | F01 y F02 | Los de F01 (§13) y F02 | Integración: [prompt-f2-f01-nucleo-integracion-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-integracion-2026-11-21.md) | Aprobado el 2026-11-21, con los de F01 y F02 |
 | 6 | F03 | Báscula | BE y FE `f2/f03-bascula` | Back y front de F03 | I-01 | `f03-bascula/plan-cerrado-f2-f03-bascula-AAAA-MM-DD.md` | `f03-bascula/`: planificador, backend, maquetación e integración, por escribir | Por escribir |
 | 7 | F04 | Bodega | BE y FE `f2/f04-bodega` | Back y front de F04 | I-03 | `f04-bodega/plan-cerrado-f2-f04-bodega-AAAA-MM-DD.md` | `f04-bodega/`, igual | Por escribir |
 | 8 | F05 | Comercio Exterior | BE y FE `f2/f05-comercio-exterior` | Back y front de F05 | I-04 | `f05-comercio-exterior/plan-cerrado-f2-f05-comercio-exterior-AAAA-MM-DD.md` | `f05-comercio-exterior/`, igual | Por escribir |
@@ -80,7 +80,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 | --- | --- | --- |
 | Commit del `AGENTS.md` de `Backend/wms-api` y de `Frontend/wms` (anexo A del plan maestro) | Paso 3 (las ramas salen de `develop`) | Hecho el 2026-11-21: BE `42738e1` y FE `3aa6e3c` en `develop`, publicados |
 | Mover el prompt del plan maestro a `archivo/prompts/` | Orden del hub (`README.md`, «Archivos nuevos») | Hecho el 2026-11-21: `archivo/prompts/sprint-11/` |
-| Prompt del planificador para los planes cerrados de F01 y F02, en `f01-nucleo/` | Paso 4 | Escrito el 2026-11-21: [prompt-f2-f01-nucleo-planificador-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-planificador-2026-11-21.md) |
+| Prompt del planificador para los planes cerrados de F01 y F02, en `f01-nucleo/` | Paso 4 | Hecho el 2026-11-21: [prompt-f2-f01-nucleo-planificador-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-planificador-2026-11-21.md) ejecutado; los dos planes y sus tres prompts, aprobados el 2026-11-21 |
 
 ---
 
