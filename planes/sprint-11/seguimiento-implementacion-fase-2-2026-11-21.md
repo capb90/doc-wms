@@ -1,7 +1,8 @@
 # Seguimiento — Implementación de la fase 2
 
 > **Para qué sirve:** la matriz de la implementación de la fase 2 (`DEC-080`, `DEC-081`): en qué orden se ejecuta cada paso, dónde están su plan y sus prompts, y en qué estado va cada parte.
-> **Fecha de corte:** 2026-11-21. Backend `develop` `aa69633` y frontend `develop` `8c7f20e`, cada uno con su `AGENTS.md` cambiado y sin commit (anexo A del plan maestro); docs `main` `40acd3d`, publicado. Todavía no existen las ramas `fase-2`.
+> **Fecha de corte:** 2026-11-21. Backend `develop` `aa69633`, con su `AGENTS.md` cambiado y sin commit (anexo A del plan maestro); frontend `develop` `8c7f20e`, con su `AGENTS.md` sin el cambio del anexo A (se revirtió fuera de la sesión que lo aplicó); docs `main` `194cf41`, reorganizado en `planes/sprint-11/` el 2026-11-21. Todavía no existen las ramas `fase-2`.
+> **Carpeta:** `planes/sprint-11/` reúne el plan maestro, esta matriz, el plan de P0 y los planes cerrados que se escriban para la fase 2. Los prompts ejecutados pasan a `archivo/prompts/sprint-11/`.
 > **Fuente del orden:** [plan maestro](plan-maestro-implementacion-fase-2-2026-11-20.md), §4 (orden y paralelismo), §5.3 (ramas y fusiones) y §9 (plantilla del plan cerrado).
 > **Mantenimiento:** §5 de este documento.
 
@@ -26,7 +27,7 @@ Los pasos con el mismo número corren a la vez, uno en cada repo (M10). Un paso 
 
 | # | ID | Paso | Repo y rama | Corre a la vez con | Depende de | Plan | Prompts | Estado del plan |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 0 | MAESTRO | Plan maestro de la fase 2 | docs `main` | — | `DEC-080` | [plan-maestro-implementacion-fase-2-2026-11-20.md](plan-maestro-implementacion-fase-2-2026-11-20.md) | [prompt-plan-maestro-implementacion-fase-2-2026-11-20.md](prompt-plan-maestro-implementacion-fase-2-2026-11-20.md) (por archivar) | Aprobado el 2026-11-20 (docs `40acd3d`) |
+| 0 | MAESTRO | Plan maestro de la fase 2 | docs `main` | — | `DEC-080` | [plan-maestro-implementacion-fase-2-2026-11-20.md](plan-maestro-implementacion-fase-2-2026-11-20.md) | [prompt-plan-maestro-implementacion-fase-2-2026-11-20.md](../../archivo/prompts/sprint-11/prompt-plan-maestro-implementacion-fase-2-2026-11-20.md) (archivado) | Aprobado el 2026-11-20 (docs `40acd3d`) |
 | 1 | P0 | Correos al rol: código y pruebas (fase 1 de su plan) | BE `p0/correos-por-rol`, desde `develop` | Planes de F01 y F02; maquetación de F02 cuando su plan esté aprobado | — | [plan-cerrado-correos-notificacion-por-rol-2026-11-05.md](plan-cerrado-correos-notificacion-por-rol-2026-11-05.md) | Fase 1: [prompt-correos-notificacion-por-rol-2026-11-05.md](prompt-correos-notificacion-por-rol-2026-11-05.md) | Aprobado el 2026-11-05 |
 | 2 | P0 | Correos al rol: QA del usuario, fusión en `develop` y staging (fase 2 de su plan) | BE `develop` y staging | Maquetación de F02 | Paso 1 | El mismo | Fase 2: se pide aparte, con el «sí» del usuario en cada acción | Aprobado |
 | 3 | RAMAS | Crear `fase-2` en BE y FE | BE y FE, desde `develop` | — | P0 en `develop`; commit de los `AGENTS.md` | Plan maestro §5.3 | — | — |
@@ -45,7 +46,7 @@ Los pasos con el mismo número corren a la vez, uno en cada repo (M10). Un paso 
 | 12 | F09 | Notificaciones configurables | BE y FE `f2/f09-notificaciones` | G3 | P0 e I-08 | `plan-cerrado-f2-f09-notificaciones-AAAA-MM-DD.md` | En el §11 de su plan | Por escribir |
 | 13 | G4 | QA del usuario y despliegue de F09 | `fase-2` → `develop` → staging | — | G3 e I-09 | En el plan de F09 | En el plan de F09 | — |
 
-Un plan que aún no existe aparece con su nombre esperado entre comillas invertidas; al escribirlo se reemplaza por el enlace. Los prompts de cada parte van en el §11 de su plan cerrado (plantilla del plan maestro, §9); si el usuario los pide como archivo aparte, van en `planes/` y se enlazan aquí.
+Un plan que aún no existe aparece con su nombre esperado entre comillas invertidas, y se escribe en esta carpeta; al escribirlo se reemplaza por el enlace. Los prompts de cada parte van en el §11 de su plan cerrado (plantilla del plan maestro, §9); si el usuario los pide como archivo aparte, van en `planes/` y se enlazan aquí.
 
 ### 2.2 Estado de la implementación
 
@@ -77,8 +78,8 @@ Un plan que aún no existe aparece con su nombre esperado entre comillas inverti
 
 | Pendiente | Lo necesita | Estado |
 | --- | --- | --- |
-| Commit del `AGENTS.md` de `Backend/wms-api` y de `Frontend/wms` (anexo A del plan maestro) | Paso 3 (las ramas salen de `develop`) | Cambiado en `develop`, sin commit |
-| Mover el prompt del plan maestro a `archivo/prompts/` | Orden del hub (`README.md`, «Archivos nuevos») | Pendiente: el plan ya está aprobado y con commit |
+| Commit del `AGENTS.md` de `Backend/wms-api` y de `Frontend/wms` (anexo A del plan maestro) | Paso 3 (las ramas salen de `develop`) | Backend: cambiado en `develop`, sin commit. Frontend: el cambio se revirtió; falta volver a aplicarlo |
+| Mover el prompt del plan maestro a `archivo/prompts/` | Orden del hub (`README.md`, «Archivos nuevos») | Hecho el 2026-11-21: `archivo/prompts/sprint-11/` |
 | Prompt del planificador para los planes cerrados de F01 y F02 | Paso 4 | Por pedir |
 
 ---
@@ -106,5 +107,5 @@ Ninguno bloquea la construcción; los cuatro primeros se configuran en la aplica
   - el agente de integración, al fusionar en `fase-2`: la columna «3 · Integración»;
   - el agente que cierra un grupo: §2.3.
 - **Al cambiar algo:** se actualiza la fecha de corte y los commits del encabezado.
-- **Al archivar un prompt:** cuando su parte termina, el prompt pasa a `archivo/prompts/fase-2/` y su enlace se corrige aquí.
+- **Al archivar un prompt:** cuando su parte termina, el prompt pasa a `archivo/prompts/sprint-11/` y su enlace se corrige aquí.
 - **Si el orden cambia:** manda el plan maestro (§4); primero se cambia allí y después aquí.

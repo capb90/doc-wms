@@ -37,7 +37,7 @@ M4. Convivencia en develop mientras una feature no está integrada:
     - las pantallas nuevas van en rutas nuevas, sin enlazar en el menú hasta la integración;
     - las pantallas existentes se rediseñan en la integración, o detrás de un interruptor que deja activa la versión actual;
     - nada de una feature se despliega en staging antes de cerrar su integración.
-M5. El plan ya aprobado docs/planes/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md se ejecuta antes de la feature de notificaciones, porque AF-133 se apoya en él.
+M5. El plan ya aprobado docs/planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md se ejecuta antes de la feature de notificaciones, porque AF-133 se apoya en él.
 
 Puedes proponer ajustes a la lista de features que deja M3 (por ejemplo, separar Facturación en «operación de facturas» y «acuerdos y tarifas»), pero como pregunta, no como hecho.
 

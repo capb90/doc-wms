@@ -266,7 +266,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **También cambia:** P16 del plan de paridad, CHG-36 del plan de corrección, lo construido para `DEC-014` en BAS-07 y la regla de WMS-29 de `contexto-negocio-wms-para-ia.md` §5.11 (sección 5 del análisis).
 - **Fuente:** el usuario, sección por sección (AF-55, AF-71, AF-103, AF-126 y AF-137).
 
-**DEC-081 — Implementación de la fase 2** (2026-11-20). Respuestas del usuario a la ronda del plan maestro (`planes/plan-maestro-implementacion-fase-2-2026-11-20.md`, M6 a M24).
+**DEC-081 — Implementación de la fase 2** (2026-11-20). Respuestas del usuario a la ronda del plan maestro (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`, M6 a M24).
 - **Ramas** (reemplaza a `DEC-003` en lo de las ramas y los commits). En cada repo de código, `fase-2` sale de `develop`; cada feature trabaja en `f2/fNN-<tema>` y vuelve a `fase-2` al cerrar su integración. `develop` refleja staging y recibe las correcciones urgentes. El agente crea las ramas, hace commit y push, y fusiona; `fase-2` pasa a `develop` solo después de la QA del usuario sobre `fase-2`. Desplegar en staging sigue pidiendo el «sí» del usuario (`DEC-006`).
 - **Un agente por repo a la vez.** El back y el front de una feature van en paralelo; la integración ocupa los dos.
 - **Despliegue por grupos:** G1 (F01 a F06) en un solo despliegue, con staging recreado y cargado otra vez desde el legacy con la herramienta adaptada (segunda excepción a `DEC-006`, como `DEC-043`); después, una feature por despliegue.

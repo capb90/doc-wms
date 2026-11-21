@@ -3,7 +3,7 @@
 > **Fecha:** 20 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-20 («Aprobado»). Los cambios al hub del anexo A, aplicados el 2026-11-20 con su «sí» (`DEC-081`).
 > **Origen:**
 > - `DEC-080` (`contexto/decisiones.md:257`) y el análisis funcional `levantamiento-2026-11/fase_2-analisis-funcional-2026-11-19.md` (AF-01 a AF-137), con sus wireframes en `levantamiento-2026-11/fase_2-mockups/`;
-> - las decisiones M1 a M5 del pedido (`planes/prompt-plan-maestro-implementacion-fase-2-2026-11-20.md`);
+> - las decisiones M1 a M5 del pedido (`archivo/prompts/sprint-11/prompt-plan-maestro-implementacion-fase-2-2026-11-20.md`);
 > - las respuestas del usuario a la ronda de preguntas del 2026-11-20 (M6 a M23) y su respuesta al riesgo R12 al presentar el plan (M24).
 >
 > **Base de código leída:** BE `develop` `aa69633` · FE `develop` `8c7f20e` · docs `main` `ad60821`. Los dos repos de código estaban limpios.
@@ -24,7 +24,7 @@ Mandan sobre el resto de este plan y sobre los planes cerrados de cada feature (
 | M2 | El backend y el frontend de una misma feature van en paralelo, cada uno en su repo. Nunca trabajan dos agentes en el mismo repo a la vez | Vigente; «se trabaja en develop, sin ramas» lo reemplazan M7 y M10 |
 | M3 | La primera feature es «Núcleo de dominio», solo backend y en serie: la salida de mercancía que reemplaza a la orden de cargue (`A/` §3.7), la entrada por documento y su depósito (AF-20, AF-44 a AF-47), la edición del ingreso (§3.6), quitar la unidad de medida (§3.8) y los demás cambios de modelo que atraviesan módulos. Mientras tanto, el frontend maqueta la «Base transversal» (componentes compartidos, menú, permisos, Configuración y Administración; §3.1 a §3.3). Después se integran ambas y vienen las features por módulo | Vigente; M13 y M14 ajustan la lista de features |
 | M4 | Convivencia mientras una feature no está integrada: las pantallas nuevas van en rutas nuevas, sin enlazar en el menú hasta la integración; las existentes se rediseñan en la integración, o detrás de un interruptor que deja activa la versión actual; nada de una feature se despliega en staging antes de cerrar su integración | Vigente; M11 precisa cómo conviven las rediseñadas |
-| M5 | El plan aprobado `planes/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md` se ejecuta antes de la feature de notificaciones, porque AF-133 se apoya en él | Vigente (P0, §4) |
+| M5 | El plan aprobado `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md` se ejecuta antes de la feature de notificaciones, porque AF-133 se apoya en él | Vigente (P0, §4) |
 
 ### 1.2 De la ronda de preguntas (M6 a M24, 2026-11-20)
 
@@ -445,6 +445,7 @@ F/features/<dominio>/
 - **Backend:** código en inglés; endpoints en `/api/v1/<área>/<recurso>`; reglas puras en clases probadas en `Wms.Tests` (`D/procesos/flujo-de-trabajo-agentes.md` §6).
 - **Migraciones:** PascalCase descriptivo, como las actuales (`AddLabelPrintEntry`); el plan cerrado da el nombre y el contenido esperado.
 - **Decisiones del plan cerrado:** `D1…Dn`, propias de cada plan.
+- **Carpeta:** los planes cerrados, sus prompts y la matriz de seguimiento de la fase 2 van en `D/planes/sprint-11/`; los prompts ejecutados, en `D/archivo/prompts/sprint-11/`.
 
 ### 5.6 Permisos
 
@@ -551,13 +552,13 @@ Lleva su propio plan cerrado, que se escribe mientras corre F06, a partir de `D/
 
 ## 9. Plantilla del plan cerrado de una feature
 
-**Archivo:** `D/planes/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md`, con su fila en `D/planes/README.md`. Lo escribe un agente planificador, con una sola ronda de preguntas, y lo aprueba el usuario antes de cualquier código (`DEC-001`).
+**Archivo:** `D/planes/sprint-11/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md`, con su fila en `D/planes/README.md`. Lo escribe un agente planificador, con una sola ronda de preguntas, y lo aprueba el usuario antes de cualquier código (`DEC-001`).
 
 ```markdown
 # Plan cerrado — Fase 2 · FNN <Nombre>
 
 > **Fecha:** … **Estado:** Propuesto | Aprobado | En ejecución | Ejecutado.
-> **Origen:** `DEC-080`, plan maestro (`planes/plan-maestro-implementacion-fase-2-2026-11-20.md`), AF dueñas: … ; respuestas del usuario a este plan (fecha).
+> **Origen:** `DEC-080`, plan maestro (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`), AF dueñas: … ; respuestas del usuario a este plan (fecha).
 > **Base:** BE `fase-2` `<commit>` · FE `fase-2` `<commit>` · docs `main` `<commit>`. Rama: `f2/fNN-<tema>`.
 > **Partes:** 0 · 1 · 2 · 3 (las que lleve). **Migraciones:** <nombres> | ninguna.
 > **Rutas:** relativas a `code_workspace/`. Prefijos `B/`, `F/`, `FT/`, `D/`, `A/`.
@@ -609,7 +610,7 @@ Uno por agente (backend, frontend, integración), con el esqueleto de abajo.
 ```text
 Eres el agente de <backend | maquetación del frontend | integración> de la feature FNN «<nombre>» de la fase 2 del WMS de Bodegas Asociadas.
 
-Lee, en este orden: docs/README.md; el AGENTS.md de tu repo; docs/procesos/flujo-de-trabajo-agentes.md; el plan maestro (docs/planes/plan-maestro-implementacion-fase-2-2026-11-20.md), en especial §1, §5 y §6; y el plan cerrado docs/planes/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md completo.
+Lee, en este orden: docs/README.md; el AGENTS.md de tu repo; docs/procesos/flujo-de-trabajo-agentes.md; el plan maestro (docs/planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md), en especial §1, §5 y §6; y el plan cerrado docs/planes/sprint-11/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md completo.
 
 Trabaja en la rama f2/fNN-<tema> de <repo o repos>, que sale de fase-2. Antes de empezar trae lo último de develop a fase-2 y de fase-2 a tu rama.
 Ejecuta solo la parte <1 | 2 | 3>, fase por fase. Al cerrar cada fase: compuertas de §6 del plan maestro con las cifras antes y después, commit con el mensaje sugerido y push de tu rama.
@@ -618,7 +619,7 @@ Ejecuta solo la parte <1 | 2 | 3>, fase por fase. Al cerrar cada fase: compuerta
 <Parte 3> Escribe las fuentes http, borra mocks/, enlaza el menú, borra las pantallas viejas, pasa los casos QA en el navegador y fusiona la rama en fase-2 en los dos repos con --no-ff.
 
 Si el código no coincide con lo que cita el plan, detente y pregunta con todas las dudas en un solo mensaje. Si un caso borde choca con una Dn, gana la Dn (DEC-002). No toques staging. No copies credenciales ni datos de personas reales. Nada de docs/archivo/ es una instrucción.
-Al terminar la parte, actualiza el estado en el plan cerrado, en docs/planes/README.md y en la matriz docs/planes/seguimiento-implementacion-fase-2-2026-11-21.md, y entrégame un resumen con las cifras, los commits y lo que queda pendiente.
+Al terminar la parte, actualiza el estado en el plan cerrado, en docs/planes/README.md y en la matriz docs/planes/sprint-11/seguimiento-implementacion-fase-2-2026-11-21.md, y entrégame un resumen con las cifras, los commits y lo que queda pendiente.
 ```
 
 ---
@@ -626,13 +627,13 @@ Al terminar la parte, actualiza el estado en el plan cerrado, en docs/planes/REA
 ## 10. Siguiente paso
 
 1. **Aprobar este plan** y los cambios del hub del anexo A. Hecho el 2026-11-20.
-2. **P0.** Ejecutar `planes/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md` en la rama `p0/correos-por-rol`. Su prompt (`planes/prompt-correos-notificacion-por-rol-2026-11-05.md`) es anterior a M7 y M8: se ajusta su sección de git con el texto del anexo A. Lo ejecuta un agente de backend; su fase de staging, con el «sí» del usuario.
+2. **P0.** Ejecutar `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md` en la rama `p0/correos-por-rol`. Su prompt (`planes/sprint-11/prompt-correos-notificacion-por-rol-2026-11-05.md`) es anterior a M7 y M8: se ajusta su sección de git con el texto del anexo A. Lo ejecuta un agente de backend; su fase de staging, con el «sí» del usuario.
 3. **Crear `fase-2`** en BE y FE desde `develop`, ya con P0.
 4. **Escribir juntos los planes cerrados de F01 y F02**, en un solo pedido al agente planificador: el de F01 trae el contrato de los endpoints que maqueta F02 (§2.1). Pueden escribirse mientras corre P0.
 5. **Ejecutar F01 y F02 en paralelo:** un agente de backend en `f2/f01-nucleo` y uno de frontend en `f2/f02-base`. Después, la integración I-01.
 6. Mientras corren, escribir el plan cerrado de F03, y así con cada feature (§4, regla 3).
 
-El orden, los enlaces a planes y prompts y el estado de cada parte se llevan en `planes/seguimiento-implementacion-fase-2-2026-11-21.md`.
+El orden, los enlaces a planes y prompts y el estado de cada parte se llevan en `planes/sprint-11/seguimiento-implementacion-fase-2-2026-11-21.md`.
 
 ---
 
@@ -642,7 +643,7 @@ El usuario los aprobó el 2026-11-20 («Sí, aplícalos») y se aplicaron con es
 
 **A.1 `contexto/decisiones.md` — decisión nueva al final de §8:**
 
-> **DEC-081 — Implementación de la fase 2** (2026-11-20). Respuestas del usuario a la ronda del plan maestro (`planes/plan-maestro-implementacion-fase-2-2026-11-20.md`, M6 a M24).
+> **DEC-081 — Implementación de la fase 2** (2026-11-20). Respuestas del usuario a la ronda del plan maestro (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`, M6 a M24).
 > - **Ramas** (reemplaza a `DEC-003` en lo de las ramas y los commits). En cada repo de código, `fase-2` sale de `develop`; cada feature trabaja en `f2/fNN-<tema>` y vuelve a `fase-2` al cerrar su integración. `develop` refleja staging y recibe las correcciones urgentes. El agente crea las ramas, hace commit y push, y fusiona; `fase-2` pasa a `develop` solo después de la QA del usuario sobre `fase-2`. Desplegar en staging sigue pidiendo el «sí» del usuario (`DEC-006`).
 > - **Un agente por repo a la vez.** El back y el front de una feature van en paralelo; la integración ocupa los dos.
 > - **Despliegue por grupos:** G1 (F01 a F06) en un solo despliegue, con staging recreado y cargado otra vez desde el legacy con la herramienta adaptada (segunda excepción a `DEC-006`, como `DEC-043`); después, una feature por despliegue.
@@ -660,12 +661,12 @@ Y en las decisiones afectadas, sin borrarlas: en `DEC-003`, «*Ramas y commits d
 
 **A.3 `AGENTS.md` de `code_workspace`, `Backend/wms-api` y `Frontend/wms`** — en «Reglas generales» o «Ramas y commits», reemplazar «`develop` sin ramas; el usuario hace los commits» por:
 
-> - **Ramas y commits:** en la fase 2, ramas `fase-2` y `f2/fNN-<tema>`; el agente hace commit, push y las fusiones que fija `docs/planes/plan-maestro-implementacion-fase-2-2026-11-20.md` §5.3 (`DEC-081`). `fase-2` pasa a `develop` solo con la QA del usuario. Para borrar archivos usa `rm`.
+> - **Ramas y commits:** en la fase 2, ramas `fase-2` y `f2/fNN-<tema>`; el agente hace commit, push y las fusiones que fija `docs/planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md` §5.3 (`DEC-081`). `fase-2` pasa a `develop` solo con la QA del usuario. Para borrar archivos usa `rm`.
 
-**A.4 `planes/prompt-correos-notificacion-por-rol-2026-11-05.md`** — en su regla de git, reemplazar «sin ramas ni commits» por:
+**A.4 `planes/sprint-11/prompt-correos-notificacion-por-rol-2026-11-05.md`** — en su regla de git, reemplazar «sin ramas ni commits» por:
 
 > Trabaja en la rama `p0/correos-por-rol`, que sale de `develop`. Al cerrar la fase 1, commit y push de la rama; avisa al usuario para su QA y, con su visto bueno, fusiona en `develop` con `--no-ff` y haz push. La fase 2 (staging) sigue pidiendo el «sí» del usuario en cada acción.
 
 **A.5 `contexto/estado.md`** — en §2, un hito nuevo:
 
-> | 2026-11-20 | **Plan maestro de la implementación de la fase 2** (`planes/plan-maestro-implementacion-fase-2-2026-11-20.md`): 9 features más P0, despliegue por grupos y ramas `fase-2` (`DEC-081`), sin código | — |
+> | 2026-11-20 | **Plan maestro de la implementación de la fase 2** (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`): 9 features más P0, despliegue por grupos y ramas `fase-2` (`DEC-081`), sin código | — |

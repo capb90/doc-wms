@@ -1885,7 +1885,7 @@ Clasificación de los modales grandes de hoy (por número de campos), a validar 
   - cambio de conductor o placa en una salida con guía emitida (AF-34, AF-135);
   - semana sin tasa registrada (AF-136).
 
-- **Relación con el plan cerrado `planes/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`** (aprobado, pendiente de ejecución). Es compatible con AF-133:
+- **Relación con el plan cerrado `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`** (aprobado, pendiente de ejecución). Es compatible con AF-133:
   - ese plan hace que el correo de un aviso llegue a los usuarios activos de cada rol destino, con `Notifications:AdminEmails` de respaldo (N1 a N3);
   - AF-133 hace configurables, por aviso, los roles destino y el envío por correo.
   

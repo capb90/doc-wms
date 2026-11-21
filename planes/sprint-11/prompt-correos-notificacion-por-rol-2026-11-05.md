@@ -6,10 +6,10 @@
 > 3. Al terminar, el agente hace commit y push de su rama, te avisa para tu QA y, con tu visto bueno, la fusiona en `develop` (`DEC-081`).
 > 4. Este prompt cubre solo la fase 1. La fase 2 (staging) se pide aparte, en una sesión con el plan abierto y con tu «sí» en cada paso (`DEC-006`).
 >
-> **Plan:** `docs/planes/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`, aprobado el 2026-11-05.
+> **Plan:** `docs/planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`, aprobado el 2026-11-05.
 > **Modelo recomendado:** Sonnet 5.5 para la fase 1; Opus 5.5 si se prefiere más margen en la fase 2.
 >
-> Cuando se hagan los commits de la fase 2, este prompt se mueve a `docs/archivo/prompts/`.
+> Cuando se hagan los commits de la fase 2, este prompt se mueve a `docs/archivo/prompts/sprint-11/`.
 
 ---
 
@@ -24,7 +24,7 @@ Eres el ejecutor de la fase indicada arriba del plan cerrado «Correos de notifi
 
 ## Lee primero
 1. docs/README.md y Backend/wms-api/AGENTS.md.
-2. docs/planes/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md completo: §0 (instrucciones), §1 (decisiones N1–N12, que mandan sobre el resto), §2 (qué cambia), la sección de tu fase en §3 y §4 (riesgos).
+2. docs/planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md completo: §0 (instrucciones), §1 (decisiones N1–N12, que mandan sobre el resto), §2 (qué cambia), la sección de tu fase en §3 y §4 (riesgos).
 3. docs/contexto/convenciones-tecnicas.md y, de docs/contexto/decisiones.md, DEC-002, DEC-003, DEC-005 y DEC-006.
 
 ## Qué haces en la fase 1

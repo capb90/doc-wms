@@ -34,7 +34,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 2026-10-27 | **Fase 13 del plan P1: despliegue y QA en staging.** 7 migraciones aplicadas, destino de respaldo externo `s3-externo` y QR de la guía verificados con celular; QA en staging con 21 PASA y 1 no ejecutado, sin defectos (`qa/resultados/PRE-informe-2026-10-25.md` §13). Veredicto: listo para el reinicio limpio de `DEC-043` | `911399c` / `33fbeba` |
 | 2026-10-27 | **Staging limpio (`DEC-043`, fase 4):** base recreada con 19 migraciones y el legacy migrado de nuevo con la herramienta actual (conjunto v4, corte en el 2026-10-26), con conteos idénticos al ensayo local; tarifas T1 a T4 y de montacargas; 5 cuentas `operario.*`; respaldos `local-staging` y `s3-externo`; sin datos de QA ni de práctica. Convenios y `open-billing` quedan para la fase 4b (`planes/migracion-staging/resultados/informe-staging-limpio-fase-4.md`) | `911399c` / `33fbeba` (sin cambios de código) |
 | 2026-11-17 → 19 | **Levantamiento de noviembre:** fase 1 (consolidación de hallazgos) y fase 2 (análisis funcional, 137 decisiones, `DEC-080`), sin código | — |
-| 2026-11-20 | **Plan maestro de la implementación de la fase 2** (`planes/plan-maestro-implementacion-fase-2-2026-11-20.md`): 9 features más P0, despliegue por grupos y ramas `fase-2` (`DEC-081`), sin código | — |
+| 2026-11-20 | **Plan maestro de la implementación de la fase 2** (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`): 9 features más P0, despliegue por grupos y ramas `fase-2` (`DEC-081`), sin código | — |
 
 ## 3. Staging
 

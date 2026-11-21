@@ -36,7 +36,7 @@ Si el código contradice una decisión, no «corrijas» ninguno de los dos sin p
 | --- | --- |
 | `contexto/` | Negocio, decisiones, estado, convenciones técnicas y mapa de fuentes |
 | `procesos/` | Flujo de trabajo, QA y defectos, verificación local, despliegue a staging |
-| `planes/` | Planes cerrados con su estado (índice en `planes/README.md`); paridad con el legacy y migración a staging |
+| `planes/` | Planes cerrados con su estado (índice en `planes/README.md`); paridad con el legacy, migración a staging y `sprint-11/`, la implementación de la fase 2 |
 | `analisis/` | Análisis previos a decisiones |
 | `levantamiento-2026-11/` | Visita de noviembre de 2026: hallazgos de los videos de Comercio Exterior y paridad del flujo de depósitos y levantes (índice en su `README.md`) |
 | `qa/` | Campaña QA: plan, casos, plan de corrección, informes, fichas de defecto y evidencias (índice en `qa/README.md`) |
@@ -54,7 +54,7 @@ Si el código contradice una decisión, no «corrijas» ninguno de los dos sin p
 - Todo documento de estado lleva fecha de corte y los commits BE/FE a los que se refiere.
 - **Sin secretos ni datos de personas reales.** Las credenciales se citan por su ruta (`contexto/mapa-de-fuentes.md` §6). Los informes usan códigos, números de depósito y conteos. `.gitignore` excluye `*.local.*`, `.env*` y `credenciales*`.
 - Al cerrar un trabajo, actualiza `contexto/estado.md`, `planes/README.md` y, si hubo una decisión nueva, `contexto/decisiones.md`.
-- Este repo trabaja en `main`, sin ramas. El agente hace commit y push de los documentos de su fase (`DEC-081`; `planes/plan-maestro-implementacion-fase-2-2026-11-20.md` §5.3).
+- Este repo trabaja en `main`, sin ramas. El agente hace commit y push de los documentos de su fase (`DEC-081`; `planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md` §5.3).
 
 ## Repos relacionados
 
