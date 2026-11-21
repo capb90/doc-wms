@@ -4,7 +4,7 @@ Antes de analizar o modificar el proyecto, lee `README.md` de este repo y sigue 
 
 - Este repo es solo documentación. El código está en `../Backend/wms-api` y `../Frontend/wms`, ambos en `develop`; la fase 2 se trabaja en sus ramas `fase-2` y `f2/fNN-<tema>` (`DEC-081`).
 - Escribe en español y sigue las «Reglas para escribir aquí» del `README.md`. Dónde va cada cosa:
-  - un plan nuevo, en `planes/` (los de la fase 2, en `planes/sprint-11/`);
+  - un plan nuevo, en `planes/` (los de la fase 2, en `planes/sprint-11/fNN-<tema>/`, junto con sus prompts);
   - una ficha de defecto, en `qa/resultados/defectos/`;
   - una decisión, en `contexto/decisiones.md`.
 - Este repo trabaja en `main`, sin ramas. El agente hace commit y push de los documentos de su fase (`DEC-081`; plan maestro de la fase 2, `planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md` §5.3).

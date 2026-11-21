@@ -27,7 +27,7 @@
 | `procesos/` | Cómo trabajar: plan cerrado, QA y defectos, verificación local, despliegue a staging |
 | `planes/` | Planes cerrados con su estado. Índice en `planes/README.md` |
 | `planes/paridad-legacy/` | Plan backend, plan frontend y contrato API de la paridad con el legacy (fases 1–6) |
-| `planes/sprint-11/` | Implementación de la fase 2 (`DEC-080`, `DEC-081`): plan maestro, matriz de seguimiento, plan de correos por rol (P0) y los planes cerrados de cada feature. Sus prompts ejecutados, en `archivo/prompts/sprint-11/` |
+| `planes/sprint-11/` | Implementación de la fase 2 (`DEC-080`, `DEC-081`): plan maestro, matriz de seguimiento y plan de correos por rol (P0) en la raíz; cada feature en su carpeta `fNN-<tema>/`, con su plan cerrado y sus prompts. El prompt del plan maestro, en `archivo/prompts/sprint-11/` |
 | `planes/migracion-staging/` | Plan de migración del legacy a staging y sus resultados (informes, `DEF-MIG-*`, guía de operarios) y el procedimiento de congelamiento del corte real (`procedimiento-corte-operaciones-abiertas.md`) |
 | `analisis/` | Análisis previos a una decisión (motor de acuerdos, permisos granulares, FOB/CIF) |
 | `levantamiento-2026-11/` | Visita de noviembre de 2026 ya procesada: lo que muestran los videos de Comercio Exterior (sin volver a verlos) y la paridad del flujo de depósitos y levantes. Las fuentes originales están en `documentos/Levantamiento staging/`, fuera del repo |

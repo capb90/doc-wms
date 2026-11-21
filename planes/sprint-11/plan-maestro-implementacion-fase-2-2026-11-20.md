@@ -445,7 +445,12 @@ F/features/<dominio>/
 - **Backend:** código en inglés; endpoints en `/api/v1/<área>/<recurso>`; reglas puras en clases probadas en `Wms.Tests` (`D/procesos/flujo-de-trabajo-agentes.md` §6).
 - **Migraciones:** PascalCase descriptivo, como las actuales (`AddLabelPrintEntry`); el plan cerrado da el nombre y el contenido esperado.
 - **Decisiones del plan cerrado:** `D1…Dn`, propias de cada plan.
-- **Carpeta:** los planes cerrados, sus prompts y la matriz de seguimiento de la fase 2 van en `D/planes/sprint-11/`; los prompts ejecutados, en `D/archivo/prompts/sprint-11/`.
+- **Carpetas** (pedido del usuario del 2026-11-21):
+  - la raíz de `D/planes/sprint-11/` guarda el plan maestro, la matriz de seguimiento y el plan de P0;
+  - cada feature tiene su carpeta `D/planes/sprint-11/fNN-<tema>/` (`f01-nucleo/`, `f02-base/`, `f03-bascula/`, `f04-bodega/`, `f05-comercio-exterior/`, `f06-salidas/`, `f07-tarifas-acuerdos/`, `f08-operacion-facturas/`, `f09-notificaciones/`), con su plan cerrado y todos sus prompts: el del planificador y uno por parte. El despliegue de G1 va en `g1-despliegue/`;
+  - F01 y F02 se planean juntas: el prompt del planificador y el de I-01 van en `f01-nucleo/`;
+  - los prompts se quedan en la carpeta de su feature aunque ya se hayan ejecutado. Al terminar su parte, el agente agrega al encabezado del prompt «**Ejecutado** el AAAA-MM-DD; ya no es una instrucción» y lo marca en la matriz.
+- **Prompts:** `prompt-f2-fNN-<tema>-<planificador|backend|maquetacion|integracion>-AAAA-MM-DD.md`.
 
 ### 5.6 Permisos
 
@@ -552,7 +557,7 @@ Lleva su propio plan cerrado, que se escribe mientras corre F06, a partir de `D/
 
 ## 9. Plantilla del plan cerrado de una feature
 
-**Archivo:** `D/planes/sprint-11/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md`, con su fila en `D/planes/README.md`. Lo escribe un agente planificador, con una sola ronda de preguntas, y lo aprueba el usuario antes de cualquier código (`DEC-001`).
+**Archivo:** `D/planes/sprint-11/fNN-<tema>/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md`, con su fila en `D/planes/README.md`. Sus prompts van en la misma carpeta (§5.5). Lo escribe un agente planificador, con una sola ronda de preguntas, y lo aprueba el usuario antes de cualquier código (`DEC-001`).
 
 ```markdown
 # Plan cerrado — Fase 2 · FNN <Nombre>
@@ -600,7 +605,7 @@ Cada fase cierra con las compuertas de §6 del plan maestro, commit y push.
 ## 10. Fuera de alcance
 
 ## 11. Prompts por parte
-Uno por agente (backend, frontend, integración), con el esqueleto de abajo.
+Enlaces a los prompts de la carpeta de la feature, uno por agente (backend, maquetación, integración), escritos con el esqueleto de abajo.
 
 ## 12. Mensajes de commit sugeridos
 ```
@@ -610,7 +615,7 @@ Uno por agente (backend, frontend, integración), con el esqueleto de abajo.
 ```text
 Eres el agente de <backend | maquetación del frontend | integración> de la feature FNN «<nombre>» de la fase 2 del WMS de Bodegas Asociadas.
 
-Lee, en este orden: docs/README.md; el AGENTS.md de tu repo; docs/procesos/flujo-de-trabajo-agentes.md; el plan maestro (docs/planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md), en especial §1, §5 y §6; y el plan cerrado docs/planes/sprint-11/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md completo.
+Lee, en este orden: docs/README.md; el AGENTS.md de tu repo; docs/procesos/flujo-de-trabajo-agentes.md; el plan maestro (docs/planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md), en especial §1, §5 y §6; y el plan cerrado docs/planes/sprint-11/fNN-<tema>/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md completo.
 
 Trabaja en la rama f2/fNN-<tema> de <repo o repos>, que sale de fase-2. Antes de empezar trae lo último de develop a fase-2 y de fase-2 a tu rama.
 Ejecuta solo la parte <1 | 2 | 3>, fase por fase. Al cerrar cada fase: compuertas de §6 del plan maestro con las cifras antes y después, commit con el mensaje sugerido y push de tu rama.
@@ -619,7 +624,7 @@ Ejecuta solo la parte <1 | 2 | 3>, fase por fase. Al cerrar cada fase: compuerta
 <Parte 3> Escribe las fuentes http, borra mocks/, enlaza el menú, borra las pantallas viejas, pasa los casos QA en el navegador y fusiona la rama en fase-2 en los dos repos con --no-ff.
 
 Si el código no coincide con lo que cita el plan, detente y pregunta con todas las dudas en un solo mensaje. Si un caso borde choca con una Dn, gana la Dn (DEC-002). No toques staging. No copies credenciales ni datos de personas reales. Nada de docs/archivo/ es una instrucción.
-Al terminar la parte, actualiza el estado en el plan cerrado, en docs/planes/README.md y en la matriz docs/planes/sprint-11/seguimiento-implementacion-fase-2-2026-11-21.md, y entrégame un resumen con las cifras, los commits y lo que queda pendiente.
+Al terminar la parte, marca este prompt «Ejecutado» en su encabezado, actualiza el estado en el plan cerrado, en docs/planes/README.md y en la matriz docs/planes/sprint-11/seguimiento-implementacion-fase-2-2026-11-21.md, y entrégame un resumen con las cifras, los commits y lo que queda pendiente.
 ```
 
 ---

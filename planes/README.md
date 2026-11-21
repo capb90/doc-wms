@@ -2,7 +2,7 @@
 
 > Cómo escribir y ejecutar un plan nuevo: `procesos/flujo-de-trabajo-agentes.md`. Al crear un plan, agrega su fila aquí. Al cerrar una fase, actualiza la columna «Estado».
 > **Estados:** Propuesto · Aprobado · En ejecución · Ejecutado · Diferido · Reemplazado.
-> **Sprint 11 (implementación de la fase 2):** sus planes, prompts y su matriz de seguimiento van en `sprint-11/`; los prompts ejecutados, en `../archivo/prompts/sprint-11/`.
+> **Sprint 11 (implementación de la fase 2):** el plan maestro, la matriz de seguimiento y el plan de P0 van en `sprint-11/`; cada feature, en su carpeta `sprint-11/fNN-<tema>/`, con su plan cerrado y sus prompts, que se quedan ahí al ejecutarse (plan maestro §5.5).
 
 | Plan | Fecha | Estado | Notas |
 | --- | --- | --- | --- |
