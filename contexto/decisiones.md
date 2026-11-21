@@ -15,6 +15,7 @@
 | DEC-040…049 | Migración del legacy y staging |
 | DEC-050…059 | Respuestas a la auditoría de paridad (2026-10-23) |
 | DEC-060…069 | Documentos impresos |
+| DEC-070…079 | Notificaciones |
 | DEC-080…089 | Levantamiento de noviembre de 2026 |
 
 ## 1. Forma de trabajo
@@ -252,7 +253,17 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Verificación:** al escanear el QR se abre una página pública, sin iniciar sesión. Muestra los datos mínimos de la guía para cotejarlos con el papel: número, fechas, estado vigente o anulada, depósito, destino, productos y cantidades, y la placa parcialmente oculta. Nunca muestra datos de personas (`DEC-007`).
 - **Fuente:** el usuario, en el plan `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` (fase 11, D35–D42).
 
-## 8. Levantamiento de noviembre de 2026
+## 8. Notificaciones
+
+**DEC-070 — Los avisos por correo van a los usuarios activos del rol** (2026-11-05; construida el 2026-11-21). Decisiones N1 a N4 de `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`.
+- **Destinatarios (N1):** el correo de un aviso va a los correos de los usuarios activos del rol destino (`Admin`, `Billing`…), los mismos que reciben la notificación en la aplicación, sin repetir y sin distinguir mayúsculas. Cambiar el correo de un usuario en la aplicación cambia a dónde le llegan los avisos.
+- **Respaldo (N2):** `Notifications:AdminEmails` (`NOTIFICATIONS_ADMIN_EMAILS` en staging) solo se usa cuando el rol tiene usuarios activos pero ninguno con correo. Con usuarios con correo, la lista no recibe copia. Admite coma o punto y coma.
+- **Sin usuarios activos (N3):** si el rol no tiene usuarios activos, no se envía correo; el respaldo no lo reemplaza.
+- **Respaldo fallido (N4):** el correo de fallo del respaldo no cambia: va a los Admin activos y a `Notifications:AdminEmails`, sin repetir, aunque la base esté caída o `Notifications:Enabled` esté apagado.
+- *Por qué:* en staging, el aviso de un pesaje modificado llegaba a la lista de configuración y no al correo del administrador configurado en la aplicación.
+- **Fuente:** el usuario, al aprobar el plan el 2026-11-05 (con N2 como está: la lista queda de respaldo).
+
+## 9. Levantamiento de noviembre de 2026
 
 **DEC-080 — Análisis funcional de la fase 2** (2026-11-19). Respuestas del usuario en `levantamiento-2026-11/fase_2-analisis-funcional-2026-11-19.md` (AF-01 a AF-137), con wireframes en `levantamiento-2026-11/fase_2-mockups/`. Todo lo acordado **se construye** y necesita plan cerrado (`DEC-001`).
 - **Reemplaza:**

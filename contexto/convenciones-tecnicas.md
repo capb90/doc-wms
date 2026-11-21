@@ -116,6 +116,8 @@ Los `[Authorize]` de ASP.NET se suman (AND): para aflojar una acción de un cont
 
 `Wms.IntegrationTests` retira los jobs y sustituye por dobles el correo, la TRM y los respaldos.
 
+**Destinatarios de los avisos por correo** (`DEC-070`): `NotificationOrchestrator` envía el correo a los usuarios activos del rol destino con correo, sin repetir (`NotificationRecipients`, en `Wms.Infrastructure/Services/`). `Notifications:AdminEmails` es solo respaldo, para cuando ninguno tiene correo; con el rol sin usuarios activos no se envía nada. Los métodos tipados sin llamadores de `INotificationService` y el correo de fallo del respaldo siguen con su regla propia.
+
 ## 7. Pruebas y compuertas
 
 | Comando | Desde |
