@@ -36,6 +36,7 @@ El WMS está **en pruebas en staging con los operarios**, sobre los datos migrad
 | 2026-11-17 → 19 | **Levantamiento de noviembre:** fase 1 (consolidación de hallazgos) y fase 2 (análisis funcional, 137 decisiones, `DEC-080`), sin código | — |
 | 2026-11-20 | **Plan maestro de la implementación de la fase 2** (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`): 9 features más P0, despliegue por grupos y ramas `fase-2` (`DEC-081`), sin código | — |
 | 2026-11-21 | **P0, fase 1: correos de aviso a los usuarios activos del rol** (`DEC-070`; `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md`). QA del usuario y fusión en `develop`. Sin desplegar: el usuario aplazó la fase 2 (staging) porque los operarios no usan la app; va con el próximo despliegue de `develop` | `529bda7` (fusión de `1b2f09f`) / — |
+| 2026-11-21 | **Ramas `fase-2`** creadas desde `develop` en BE y FE, con push (`DEC-081`, plan maestro §5.3). Las features salen de ellas en `f2/fNN-<tema>` | `529bda7` / `3aa6e3c` |
 
 ## 3. Staging
 
