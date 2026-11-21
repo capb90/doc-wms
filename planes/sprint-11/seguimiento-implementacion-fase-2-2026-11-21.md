@@ -1,7 +1,7 @@
 # Seguimiento — Implementación de la fase 2
 
 > **Para qué sirve:** la matriz de la implementación de la fase 2 (`DEC-080`, `DEC-081`): en qué orden se ejecuta cada paso, dónde están su plan y sus prompts, y en qué estado va cada parte.
-> **Fecha de corte:** 2026-11-21. Backend `develop` `aa69633`, con su `AGENTS.md` cambiado y sin commit (anexo A del plan maestro); frontend `develop` `8c7f20e`, con su `AGENTS.md` sin el cambio del anexo A (se revirtió fuera de la sesión que lo aplicó); docs `main` `194cf41`, reorganizado en `planes/sprint-11/` el 2026-11-21. Todavía no existen las ramas `fase-2`.
+> **Fecha de corte:** 2026-11-21. Backend `develop` `aa69633` y frontend `develop` `8c7f20e`, cada uno con su `AGENTS.md` cambiado y sin commit (anexo A del plan maestro); docs `main` `e39db3a`, reorganizado en `planes/sprint-11/` el 2026-11-21. Todavía no existen las ramas `fase-2`.
 > **Carpeta:** `planes/sprint-11/` reúne el plan maestro, esta matriz, el plan de P0 y los planes cerrados que se escriban para la fase 2. Los prompts ejecutados pasan a `archivo/prompts/sprint-11/`.
 > **Fuente del orden:** [plan maestro](plan-maestro-implementacion-fase-2-2026-11-20.md), §4 (orden y paralelismo), §5.3 (ramas y fusiones) y §9 (plantilla del plan cerrado).
 > **Mantenimiento:** §5 de este documento.
@@ -78,7 +78,7 @@ Un plan que aún no existe aparece con su nombre esperado entre comillas inverti
 
 | Pendiente | Lo necesita | Estado |
 | --- | --- | --- |
-| Commit del `AGENTS.md` de `Backend/wms-api` y de `Frontend/wms` (anexo A del plan maestro) | Paso 3 (las ramas salen de `develop`) | Backend: cambiado en `develop`, sin commit. Frontend: el cambio se revirtió; falta volver a aplicarlo |
+| Commit del `AGENTS.md` de `Backend/wms-api` y de `Frontend/wms` (anexo A del plan maestro) | Paso 3 (las ramas salen de `develop`) | Cambiado en `develop` en los dos repos, sin commit (en el frontend se volvió a aplicar el 2026-11-21) |
 | Mover el prompt del plan maestro a `archivo/prompts/` | Orden del hub (`README.md`, «Archivos nuevos») | Hecho el 2026-11-21: `archivo/prompts/sprint-11/` |
 | Prompt del planificador para los planes cerrados de F01 y F02 | Paso 4 | Por pedir |
 
