@@ -29,7 +29,7 @@ Los pasos con el mismo número corren a la vez, uno en cada repo (M10). Un paso 
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 0 | MAESTRO | Plan maestro de la fase 2 | docs `main` | — | `DEC-080` | [plan-maestro-implementacion-fase-2-2026-11-20.md](plan-maestro-implementacion-fase-2-2026-11-20.md) | [prompt-plan-maestro-implementacion-fase-2-2026-11-20.md](../../archivo/prompts/sprint-11/prompt-plan-maestro-implementacion-fase-2-2026-11-20.md) (archivado) | Aprobado el 2026-11-20 (docs `40acd3d`) |
 | 1 | P0 | Correos al rol: código y pruebas (fase 1 de su plan) | BE `p0/correos-por-rol`, desde `develop` | Planes de F01 y F02; maquetación de F02 cuando su plan esté aprobado | — | [plan-cerrado-correos-notificacion-por-rol-2026-11-05.md](plan-cerrado-correos-notificacion-por-rol-2026-11-05.md) | Fase 1: [prompt-correos-notificacion-por-rol-2026-11-05.md](prompt-correos-notificacion-por-rol-2026-11-05.md) | Aprobado el 2026-11-05 |
-| 2 | P0 | Correos al rol: QA del usuario, fusión en `develop` y staging (fase 2 de su plan) | BE `develop` y staging | Maquetación de F02 | Paso 1 | El mismo | Fase 2: se pide aparte, con el «sí» del usuario en cada acción | Aprobado |
+| 2 | P0 | Correos al rol: QA del usuario, fusión en `develop` y staging (fase 2 de su plan) | BE `develop` y staging | Maquetación de F02 | Paso 1 | El mismo | Fase 2: se pide aparte, con el «sí» del usuario en cada acción | Fusión hecha (`529bda7`); staging aplazado por el usuario el 2026-11-21 (los operarios no usan la app): va con el próximo despliegue de `develop` |
 | 3 | RAMAS | Crear `fase-2` en BE y FE | BE y FE, desde `develop` | — | P0 en `develop`; commit de los `AGENTS.md` | Plan maestro §5.3 | — | — |
 | 4 | F01 | Núcleo de dominio (partes 0 y 1) | BE `f2/f01-nucleo` | F02 | Paso 3 | `f01-nucleo/plan-cerrado-f2-f01-nucleo-AAAA-MM-DD.md`, por escribir junto con F02 | `f01-nucleo/`: planificador (F01 y F02) y backend, por escribir | Por escribir |
 | 4 | F02 | Base transversal (parte 2) | FE `f2/f02-base` | F01 (y P0, si aún corre) | Paso 3 en FE | `f02-base/plan-cerrado-f2-f02-base-AAAA-MM-DD.md`, por escribir junto con F01 | `f02-base/`: maquetación, por escribir | Por escribir |
@@ -52,7 +52,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 
 | ID | 0 · Contrato | 1 · Backend | 2 · Maquetación | 3 · Integración | Commits (BE / FE) | Grupo | Estado |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| P0 | — | Hecho el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f`, fusión `529bda7` / — | Antes de G1 | Fase 1 en `develop`; falta staging |
+| P0 | — | Hecho el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f`, fusión `529bda7` / — | Antes de G1 | Fase 1 en `develop`; staging aplazado |
 | F01 | Pendiente (con el plan) | Pendiente | — | Con I-01: Pendiente | — | G1 | Pendiente |
 | F02 | En el plan de F01 | — | Pendiente | Con I-01: Pendiente | — | G1 | Pendiente |
 | F03 | Pendiente | Pendiente | Pendiente | Pendiente | — | G1 | Pendiente |

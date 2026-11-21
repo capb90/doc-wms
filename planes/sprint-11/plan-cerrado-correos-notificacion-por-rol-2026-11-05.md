@@ -1,6 +1,6 @@
 # Plan cerrado — Correos de notificación al correo de los usuarios del rol
 
-> **Fecha:** 5 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-05 (con N2 como está: la lista queda de respaldo). Fase 1 completada el 2026-11-21 en la rama BE `p0/correos-por-rol` con QA del usuario y fusionada en `develop` (`529bda7`) el 2026-11-21; fase 2 pendiente. Prompt del ejecutor: `planes/sprint-11/prompt-correos-notificacion-por-rol-2026-11-05.md`.
+> **Fecha:** 5 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-05 (con N2 como está: la lista queda de respaldo). Fase 1 completada el 2026-11-21 en la rama BE `p0/correos-por-rol` con QA del usuario y fusionada en `develop` (`529bda7`) el 2026-11-21. Fase 2 aplazada por el usuario el 2026-11-21: los operarios no usan staging por ahora; el cambio llega a staging con el próximo despliegue de `develop`. Prompt del ejecutor: `planes/sprint-11/prompt-correos-notificacion-por-rol-2026-11-05.md`.
 > **Origen:** pedido del usuario del 2026-11-05. En staging, al modificar un pesaje en báscula, el aviso por correo llegó a `capb.dev@gmail.com`, y el usuario esperaba que llegara al correo del administrador que tiene configurado en la aplicación.
 > **Problema:**
 > - Los avisos por correo no usan el correo de los usuarios. `NotificationOrchestrator.NotifyRoleAsync` (`B/Wms.Api/Services/NotificationOrchestrator.cs:69`) crea la notificación dentro de la aplicación para los usuarios activos del rol, pero para el correo solo pasa el nombre del rol a `NotificationService.NotifyRoleAsync`.
@@ -84,7 +84,7 @@ Los 7 llamadores con `sendEmail: true` no cambian de código, porque conservan l
 | Fase | Contenido | Estado |
 | --- | --- | --- |
 | 1 | Código, pruebas y documentación en local (§2) | Completada el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) |
-| 2 | Despliegue y verificación en staging, con aprobación explícita | Pendiente |
+| 2 | Despliegue y verificación en staging, con aprobación explícita | Aplazada (2026-11-21): los operarios no usan staging; va con el próximo despliegue de `develop` |
 
 ### Fase 1 — Local
 
