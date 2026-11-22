@@ -49,7 +49,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 **DEC-012 — Fecha de ingreso y consecutivos** (Ola 1, 2026-09-14; Ola 2, 2026-09-17).
 - La fecha de ingreso del depósito es la hora de Vigilancia del primer camión; los siguientes no la cambian. Báscula y Comercio Exterior pueden corregirla, sin límite hacia atrás y nunca hacia el futuro. *Precisada por DEC-051 (2026-10-23):* «sin límite hacia atrás» significa dentro de la estadía del primer camión.
 - Rige la etiqueta, la fecha de la TRM, el año del consecutivo y el inicio del primer período de almacenamiento.
-- Consecutivos de 5 dígitos, con reinicio anual y sin saltos: `2026T00001`, `2026BA00001` (solo importación), `2026EXP00001`, `2026INSP00001`, `2026S00001` (una serie para todas las guías) y `2026OC00001`.
+- Consecutivos de 5 dígitos, con reinicio anual y sin saltos: `2026T00001`, `2026BA00001` (solo importación), `2026EXP00001`, `2026INSP00001`, `2026S00001` (una serie para todas las guías) y `2026OC00001`. *Precisada por el plan de F01 de la fase 2 (D1, 2026-11-21): la salida de mercancía usa la serie `2026SM00001`, que reemplaza a `2026OC00001` de la orden de cargue.*
 - Tiquetes y depósitos toman el año de la fecha de ingreso; guías y órdenes, el de su emisión.
 
 **DEC-013 — Varios camiones por documento** (Ola 1, WMS-26). Completar el ciclo de un camión no cierra el servicio. Comercio Exterior cierra el ingreso de camiones de forma explícita, sin reapertura. Un camión tardío se registra, entra al stock, se recalcula la factura del período (DEC-022) y se avisa para reimprimir la etiqueta. Un error de facturación nunca bloquea báscula. *Cierre explícito del ingreso de camiones, reemplazado por `DEC-080` (AF-95).*
@@ -94,7 +94,7 @@ No propongas diseños que hagan esperar a Comercio Exterior por Bodega, ni que c
 - Anulada: no se toca.
 - Las líneas sobrescritas se reemplazan y la notificación lista el valor descartado.
 
-**DEC-023 — TRM fuera de báscula** (Ola 1, WMS-24). *Reemplazada por `DEC-080` (AF-85).*
+**DEC-023 — TRM fuera de báscula** (Ola 1, WMS-24). *Reemplazada por `DEC-080` (AF-85).* *Se construye en F01 de la fase 2 con la tasa semanal (D15, D42); los depósitos migrados conservan su TRM del legacy (D7).*
 - Se consulta a la DIAN con la fecha de ingreso al crear la factura del período.
 - Si falla, el depósito queda con TRM pendiente y la factura se genera igual. Facturación digita la TRM manual (con motivo) antes de asignar el N.º SIIGO y aprobar.
 - Una TRM manual nunca la reemplaza la DIAN, y una de la DIAN no se reemplaza a mano.

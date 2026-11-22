@@ -126,6 +126,7 @@ El orden de §4 resuelve cada choque: una sola feature cambia el punto y las sig
 | `F/pages/foreign-trade/deposits/index.vue:57-121`; `F/pages/foreign-trade/imports/[id]/index.vue:534-905` | Tablero y detalle de CE | F05, F06 | F05 deja el stepper con la etapa Salidas vacía; F06 la llena |
 | `F/pages/foreign-trade/loading-orders/*`, `F/pages/foreign-trade/dispatch-guides/*`, `F/pages/warehouse/loading-orders/*` | Órdenes y guías | F06 | F06 las retira (AF-97) |
 | `F/pages/admin/unit-measures/index.vue` | Catálogo de unidades | F02 | F02 la retira (M21); el backend lo quita F01 |
+| `F/pages/operations/entries/history.vue`, `F/pages/warehouse/inventory/index.vue`, `F/pages/warehouse/novelties/index.vue`, `F/pages/foreign-trade/abandonment/index.vue`, `F/pages/foreign-trade/packing-lists/index.vue`, `F/pages/notifications/index.vue` | Listados del menú sin pantalla propia en los wireframes | F03, F04, F05, F09 | Cada uno pasa al patrón de AF-129 en la feature de su módulo: Vigilancia › Historial en F03; Inventario y Novedades en F04; Abandono y Listas de empaque en F05; Notificaciones en F09 (respuesta del usuario del 2026-11-21, plan de F02 D3) |
 
 ---
 

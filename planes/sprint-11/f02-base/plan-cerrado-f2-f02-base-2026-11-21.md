@@ -395,7 +395,7 @@ Una a la vez, en orden. Cada fase cierra con las compuertas de `PM/` §6.2 (`yar
 - Migrar los cobros de hoy a `AppChargeForm` (F03, F04 y F06).
 - Estimar esfuerzo.
 
-**Cambio al hub que este plan propone y no aplica** (con el «sí» del usuario):
+**Cambio al hub de este plan** (aplicado el 2026-11-22 con el «sí» del usuario):
 
 `D/planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md` §2.2, fila nueva al final de la tabla:
 

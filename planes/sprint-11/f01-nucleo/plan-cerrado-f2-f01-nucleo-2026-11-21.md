@@ -2186,7 +2186,7 @@ Los avisos de D45 entran en la fase de su regla (3 y 5; el de la tasa, en la 6).
 - Staging, el despliegue de G1 y su plan (`PM/` §7.3).
 - Estimar esfuerzo.
 
-**Cambios al hub que este plan propone y no aplica** (los aplica el usuario o un agente con su «sí»):
+**Cambios al hub de este plan** (aplicados el 2026-11-22 con el «sí» del usuario; en el 2, «Construida» quedó «Se construye», porque F01 aún no se ejecuta):
 
 1. `D/contexto/decisiones.md`, `DEC-012`, al final de la viñeta de consecutivos: «*Precisada por el plan de F01 de la fase 2 (D1, 2026-11-21): la salida de mercancía usa la serie `2026SM00001`, que reemplaza a `2026OC00001` de la orden de cargue.*»
 2. `D/contexto/decisiones.md`, `DEC-023`, después de «*Reemplazada por `DEC-080` (AF-85).*»: «*Construida en F01 de la fase 2 con la tasa semanal (D15, D42); los depósitos migrados conservan su TRM del legacy (D7).*»
