@@ -777,12 +777,12 @@ Petición, respuesta, errores y Zod: no aplica; responden 404 desde la fase 2. E
 
 ```jsonc
 {
-  "weighbridgeCycleId": "guid",            // el ciclo de ESTA entrada
+  "weighbridgeCycleId": null,              // el ciclo de ESTA entrada: nulo al registrar, nace en el cobro (nota de la fase 3, §8)
   "warehouseStorageEntryId": "guid",       // nuevo
   "isDuplicateEntry": false,               // nuevo: true en las duplicadas
   "warehouseStorageNumber": "2026BA00012",
   "isLateTruck": false                     // nuevo: true si el depósito ya estaba confirmado (D27)
-  // …resto sin cambios
+  // …resto sin cambios; salen isAdditionalDeposit y newWarehouseStorageEntryId (D20)
 }
 ```
 
@@ -1724,7 +1724,7 @@ export const storageEntryInitiateChangesSchema = z.object({
   targetWarehouseStorageId: guidSchema.nullable(),
 });
 export const storageEntryInitiateResultChangesSchema = z.object({
-  weighbridgeCycleId: guidSchema,
+  weighbridgeCycleId: guidSchema.nullable(), // nulo al registrar: el ciclo nace en el cobro (§8, nota de la fase 3)
   warehouseStorageEntryId: guidSchema,
   isDuplicateEntry: z.boolean(),
   warehouseStorageNumber: z.string(),
@@ -2163,7 +2163,7 @@ Una a la vez, en orden (`D/procesos/flujo-de-trabajo-agentes.md` §3). Cada fase
 | --- | --- | --- | --- | --- |
 | 1 | 1 | Base y catálogos: C-F01-00; D9 a D17; C-F01-01 a C-F01-68, C-F01-141 y C-F01-163 a C-F01-170; migración `AddCatalogSortAndPrefixes` | QA2-F01-001 a QA2-F01-019 en PASA | Completada el 2026-11-23 (BE `b089eef`): QA2-F01-001 a 019 en PASA por API (pruebas de integración HTTP contra Postgres); `Wms.Tests` 2098 → 2150; `Wms.IntegrationTests` 479 → 653, con los mismos 2 fallos heredados de la cola de báscula; `has-pending-model-changes` limpio. `IDianTrmService`, `DianTrmService`, `DianTrmOptions` y `TrmSource.Dian` siguen hasta la fase 6 (ver nota) |
 | 2 | 1 | Unidad de medida fuera: D18, D19; C-F01-69 a C-F01-77 y R-UOM; migración `RemoveUnitMeasure` | QA2-F01-020 y QA2-F01-021 en PASA; `grep -rl UnitMeasure` sin resultados fuera de `Migrations/` | Completada el 2026-11-23 (BE `9bb205b`): QA2-F01-020 y 021 en PASA por API (pruebas de integración HTTP contra Postgres: `ProductEndpointsTests`, `PerUomByPackagingTests`, `ReadsWithoutUomTests`); `Wms.Tests` 2150 → 2137 (salen las pruebas del catálogo y de la validación de la unidad); `Wms.IntegrationTests` 653 → 672, con los mismos 2 fallos heredados de la cola de báscula (pasan aislados); `has-pending-model-changes` limpio; `grep` sin resultados. Agrupaciones por embalaje y campos renombrados: §2.2.6 |
-| 3 | 1 | Entradas y pesos: D20 a D28; C-F01-78 a C-F01-89; migración `EntryPerDocument` | QA2-F01-022 a QA2-F01-031 en PASA | Pendiente |
+| 3 | 1 | Entradas y pesos: D20 a D28; C-F01-78 a C-F01-89; migración `EntryPerDocument` | QA2-F01-022 a QA2-F01-031 en PASA | Completada el 2026-11-23 (BE `5a44a71`): QA2-F01-022 a 031 en PASA por API (pruebas de integración HTTP contra Postgres: `EntryPerDocumentTests`, 12 pruebas, una o más por endpoint de C-F01-78 a C-F01-89); `Wms.Tests` 2137 → 2120 (salen las del cierre de camiones y de los bloqueos de Bodega; entran las de la mercancía y de la entrada duplicada); `Wms.IntegrationTests` 672 → 661 (salen 23 del depósito adicional, el pesaje compartido, la llegada a Bodega, el cargue previo al repesaje y el cierre de camiones; entran 12), con los mismos 2 fallos heredados de la cola de báscula (pasan aislados); `has-pending-model-changes` limpio; migración `EntryPerDocument` aplicada en la base local. Ver la nota de la fase 3 |
 | 4 | 1 | Edición del ingreso: D29 a D32; C-F01-90 a C-F01-93; sin migración | QA2-F01-032 a QA2-F01-035 en PASA | Pendiente |
 | 5 | 1 | Salidas: D1 a D4, D33 a D40, D45 a D47; C-F01-94 a C-F01-139 y R-SAL; migración `ReplaceLoadingOrderWithGoodsExit` | QA2-F01-036 a QA2-F01-050 en PASA; `grep -rl LoadingOrder` sin resultados fuera de `Migrations/` | Pendiente |
 | 6 | 1 | Facturación: D41 a D43; C-F01-140; importador con la tasa (D44); importación completa de ensayo (§7); sin migración | QA2-F01-051 a QA2-F01-054 en PASA; conteos de la importación iguales; se borran `IDianTrmService`, `DianTrmService`, `DianTrmOptions` y `TrmSource.Dian` | Pendiente |
@@ -2172,6 +2172,8 @@ Una a la vez, en orden (`D/procesos/flujo-de-trabajo-agentes.md` §3). Cada fase
 Los avisos de D45 entran en la fase de su regla (3 y 5; el de la tasa, en la 6).
 
 **Servicio de la DIAN (respuesta del usuario del 2026-11-23, «Dejarlo hasta la fase 6»):** la fase 1 retiró `GET system/dian-trm/today` (C-F01-14) y la consulta del levante (D15), pero el servicio de la DIAN lo sigue usando la facturación de almacenamiento (`StorageBillingService.TryAssignDianTrmAsync`, `WarehouseStorage.AssignDianTrm`). Se borra en la fase 6, cuando D42 y D43 lo reemplazan por la tasa semanal.
+
+**Fase 3, ciclo en el cobro (respuesta del usuario del 2026-11-23, «Ciclo en el cobro»):** el ciclo de báscula de cada entrada sigue naciendo en el cobro (`storage/process-payment` o `storage/start-pending-billing`), uno por entrada; ahí se marca `IsDuplicateEntry` y la duplicada sale en $0 aunque el operario envíe otro valor. Por eso `storage/initiate` y `storage/register` devuelven `weighbridgeCycleId` nulo (el esquema `storageEntryInitiateResultChangesSchema` pasa a `guidSchema.nullable()`) y la pantalla de F03 toma el ciclo de la respuesta del cobro, como hoy. F02 no cambia. Precisiones de la fase, por las decisiones: el detalle del depósito expone `dispatchedWeight` y `weightBalance` en nulo hasta la fase 5 (D39); el formulario debe enviar el peso de la mercancía para que la tara y el neto se deduzcan (D21: el manifiesto solo se informa); una inspección sin documento se reconoce como ingreso con depósito por su depósito; dos registros del mismo camión sin depósito elegido dejan el segundo como entrada duplicada en un depósito nuevo (D20 y `DEC-057` D1).
 
 **Fase 1, nota de D13:** «ciclo guardado» incluye la operación que Báscula ya guardó con `storage/initiate` para un motivo con categoría, aunque el ciclo nazca después, en el cobro. Sin categoría (solo bodega), sigue el bloqueo de hoy (WMS-5).
 
