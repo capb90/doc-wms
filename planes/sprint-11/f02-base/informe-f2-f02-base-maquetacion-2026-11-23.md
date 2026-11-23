@@ -177,3 +177,86 @@ Las capturas se tomaron en el navegador del entorno contra `yarn dev` (`wms-dev-
 - Decidir si los tipos de vehículo vuelven a leerse del catálogo de báscula.
 - Al mutar ubicaciones, invalidar también `['warehouse-locations']` de las pantallas de Bodega, si comparten datos con el API real.
 - Borrar lo que solo usaban las páginas viejas de esta fase (por ejemplo `useMutations.ts` de `entries` y `useWarehouseLocationMutations.ts`, tras comprobar con grep quién los importa).
+
+---
+
+## Fase 4 · Configuración II
+
+**Commit FE:** `9e738bc` — `feat(configuracion): terceros, productos, embalajes, unidades de carga, servicios, ciudades, cuadrillas y parámetros con el patrón nuevo (DEC-080, F02)`.
+
+### Respuestas del usuario (2026-11-23)
+
+| Duda | Respuesta | Efecto |
+| --- | --- | --- |
+| El contrato de F01 (§2.3, `cityCreateSchema`) pedía `countryCode` de 2 letras; el backend (`CreateCityValidator`) y los datos usan 3 («COL», «ECU») | «Contrato a 3 letras» | `P01/` §2.3 y C-F01-48 corregidos a `length(3)`, con la nota de la respuesta; el backend de F01 ya valida 3 letras, así que no cambia |
+| Terceros: ¿se conservan la búsqueda global (WMS-7) y el filtro «Salidas» (BR-05-004)? | «Nombre, Tipo de identificación, Número de identificación, Roles, Estado Financiero, Salidas, Estado y los filtros solo por columnas; sin búsqueda global» | Siete columnas y solo filtros de fila; sale la búsqueda global; «Salidas» queda como columna con su filtro. Fila de Terceros de §2.3 del plan actualizada |
+
+### Qué quedó
+
+| Pieza | Archivos (`Frontend/wms/`) |
+| --- | --- |
+| Contratos (copiados de `P01/` §2.3, tipos con `z.infer`) | `app/features/administration/contracts/{packaging-type,cargo-unit-type,city,crew,system-parameter}.ts`, `app/features/services/contracts/service.ts`, `app/features/products/contracts/product.ts` |
+| Fuentes (`I<Recurso>Source` y la fuente activa, simulada) | `packaging-type.source.ts`, `cargo-unit-type.source.ts`, `city.source.ts`, `crew.source.ts`, `system-parameter.source.ts` (`administration`); `service.source.ts`; `product.source.ts`. `stakeholder.source.ts` suma `businessRoles()`: simula el endpoint de hoy `GET administration/business-role`, sin cambios (`PM/` §5.2) |
+| Datos y fuentes simulados | 9 tipos de embalaje, 7 de unidad de carga, 16 ciudades de Colombia, Ecuador y Perú, 7 cuadrillas, 12 parámetros, 12 servicios sin precios y 15 productos sin unidad. Simulan los errores del contrato: código, nombre, SKU o documento repetidos (409), en uso al eliminar (409), formato del código del servicio (400), activar dos veces (400), valor que no corresponde al tipo del parámetro (400) y la importación del CSV de ciudades con sus filas con error |
+| Consultas (`*.queries.ts`) | Prefijos `['packaging-types']`, `['cargo-unit-types']`, `['cities']`, `['crews']`, `['system-parameters']`, `['services']`, `['products']` y `['stakeholders']`, con un segundo nivel (`list`, `detail`) que no choca con los composables de hoy; invalidación tras cada mutación |
+| Terceros (`/admin/stakeholders`) | Nombre ↕, Tipo de identificación, Número de identificación ↕, Roles, Estado financiero ↕, Salidas, Estado; filtros de fila; `?rol=` fija el filtro de Roles y el filtro escribe `?rol=` (la miga sigue con el rol). Ver, ✎ y activar o desactivar. Modal a dos columnas (siete campos; roles solo al crear). Drawer con `?id=`: datos, saldo vencido, marca «sin salidas» con su motivo y los marcadores de D11 (roles, cuentas, contactos, «sin salidas»; acuerdos solo para Admin y Facturación, D2) |
+| Productos (`/admin/products`) | Nombre ↕, SKU ↕, Embalaje ↕ (filtro por tipo), Estado; ✎ y activar o desactivar. Modal sin unidad de medida (D19) con el tipo de embalaje y su «+» de alta rápida, como hoy (C-F01-30) |
+| Tipos de embalaje · Tipos de unidad de carga | Código, Nombre, Estado; lista completa con orden y filtros en el navegador; modal; ✎ y 🗑. En embalajes el estado no se edita (C-F01-31 no lo trae); en unidades de carga, al editar, el código no cambia y se suma «Activo» (C-F01-35) |
+| Servicios (`/admin/services`) | Código ↕, Nombre ↕, Estado; Ver, ✎ y activar o desactivar. Modal sin precios (código solo al crear). Drawer con `?id=` y los marcadores de precios, reglas, mínimos e impuestos solo para Admin y Facturación (D2, D6, D11) |
+| Ciudades (`/admin/cities`) | Nombre ↕, País ↕, Departamento ↕, Días de tránsito ↕, Destino de abandono, Estado; filtros de fila. «Importar» en la barra: `CityImportDialog.vue` ya no llama al API, recibe `importCities` de la página (fuente activa, C-F01-51). Modal con el país de 3 letras |
+| Cuadrillas (`/admin/crews`) | Nombre ↕, Estado; modal; ✎ y 🗑 |
+| Parámetros (`/admin/parameters`) | Código ↕, Valor, Tipo ↕, Descripción, Estado; solo edición en modal (sin «Nuevo»), con el valor según su tipo (número con `es-CO`, verdadero o falso, texto); solo Admin |
+| Roles (D6) | Las siete páginas de Configuración pasan de `["Admin"]` a `["Admin", "ForeignTrade", "Billing"]`; Parámetros sigue en `["Admin"]`; Terceros ya los tenía. Ninguna acción se oculta salvo las secciones de tarifas y acuerdos (D2): las políticas de sus endpoints admiten los tres roles |
+| Componentes compartidos | `AppCrudDialog`: limpia el error del API en cada intento, también si la validación local lo detiene (quedaba «Ya existe la ciudad PASTO» bajo un nombre ya corregido); prueba nueva en `AppCrudDialog.spec.ts`. `AppDataTable`: las acciones de la fila no se parten en varias líneas |
+| Guardias | `list-pattern-routes.ts`: ocho rutas pasan de `PENDING` a `PATTERN` (quedan en `PENDING` de F02 solo Usuarios y Auditoría). `mock-sources.spec.ts`: las ocho páginas y `CityImportDialog.vue` entran en `MAQUETACION_PAGES` |
+| Pruebas | `test/unit/administration/mocks.spec.ts`, `test/unit/services/mocks.spec.ts`, `test/unit/products/mocks.spec.ts` (nuevas) y `test/unit/stakeholders/mocks.spec.ts` (ampliada): cada dato pasa su esquema y la fuente simulada responde con las reglas y los errores del contrato (D16) |
+
+Notas, sin cambiar ninguna Dn:
+
+- **Campos del contrato fuera del modal:** `bankAccounts` y `contacts` del tercero (el modal no los envía, C-F01-27) y `packaging` del producto (texto libre que el modal de hoy no tiene) se sacan del esquema del formulario y la página los envía en `null`; con el esquema completo, el formulario no se enviaba porque esos campos llegaban sin valor.
+- **Productos sin «Origen»:** la columna «Origen» (creado desde báscula) de la pantalla vieja no está en §2.3; queda en el Excel de «Exportar».
+- **Velo de carga:** al abrir una página paginada, el velo de la tabla sigue unos cientos de milisegundos después de pintar las filas; pasa igual en Conductores (fase 3). Es cosmético y no se tocó.
+
+### Compuertas
+
+| Compuerta | Antes (fase 3, `4e60427`) | Después (`9e738bc`) |
+| --- | --- | --- |
+| `yarn build` | código 0 | código 0 |
+| `yarn test` | 126 archivos · 694 pruebas, en verde | 129 archivos · 711 pruebas, en verde |
+| `yarn lint` | 270 errores · 394 avisos | 262 errores · 390 avisos (bajan con las páginas reescritas); 0 errores en archivos nuevos o cambiados |
+| Tipos (`nuxi typecheck`) | — | sin errores en los archivos de la fase (los 71 que reporta son de archivos anteriores) |
+| Sin llamadas reales (D15) | `mock-sources.spec.ts` en verde | en verde, con las ocho páginas y `CityImportDialog.vue` en `MAQUETACION_PAGES`; en el navegador, ninguna petición a `api/v1` |
+| Datos simulados con sus esquemas (D16) | terceros, motivos, conductores, vehículos, prefijos, tasas y ubicaciones | más roles de negocio, tipos de embalaje y de unidad de carga, ciudades, cuadrillas, parámetros, servicios y productos |
+| Rutas nuevas en el menú | ninguna | ninguna |
+| Patrón de listado (D14) | 4 rutas en `PATTERN` | 12 rutas en `PATTERN`, en verde |
+
+### Casos QA de la fase (contra los simulados)
+
+| ID | Resultado | Evidencia |
+| --- | --- | --- |
+| QA2-F02-022 | PASA (`?roles=Billing`): Terceros › Ver un cliente muestra los datos y los marcadores, con «Acuerdos del cliente · se conecta en I-01»; Servicios › Ver muestra «Precios», «Reglas de tarifa», «Valores mínimos» e «Impuestos» como marcadores. Con `?roles=ForeignTrade`, ni acuerdos ni tarifas (D2, D6) | [f4-03](evidencias/f4-03-tercero-drawer-facturacion.jpg), [f4-13](evidencias/f4-13-servicio-drawer-tarifas-facturacion.jpg), [f4-14](evidencias/f4-14-servicio-drawer-sin-tarifas-ce.jpg) |
+| QA2-F02-023 | PASA (`?roles=ForeignTrade`): Productos › «+ Nuevo producto» no tiene unidad de medida; el «+» crea el tipo de embalaje «Bolsas», queda elegido y el producto se crea | [f4-08](evidencias/f4-08-producto-modal-sin-unidad.jpg), [f4-09](evidencias/f4-09-producto-embalaje-alta-rapida.jpg) |
+| QA2-F02-006 (repaso) | PASA en las ocho páginas: botones con borde o relleno (guardia D17 sobre las rutas de `PATTERN`), sin clic de fila | capturas de los listados |
+| QA2-F02-013 (repaso) | PASA: etiquetas encima en todos los modales de la fase | [f4-04](evidencias/f4-04-tercero-modal-validacion.jpg), [f4-17](evidencias/f4-17-ciudad-pais-tres-letras.jpg), [f4-23](evidencias/f4-23-parametro-modal-numero.jpg) |
+
+Capturas de cada pantalla:
+
+| Pantalla | Capturas |
+| --- | --- |
+| Terceros | Listado con Facturación ([f4-01](evidencias/f4-01-terceros-listado-facturacion.jpg)); `?rol=CUSTOMER` con el filtro «Cliente» y la miga «Clientes» ([f4-02](evidencias/f4-02-terceros-filtro-rol-clientes.jpg)); validación del modal ([f4-04](evidencias/f4-04-tercero-modal-validacion.jpg)); NIT repetido, 409 bajo el encabezado ([f4-05](evidencias/f4-05-tercero-documento-repetido-409.jpg)); creado y filtrado por nombre ([f4-06](evidencias/f4-06-tercero-creado-filtro-nombre.jpg)) |
+| Productos | [f4-07](evidencias/f4-07-productos-listado.jpg), [f4-08](evidencias/f4-08-producto-modal-sin-unidad.jpg), [f4-09](evidencias/f4-09-producto-embalaje-alta-rapida.jpg) |
+| Tipos de embalaje · Tipos de unidad de carga | [f4-10](evidencias/f4-10-tipos-embalaje-listado.jpg) (eliminar «Sacos», en uso, da el aviso del 409); [f4-11](evidencias/f4-11-unidad-carga-modal-editar.jpg) (código fijo y «Activo») |
+| Servicios | [f4-12](evidencias/f4-12-servicios-listado.jpg), [f4-13](evidencias/f4-13-servicio-drawer-tarifas-facturacion.jpg), [f4-14](evidencias/f4-14-servicio-drawer-sin-tarifas-ce.jpg) |
+| Ciudades | [f4-15](evidencias/f4-15-ciudades-listado.jpg); nombre repetido en el campo ([f4-16](evidencias/f4-16-ciudad-repetida-409.jpg)); país de 2 letras rechazado y sin el error viejo del API ([f4-17](evidencias/f4-17-ciudad-pais-tres-letras.jpg)); creada y filtrada sin tilde ([f4-18](evidencias/f4-18-ciudad-creada-filtro-sin-tilde.jpg)); «Importar» con la simulación del CSV: 3 filas, 1 se crea, 1 se actualiza, 1 con error ([f4-19](evidencias/f4-19-ciudades-importar-simulacion.jpg)) |
+| Cuadrillas | [f4-20](evidencias/f4-20-cuadrillas-listado.jpg), [f4-21](evidencias/f4-21-cuadrilla-repetida-409.jpg) |
+| Parámetros | [f4-22](evidencias/f4-22-parametros-listado-editado.jpg) (valor guardado), [f4-23](evidencias/f4-23-parametro-modal-numero.jpg); con `?roles=ForeignTrade` lleva a «Acceso denegado» |
+
+Las capturas se tomaron en el navegador del entorno contra `yarn dev` (`wms-dev-maquetacion`, puerto 3020), con la sesión simulada por rol.
+
+### Pendiente para I-01 (de esta fase)
+
+- Escribir `packaging-type.http.ts`, `cargo-unit-type.http.ts`, `city.http.ts`, `crew.http.ts`, `system-parameter.http.ts`, `service.http.ts`, `product.http.ts` y completar `stakeholder.http.ts` con `businessRoles()` (`GET administration/business-role`); cambiar la línea de cada `*.source.ts`, borrar las carpetas `mocks/` y vaciar `MAQUETACION_PAGES` (incluido `CityImportDialog.vue`).
+- Montar en los drawers las secciones de D11 con los componentes de hoy (`P01/` §13.5): en Terceros, roles, cuentas, contactos, marca «sin salidas» y acuerdos; en Servicios, precios, reglas, mínimos e impuestos.
+- Borrar las páginas `create.vue`, `edit/[id].vue` y `[id].vue` de Terceros, Productos y Servicios, y lo que solo ellas usan (por ejemplo `ProductForm.vue`, con la unidad de medida, y `StakeholderForm.vue`), tras comprobar con grep quién los importa; también `useImportCities` y los composables viejos de los catálogos si ya nadie los usa, y `stakeholderPageTexts` (`page-texts.ts` y su prueba), que la página nueva ya no usa.
+- Los enlaces de otras pantallas a `/admin/stakeholders/{id}` (por ejemplo `app/pages/billing/invoices/[id].vue`) pasan a `/admin/stakeholders?id={id}`.
+- Comprobar contra el backend real los 409 y 400 que aquí se simulan con mensajes propios (por ejemplo, tipo de embalaje o cuadrilla en uso) y ajustar los textos si difieren.

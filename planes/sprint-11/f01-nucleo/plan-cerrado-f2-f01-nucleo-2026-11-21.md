@@ -605,7 +605,7 @@ Cada ficha dice: política; qué cambia; petición; respuesta (con el esquema de
 - **Respuesta 200:** `pagedSchema(citySchema)`. **Errores:** los de C-F01-00. **Zod:** `cityListQuerySchema`, `citySchema` (`F/features/administration/contracts/city.ts`).
 
 ##### C-F01-48 · `POST administration/cities` (modificado)
-- **Política:** `ConfigurationAccess` (antes `AdminOnly`). **Petición:** `cityCreateSchema` (`name`, `countryCode`, `district`, `transitDays`, `isAbandonmentDestination`). **Respuesta 201:** `dataSchema(citySchema)`.
+- **Política:** `ConfigurationAccess` (antes `AdminOnly`). **Petición:** `cityCreateSchema` (`name`, `countryCode`, `district`, `transitDays`, `isAbandonmentDestination`). **Respuesta 201:** `dataSchema(citySchema)`. `countryCode` lleva 3 letras («COL», «ECU»), como `CreateCityValidator` de hoy: el esquema decía 2 y se corrigió con la respuesta del usuario del 2026-11-23 (maquetación de F02, fase 4).
 - **Errores:** los de hoy. **Zod:** `cityCreateSchema`, `citySchema`.
 
 ##### C-F01-49 · `PUT administration/cities/{id}` (modificado)
@@ -1527,7 +1527,7 @@ export const cityListQuerySchema = listQueryBaseSchema.extend({
   isActive: z.boolean().optional(), isAbandonmentDestination: z.boolean().optional(),
 });
 export const cityCreateSchema = z.object({
-  name: z.string().trim().min(1).max(100), countryCode: z.string().trim().length(2),
+  name: z.string().trim().min(1).max(100), countryCode: z.string().trim().length(3), // 3 letras («COL», «ECU»), como `CreateCityValidator` (respuesta del usuario del 2026-11-23)
   district: z.string().nullable(), transitDays: z.int().min(0).nullable(), isAbandonmentDestination: z.boolean(),
 });
 export const cityUpdateSchema = cityCreateSchema.extend({ isActive: z.boolean() });
