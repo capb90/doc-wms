@@ -4,7 +4,7 @@
 > **Origen:**
 > - `DEC-080` (`contexto/decisiones.md:257`) y el análisis funcional `levantamiento-2026-11/fase_2-analisis-funcional-2026-11-19.md` (AF-01 a AF-137), con sus wireframes en `levantamiento-2026-11/fase_2-mockups/`;
 > - las decisiones M1 a M5 del pedido (`archivo/prompts/sprint-11/prompt-plan-maestro-implementacion-fase-2-2026-11-20.md`);
-> - las respuestas del usuario a la ronda de preguntas del 2026-11-20 (M6 a M23) y su respuesta al riesgo R12 al presentar el plan (M24).
+> - las respuestas del usuario a la ronda de preguntas del 2026-11-20 (M6 a M23), su respuesta al riesgo R12 al presentar el plan (M24) y su cambio del despliegue del 2026-11-23 (M25).
 >
 > **Base de código leída:** BE `develop` `aa69633` · FE `develop` `8c7f20e` · docs `main` `ad60821`. Los dos repos de código estaban limpios.
 > **Alcance:** divide la implementación en 9 features, más el plan de correos ya aprobado (P0); fija su orden, sus reglas comunes, sus compuertas y la transición de datos, y deja la plantilla del plan cerrado de cada feature. No escribe los planes cerrados, no toca código y no estima esfuerzo.
@@ -26,14 +26,14 @@ Mandan sobre el resto de este plan y sobre los planes cerrados de cada feature (
 | M4 | Convivencia mientras una feature no está integrada: las pantallas nuevas van en rutas nuevas, sin enlazar en el menú hasta la integración; las existentes se rediseñan en la integración, o detrás de un interruptor que deja activa la versión actual; nada de una feature se despliega en staging antes de cerrar su integración | Vigente; M11 precisa cómo conviven las rediseñadas |
 | M5 | El plan aprobado `planes/sprint-11/plan-cerrado-correos-notificacion-por-rol-2026-11-05.md` se ejecuta antes de la feature de notificaciones, porque AF-133 se apoya en él | Vigente (P0, §4) |
 
-### 1.2 De la ronda de preguntas (M6 a M24, 2026-11-20)
+### 1.2 De la ronda de preguntas y posteriores (M6 a M25)
 
 | # | Tema | Qué decide | Palabras del usuario |
 | --- | --- | --- | --- |
 | M6 | Migraciones | Rige `DEC-004`: el agente de backend genera y aplica las migraciones con `dotnet ef`, solo contra la base local, y cierra cada fase de backend con `has-pending-model-changes` limpio y la migración en el mismo commit | «Rige DEC-004» |
 | M7 | Ramas | Se trabaja en ramas, no todo en `develop`. En cada repo de código, una rama `fase-2` que sale de `develop`; cada feature trabaja en `f2/fNN-<tema>` desde `fase-2` y vuelve a `fase-2` al cerrar su integración. `develop` sigue reflejando staging y recibe las correcciones urgentes, que se traen a `fase-2`. Reemplaza a `DEC-003` en lo de las ramas (anexo A) | «Tome una desición, se van a trabajar en ramas separadas, no todo en develop.» Al volver a preguntar: «Fase + feature» |
-| M8 | Git por el agente | El agente crea las ramas, hace commit y push, y fusiona: cada feature en `fase-2` cuando sus casos QA pasan; `fase-2` en `develop` solo después de la QA del usuario sobre `fase-2`, que el agente le pide al completar un grupo. Desplegar en staging sigue pidiendo el «sí» del usuario (`DEC-006`) | «Pero autorizo al agente a crear las ramas, hacer commit, hacer los push y mesclar a develop, cuando este listo, me confirma para yo hacer el QA». Al aclararlo: «QA antes de develop» |
-| M9 | Cadencia de staging | Por grupos: G1 = F01 a F06 (núcleo, base transversal, Báscula, Bodega, Comercio Exterior y Salidas), en un solo despliegue con su transición de datos y la medición PRF-002; después, uno por feature (F07, F08 y F09) | «Por grupos» |
+| M8 | Git por el agente | El agente crea las ramas, hace commit y push, y fusiona: cada feature en `fase-2` cuando sus casos QA pasan; `fase-2` en `develop` solo después de la QA del usuario sobre `fase-2`, que el agente le pide cuando todo está integrado (M25). Desplegar en staging sigue pidiendo el «sí» del usuario (`DEC-006`) | «Pero autorizo al agente a crear las ramas, hacer commit, hacer los push y mesclar a develop, cuando este listo, me confirma para yo hacer el QA». Al aclararlo: «QA antes de develop» |
+| M9 | Cadencia de staging | Por grupos: G1 = F01 a F06 (núcleo, base transversal, Báscula, Bodega, Comercio Exterior y Salidas), en un solo despliegue con su transición de datos y la medición PRF-002; después, uno por feature (F07, F08 y F09). **Reemplazada por M25** | «Por grupos» |
 | M10 | Agentes por repo | Un solo agente a la vez en cada repo; el back y el front de una feature van en paralelo y la integración ocupa los dos repos | «Un agente por repo» |
 | M11 | Pantallas que se rediseñan | Se maquetan en su ruta definitiva dentro de la rama de la feature; la integración borra lo viejo. Nada sin integrar llega a `fase-2`. Reemplaza la primera respuesta («Ruta temporal»), dada antes de M7 | «Ruta definitiva en la rama» |
 | M12 | Datos simulados | Fuente intercambiable: cada servicio nuevo tiene una interfaz con una implementación simulada (`mocks/`, datos validados con los esquemas Zod del contrato) y la real (`useApi`), que escribe la integración. Sin dependencias nuevas ni tráfico HTTP (§5.2) | «Fuente intercambiable» |
@@ -41,7 +41,7 @@ Mandan sobre el resto de este plan y sobre los planes cerrados de cada feature (
 | M14 | Facturación en dos | Primero F07 «Tarifas y acuerdos» y después F08 «Operación de facturas», que ya encuentra el «Facturar a» | «Dos: acuerdos y luego operación» |
 | M15 | `DEC-028` frente a AF-36 | La cantidad facturable cuenta las salidas que bajaron el stock al emitir la guía (o al confirmar una salida de inspección) y resta las anulaciones de guía. Precisa `DEC-028`, `DEC-053` (BR-06-005) y `DEC-055` (anexo A) | «Por guía emitida» |
 | M16 | AF-120 frente a AF-94 | La fórmula «descargada o sobre vehículo» cobra el % sobre el precio de cada camión descargado; el valor CPI no cuenta para esa fórmula | «Precio por camión» |
-| M17 | Estrategia de transición | En el despliegue de G1, staging se recrea y se carga otra vez desde el legacy con la herramienta de importación adaptada al modelo nuevo, como `DEC-043`, con el «sí» del usuario en ese momento | «Reiniciar y migrar» |
+| M17 | Estrategia de transición | En el despliegue final (M25), staging se recrea y se carga otra vez desde el legacy con la herramienta de importación adaptada al modelo nuevo, como `DEC-043`, con el «sí» del usuario en ese momento | «Reiniciar y migrar» |
 | M18 | Órdenes de cargue y llegadas abiertas | No se convierten: los datos de staging se borran con el reinicio de M17 | «Los datos de staging se pueden borrar sin problema, es un ambiente de pruebas» |
 | M19 | Depósitos confirmados sin amparado ni precio por camión | Los confirmados y cerrados quedan con la cantidad amparada igual a la ingresada; el valor actual pasa a ser el valor CPI y el precio por camión queda vacío | «Amparado = ingresado» |
 | M20 | Clientes con «mes calendario» | Pasan a «Mensual» de 30 días; el período abierto termina en su fecha y los siguientes cuentan 30. Facturación recibe la lista | «Mensual de 30 días» |
@@ -49,10 +49,11 @@ Mandan sobre el resto de este plan y sobre los planes cerrados de cada feature (
 | M22 | Categoría de los motivos | Por la tabla de hoy: los dos «Descargue» → Ingreso, los dos «Cargue» → Salida, «Solo Bascula» → Solo báscula. «Solo bodega» y «Otro» quedan sin categoría: la categoría solo es obligatoria en los motivos que requieren pesaje | «Por la tabla de hoy» |
 | M23 | Tipos de notificación | Un tipo por evento de negocio; los handlers que avisan lo mismo comparten tipo (unos 25 a 30 tipos, cada uno con su módulo, roles y correo) | «Uno por evento» |
 | M24 | Reserva de stock de la salida en Borrador | Una salida en Borrador reserva el stock de sus líneas, así que lo disponible para otra salida ya lo descuenta; confirmarla emite la guía y descuenta el stock (AF-36). Respuesta al riesgo R12, después de presentar el plan (2026-11-20) | «Si, una salida en borrador reserva stock» |
+| M25 | Despliegue único al final (2026-11-23; reemplaza M9) | Staging recibe un solo despliegue, cuando F01 a F09 están integradas en `fase-2` y el usuario terminó sus pruebas en local. Hasta entonces no hay grupos ni despliegues parciales; los operarios prueban solo con el flujo completo funcionando. El usuario puede probar en local cada integración a medida que se cierra | «el despliegue a staging queda al final de toda la implementación, cuando este listo todo, las pruebas las hago en local. Los operarios solo prueban cuando todo el flujo este funcional» |
 
 ### 1.3 Resueltas sin preguntar (`DEC-002`)
 
-- **Relojes de Bodega de los registros abiertos al desplegar** (`A/` §2.2 j). M17 y M18 los resuelven: en G1 no hay registros abiertos, porque staging se recrea y la carga del legacy solo trae maestros, depósitos y levantes (`B/Wms.Domain/Enums/LegacyImportEntity.cs:7-20`). Los relojes arrancan con los registros nuevos. Lo mismo vale para el corte real, que también carga desde el legacy.
+- **Relojes de Bodega de los registros abiertos al desplegar** (`A/` §2.2 j). M17, M18 y M25 los resuelven: en el despliegue final no hay registros abiertos, porque staging se recrea y la carga del legacy solo trae maestros, depósitos y levantes (`B/Wms.Domain/Enums/LegacyImportEntity.cs:7-20`). Los relojes arrancan con los registros nuevos. Lo mismo vale para el corte real, que también carga desde el legacy.
 - **La integración ocupa los dos repos.** Lo fijan M1 («un agente con los dos repos») y M10.
 - **Pagos sin verificar.** AF-110 dice que todo pago registrado queda verificado: F08 marca verificados los existentes (§7).
 
@@ -239,15 +240,15 @@ AF-137 está fuera del rango AF-05 a AF-136; se nombra por ser visto bueno.
 
 | Origen | Tema | Feature | Cómo se atiende |
 | --- | --- | --- | --- |
-| Cliente 1 | Valores iniciales de los umbrales amarillo y rojo | F04 | Configurables en P-TR-08; los valores se cargan antes del despliegue de G1 (§7.3) |
+| Cliente 1 | Valores iniciales de los umbrales amarillo y rojo | F04 | Configurables en P-TR-08; los valores se cargan antes del despliegue final (§7.3) |
 | Cliente 2 | Tramos de peso: límite y si la segunda tarifa va a todo el peso o al exceso | F07 | El plan cerrado de F07 los pide; si no llegan, ver riesgo R7 |
 | Cliente 3 | Mínimo de la parte porcentual en un depósito mixto | F07 | Igual que el anterior |
-| Cliente 4 | Prefijos y tasa de la semana de arranque | F01 | Se cargan en Configuración antes del despliegue de G1 (§7.3) |
+| Cliente 4 | Prefijos y tasa de la semana de arranque | F01 | Se cargan en Configuración antes del despliegue final (§7.3) |
 | Consideración | Categoría de los motivos existentes | F01 | M22 |
 | Consideración | Órdenes de cargue y llegadas abiertas | F01 y F04 | M18: no se convierten |
 | Consideración | Recálculo al corregir pesos, unidades, valor y tasa (`DEC-022`) | F01 (pesos, unidades, tasa), F05 (valor y productos) | Cada plan cerrado lo prueba |
-| Consideración | Medir de nuevo PRF-002 (≤ 30 s por camión) | F03 | Se mide en staging con un operario al desplegar G1 (§7.3) |
-| Consideración | Relojes de los registros abiertos al desplegar | F04 | §1.3: no hay registros abiertos en G1 |
+| Consideración | Medir de nuevo PRF-002 (≤ 30 s por camión) | F03 | Se mide en staging con un operario en el despliegue final (§7.3) |
+| Consideración | Relojes de los registros abiertos al desplegar | F04 | §1.3: no hay registros abiertos en el despliegue final |
 | Consideración | Depósitos confirmados sin amparado ni precio por camión | F05 | M19 |
 | Consideración | Clientes con «mes calendario» | F07 | M20 |
 | Consideración | Carga inicial de los 58 textos de tarifa de la hoja 2026 | F07 | Con la plantilla de AF-114, que Facturación revisa antes de importar |
@@ -270,7 +271,7 @@ AF-137 está fuera del rango AF-05 a AF-136; se nombra por ser visto bueno.
 2. La integración ocupa los dos repos. Entra cuando terminan las dos partes de su feature, en una frontera de fase.
 3. Una parte arranca cuando su repo está libre y su plan cerrado está aprobado. Los planes cerrados se escriben en `docs` mientras corre la feature anterior, porque `docs` no es repo de código.
 4. P0 va primero en el backend, desde `develop`. Así M5 se cumple con holgura y la rama `fase-2` sale con P0 incluido. Mientras tanto, el frontend puede empezar F02.
-5. Las correcciones de la QA del usuario sobre un grupo (M8) van antes que la siguiente fase de cualquier feature, en el mismo turno de cada repo.
+5. Las correcciones de las pruebas del usuario en local (M8, M25) van antes que la siguiente fase de cualquier feature, en el mismo turno de cada repo.
 
 ```mermaid
 flowchart LR
@@ -305,12 +306,7 @@ flowchart LR
     I08["I-08 · Operación de facturas"]
     I09["I-09 · Notificaciones"]
   end
-  subgraph DEP["QA del usuario, develop y staging"]
-    G1["G1 · F01 a F06, staging reiniciado y PRF-002"]
-    G2["G2 · F07"]
-    G3["G3 · F08"]
-    G4["G4 · F09"]
-  end
+  DF["DF · Pruebas del usuario en local, fase-2 a develop, staging reiniciado y PRF-002"]
   P0 --> B01
   B01 --> I01
   M02 --> I01
@@ -330,32 +326,27 @@ flowchart LR
   I05 --> M06
   B06 --> I06
   M06 --> I06
-  I06 --> G1
   I06 --> B07
   I06 --> M07
   B07 --> I07
   M07 --> I07
-  G1 --> G2
-  I07 --> G2
   I07 --> B08
   I07 --> M08
   B08 --> I08
   M08 --> I08
-  G2 --> G3
-  I08 --> G3
   I08 --> B09
   I08 --> M09
   P0 -.-> B09
   B09 --> I09
   M09 --> I09
-  G3 --> G4
-  I09 --> G4
+  I09 --> DF
 ```
 
 **Por qué este orden:**
 
 - **F03 → F04 → F05 → F06.** Bodega recibe las entradas que crea Báscula; CE muestra en su etapa Bodega los relojes de F04; Salidas necesita depósitos confirmados y nacionalizados de F05 y llena la etapa Salidas del detalle de CE.
-- **F06 cierra G1.** Con F06 integrado vuelven a funcionar completos los flujos de entrada y salida que F01 cambió (M9).
+- **F06 cierra el flujo de entrada y salida.** Con F06 integrado vuelven a funcionar completos los flujos que F01 cambió. Igual no se despliega: staging espera a F09 (M25).
+- **Un solo despliegue (DF).** Cuando I-09 está en `fase-2` y el usuario terminó sus pruebas en local (M25).
 - **F07 antes de F08.** «Facturar» precarga el «Facturar a» que configura F07 (M14). F07 necesita la marca «Queda sobre el vehículo» de F04 y el precio por camión de F01 (AF-120).
 - **F09 al final.** Toca los 26 archivos que avisan y los avisos nuevos de F01 y F03 a F06, así que va cuando ya existen todos. Se apoya en P0 (M5).
 
@@ -367,7 +358,7 @@ flowchart LR
   F2 -->|"sale cada feature"| FB["f2/fNN-tema en cada repo"]
   FB -->|"casos QA en PASA, el agente fusiona"| F2
   DEV -.->|"correcciones urgentes, el agente las trae"| F2
-  F2 -->|"cierre de grupo, tras la QA del usuario"| DEV
+  F2 -->|"al final, tras las pruebas del usuario"| DEV
   DEV -->|"con el sí del usuario"| STG["staging"]
 ```
 
@@ -427,7 +418,7 @@ F/features/<dominio>/
 - **Commits.** El agente hace commit al cerrar cada fase, con mensaje convencional (`feat(<módulo>): … (DEC-080, Fnn)`), y hace push de su rama. La migración va en el mismo commit que el código (M6).
 - **Fusiones.** Con `--no-ff`, nunca `push --force` ni reescritura de ramas publicadas.
   - Feature → `fase-2`: la hace el agente de integración cuando la feature pasa sus compuertas (§6.3), en los dos repos a la vez.
-  - `fase-2` → `develop`: al completar un grupo, el agente avisa al usuario; el usuario hace su QA sobre `fase-2` en local; con su visto bueno, el agente fusiona y hace push (M8).
+  - `fase-2` → `develop`: una sola vez, cuando F01 a F09 están integradas; el agente avisa al usuario, el usuario termina sus pruebas sobre `fase-2` en local y, con su visto bueno, el agente fusiona y hace push (M8, M25). Al cerrar cada integración, el agente le dice al usuario qué puede probar en local.
   - Staging: con el «sí» del usuario para cada acción (`DEC-006`).
 - **Migraciones con ramas.** Antes de generar una migración, el agente trae lo último de `fase-2`. Una corrección urgente en `develop` no lleva migración salvo que el usuario lo apruebe; si la lleva, al fusionarla en `fase-2` el agente regenera con `dotnet ef` la última migración propia de `fase-2`, nunca a mano.
 - **`docs`.** Sigue en `main`, sin ramas. El agente hace commit y push de los documentos de su fase.
@@ -437,7 +428,7 @@ F/features/<dominio>/
 - Una pantalla nueva va en una ruta nueva y no se enlaza en el menú hasta la integración.
 - Una pantalla que se rediseña y conserva su URL se construye en su ruta definitiva dentro de la rama de la feature. La integración borra la versión vieja, sus componentes que nadie más usa y sus pruebas. Antes de borrar, se comprueba quién importa cada componente (trampa 7 de `D/contexto/convenciones-tecnicas.md` §10).
 - Lo que una feature retira (por ejemplo `F/pages/operations/weighbridge/recover.vue`, AF-51) se borra en su integración, con `rm`.
-- Dentro de `fase-2`, las pantallas viejas de un flujo que F01 cambió pueden no funcionar hasta que se integre su feature. Es lo esperado por M9.
+- Dentro de `fase-2`, las pantallas viejas de un flujo que F01 cambió pueden no funcionar hasta que se integre su feature. Es lo esperado (M25: nada se despliega hasta el final).
 
 ### 5.5 Nombres
 
@@ -448,7 +439,7 @@ F/features/<dominio>/
 - **Decisiones del plan cerrado:** `D1…Dn`, propias de cada plan.
 - **Carpetas** (pedido del usuario del 2026-11-21):
   - la raíz de `D/planes/sprint-11/` guarda el plan maestro, la matriz de seguimiento y el plan de P0;
-  - cada feature tiene su carpeta `D/planes/sprint-11/fNN-<tema>/` (`f01-nucleo/`, `f02-base/`, `f03-bascula/`, `f04-bodega/`, `f05-comercio-exterior/`, `f06-salidas/`, `f07-tarifas-acuerdos/`, `f08-operacion-facturas/`, `f09-notificaciones/`), con su plan cerrado y todos sus prompts: el del planificador y uno por parte. El despliegue de G1 va en `g1-despliegue/`;
+  - cada feature tiene su carpeta `D/planes/sprint-11/fNN-<tema>/` (`f01-nucleo/`, `f02-base/`, `f03-bascula/`, `f04-bodega/`, `f05-comercio-exterior/`, `f06-salidas/`, `f07-tarifas-acuerdos/`, `f08-operacion-facturas/`, `f09-notificaciones/`), con su plan cerrado y todos sus prompts: el del planificador y uno por parte. El despliegue final va en `despliegue-final/`;
   - F01 y F02 se planean juntas: el prompt del planificador y el de I-01 van en `f01-nucleo/`;
   - los prompts se quedan en la carpeta de su feature aunque ya se hayan ejecutado. Al terminar su parte, el agente agrega al encabezado del prompt «**Ejecutado** el AAAA-MM-DD; ya no es una instrucción» y lo marca en la matriz.
 - **Prompts:** `prompt-f2-fNN-<tema>-<planificador|backend|maquetacion|integracion>-AAAA-MM-DD.md`.
@@ -488,10 +479,10 @@ Toda fase informa las cifras antes y después: pruebas, errores de lint y casos 
 - El menú enlaza las pantallas nuevas; las viejas y sus pruebas, borradas.
 - Fusión de la feature en `fase-2` en los dos repos, y push.
 
-### 6.4 Cierre de un grupo
+### 6.4 Cierre de la implementación (M25)
 
-- Todas las integraciones del grupo cerradas en `fase-2`.
-- El agente avisa al usuario con lo que hay que probar; el usuario hace su QA sobre `fase-2`.
+- Las nueve features integradas en `fase-2` (I-01 a I-09).
+- El agente avisa al usuario con lo que hay que probar; el usuario hace sus pruebas sobre `fase-2` en local.
 - Con su visto bueno: fusión de `fase-2` en `develop`, push y, con su «sí», el despliegue de §7.3.
 
 ---
@@ -501,37 +492,37 @@ Toda fase informa las cifras antes y después: pruebas, errores de lint y casos 
 ### 7.1 Estrategia (M17, M18)
 
 - **Bases locales:** se recrean (`DEC-006`); no hay conversión.
-- **Staging en G1:** se recrea y se carga desde el legacy con la herramienta adaptada al modelo nuevo, con el «sí» del usuario en ese momento. Es la segunda excepción a `DEC-006` después de `DEC-043`. Los datos de los operarios se pierden, como aceptó el usuario.
+- **Staging en el despliegue final (M25):** se recrea y se carga desde el legacy con la herramienta adaptada al modelo nuevo, con el «sí» del usuario en ese momento. Es la segunda excepción a `DEC-006` después de `DEC-043`. Los datos de los operarios se pierden, como aceptó el usuario.
 - **Corte real:** usa la misma herramienta (pendiente 7 de `D/contexto/estado.md`).
-- **Después de G1:** staging ya no se recrea. Una conversión que haga falta en G2, G3 o G4 va en un comando de transición idempotente, en código de la aplicación, solo para Admin, que queda en la auditoría y se ejecuta en staging con el «sí» del usuario. Nunca SQL ni migraciones editadas a mano.
+- **Sin conversiones en staging:** como staging se recrea una sola vez con todo integrado (M25), las conversiones de §7.2 se hacen en el importador o en la semilla. Si después de ese despliegue hiciera falta una, va en un comando de transición idempotente, en código de la aplicación, solo para Admin, auditado y ejecutado con el «sí» del usuario. Nunca SQL ni migraciones editadas a mano.
 
 ### 7.2 Qué resuelve cada feature
 
 | Feature | Dato | Qué se hace | Decisión |
 | --- | --- | --- | --- |
 | F01 | Unidad de medida | La migración quita la columna del producto y el catálogo; las semillas y el parámetro de `PER_UOM` pierden `uom`. El importador deja de buscar unidad | M21 |
-| F01 | Motivos de ingreso | La semilla agrega la categoría según la tabla de M22; con el reinicio de G1 no quedan motivos creados a mano | M22 |
+| F01 | Motivos de ingreso | La semilla agrega la categoría según la tabla de M22; con el reinicio del despliegue final no quedan motivos creados a mano | M22 |
 | F01 | Órdenes de cargue, guías ligadas a órdenes, cierre de camiones | El modelo nuevo no las conserva; no se convierten | M18 |
 | F01 | Valor del depósito | Pasa a valor CPI; el precio por camión queda vacío en lo importado | M19 |
-| F01 | Tasa de cambio | La tasa semanal arranca vacía; la de la semana de arranque se carga antes de G1 (§7.3) | AF-85, AF-86, AF-136 |
+| F01 | Tasa de cambio | La tasa semanal arranca vacía; la de la semana de arranque se carga antes del despliegue final (§7.3) | AF-85, AF-86, AF-136 |
 | F04 | Llegadas a Bodega | Desaparecen; no se convierten | M18 |
 | F04 | Relojes | Arrancan con los registros nuevos | §1.3 |
 | F05 | Cantidad amparada de lo confirmado o cerrado | El importador fija amparado = ingresado | M19 |
-| F07 | Ciclo «mes calendario» | El importador no lo produce (el legacy cuenta en días). Para lo configurado en staging entre G1 y G2, un comando de transición lo pasa a 30 días y lista los clientes a Facturación | M20 |
+| F07 | Ciclo «mes calendario» | El importador no lo produce (el legacy cuenta en días) y la opción desaparece del catálogo; en local no hay nada que convertir | M20 |
 | F07 | Acuerdos | Carga inicial con la plantilla (AF-114), revisada por Facturación; reemplaza la fase 4b pendiente de `DEC-043` | AF-114 |
-| F08 | Pagos sin verificar | Un comando de transición los marca verificados | AF-110 |
+| F08 | Pagos sin verificar | El importador no trae pagos; los nuevos nacen verificados | AF-110 |
 | F09 | Tipos de notificación | Semilla con un tipo por evento, con los roles y el canal de hoy | M23 |
 
-### 7.3 Despliegue de G1
+### 7.3 Despliegue final (M25)
 
-Lleva su propio plan cerrado, que se escribe mientras corre F06, a partir de `D/planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`. Sus pasos, todos con el «sí» del usuario:
+Lleva su propio plan cerrado, que se escribe mientras corre F09, a partir de `D/planes/plan-cerrado-staging-limpio-legacy-2026-10-27.md`. Sus pasos, todos con el «sí» del usuario:
 
 1. Respaldo de staging en los dos destinos.
-2. Despliegue de `develop` (con G1) y reinicio de la base con todas las migraciones.
+2. Despliegue de `develop` (con F01 a F09) y reinicio de la base con todas las migraciones.
 3. Carga del legacy con la herramienta adaptada; conteos frente al ensayo local.
-4. Datos de arranque: prefijos y tasa de la semana (pendiente 4 del cliente), umbrales de Bodega (pendiente 1), tarifas T1 a T4 y de montacargas (`DEC-041`), cuentas `operario.*`.
-5. QA en staging de los flujos de G1 y medición PRF-002 con un operario (pendiente 1 de `D/contexto/estado.md`).
-6. Nota para los operarios y lista de videos y manuales desactualizados.
+4. Datos de arranque: prefijos y tasa de la semana (pendiente 4 del cliente), umbrales de Bodega (pendiente 1), acuerdos cargados con la plantilla (AF-114), tarifas base y de montacargas (`DEC-041`), cuentas `operario.*`. La fase 2 de P0 (staging) va en este mismo despliegue.
+5. QA en staging del flujo completo y medición PRF-002 con un operario (pendiente 1 de `D/contexto/estado.md`).
+6. Apertura a los operarios, con el flujo completo funcionando; nota para ellos y lista de videos y manuales desactualizados.
 
 ---
 
@@ -544,15 +535,16 @@ Lleva su propio plan cerrado, que se escribe mientras corre F06, a partir de `D/
 | R3 | El contrato y los datos simulados se separan del backend | El contrato del plan cerrado es la única fuente; Zod valida los datos simulados; cada endpoint tiene prueba de integración; la integración pasa los casos QA |
 | R4 | Una feature necesita cambiar un componente compartido de F02 | Se permite en su parte de frontend, con pruebas y listado en su plan; F02 los deja genéricos |
 | R5 | Las guardias del frontend exigen el patrón de `DEC-058` (`FT/unit/guards/page-header.spec.ts:45-53`) | F02 las reemplaza por las de AF-129; una guardia en rojo sigue siendo un defecto real |
-| R6 | El formulario nuevo de Báscula vuelve a la báscula lenta (PRF-002, meta de 30 s) | F03 conserva el flujo de teclado (Enter, F2) y la medición se hace en G1 con un operario |
+| R6 | El formulario nuevo de Báscula vuelve a la báscula lenta (PRF-002, meta de 30 s) | F03 conserva el flujo de teclado (Enter, F2) y la medición se hace en el despliegue final con un operario |
 | R7 | Faltan datos del cliente: umbrales, prefijos, tasa de arranque, tramos de peso y mínimo del depósito mixto | Los cuatro primeros son configurables y no bloquean la construcción. Para tramos y mínimo, el plan cerrado de F07 pregunta; si aún no hay respuesta, propone dejar la variante como parámetro de la fórmula, para que lo decida el usuario |
 | R8 | La integración ocupa los dos repos y frena el avance | Planes cerrados de tamaño manejable (M13, M14); la integración entra en una frontera de fase |
 | R9 | F09 toca 26 archivos de todos los módulos | Va al final, cuando el backend no tiene otra feature en curso |
-| R10 | El reinicio de G1 borra los datos de prueba de los operarios y usa el volcado del legacy de junio de 2024 | Aceptado (M17, M18). Se avisa a los operarios antes. El corte real sigue necesitando un volcado nuevo |
+| R10 | El reinicio del despliegue final borra los datos de prueba de los operarios y usa el volcado del legacy de junio de 2024 | Aceptado (M17, M18). Se avisa a los operarios antes. El corte real sigue necesitando un volcado nuevo |
 | R11 | Los agentes ahora hacen commit, push y fusiones (M8) | Solo fusionan después de sus compuertas; `fase-2` llega a `develop` solo con la QA del usuario; sin `push --force`; staging sigue con el «sí» |
 | R12 | Hueco menor que el análisis no fija: la serie del consecutivo de la salida (`DEC-012` tiene `2026OC00001` para la orden). La reserva de stock de la salida en Borrador ya la resolvió M24 | El plan cerrado de F01 pregunta la serie en su ronda única |
-| R13 | Videos, manuales, guía de operarios y casos QA de la campaña quedan desactualizados | Lista al cerrar G1 y un plan aparte; fuera de este alcance |
+| R13 | Videos, manuales, guía de operarios y casos QA de la campaña quedan desactualizados | Lista en el despliegue final y un plan aparte; fuera de este alcance |
 | R14 | Los documentos del hub decían «develop sin ramas» y «el usuario hace los commits» | Anexo A, aplicado el 2026-11-20 (`DEC-081`) |
+| R15 | Staging y los operarios pasan semanas sin cambios (M25): sus defectos y los de P0 esperan | Las correcciones urgentes siguen yendo a `develop` y se despliegan con el «sí» del usuario sin arrastrar `fase-2` (§5.3); lo demás espera al despliegue final |
 
 ---
 

@@ -15,7 +15,7 @@
 | Plan | Por escribir · Propuesto · Aprobado · Ejecutado |
 | Parte 0 a 3 | — (no la lleva) · Pendiente · En curso · Hecha (commit) · Bloqueada |
 | Integración | Pendiente · En curso · Fusionada en `fase-2` |
-| Grupo | Pendiente · En QA del usuario · En `develop` · En staging |
+| Despliegue final | Pendiente · En pruebas del usuario · En `develop` · En staging |
 
 ---
 
@@ -38,39 +38,33 @@ Los pasos con el mismo número corren a la vez, uno en cada repo (M10). Un paso 
 | 7 | F04 | Bodega | BE y FE `f2/f04-bodega` | Back y front de F04 | I-03 | `f04-bodega/plan-cerrado-f2-f04-bodega-AAAA-MM-DD.md` | `f04-bodega/`, igual | Por escribir |
 | 8 | F05 | Comercio Exterior | BE y FE `f2/f05-comercio-exterior` | Back y front de F05 | I-04 | `f05-comercio-exterior/plan-cerrado-f2-f05-comercio-exterior-AAAA-MM-DD.md` | `f05-comercio-exterior/`, igual | Por escribir |
 | 9 | F06 | Salidas de mercancía | BE y FE `f2/f06-salidas` | Back y front de F06 | I-05 | `f06-salidas/plan-cerrado-f2-f06-salidas-AAAA-MM-DD.md` | `f06-salidas/`, igual | Por escribir |
-| 10 | G1 | QA del usuario sobre `fase-2`, fusión en `develop` y despliegue de G1 (staging recreado y cargado desde el legacy, PRF-002) | `fase-2` → `develop` → staging | Back y front de F07 | I-06 | `g1-despliegue/plan-cerrado-despliegue-g1-fase-2-AAAA-MM-DD.md`, por escribir mientras corre F06 (plan maestro §7.3) | `g1-despliegue/`, por escribir | Por escribir |
-| 10 | F07 | Tarifas y acuerdos | BE y FE `f2/f07-tarifas-acuerdos` | G1 | I-06 | `f07-tarifas-acuerdos/plan-cerrado-f2-f07-tarifas-acuerdos-AAAA-MM-DD.md` | `f07-tarifas-acuerdos/`, igual que F03 | Por escribir |
-| 11 | G2 | QA del usuario y despliegue de F07 | `fase-2` → `develop` → staging | Back y front de F08 | G1 e I-07 | En el plan de F07 | En el plan de F07 | — |
-| 11 | F08 | Operación de facturas | BE y FE `f2/f08-operacion-facturas` | G2 | I-07 | `f08-operacion-facturas/plan-cerrado-f2-f08-operacion-facturas-AAAA-MM-DD.md` | `f08-operacion-facturas/`, igual que F03 | Por escribir |
-| 12 | G3 | QA del usuario y despliegue de F08 | `fase-2` → `develop` → staging | Back y front de F09 | G2 e I-08 | En el plan de F08 | En el plan de F08 | — |
-| 12 | F09 | Notificaciones configurables | BE y FE `f2/f09-notificaciones` | G3 | P0 e I-08 | `f09-notificaciones/plan-cerrado-f2-f09-notificaciones-AAAA-MM-DD.md` | `f09-notificaciones/`, igual que F03 | Por escribir |
-| 13 | G4 | QA del usuario y despliegue de F09 | `fase-2` → `develop` → staging | — | G3 e I-09 | En el plan de F09 | En el plan de F09 | — |
+| 10 | F07 | Tarifas y acuerdos | BE y FE `f2/f07-tarifas-acuerdos` | — | I-06 | `f07-tarifas-acuerdos/plan-cerrado-f2-f07-tarifas-acuerdos-AAAA-MM-DD.md` | `f07-tarifas-acuerdos/`, igual que F03 | Por escribir |
+| 11 | F08 | Operación de facturas | BE y FE `f2/f08-operacion-facturas` | — | I-07 | `f08-operacion-facturas/plan-cerrado-f2-f08-operacion-facturas-AAAA-MM-DD.md` | `f08-operacion-facturas/`, igual que F03 | Por escribir |
+| 12 | F09 | Notificaciones configurables | BE y FE `f2/f09-notificaciones` | — | P0 e I-08 | `f09-notificaciones/plan-cerrado-f2-f09-notificaciones-AAAA-MM-DD.md` | `f09-notificaciones/`, igual que F03 | Por escribir |
+| 13 | DF | Despliegue final (M25): pruebas del usuario en local sobre `fase-2`, fusión en `develop`, staging recreado y cargado desde el legacy, fase 2 de P0, PRF-002 y apertura a los operarios | `fase-2` → `develop` → staging | — | I-01 a I-09 en `fase-2` | `despliegue-final/plan-cerrado-despliegue-final-fase-2-AAAA-MM-DD.md`, por escribir mientras corre F09 (plan maestro §7.3) | `despliegue-final/`, por escribir | Por escribir |
 
 Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a esta carpeta y entre comillas invertidas; al escribirlo se reemplaza por el enlace. Los prompts se llaman `prompt-f2-fNN-<tema>-<planificador|backend|maquetacion|integracion>-AAAA-MM-DD.md` y el §11 de cada plan cerrado los enlaza.
 
 ### 2.2 Estado de la implementación
 
-| ID | 0 · Contrato | 1 · Backend | 2 · Maquetación | 3 · Integración | Commits (BE / FE) | Grupo | Estado |
+| ID | 0 · Contrato | 1 · Backend | 2 · Maquetación | 3 · Integración | Commits (BE / FE) | Despliegue | Estado |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| P0 | — | Hecho el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f`, fusión `529bda7` / — | Antes de G1 | Fase 1 en `develop`; staging aplazado |
-| F01 | Pendiente (con el plan) | Pendiente | — | Con I-01: Pendiente | — | G1 | Pendiente |
-| F02 | En el plan de F01 | — | Pendiente | Con I-01: Pendiente | — | G1 | Pendiente |
-| F03 | Pendiente | Pendiente | Pendiente | Pendiente | — | G1 | Pendiente |
-| F04 | Pendiente | Pendiente | Pendiente | Pendiente | — | G1 | Pendiente |
-| F05 | Pendiente | Pendiente | Pendiente | Pendiente | — | G1 | Pendiente |
-| F06 | Pendiente | Pendiente | Pendiente | Pendiente | — | G1 | Pendiente |
-| F07 | Pendiente | Pendiente | Pendiente | Pendiente | — | G2 | Pendiente |
-| F08 | Pendiente | Pendiente | Pendiente | Pendiente | — | G3 | Pendiente |
-| F09 | Pendiente | Pendiente | Pendiente | Pendiente | — | G4 | Pendiente |
+| P0 | — | Hecho el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f`, fusión `529bda7` / — | DF | Fase 1 en `develop`; staging aplazado |
+| F01 | Pendiente (con el plan) | Pendiente | — | Con I-01: Pendiente | — | DF | Pendiente |
+| F02 | En el plan de F01 | — | Pendiente | Con I-01: Pendiente | — | DF | Pendiente |
+| F03 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
+| F04 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
+| F05 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
+| F06 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
+| F07 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
+| F08 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
+| F09 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
 
-### 2.3 Grupos y despliegues
+### 2.3 Despliegue final (M25)
 
-| Grupo | Contenido | Para cerrarlo | QA del usuario | `fase-2` → `develop` | Staging | Estado |
+| Paso | Contenido | Para cerrarlo | QA del usuario | `fase-2` → `develop` | Staging | Estado |
 | --- | --- | --- | --- | --- | --- | --- |
-| G1 | F01 a F06 | I-01, I-03, I-04, I-05 e I-06 fusionadas en `fase-2` | Pendiente | Pendiente | Pendiente: recreado y cargado desde el legacy con el «sí» del usuario, datos de arranque y PRF-002 (plan maestro §7.3) | Pendiente |
-| G2 | F07 | I-07 fusionada y G1 en staging | Pendiente | Pendiente | Pendiente | Pendiente |
-| G3 | F08 | I-08 fusionada y G2 en staging | Pendiente | Pendiente | Pendiente | Pendiente |
-| G4 | F09 | I-09 fusionada y G3 en staging | Pendiente | Pendiente | Pendiente | Pendiente |
+| DF | F01 a F09 | I-01 a I-09 fusionadas en `fase-2` | Pendiente (el usuario puede probar en local cada integración al cerrarse) | Pendiente | Pendiente: recreado y cargado desde el legacy con el «sí» del usuario, datos de arranque, fase 2 de P0, PRF-002 y apertura a los operarios (plan maestro §7.3) | Pendiente |
 
 ---
 
@@ -90,12 +84,12 @@ Ninguno bloquea la construcción; los cuatro primeros se configuran en la aplica
 
 | Dato | Lo usa | Hace falta antes de | Estado |
 | --- | --- | --- | --- |
-| Umbrales amarillo y rojo de recepción, cargue y salida de patio (AF-57) | F04 | El despliegue de G1 | Pendiente del cliente |
-| Prefijos de N.º de levante, N.º de aceptación y manifiesto DIAN (AF-79) | F01 y F05 | El despliegue de G1 | Pendiente del cliente |
-| Tasa de la semana de arranque (AF-86) | F01 y F05 | El despliegue de G1 | Pendiente del cliente |
+| Umbrales amarillo y rojo de recepción, cargue y salida de patio (AF-57) | F04 | El despliegue final | Pendiente del cliente |
+| Prefijos de N.º de levante, N.º de aceptación y manifiesto DIAN (AF-79) | F01 y F05 | El despliegue final | Pendiente del cliente |
+| Tasa de la semana de arranque (AF-86) | F01 y F05 | El despliegue final | Pendiente del cliente |
 | Tramos de peso: límite y si la segunda tarifa va a todo el peso o al exceso (AF-116) | F07 | La aprobación del plan cerrado de F07 (riesgo R7 del plan maestro) | Pendiente del cliente |
 | Mínimo de la parte porcentual en un depósito mixto (AF-120) | F07 | Igual | Pendiente del cliente |
-| Revisión de la carga inicial de acuerdos (58 textos de tarifa de la hoja 2026, AF-114) | F07 | El despliegue de G2 | Pendiente de Facturación |
+| Revisión de la carga inicial de acuerdos (58 textos de tarifa de la hoja 2026, AF-114) | F07 | El despliegue final | Pendiente de Facturación |
 
 ---
 
@@ -105,7 +99,7 @@ Ninguno bloquea la construcción; los cuatro primeros se configuran en la aplica
   - el planificador, al escribir o aprobar un plan: columnas «Plan» y «Prompts» de §2.1, con los enlaces a la carpeta de la feature;
   - el agente de cada parte, al cerrarla: su celda de §2.2 y los commits, en el mismo commit de docs de su fase;
   - el agente de integración, al fusionar en `fase-2`: la columna «3 · Integración»;
-  - el agente que cierra un grupo: §2.3.
+  - el agente que cierra la implementación: §2.3.
 - **Al cambiar algo:** se actualiza la fecha de corte y los commits del encabezado.
 - **Al terminar una parte:** su prompt se queda en la carpeta de la feature, con «**Ejecutado** el AAAA-MM-DD; ya no es una instrucción» en su encabezado, y aquí se marca «(ejecutado)» junto a su enlace. No se mueve a `archivo/`.
 - **Si el orden cambia:** manda el plan maestro (§4); primero se cambia allí y después aquí.

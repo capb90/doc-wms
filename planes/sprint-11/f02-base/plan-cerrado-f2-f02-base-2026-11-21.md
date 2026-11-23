@@ -355,7 +355,7 @@ En la maquetación, el agente de F02 los recorre contra los datos simulados y de
 
 ## 7. Transición de datos
 
-No aplica: F02 no tiene datos propios. Los prefijos y la tasa de arranque los carga el cliente antes de G1 (`PM/` §7.3; `P01/` §7).
+No aplica: F02 no tiene datos propios. Los prefijos y la tasa de arranque los carga el cliente antes del despliegue final (`PM/` §7.3; `P01/` §7).
 
 ---
 
