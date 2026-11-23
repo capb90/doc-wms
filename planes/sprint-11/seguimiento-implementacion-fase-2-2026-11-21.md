@@ -51,7 +51,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | P0 | — | Hecho el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f`, fusión `529bda7` / — | DF | Fase 1 en `develop`; staging aplazado |
 | F01 | Pendiente (con el plan) | Pendiente | — | Con I-01: Pendiente | — | DF | Pendiente |
-| F02 | En el plan de F01 | — | Pendiente | Con I-01: Pendiente | — | DF | Pendiente |
+| F02 | En el plan de F01 | — | En curso: fase 1 de 5 hecha el 2026-11-23 (`d389685`) | Con I-01: Pendiente | — / `d389685` | DF | En maquetación |
 | F03 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
 | F04 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
 | F05 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
