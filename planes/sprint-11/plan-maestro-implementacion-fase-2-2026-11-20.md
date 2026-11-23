@@ -454,6 +454,8 @@ Por roles, según la tabla de `A/` §3.1 (AF-127, AF-128) y `DEC-030`. Se cambia
 
 Toda fase informa las cifras antes y después: pruebas, errores de lint y casos QA.
 
+**Una fase por turno (2026-11-23).** Para cuidar el contexto, cada fase de una parte se ejecuta en un turno y, de preferencia, en una sesión nueva: el agente cierra la fase con sus compuertas, commit y push, y se detiene con el reporte; el usuario pide la siguiente. Durante el trabajo corre solo las pruebas de la fase con salida mínima, y la suite completa al cerrar. La regla está en la sección «Eficiencia de contexto y cierres por fase» del `AGENTS.md` de cada repo de código.
+
 ### 6.1 Backend (parte 1)
 
 - Las de `D/procesos/flujo-de-trabajo-agentes.md` §5: `dotnet build Wms.sln` sin errores; `Wms.Tests` y `Wms.IntegrationTests` en verde.
@@ -608,10 +610,10 @@ Enlaces a los prompts de la carpeta de la feature, uno por agente (backend, maqu
 ```text
 Eres el agente de <backend | maquetación del frontend | integración> de la feature FNN «<nombre>» de la fase 2 del WMS de Bodegas Asociadas.
 
-Lee, en este orden: docs/README.md; el AGENTS.md de tu repo; docs/procesos/flujo-de-trabajo-agentes.md; el plan maestro (docs/planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md), en especial §1, §5 y §6; y el plan cerrado docs/planes/sprint-11/fNN-<tema>/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md completo.
+Lee, en este orden: docs/README.md; el AGENTS.md de tu repo (su sección «Eficiencia de contexto y cierres por fase» rige tu trabajo); docs/procesos/flujo-de-trabajo-agentes.md; del plan maestro (docs/planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md) solo §1.2, §5 y §6; y del plan cerrado docs/planes/sprint-11/fNN-<tema>/plan-cerrado-f2-fNN-<tema>-AAAA-MM-DD.md solo §0, §1, §2 y la sección de tu fase en §8. Lee el resto del plan por secciones, solo cuando tu fase lo cite.
 
 Trabaja en la rama f2/fNN-<tema> de <repo o repos>, que sale de fase-2. Antes de empezar trae lo último de develop a fase-2 y de fase-2 a tu rama.
-Ejecuta solo la parte <1 | 2 | 3>, fase por fase. Al cerrar cada fase: compuertas de §6 del plan maestro con las cifras antes y después, commit con el mensaje sugerido y push de tu rama.
+Ejecuta solo la parte <1 | 2 | 3> y solo UNA fase por turno: <la fase que te indique el usuario>. Al cerrarla: compuertas de §6 del plan maestro con las cifras antes y después, commit con el mensaje sugerido y push de tu rama, y detente con el reporte de cierre. El usuario te pide la siguiente fase en una sesión nueva.
 <Parte 1> Migraciones solo con dotnet ef y solo contra la base local; has-pending-model-changes limpio al cerrar.
 <Parte 2> Datos simulados con la fuente intercambiable de §5.2; ninguna llamada real al API; no enlaces nada en el menú.
 <Parte 3> Escribe las fuentes http, borra mocks/, enlaza el menú, borra las pantallas viejas, pasa los casos QA en el navegador y fusiona la rama en fase-2 en los dos repos con --no-ff.
