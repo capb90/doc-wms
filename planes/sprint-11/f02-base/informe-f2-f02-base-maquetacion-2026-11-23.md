@@ -59,3 +59,52 @@ Decisiones de detalle, sin cambiar ninguna Dn:
 | QA2-F02-026 | PASA: guardias `list-pattern` y `mock-sources` en verde | `yarn test` |
 
 Drawer de P-TR-03 en la galería: [f1-05](evidencias/f1-05-drawer-detalle.jpg).
+
+---
+
+## Fase 2 · Menú y marco
+
+**Commits FE:** `3e85d79` (wip de la sesión cortada por el límite de uso) y `813443f` — `feat(menu): menú por rol con Configuración, Tarifas y acuerdos, Reportes y Administración; login y sidebar (DEC-080, F02)`, encima del wip, sin reescribir el historial.
+
+### Qué quedó
+
+| Pieza | Archivos (`Frontend/wms/`) |
+| --- | --- |
+| P-TR-01, menú por rol (D5, D6; §1.5) | `app/components/layout/menu-model.ts` (secciones en el orden de P-TR-01, roles por sección o por ítem, `filterMenuByRoles` y `menuRoutesOf`); `AppMenu.vue` solo filtra el modelo. Salen de su sección «Terceros» (CE), «Configuraciones», «Clientes» y los reportes (Facturación); `MENU_FILTER_PARAMS` queda vacío (`app/utils/menu-route.ts`) |
+| P-TR-10 · H-079, sidebar | `AppMenuProfile.vue`: roles en otra línea, una etiqueta por rol con su nombre en español (`ROLE_LABELS` y `roleLabel` en `usePermissions.ts`); el avatar no se encoge. `AppRightMenu.vue` usa los mismos nombres |
+| P-TR-10 · H-080, switch de tema | `AppRightMenu.vue`: el clic sobre el switch cambiaba el tema dos veces (el del switch y el de la fila). El switch vive en el menú derecho, no en `AppConfig.vue:112`, que cita el plan |
+| P-TR-10 · PR-31, ver contraseña | `app/pages/auth/login.vue`: `toggle-mask` con rótulos accesibles. **Corregido al cerrar:** dentro del `InputGroup`, el campo enfocado sube a `z-index: 1` y tapaba el ojo, que no se veía ni recibía el clic; el ojo queda por encima (estilo con alcance de la página) |
+| H-081, encabezado del modal | Hecho en la fase 1 (`app/assets/styles.scss`); se recorre aquí su caso |
+| D6, Tarifas y acuerdos | `app/pages/admin/forklift-rates/index.vue` pasa de `["Admin"]` a `["Admin", "Billing"]`: el menú se la muestra a Facturación y el API ya pide `BillingAccess` (`ForkliftRateController`). Sin este cambio, Facturación llegaba a «acceso denegado» desde su menú |
+| D19, unidad de medida fuera | Borrados con `rm`: `app/pages/admin/unit-measures/index.vue` y `useMutationsUnitMeasures.ts` (solo los usaba esa página); sale el rótulo de `entity-labels.ts`. Se quedan `useUnitMeasures.ts`, `types/unit-measure.ts` y sus métodos de servicio (los usan pantallas de F03, F04, F05 y F07). El campo de unidad de `ProductForm.vue` lo retira la fase 4 (Productos) y sus páginas viejas, I-01 |
+| Pruebas | `test/unit/layout/app-menu.spec.ts` (nueva: cada rol, sin «Unidades de medida», ninguna ruta `/settings/…`); ajustadas `AppMenu.spec.ts`, `AppMenuItem.spec.ts`, `entity-labels.spec.ts`, `menu-route.spec.ts` y las listas de las guardias |
+
+Notas, sin cambiar ninguna Dn:
+
+- Las páginas de Configuración (salvo Terceros) siguen con `["Admin"]` hasta las fases 3 y 4, que les ponen los roles de §1.5 (plan §3.3). Mientras tanto, CE y Facturación las ven en el menú y reciben «acceso denegado» al abrirlas: es lo esperado en la rama de la maquetación (`PM/` §5.4).
+- Vigilancia no tiene reportes propios en §1.5, así que su menú no muestra «Reportes».
+
+### Compuertas
+
+| Compuerta | Antes (fase 1, `d389685`) | Después (`813443f`) |
+| --- | --- | --- |
+| `yarn build` | código 0 | código 0 |
+| `yarn test` | 122 archivos · 668 pruebas, en verde | 123 archivos · 675 pruebas, en verde |
+| `yarn lint` | 276 errores · 396 avisos | 276 errores · 396 avisos; 0 errores en archivos nuevos (`menu-model.ts`, `app-menu.spec.ts`) |
+| Sin llamadas reales (D15) | `mock-sources.spec.ts` en verde | en verde |
+| Rutas nuevas en el menú | ninguna | ninguna: solo rutas de hoy; ninguna `/settings/…` (`app-menu.spec.ts`) |
+
+### Casos QA de la fase (contra los simulados, sesión simulada por rol)
+
+| ID | Resultado | Evidencia |
+| --- | --- | --- |
+| QA2-F02-001 | PASA (`?roles=ForeignTrade`): Notificaciones, Dashboards, Comercio Exterior (sin «Terceros»), Reportes (los seis de CE, Movimientos, Inventario general y Póliza), Configuración sin Parámetros, Ayuda | [f2-01](evidencias/f2-01-menu-comercio-exterior.jpg) |
+| QA2-F02-002 | PASA (`?roles=Billing`): Facturación sin «Configuraciones» ni «Clientes»; Reportes con Movimientos, Inventario general, Facturación por CPI y anual; Tarifas y acuerdos (las dos páginas abren); Configuración sin Prefijos ni Parámetros | [f2-02](evidencias/f2-02-menu-facturacion.jpg) |
+| QA2-F02-003 | PASA (`?roles=Admin`): las doce secciones en el orden de P-TR-01; Administración con Usuarios y Auditoría; sin «Unidades de medida» | [f2-03](evidencias/f2-03-menu-admin.jpg) |
+| QA2-F02-004 | PASA: Vigilancia ve Notificaciones, Vigilancia y Ayuda; Báscula, además, Reportes › Reporte de báscula; Bodega, Reportes › Inventario general. `/admin/drivers` lleva a «Acceso denegado» con los tres | [f2-04a](evidencias/f2-04a-menu-vigilancia.jpg), [f2-04b](evidencias/f2-04b-menu-bascula.jpg), [f2-04c](evidencias/f2-04c-menu-bodega.jpg), [f2-04d](evidencias/f2-04d-conductores-acceso-denegado.jpg) |
+| QA2-F02-018 | PASA tras la corrección del ojo (antes no se veía): con la sesión cerrada, el ojo muestra la contraseña (`type="text"`) y la vuelve a ocultar | [f2-06a](evidencias/f2-06a-login-oculta.jpg), [f2-06b](evidencias/f2-06b-login-visible.jpg) |
+| QA2-F02-019 | PASA (`?roles=Admin,ForeignTrade,Billing`): «Administrador», «Comercio Exterior» y «Facturación» en otra línea, bajo el nombre; avatar de 35 × 35 px sin cortar | [f2-05](evidencias/f2-05-sidebar-tres-roles.jpg) |
+| QA2-F02-020 | PASA: un clic sobre el switch pasa a oscuro y otro vuelve a claro | [f2-07](evidencias/f2-07-switch-tema-oscuro.jpg) |
+| QA2-F02-021 | PASA (galería, error simulado del API): la alerta empieza bajo el encabezado del modal y se ve completa; el error del campo va en «Código» | [f2-08](evidencias/f2-08-modal-error-api.jpg) |
+
+Las capturas se tomaron con Playwright contra `yarn dev` (`wms-dev-maquetacion`, puerto 3020); los menús y los resultados se comprobaron también por el DOM.

@@ -1,5 +1,7 @@
 # Prompt — Reanudar F02, fase 2 (maquetación), tras el corte por límite de uso
 
+> **Ejecutado** el 2026-11-23; ya no es una instrucción. Fase 2 cerrada en FE `813443f` (sobre el wip `3e85d79`); informe, sección «Fase 2».
+
 > **Cómo usarlo:**
 > 1. Abre una sesión **nueva** de Claude Code en `code_workspace/` (Sonnet 5.5 alcanza: la fase está casi hecha).
 > 2. Copia el bloque de abajo. No pegues el prompt original de F02: este lo reemplaza para esta fase.
