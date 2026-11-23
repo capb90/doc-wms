@@ -50,7 +50,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 | ID | 0 · Contrato | 1 · Backend | 2 · Maquetación | 3 · Integración | Commits (BE / FE) | Despliegue | Estado |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | P0 | — | Hecho el 2026-11-21; QA del usuario y fusión en `develop` (`529bda7`) | — | — (su fase 2 es la de staging: Pendiente) | `1b2f09f`, fusión `529bda7` / — | DF | Fase 1 en `develop`; staging aplazado |
-| F01 | Pendiente (con el plan) | En curso: fase 1 de 6 hecha el 2026-11-23 (`b089eef`): QA2-F01-001 a 019 en PASA; `Wms.Tests` 2098 → 2150, `Wms.IntegrationTests` 479 → 653 (los 2 fallos heredados) | — | Con I-01: Pendiente | `b089eef` / — | DF | En backend |
+| F01 | Pendiente (con el plan) | En curso: fase 1 de 6 hecha el 2026-11-23 (`b089eef`): QA2-F01-001 a 019 en PASA; `Wms.Tests` 2098 → 2150, `Wms.IntegrationTests` 479 → 653 (los 2 fallos heredados). Fase 2 hecha el 2026-11-23 (`9bb205b`): QA2-F01-020 y 021 en PASA; `Wms.Tests` 2150 → 2137, `Wms.IntegrationTests` 653 → 672 (los 2 fallos heredados); agrupaciones por embalaje (plan §2.2.6) | — | Con I-01: Pendiente | `b089eef`, `9bb205b` / — | DF | En backend |
 | F02 | En el plan de F01 | — | En curso: fases 1 a 3 de 5 hechas el 2026-11-23 (`d389685`, `813443f`, `4e60427`); fase 3: QA2-F02-005 a 012 en PASA, `yarn test` 675 → 694, lint 276 → 270 errores | Con I-01: Pendiente | — / `d389685`, `813443f`, `4e60427` | DF | En maquetación |
 | F03 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |
 | F04 | Pendiente | Pendiente | Pendiente | Pendiente | — | DF | Pendiente |

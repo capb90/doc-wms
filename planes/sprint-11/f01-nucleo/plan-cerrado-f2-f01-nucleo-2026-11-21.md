@@ -1188,6 +1188,16 @@ Dos reglas cambian campos en lecturas que maquetan otras features. La forma nuev
 
 Para todas: petición sin cambios; respuesta = la de hoy con la regla; errores, los de hoy. Si una lectura no listada lleva alguno de esos campos, se le aplica la regla y se agrega a esta tabla en el commit de su fase.
 
+**R-UOM: el embalaje reemplaza a la unidad en las agrupaciones** (respuesta del usuario del 2026-11-23, «Por embalaje», en la fase 2). Lo que hoy no sumaba unidades distintas (CHG-69, CHG-72) agrupa por el tipo de embalaje de la línea del depósito: resumen de existencias del tablero, saldos del listado de importaciones, total del historial y del PDF de la guía, columna «Ampara» del rótulo y detalle «ALMACENAMIENTO DE» de la factura («40 SACOS CEBOLLA»; sin embalaje, «40 CEBOLLA»). Tres campos cambian de nombre en lugar de desaparecer:
+
+| ID | Endpoint | Antes | Ahora | Maqueta |
+| --- | --- | --- | --- | --- |
+| C-F01-142 | `GET foreign-trade/imports` | `balances[].unitMeasure` | `balances[].packaging` (texto; «—» sin embalaje) | F05 |
+| C-F01-86 | `GET foreign-trade/imports/{id}` | `warehouseReception.lines[].unitMeasure` | `warehouseReception.lines[].packaging` (texto o nulo) | F05 |
+| C-F01-171 | `GET foreign-trade/dispatch-guides` (historial de guías) | `products[].unitMeasure` | `products[].packaging` (texto; vacío sin embalaje); `quantity` es nula si la guía mezcla embalajes | F06 |
+
+`GET public/dispatch-guides/verify/{token}` (C-F01-139) pierde `lines[].unitMeasure` por R-UOM: sus líneas quedan con `productName` y `quantity`. La migración `RemoveUnitMeasure` también quita `warehouse_storage_products.unit_measure_id`, que apuntaba a la tabla que D18 borra.
+
 ### 2.3 Esquemas Zod y tipos
 
 Zod 4 (`Frontend/wms/package.json`: `"zod": "^4.1.13"`). Reglas:
@@ -2152,7 +2162,7 @@ Una a la vez, en orden (`D/procesos/flujo-de-trabajo-agentes.md` §3). Cada fase
 | Fase | Parte | Contenido | Criterio de salida | Estado |
 | --- | --- | --- | --- | --- |
 | 1 | 1 | Base y catálogos: C-F01-00; D9 a D17; C-F01-01 a C-F01-68, C-F01-141 y C-F01-163 a C-F01-170; migración `AddCatalogSortAndPrefixes` | QA2-F01-001 a QA2-F01-019 en PASA | Completada el 2026-11-23 (BE `b089eef`): QA2-F01-001 a 019 en PASA por API (pruebas de integración HTTP contra Postgres); `Wms.Tests` 2098 → 2150; `Wms.IntegrationTests` 479 → 653, con los mismos 2 fallos heredados de la cola de báscula; `has-pending-model-changes` limpio. `IDianTrmService`, `DianTrmService`, `DianTrmOptions` y `TrmSource.Dian` siguen hasta la fase 6 (ver nota) |
-| 2 | 1 | Unidad de medida fuera: D18, D19; C-F01-69 a C-F01-77 y R-UOM; migración `RemoveUnitMeasure` | QA2-F01-020 y QA2-F01-021 en PASA; `grep -rl UnitMeasure` sin resultados fuera de `Migrations/` | Pendiente |
+| 2 | 1 | Unidad de medida fuera: D18, D19; C-F01-69 a C-F01-77 y R-UOM; migración `RemoveUnitMeasure` | QA2-F01-020 y QA2-F01-021 en PASA; `grep -rl UnitMeasure` sin resultados fuera de `Migrations/` | Completada el 2026-11-23 (BE `9bb205b`): QA2-F01-020 y 021 en PASA por API (pruebas de integración HTTP contra Postgres: `ProductEndpointsTests`, `PerUomByPackagingTests`, `ReadsWithoutUomTests`); `Wms.Tests` 2150 → 2137 (salen las pruebas del catálogo y de la validación de la unidad); `Wms.IntegrationTests` 653 → 672, con los mismos 2 fallos heredados de la cola de báscula (pasan aislados); `has-pending-model-changes` limpio; `grep` sin resultados. Agrupaciones por embalaje y campos renombrados: §2.2.6 |
 | 3 | 1 | Entradas y pesos: D20 a D28; C-F01-78 a C-F01-89; migración `EntryPerDocument` | QA2-F01-022 a QA2-F01-031 en PASA | Pendiente |
 | 4 | 1 | Edición del ingreso: D29 a D32; C-F01-90 a C-F01-93; sin migración | QA2-F01-032 a QA2-F01-035 en PASA | Pendiente |
 | 5 | 1 | Salidas: D1 a D4, D33 a D40, D45 a D47; C-F01-94 a C-F01-139 y R-SAL; migración `ReplaceLoadingOrderWithGoodsExit` | QA2-F01-036 a QA2-F01-050 en PASA; `grep -rl LoadingOrder` sin resultados fuera de `Migrations/` | Pendiente |
