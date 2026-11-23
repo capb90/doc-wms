@@ -1,5 +1,7 @@
 # Prompt — F02 «Base transversal», parte 2 · Maquetación del frontend (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-23; ya no es una instrucción. Las cinco fases de la parte 2 quedaron cerradas en FE `f2/f02-base` (`d389685`, `813443f`, `4e60427`, `9e738bc`, `35f1746`); informe en [informe-f2-f02-base-maquetacion-2026-11-23.md](informe-f2-f02-base-maquetacion-2026-11-23.md). Sigue I-01.
+
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/Frontend/wms`. Necesita leer `docs/` y escribir solo en `Frontend/wms` (y en `docs`, para el estado de sus fases).
 > 2. Copia el bloque de abajo. El agente ejecuta las cinco fases del plan, una a la vez, con commit y push de `f2/f02-base` al cerrar cada una.
