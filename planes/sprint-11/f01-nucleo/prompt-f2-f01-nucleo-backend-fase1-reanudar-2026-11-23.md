@@ -1,5 +1,7 @@
 # Prompt — Reanudar F01, fase 1 (backend), tras el corte por límite de uso
 
+> **Ejecutado** el 2026-11-23; ya no es una instrucción. Fase 1 cerrada en BE `b089eef`.
+
 > **Cómo usarlo:**
 > 1. Abre una sesión **nueva** de Claude Code en `code_workspace/` (Sonnet 5.5 alcanza para terminar una fase ya avanzada; Opus 5.5 si la fase 1 sale con muchas diferencias del contrato).
 > 2. Copia el bloque de abajo. No pegues el prompt original de F01: este lo reemplaza para esta fase.
