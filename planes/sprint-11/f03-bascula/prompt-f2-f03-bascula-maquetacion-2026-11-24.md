@@ -1,5 +1,7 @@
 # Prompt — F03 «Báscula», parte 2 (maquetación del frontend)
 
+> **Ejecutado** el 2026-11-24; ya no es una instrucción. Resultado: FE-1 (`d49a691`), FE-2 (`cd58697`) y FE-3 (`ae34783`) en la rama `f2/f03-bascula` del frontend; estado y notas para I-03 en el plan cerrado §8.4 a §8.6.
+
 > **Fecha:** 24 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f03-bascula-2026-11-24.md](plan-cerrado-f2-f03-bascula-2026-11-24.md) (§8.4 a §8.6). **Repo y rama:** `Frontend/wms`, `f2/f03-bascula`, que sale de `fase-2` (base `5793bc9`, o lo que haya en `fase-2` si avanzó). Corre en paralelo con el backend (otro agente): trabajas sin API, con la sesión simulada.
 
 ```text
