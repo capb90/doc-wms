@@ -1,5 +1,7 @@
 # Prompt — F03 «Báscula», parte 1 (backend)
 
+> **Ejecutado** el 2026-11-24; ya no es una instrucción. Resultado: BE-1 `ccfa53d`, BE-2 `56d52f8` y BE-3 `8d78339` en `f2/f03-bascula` (plan cerrado §8.1 a §8.3).
+
 > **Fecha:** 24 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f03-bascula-2026-11-24.md](plan-cerrado-f2-f03-bascula-2026-11-24.md) (§8.1 a §8.3). **Repo y rama:** `Backend/wms-api`, `f2/f03-bascula`, que sale de `fase-2` (base `019fa81`, o lo que haya en `fase-2` si avanzó). Corre en paralelo con la maquetación (otro agente, en el frontend).
 
 ```text
