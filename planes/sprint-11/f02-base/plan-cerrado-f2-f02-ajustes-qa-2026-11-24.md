@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · Ajustes de la QA manual de F01 y F02
 
-> **Fecha:** 24 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-24 («Aprobar y ejecutar»). En ejecución.
+> **Fecha:** 24 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-24 («Aprobar y ejecutar»). En ejecución: fase 1 hecha (FE `5b31280`).
 > **Origen:** la QA manual del usuario sobre `fase-2` después de I-01, con diez hallazgos visuales: [`../qa-manual/hallazgos-f01-f02.md`](../qa-manual/hallazgos-f01-f02.md) y sus mockups (`drawel-detalle-terceros/`, `drawer-detalle-servicios/`, `drawer-detalle-usuario/`). Las respuestas del usuario del 2026-11-24 están en D1 a D4.
 > **Base:** FE `fase-2` `042c4ce` · docs `main`. Rama: `f2/f02-ajustes-qa` (FE), desde `fase-2` (D4).
 > **Alcance:** solo frontend. Sin cambios de backend, de contrato ni migraciones.
@@ -79,11 +79,11 @@ Props: `title`, `icon?`, `count?` (número del `Badge`). Slots: por defecto (cue
 
 ## 4. Fases
 
-| Fase | Contenido | Criterio de salida |
-| --- | --- | --- |
-| 1 | Drawer y sección compartidos (§2), tooltips y «Ver» de icono en las 16 páginas, Ciudades, Prefijos y galería | Compuertas de §6; QA-AJ-001 a 005 en PASA. Los drawers de hoy siguen funcionando con el componente nuevo aunque aún no usen `icon`, `status` ni `actions` |
-| 2 | Terceros y Servicios | Compuertas; QA-AJ-006 a 009 en PASA |
-| 3 | Conductores, Usuarios y Auditoría; convención escrita; fusión en `fase-2` | Compuertas; QA-AJ-010 a 013 en PASA; fusión hecha y publicada |
+| Fase | Contenido | Criterio de salida | Estado |
+| --- | --- | --- | --- |
+| 1 | Drawer y sección compartidos (§2), tooltips y «Ver» de icono en las 16 páginas, Ciudades, Prefijos y galería | Compuertas de §6; QA-AJ-001 a 005 en PASA. Los drawers de hoy siguen funcionando con el componente nuevo aunque aún no usen `icon`, `status` ni `actions` | Hecha el 2026-11-24 (FE `5b31280`): QA-AJ-001 a 004 en PASA en el navegador contra el backend local; QA-AJ-005 cubierto por `AppDetailDrawer.spec.ts` (la galería pide Admin y la sesión de la prueba era Facturación, Operario y CE); `yarn test` 679 → 684, lint 255 → 255 errores (sin contar el cambio local de `app.vue`), `yarn build` en 0. La zona para soltar el CSV se hizo con un `input` nativo en lugar de `FileUpload` (D13): mismo resultado, sin los botones propios de `FileUpload` |
+| 2 | Terceros y Servicios | Compuertas; QA-AJ-006 a 009 en PASA | Pendiente |
+| 3 | Conductores, Usuarios y Auditoría; convención escrita; fusión en `fase-2` | Compuertas; QA-AJ-010 a 013 en PASA; fusión hecha y publicada | Pendiente |
 
 ---
 

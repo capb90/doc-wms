@@ -75,6 +75,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 | Commit del `AGENTS.md` de `Backend/wms-api` y de `Frontend/wms` (anexo A del plan maestro) | Paso 3 (las ramas salen de `develop`) | Hecho el 2026-11-21: BE `42738e1` y FE `3aa6e3c` en `develop`, publicados |
 | Mover el prompt del plan maestro a `archivo/prompts/` | Orden del hub (`README.md`, «Archivos nuevos») | Hecho el 2026-11-21: `archivo/prompts/sprint-11/` |
 | Prompt del planificador para los planes cerrados de F01 y F02, en `f01-nucleo/` | Paso 4 | Hecho el 2026-11-21: [prompt-f2-f01-nucleo-planificador-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-planificador-2026-11-21.md) ejecutado; los dos planes y sus tres prompts, aprobados el 2026-11-21 |
+| Ajustes de la QA manual de F01 y F02: [plan](f02-base/plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md), aprobado el 2026-11-24; FE `f2/f02-ajustes-qa` | Antes de seguir con F03 sobre `fase-2` | Fase 1 hecha el 2026-11-24 (FE `5b31280`); fases 2 y 3 pendientes |
 
 ---
 
