@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · Ajustes de la QA manual de F01 y F02
 
-> **Fecha:** 24 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-24 («Aprobar y ejecutar»). Ejecutado el 2026-11-24: fases 1 a 3 (FE `5b31280`, `6abd68b`, `877f26b`), fusionado en `fase-2` (`5793bc9`).
+> **Fecha:** 24 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-24 («Aprobar y ejecutar»). Ejecutado el 2026-11-24: fases 1 a 3 (FE `5b31280`, `6abd68b`, `877f26b`), fusionado en `fase-2` (`5793bc9`). Revisión del usuario aprobada el 2026-11-24.
 > **Origen:** la QA manual del usuario sobre `fase-2` después de I-01, con diez hallazgos visuales: [`../qa-manual/hallazgos-f01-f02.md`](../qa-manual/hallazgos-f01-f02.md) y sus mockups (`drawel-detalle-terceros/`, `drawer-detalle-servicios/`, `drawer-detalle-usuario/`). Las respuestas del usuario del 2026-11-24 están en D1 a D4.
 > **Base:** FE `fase-2` `042c4ce` · docs `main`. Rama: `f2/f02-ajustes-qa` (FE), desde `fase-2` (D4).
 > **Alcance:** solo frontend. Sin cambios de backend, de contrato ni migraciones.

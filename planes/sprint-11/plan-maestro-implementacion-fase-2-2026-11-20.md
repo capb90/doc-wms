@@ -254,6 +254,7 @@ AF-137 está fuera del rango AF-05 a AF-136; se nombra por ser visto bueno.
 | Consideración | Carga inicial de los 58 textos de tarifa de la hoja 2026 | F07 | Con la plantilla de AF-114, que Facturación revisa antes de importar |
 | Consideración | Productos y tarifas `PER_UOM` con unidad de medida | F01 | M21 |
 | Consideración | Agrupar en tipos los puntos que avisan | F09 | M23 |
+| Usuario (QA manual de F01 y F02, 2026-11-24) | IVA del precio en lugar de la sección «Impuestos»: «El porcentaje de iva está quemado en el código, para tarifa se agrega en la sección de impuestos, evaluar el manejo de iva como en el legacy al agregar un precio se agrega el porcentaje de iva, el iva es el único impuesto que manejan». Los demás impuestos no hacen falta y confunden al usuario. Hoy el 19 % es un dato sembrado (`B/Wms.Infrastructure/Persistence/SeedDataExtensions.cs:134`, junto a «Rete de fuente» 3 %) y se asigna al servicio en «Impuestos» del detalle (`F/features/services/components/ServiceProfile.vue`) | F07 | El plan cerrado de F07 evalúa llevar el porcentaje de IVA al formulario del precio, como el legacy, y retirar la gestión de otros impuestos; hasta F07 el detalle del servicio los conserva (plan de ajustes de la QA, D1). Contexto: [`qa-manual/hallazgos-f01-f02.md`](qa-manual/hallazgos-f01-f02.md) |
 
 ### 3.5 Conteos verificados
 

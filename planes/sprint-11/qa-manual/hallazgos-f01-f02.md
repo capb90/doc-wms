@@ -32,3 +32,5 @@ Plan: [plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md](../f02-base/plan-cerrado-f2
 | 8. Drawer de Usuarios | D11 y D3 (más de dos acciones: todas en el menú del encabezado) | Corregido (fase 3) |
 | 9. Drawer de Auditoría | D12 | Corregido (fase 3) |
 | 10. Consistencia de los drawers | D5 y D15: anatomía única, escrita en `contexto/convenciones-tecnicas.md` §3 y en la galería `/dev/components` | Corregido |
+
+**Revisión del usuario: aprobada el 2026-11-24.** Comentario para F07: «El porcentaje de iva está quemado en el código, para tarifa se agrega en la sección de impuestos, evaluar el manejo de iva como en el legacy al agregar un precio se agrega el porcentaje de iva, el iva es el único impuesto que manejan». Los demás impuestos no hacen falta y confunden al usuario. Registrado en el plan maestro §3.4 para el plan cerrado de F07.
