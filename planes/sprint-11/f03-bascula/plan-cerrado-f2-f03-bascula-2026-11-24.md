@@ -396,7 +396,7 @@ Los números C-F03-42 y C-F03-47 no se usan. `POST weighbridge/cycles/{cycleId}/
 - **Rutas:** `GET weighbridge/entries/{entryId}/detail` (entrada de ingreso), `GET weighbridge/service-records/{serviceRecordId}/detail?entryLogId=` (salida o solo báscula) y `GET weighbridge/cycles/{cycleId}/detail` (cualquier ciclo, para `cycles/[id]`).
 - **Política:** `ActiveUser` (en `WeighbridgeCycleReadController`, junto al detalle de hoy).
 - **Petición:** el Id en la ruta; C-F03-26 lleva además `entryLogId` en la consulta.
-- **Respuesta 200:** `dataSchema(weighbridgeDetailSchema)`: `category`, `state`, `isDuplicateEntry`, `singleWeightOnly`; los ids (`entryLogId`, `serviceRecordId`, `weighbridgeCycleId`, `warehouseStorageEntryId`, `warehouseStorageId`, `warehouseStorageNumber`, `warehouseStorageStatus`, `exitId`, `exitNumber`); `vehicle` (`plate`, `carrierCompanyName`, `country`, `vehicleType`); `driver` (`fullName`, `idType`, `idNumber`) o nulo; `entryReasonName`, `dateTimeEntry`, `stakeholderName`; `documentTypeName`, `documentNumber`, `modalityName`; `merchandise[]`; `weights` (`indicator`, `tare` con `isReal`, `manifest`, `merchandise` con `source`, cada uno con su fecha cuando la tiene, y `manifestExceedsDifference`); `weighings[]` (`id`, `sequence`, `weightType`, `weight`, `capturedAt`, `originalWeight`, `modificationReason`); `ticket` (`ticketNumber`, `chargedAmount`, `declaredWeight`, `isZero`) o nulo; `billing` (`invoiceNumber`, `customerName`, `totalCharged`, `statusLabel`) o nulo; `voided` (`at`, `byName`, `reason`) o nulo; `actions` (`canEdit`, `canEditWeights`, `canReweigh`, `canPrint`, `canVoid`).
+- **Respuesta 200:** `dataSchema(weighbridgeDetailSchema)`: `category`, `state`, `isDuplicateEntry`, `singleWeightOnly`; los ids (`entryLogId`, `serviceRecordId`, `weighbridgeCycleId`, `warehouseStorageEntryId`, `warehouseStorageId`, `warehouseStorageNumber`, `warehouseStorageStatus`, `exitId`, `exitNumber`); `vehicle` (`plate`, `carrierCompanyName`, `country`, `vehicleType`); `driver` (`fullName`, `idType`, `idNumber`) o nulo; `entryReasonName`, `dateTimeEntry`, `stakeholderName`; `documentTypeName`, `documentNumber`, `modalityName`; `merchandise[]`; `weights` (`indicator`, `tare` con `isReal`, `manifest`, `merchandise` con `source`, cada uno con su fecha cuando la tiene, y `manifestExceedsDifference`); `weighings[]` (`id`, `sequence`, `weightType`, `weight`, `capturedAt`, `originalWeight`, `modificationReason`); `ticket` (`ticketNumber`, `chargedAmount`, `declaredWeight`, `isZero`) o nulo; `billing` (`invoiceNumber`, `customerName`, `totalCharged`, `statusLabel`) o nulo; `voided` (`at`, `byName`, `reason`) o nulo; `ticketObservations` (texto \| null: la observación guardada del tiquete, C-F03-36, que precarga el modal de impresión, D33; sumado en FE-2 con la respuesta del usuario del 2026-11-24, «Sumar al detalle»); `actions` (`canEdit`, `canEditWeights`, `canReweigh`, `canPrint`, `canVoid`).
 - **Pesos por categoría:** ingreso, como P-BAS-02; salida, `indicator` = peso al salir, `tare` = vehículo vacío, `merchandise` = neto, sin manifiesto; solo báscula, `indicator` = pesaje, `tare` = repesaje, `merchandise` = diferencia.
 - **Errores:** 404 «La entrada no existe.», «La operación no existe.» o «El ciclo de báscula no existe.»; 400 «Indique el camión.» (C-F03-26 sin `entryLogId`).
 - **Zod:** `weighbridgeDetailSchema` (`F/features/weighbridge/contracts/detail.ts`).
@@ -1067,6 +1067,7 @@ export const weighbridgeDetailSchema = z.object({
     totalCharged: z.number(), statusLabel: z.string(),
   }).nullable(),
   voided: z.object({ at: dateTimeSchema, byName: z.string(), reason: z.string() }).nullable(),
+  ticketObservations: z.string().nullable(), // FE-2 (2026-11-24): la observación guardada (C-F03-36), D33
   actions: z.object({
     canEdit: z.boolean(), canEditWeights: z.boolean(), canReweigh: z.boolean(),
     canPrint: z.boolean(), canVoid: z.boolean(),
@@ -1217,7 +1218,7 @@ export type EntryLog = z.infer<typeof entryLogSchema>;
 | P-BAS-03 Registro, salida | la misma | C-F03-43, C-F03-17, C-F03-03, C-F03-15, C-F03-16, C-F03-12, C-F03-11, C-F03-21; C-F01-02, C-F01-101, C-F01-15, C-F01-17, C-F01-18, C-F01-25, C-F01-141 |
 | P-BAS-04 Registro, solo báscula | la misma | C-F03-43, C-F03-17, C-F03-04, C-F03-15, C-F03-16, C-F03-12, C-F03-11, C-F03-21; C-F01-02, C-F01-15, C-F01-17, C-F01-18, C-F01-25, C-F01-141 |
 | P-BAS-05 Cobro | la misma (`?paso=cobro`) | C-F03-05 a C-F03-10, C-F03-13, C-F03-15; C-F01-25, C-F01-26, C-F01-141 |
-| P-BAS-06 Tiquete | la misma (`?paso=tiquete`) | C-F03-25, C-F03-26 (resumen del pesaje) |
+| P-BAS-06 Tiquete | la misma (`?paso=tiquete`) | C-F03-15 (el ciclo) y C-F03-34 (resumen del pesaje por el ciclo: una entrada de ingreso completada sale de la cola y la página pierde su `warehouseStorageEntryId`; respuesta del usuario del 2026-11-24 en FE-2) |
 | P-BAS-07 Repesaje | modal en la página, el historial y el detalle | C-F03-11 |
 | P-BAS-08 Historial › Entradas | `/operations/weighbridge/history` | C-F03-22, C-F03-37 |
 | P-BAS-09 Historial › Salidas | `/operations/weighbridge/history/exits` | C-F03-23, C-F03-38 |
@@ -1416,7 +1417,7 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 | BE-2 | 1 | Cola, historial y detalle | QA2-F03-017 a 023 en PASA | Pendiente |
 | BE-3 | 1 | Tiquete, anulación y correcciones | QA2-F03-024 a 030 en PASA | Pendiente |
 | FE-1 | 2 | Contratos, fuentes simuladas, cola y registro | P-BAS-01 a P-BAS-04 con su lista del wireframe y captura | Hecha el 2026-11-24 (FE `d49a691`) |
-| FE-2 | 2 | Cobro, tiquete, repesaje e impresión | P-BAS-05 a P-BAS-07 y P-BAS-13 con su lista y captura | Pendiente |
+| FE-2 | 2 | Cobro, tiquete, repesaje e impresión | P-BAS-05 a P-BAS-07 y P-BAS-13 con su lista y captura | Hecha el 2026-11-24 (FE `cd58697`) |
 | FE-3 | 2 | Historial, detalle, corrección, Vigilancia › Historial y `cycles/[id]` | P-BAS-08 a P-BAS-11, P-TR-12, Vigilancia › Historial y `cycles/[id]` con su lista y captura | Pendiente |
 | I-03 | 3 | Integración (§13) | §13.5 | Pendiente |
 
@@ -1446,6 +1447,7 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 - **Pruebas:** `WeighbridgeQueueTests`, `WeighbridgeHistoryTests`, `WeighbridgeDetailTests`, `EntryLogListTests` (§5).
 - **Casos QA:** QA2-F03-017 a QA2-F03-023.
 - **Cuidado:** los listados usan `ListSorting` de C-F01-00 (`B/Wms.Common/Wrappers/ListSorting.cs`); el estado de cada fila sale de `WeighbridgeEntryStateResolver`; la cola conserva su tope (trampa 12).
+- **Cambio de contrato de FE-2 (2026-11-24, respuesta del usuario «Sumar al detalle»):** el detalle (C-F03-25, C-F03-26 y C-F03-34) devuelve también `ticketObservations` (texto \| null), la observación del tiquete que guarda C-F03-36 (la misma que imprime `WeighbridgeTicketPdfService.cs:511-517`). Aditivo; ficha en §2.2 y esquema en §2.3.
 
 ### 8.3 Backend, fase 3 — Tiquete, anulación y correcciones
 
@@ -1480,6 +1482,15 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 - **Pantallas:** P-BAS-05, P-BAS-06, P-BAS-07 y P-BAS-13 (con un PDF de ejemplo en el simulado de C-F03-35).
 - **Lista de cada wireframe:** `A/` §2.1 g (P-BAS-05 a P-BAS-07 y P-BAS-13) y `bascula.html`.
 - **Pruebas:** las de `WeighbridgeChargeStep`, `WeighbridgeTicketStep`, `ReweighDialog` y `TicketPrintDialog`.
+- **Estado:** hecha el 2026-11-24 (FE `cd58697`, rama `f2/f03-bascula`). `yarn test` 142 → 149 archivos y 744 → 770 pruebas, en verde; `yarn lint` 247 → 247 errores (avisos 328, sin cambio), ninguno en archivos nuevos; `yarn build` con código 0. Sin llamadas reales: ninguna página nueva (todo vive en `process/[entryLogId].vue`, ya en `MAQUETACION_PAGES`), el grep de cierre sin `useApi`, `$api`, fuentes de `INTEGRATED_SOURCES` ni componentes de hoy que llamen al API (`useTicketPdf`, `BillingCollectForm`…), y ninguna petición fuera de la app en el navegador. Los simulados pasan sus esquemas (`FT/unit/weighbridge/mocks.spec.ts`, con la observación del detalle). Ninguna ruta nueva en el menú. P-BAS-05, P-BAS-06, P-BAS-07 y P-BAS-13 revisadas en el navegador con la sesión simulada (`?roles=Admin,Scale`), con su lista del wireframe; capturas en `evidencias/fe2-01` a `fe2-09`.
+- **Hecho:** el paso Cobro (`WeighbridgeChargeStep`: resumen con «Editar registro», `AppChargeForm` con los destinatarios de hoy, el cliente del depósito precargado, el conductor del registro, «+» de alta rápida, «Inmediato» y «Pendiente por facturar», y $0 con su motivo en la duplicada o por convenio; el error del cobro se muestra en el paso), el paso Tiquete (`WeighbridgeTicketStep`: tiquete, pesos por categoría, lo pendiente y el cobro; «Imprimir» desde el primer pesaje y «Finalizar»), `ReweighDialog` (P-BAS-07, el repesaje opuesto al primer pesaje, la mercancía al instante y su diferencia con el manifiesto) y `TicketPrintDialog` (P-BAS-13); las utilidades puras `charge-step.ts`, `reweigh.ts`, `ticket-print.ts` y `ticket-pdf.ts`, con sus pruebas, y una por componente. El encabezado oculta la acción principal, el switch y «Duplicar entrada» en Cobro y Tiquete, como los wireframes. Teclado (D23, R6): Enter cobra en Cobro y finaliza en Tiquete (el foco queda en el paso), el repesaje se abre solo al atender una entrada «Por repesar» y con F2, con el foco en el peso; Enter en el modal registra; Escape cierra solo el modal. Tras el repesaje la página pasa al Tiquete.
+- **Decisiones del usuario (2026-11-24):** (1) el detalle suma `ticketObservations` (§2.2, §2.3 y la nota de §8.2 para BE-2); (2) el paso Tiquete lee el detalle por el ciclo (C-F03-34) que trae C-F03-15 (§2.4).
+- **Notas para FE-3 e I-03:**
+  - `ReweighDialog` y `TicketPrintDialog` reciben el detalle (`WeighbridgeDetail`) y llaman a sus fuentes (C-F03-11; C-F03-36 y C-F03-35): el historial y el detalle de FE-3 los montan igual. Quien los monte debe fijar el detalle al abrir (como `reweighDetail` en la página): al registrar el repesaje la consulta del detalle puede cambiar y desmontar el modal antes de que avise.
+  - `useWeighbridgeDetail` (en `weighbridge.queries.ts`) recibe la clave `entry`, `service` o `cycle` (C-F03-25, C-F03-26 y C-F03-34).
+  - El simulado de C-F03-35 responde ya los mensajes del contrato («El pesaje aún no tiene el primer peso…», «El repesaje aún no existe…»).
+  - `ticket-pdf.ts` abre el PDF en una pestaña e imprime (si el navegador bloquea la ventana, lo descarga); reemplaza a `useTicketPdf`, que llama al API de hoy y que I-03 borra si nadie más lo importa.
+  - En los simulados los errores no pasan por el notificador global (solo el interceptor del API real lo llama): el cobro y los modales muestran el error en su lugar; en I-03, con el API real, el cobro lo reclama con `handlesErrors`.
 
 ### 8.6 Maquetación, fase 3 — Historial, detalle, corrección, Vigilancia › Historial y `cycles/[id]`
 
