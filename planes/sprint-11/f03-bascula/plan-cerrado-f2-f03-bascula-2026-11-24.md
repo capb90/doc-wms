@@ -1412,7 +1412,7 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 
 | Fase | Parte | Contenido | Criterio de salida | Estado |
 | --- | --- | --- | --- | --- |
-| BE-1 | 1 | Registro y ciclo | QA2-F03-001 a 016 en PASA; migración `WeighingAtRegistration` aplicada | Pendiente |
+| BE-1 | 1 | Registro y ciclo | QA2-F03-001 a 016 en PASA; migración `WeighingAtRegistration` aplicada | Hecha el 2026-11-24 (BE `ccfa53d`) |
 | BE-2 | 1 | Cola, historial y detalle | QA2-F03-017 a 023 en PASA | Pendiente |
 | BE-3 | 1 | Tiquete, anulación y correcciones | QA2-F03-024 a 030 en PASA | Pendiente |
 | FE-1 | 2 | Contratos, fuentes simuladas, cola y registro | P-BAS-01 a P-BAS-04 con su lista del wireframe y captura | Pendiente |
@@ -1428,6 +1428,15 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 - **Pruebas:** `WeighbridgeEntryStateResolverTests`, `EntryLogInfoUpdaterTests`, `ReweighRulesTests`, `WeighingAtRegistrationTests`, `CycleSecondWeighingTests`, `EntryCorrectionTests`, `QuickCreateRetiredTests` (§5).
 - **Casos QA:** QA2-F03-001 a QA2-F03-016.
 - **Cuidado:** el ciclo sigue naciendo en el cobro; la duplicada en $0 no cambia (`P01/` D20); `RecordWeighingHandler` lee el modo del vínculo de la entrada del ciclo, no del servicio.
+- **Estado:** hecha el 2026-11-24 (BE `ccfa53d`, rama `f2/f03-bascula`). QA2-F03-001 a 016 en PASA por API. `Wms.Tests` 2037 → 2072; `Wms.IntegrationTests` 678 → 709 (los 2 fallos heredados de la base, `InitiateCustomerIdTests.Queue_PendingService_ReturnsCustomerId` y `DiscardOperationTests.Discard_ReleasesTruckToNotStarted`, que pasan solas y fallan por el orden de la suite); migración `WeighingAtRegistration` aplicada en local y `has-pending-model-changes` limpio. Cada endpoint de la fase tiene su prueba de integración (C-F03-43 y C-F03-44, sin cambios, en `WeighingAtRegistrationTests`; C-F03-52 en `DocumentCandidatesTests`; C-F03-15 en `WeighbridgeRegistrationTests`).
+- **Notas para I-03 (aplicadas por `DEC-002`):**
+  - D15: el tipo del primer pesaje ya no se exige en ingreso ni en solo báscula; por defecto es bruto, así que `configuredFirstWeightType` de solo báscula sale `Gross` (antes nulo).
+  - C-F03-11: el repesaje de un ciclo cerrado no se limita por la salida del camión (D19, «aunque el camión haya salido»); debe ser el opuesto al primer pesaje (400 «El repesaje debe ser Tara (opuesto al primer pesaje).» o «Bruto»).
+  - C-F03-07: una salida de un solo pesaje se cierra en el cobro, así que el cobro responde el error de la guía de importación de hoy (CHG-33) si la salida no la tiene.
+  - C-F03-17: sin motivo, Vigilancia y Admin reciben el 400 del validador, con el mensaje en `errors[]`; Báscula con un ciclo completo lo recibe en `description`.
+  - C-F03-14: la respuesta (`depositEntrySchema`) trae en `indicatorWeight` el primer peso del vínculo cuando no hay ciclo; `packagingTypeId` se suma a cada producto de `depositEntrySchema` en todas sus lecturas (aditivo).
+  - C-F03-12: con el ciclo anulado responde 409 «El pesaje está anulado.» aunque la anulación haya retirado el vínculo.
+  - D1: se retiraron las dos rutas; los comandos `QuickCreateStakeholderCommand` y `QuickCreateTransportCompanyCommand` quedan sin ruta (los usan pruebas de validación).
 
 ### 8.2 Backend, fase 2 — Cola, historial y detalle
 
