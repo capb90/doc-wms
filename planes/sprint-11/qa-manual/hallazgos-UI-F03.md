@@ -37,3 +37,16 @@
 **Dudas**
 
 1. `/weighbridge/history` ¿En el historial los ciclos con estado "Completado" ya no se pueden editar?, si es si, agregar un campo solo para los completados que permita al oporario agregar una observación que llega a CE. 
+
+---
+
+**Decisiones** (plan [`plan-cerrado-f2-f03-ajustes-ui-2026-11-24.md`](../f03-bascula/plan-cerrado-f2-f03-ajustes-ui-2026-11-24.md), ejecutado el 2026-11-24, FE `7eb7cfc` y `ee3d5d9`):
+
+1. **Historial en tres secciones:** las tres páginas ya existían desde FE-3. I-03 las enlaza como submenú «Historial ▸ Entradas, Salidas, Solo báscula» (D16).
+2. **Proceso de pesaje:** hecho. Sin búsqueda global; filtros de placa y conductor en la columna; estados en pestañas con contador; placa en etiqueta con «D»; «Pesos (kg)» (D7 a D9). Los botones de acción ya eran `small`, y la regla queda en la convención (D5).
+3. **Panel «Camiones en cola»:** hecho como se propuso. Los cinco estados van en un selector con contador (D4, D10 y D11).
+4. **Repesaje:** hecho. Es un paso de la página de proceso y no un modal; «Repesar» del historial, del detalle y de `cycles/[id]` también lleva a él (D1, D12 a D14).
+5. **Historial:** hecho. Placa en etiqueta con «D»; pesos agrupados (también en Salidas y Solo báscula); conductor y documento en una columna, con un filtro por nombre o documento; documento de entrada en dos líneas; acciones en el menú «Acciones» si la tabla puede tener más de tres, como regla general (D3, D6 y D15).
+
+**Duda 1:** no se agrega el campo de observación para CE (D2). Los completados se corrigen con motivo: en Entradas, mientras el depósito esté en Borrador; en Salidas y Solo báscula, siempre. Con el depósito confirmado corrige CE (P-CE-03, F05).
+

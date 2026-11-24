@@ -76,6 +76,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 | Mover el prompt del plan maestro a `archivo/prompts/` | Orden del hub (`README.md`, «Archivos nuevos») | Hecho el 2026-11-21: `archivo/prompts/sprint-11/` |
 | Prompt del planificador para los planes cerrados de F01 y F02, en `f01-nucleo/` | Paso 4 | Hecho el 2026-11-21: [prompt-f2-f01-nucleo-planificador-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-planificador-2026-11-21.md) ejecutado; los dos planes y sus tres prompts, aprobados el 2026-11-21 |
 | Ajustes de la QA manual de F01 y F02: [plan](f02-base/plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md), aprobado el 2026-11-24; FE `f2/f02-ajustes-qa` | Antes de seguir con F03 sobre `fase-2` | Hecho el 2026-11-24: fases 1 a 3 (FE `5b31280`, `6abd68b`, `877f26b`), fusión en `fase-2` `5793bc9` |
+| Ajustes de UI de la maquetación de F03: [plan](f03-bascula/plan-cerrado-f2-f03-ajustes-ui-2026-11-24.md), aprobado el 2026-11-24; FE `f2/f03-bascula` | Antes de I-03 | Hecho el 2026-11-24: fases 1 y 2 (FE `7eb7cfc` y `ee3d5d9`). I-03 enlaza el submenú «Historial» (D16) |
 | Prompt del planificador del plan cerrado de F03, en `f03-bascula/` | Paso 6 | Hecho el 2026-11-24: con [prompt-f2-f03-bascula-planificador-2026-11-24.md](f03-bascula/prompt-f2-f03-bascula-planificador-2026-11-24.md) se escribieron el plan cerrado y sus tres prompts, aprobados el 2026-11-24; el prompt, ejecutado |
 
 ---

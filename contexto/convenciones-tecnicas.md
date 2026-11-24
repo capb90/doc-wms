@@ -53,6 +53,14 @@
   - **Acciones del registro** (`actions`): con una o dos van en el pie, con botones `small`; con más de dos, todas pasan al menú «Acciones» (⋮) del encabezado y el drawer no lleva pie. Nunca un botón de acción suelto en el encabezado.
   - **Secciones:** una `AppDetailSection` por bloque, con `title` e `icon`; `count` para listas; la acción de la sección («Agregar») en el slot `actions`; `flush` para una tabla `DataTable size="small"`; `empty`, `empty-text` y el slot `empty-action` para el estado vacío; los diálogos de la sección en el slot `dialogs`. Los datos van en pares `dt`/`dd` dentro de `.app-detail-grid`.
   - **Botones de solo icono** (acciones de fila, encabezado): siempre con `v-tooltip.top` con el verbo («Ver detalle», «Editar», «Eliminar»…) y su `aria-label`. «Ver» es de solo icono (`pi pi-eye`).
+- **Tablas de listado** (`DEC-080`; plan `planes/sprint-11/f03-bascula/plan-cerrado-f2-f03-ajustes-ui-2026-11-24.md`, D5 y D6). Se suman a las del drawer:
+  - **Tamaño:** los botones de acción de una fila llevan siempre `size="small"`.
+  - **Más de tres acciones:** si una tabla puede tener más de tres acciones por fila, todas van al menú «Acciones» (⋮) de `AppRowActions` (`app/components/app/AppRowActions.vue`, tipos en `app/types/app-row-actions.ts`).
+    - La regla es por tabla, no por fila: la página pasa todas las acciones posibles, con `visible` según la fila. Así, una fila que solo tiene «Ver» también usa el menú.
+    - Con tres o menos, `AppRowActions` pinta botones de solo icono con tooltip.
+    - Una acción destructiva lleva `severity="danger"` y `separator` para ir al final, tras un divisor.
+  - **Filtros:** en la columna, no en una búsqueda global. Los estados de una cola o de una lista corta pueden ir en pestañas (`Tabs`) con su contador en el slot `toolbar`.
+  - **Galería:** `/dev/components` muestra `AppRowActions` con tres y con cinco acciones.
 
 ## 4. Permisos
 
