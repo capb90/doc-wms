@@ -1,5 +1,7 @@
 # Prompt — Planificación de F03 «Báscula» (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-24; ya no es una instrucción. Resultado: [plan-cerrado-f2-f03-bascula-2026-11-24.md](plan-cerrado-f2-f03-bascula-2026-11-24.md), aprobado el 2026-11-24, con sus tres prompts (§11 del plan).
+
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/`. Necesita leer `docs/`, `Backend/wms-api` y `Frontend/wms`, los dos en su rama `fase-2`.
 > 2. Copia el bloque de abajo.
