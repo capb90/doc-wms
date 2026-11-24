@@ -1,0 +1,406 @@
+<!DOCTYPE html><html class="h-full bg-slate-100" lang="es" data-lt-installed="true"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Detalle de Tercero - Cliente Bodega Ejemplo</title>
+<!-- PrimeIcons & Google Fonts -->
+<link href="https://unpkg.com/primeicons/primeicons.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 with Forms & Container Queries -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            primary: {
+              50: '#f0f9ff',
+              100: '#e0f2fe',
+              500: '#0ea5e9',
+              600: '#0284c7',
+              700: '#0369a1',
+            }
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Custom Styles for PrimeVue Aura / Lara Theme Emulation -->
+<style data-purpose="primevue-theme">
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+    
+    /* Custom scrollbar for Drawer body */
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<!-- END: Custom Styles for PrimeVue Aura / Lara Theme Emulation -->
+</head>
+<body class="h-full overflow-hidden text-slate-800 antialiased">
+<!-- BEGIN: App Context Background (Simulated behind the drawer overlay) -->
+<div class="h-screen w-full flex flex-col bg-slate-100 filter blur-[1px]">
+<!-- Simulated Top Navigation Bar -->
+<header class="h-14 border-b border-slate-200 bg-white px-6 flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<div class="w-8 h-8 rounded bg-primary-600 flex items-center justify-center text-white font-bold text-sm">BA</div>
+<span class="font-semibold text-slate-800 tracking-tight">Bodegas Asociadas Hub</span>
+</div>
+<div class="flex items-center space-x-4 text-slate-400">
+<i class="pi pi-search text-base"></i>
+<i class="pi pi-bell text-base"></i>
+<div class="w-8 h-8 rounded-full bg-slate-200 border border-slate-300"></div>
+</div>
+</header>
+<!-- Simulated Content Table Preview -->
+<main class="p-8 flex-1">
+<div class="h-7 w-64 bg-slate-300 rounded mb-6"></div>
+<div class="bg-white rounded-xl border border-slate-200 p-6 space-y-4">
+<div class="h-10 bg-slate-100 rounded-lg w-full"></div>
+<div class="h-12 bg-slate-50 rounded-lg w-full"></div>
+<div class="h-12 bg-slate-50 rounded-lg w-full"></div>
+<div class="h-12 bg-slate-50 rounded-lg w-full"></div>
+</div>
+</main>
+</div>
+<!-- END: App Context Background -->
+<!-- BEGIN: Drawer Backdrop Overlay -->
+<div class="fixed inset-0 bg-slate-900/40 backdrop-blur-[2px] transition-opacity z-40" data-purpose="drawer-overlay"></div>
+<!-- END: Drawer Backdrop Overlay -->
+<!-- BEGIN: PrimeVue Drawer Component -->
+<aside aria-label="Detalle del Tercero" class="fixed inset-y-0 right-0 z-50 flex w-full max-w-[780px] flex-col bg-white shadow-2xl border-l border-slate-200 transition-transform duration-300 ease-out" data-purpose="primevue-sidebar-panel" id="third-party-drawer">
+<!-- BEGIN: Drawer Header -->
+<header class="sticky top-0 z-20 flex flex-col border-b border-slate-200 bg-white/95 backdrop-blur-md px-6 py-4">
+<div class="flex items-start justify-between gap-4">
+<!-- Title & Metadata -->
+<div class="space-y-1">
+<div class="flex items-center gap-2.5">
+<span class="inline-flex items-center justify-center p-2 rounded-lg bg-sky-50 text-sky-600 border border-sky-100">
+<i class="pi pi-building text-lg"></i>
+</span>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="text-xl font-bold text-slate-900 leading-tight">Cliente Bodega Ejemplo</h1>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200/80">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500 mr-1.5"></span>
+                  Activo
+                </span>
+</div>
+<div class="flex items-center gap-2 text-xs font-medium text-slate-500 mt-0.5">
+<span class="font-mono tracking-wide text-slate-600">NIT 830000003</span>
+<span>•</span>
+<span>Tercero Comercial</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Header Actions -->
+<div class="flex items-center gap-1.5">
+<!-- Quick Edit Button -->
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-slate-700 bg-slate-100 hover:bg-slate-200 hover:text-slate-900 border border-slate-200/70 transition-colors" title="Editar rápido" type="button">
+<i class="pi pi-pencil text-xs"></i>
+<span>Editar</span>
+</button>
+<!-- Maximize Window Button -->
+<button class="p-2 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 transition-colors" title="Pantalla completa" type="button">
+<i class="pi pi-window-maximize text-sm"></i>
+</button>
+<!-- Close Drawer Button -->
+<button class="p-2 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors" title="Cerrar panel" type="button">
+<i class="pi pi-times text-base"></i>
+</button>
+</div>
+</div>
+</header>
+<!-- END: Drawer Header -->
+<!-- BEGIN: Drawer Scrollable Body Content -->
+<div class="custom-scrollbar flex-1 overflow-y-auto px-6 py-6 space-y-6">
+<!-- BEGIN: Datos del Tercero Card -->
+<section class="rounded-xl border border-slate-200/90 bg-white p-5 shadow-sm" data-purpose="tercero-resumen">
+<div class="flex items-center justify-between pb-3.5 border-b border-slate-100">
+<div class="flex items-center gap-2">
+<i class="pi pi-id-card text-sky-600 text-sm"></i>
+<h2 class="text-sm font-bold uppercase tracking-wider text-slate-700">Datos del Tercero</h2>
+</div>
+<!-- Security / Operative Indicator -->
+<div class="flex items-center gap-2">
+<span class="text-xs text-slate-500 font-medium">Salidas Operativas:</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<i class="pi pi-check-circle mr-1 text-[11px]"></i> Permitidas
+            </span>
+</div>
+</div>
+<!-- Executive Grid of Information -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-y-4 gap-x-5 pt-4">
+<!-- Col 1: Name -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Nombre / Razón Social</span>
+<span class="text-sm font-semibold text-slate-800 break-words mt-0.5 block">Cliente Bodega Ejemplo</span>
+</div>
+<!-- Col 2: NIT -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Identificación</span>
+<span class="text-sm font-semibold text-slate-800 font-mono mt-0.5 block">NIT 830000003</span>
+</div>
+<!-- Col 3: Rol -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Rol Principal</span>
+<div class="mt-1">
+<span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-sky-50 text-sky-700 border border-sky-200">
+                Cliente
+              </span>
+</div>
+</div>
+<!-- Col 4: Estado Financiero -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Estado Financiero</span>
+<div class="mt-1">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-100/70 text-emerald-800">
+                Activo
+              </span>
+</div>
+</div>
+<!-- Col 5: Saldo Vencido -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Saldo Vencido</span>
+<span class="text-sm font-medium text-slate-700 mt-0.5 block font-mono">$0 COP <span class="text-xs text-slate-400 font-sans">(—)</span></span>
+</div>
+<!-- Col 6: Estado Comercial -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Estado Comercial</span>
+<span class="text-sm font-medium text-slate-700 mt-0.5 block">Al día / —</span>
+</div>
+<!-- Col 7: Cámara de Comercio -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Cámara de Comercio</span>
+<span class="text-sm font-medium text-slate-700 mt-0.5 block">Vigente / —</span>
+</div>
+<!-- Col 8: UAP -->
+<div>
+<span class="block text-xs font-medium text-slate-400">UAP</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-600 mt-0.5">
+              No
+            </span>
+</div>
+<!-- Col 9: Fecha Registro -->
+<div>
+<span class="block text-xs font-medium text-slate-400">Fecha de Creación</span>
+<span class="text-sm font-medium text-slate-700 mt-0.5 block">24/11/2026</span>
+</div>
+<!-- Col 10: Salidas Operativas Switch -->
+<div class="col-span-2 md:col-span-3 flex items-center justify-end pt-1">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors" type="button">
+<i class="pi pi-lock text-xs"></i>
+<span>Bloquear salidas</span>
+</button>
+</div>
+</div>
+</section>
+<!-- END: Datos del Tercero Card -->
+<!-- BEGIN: Roles de Negocio Panel -->
+<section class="rounded-xl border border-slate-200 bg-white p-5 shadow-sm" data-purpose="roles-negocio">
+<div class="flex items-center justify-between pb-3 border-b border-slate-100">
+<div>
+<h3 class="text-sm font-bold text-slate-800">Roles de negocio</h3>
+<p class="text-xs text-slate-400 mt-0.5">Define los permisos operacionales y contractuales del tercero</p>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100/70 border border-primary-100 transition-colors" type="button">
+<i class="pi pi-plus text-xs"></i>
+<span>Asignar roles</span>
+</button>
+</div>
+<div class="pt-4 flex flex-wrap gap-2">
+<!-- Active Role Chip: Cliente -->
+<div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-sky-50/80 border border-sky-200/80 text-sky-800 text-xs font-medium shadow-xs">
+<i class="pi pi-user text-sky-600 text-xs"></i>
+<span>Cliente</span>
+<button class="text-sky-400 hover:text-sky-700 ml-1 rounded" type="button">
+<i class="pi pi-times text-[10px]"></i>
+</button>
+</div>
+<!-- Add Role Suggestion (Optional pill) -->
+<button class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-dashed border-slate-300 text-slate-500 hover:border-slate-400 hover:text-slate-700 text-xs font-medium transition-colors" type="button">
+<i class="pi pi-plus text-[10px]"></i>
+<span>Añadir rol secundario</span>
+</button>
+</div>
+</section>
+<!-- END: Roles de Negocio Panel -->
+<!-- BEGIN: Cuentas Bancarias DataTable -->
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden" data-purpose="cuentas-bancarias">
+<!-- Section Header -->
+<div class="p-4 sm:px-5 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+<div class="flex items-center gap-2">
+<i class="pi pi-credit-card text-slate-500 text-sm"></i>
+<h3 class="text-sm font-bold text-slate-800">Cuentas Bancarias</h3>
+<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-200 text-slate-600">0</span>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-primary-600 hover:bg-primary-700 shadow-xs transition-colors" type="button">
+<i class="pi pi-plus text-xs"></i>
+<span>Agregar</span>
+</button>
+</div>
+<!-- PrimeVue Styled DataTable Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs text-slate-600">
+<thead class="bg-slate-50 border-b border-slate-200 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+<tr>
+<th class="py-3 px-4" scope="col">Banco</th>
+<th class="py-3 px-4" scope="col">Tipo</th>
+<th class="py-3 px-4" scope="col">Número de Cuenta</th>
+<th class="py-3 px-4" scope="col">Estado</th>
+<th class="py-3 px-4 text-right" scope="col">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Empty State Row -->
+<tr>
+<td class="py-8 text-center" colspan="5">
+<div class="flex flex-col items-center justify-center space-y-2">
+<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+<i class="pi pi-credit-card text-lg"></i>
+</div>
+<span class="text-xs font-medium text-slate-500">No se encontraron cuentas bancarias registradas.</span>
+<button class="text-xs font-semibold text-primary-600 hover:underline pt-1" type="button">
+                      + Vincular cuenta bancaria ahora
+                    </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- END: Cuentas Bancarias DataTable -->
+<!-- BEGIN: Contactos DataTable -->
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden" data-purpose="contactos">
+<!-- Section Header -->
+<div class="p-4 sm:px-5 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+<div class="flex items-center gap-2">
+<i class="pi pi-users text-slate-500 text-sm"></i>
+<h3 class="text-sm font-bold text-slate-800">Contactos</h3>
+<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-slate-200 text-slate-600">0</span>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-primary-600 hover:bg-primary-700 shadow-xs transition-colors" type="button">
+<i class="pi pi-plus text-xs"></i>
+<span>Agregar</span>
+</button>
+</div>
+<!-- PrimeVue Styled DataTable Container -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs text-slate-600">
+<thead class="bg-slate-50 border-b border-slate-200 text-[11px] uppercase tracking-wider font-semibold text-slate-500">
+<tr>
+<th class="py-3 px-4" scope="col">Nombre</th>
+<th class="py-3 px-4" scope="col">Email</th>
+<th class="py-3 px-4" scope="col">Teléfono</th>
+<th class="py-3 px-4" scope="col">País</th>
+<th class="py-3 px-4 text-right" scope="col">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Empty State Row -->
+<tr>
+<td class="py-8 text-center" colspan="5">
+<div class="flex flex-col items-center justify-center space-y-2">
+<div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center text-slate-400">
+<i class="pi pi-user-plus text-lg"></i>
+</div>
+<span class="text-xs font-medium text-slate-500">No se encontraron registros de contacto.</span>
+<button class="text-xs font-semibold text-primary-600 hover:underline pt-1" type="button">
+                      + Añadir nuevo contacto
+                    </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- END: Contactos DataTable -->
+<!-- BEGIN: Gestión de Acuerdos Section -->
+<section class="rounded-xl border border-slate-200 bg-white shadow-sm overflow-hidden mb-4" data-purpose="gestion-acuerdos">
+<!-- Section Header -->
+<div class="p-4 sm:px-5 border-b border-slate-200 flex items-center justify-between bg-slate-50/50">
+<div class="flex items-center gap-2">
+<i class="pi pi-briefcase text-slate-500 text-sm"></i>
+<h3 class="text-sm font-bold text-slate-800">Gestión de Acuerdos</h3>
+<span class="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-100 text-emerald-700">0 vigentes</span>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-white bg-primary-600 hover:bg-primary-700 shadow-xs transition-colors" type="button">
+<i class="pi pi-plus text-xs"></i>
+<span>Nuevo acuerdo</span>
+</button>
+</div>
+<!-- Filter and Search Toolbar -->
+<div class="p-3.5 border-b border-slate-200 bg-white flex flex-wrap items-center justify-between gap-3">
+<!-- Left: Filter search input simulation -->
+<div class="relative w-full sm:w-64">
+<i class="pi pi-search absolute left-3 top-2.5 text-xs text-slate-400"></i>
+<input class="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-300 focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 text-slate-700 placeholder-slate-400" placeholder="Buscar acuerdos..." type="text">
+</div>
+<!-- Right: Action Buttons (Limpiar filtros / Exportar) -->
+<div class="flex items-center gap-2">
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 bg-white hover:bg-slate-50 border border-slate-300 transition-colors" type="button">
+<i class="pi pi-filter-slash text-xs text-slate-500"></i>
+<span>Limpiar filtros</span>
+</button>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg text-slate-600 bg-white hover:bg-slate-50 border border-slate-300 transition-colors" type="button">
+<i class="pi pi-upload text-xs text-slate-500"></i>
+<span>Exportar</span>
+</button>
+</div>
+</div>
+<!-- Table Body Placeholder / Empty State for Agreements -->
+<div class="py-10 px-4 text-center">
+<div class="max-w-xs mx-auto flex flex-col items-center">
+<div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 mb-2.5">
+<i class="pi pi-file text-xl"></i>
+</div>
+<h4 class="text-sm font-semibold text-slate-700">Sin acuerdos registrados</h4>
+<p class="text-xs text-slate-400 mt-1">Este cliente no posee tarifas personalizadas ni acuerdos comerciales activos.</p>
+<button class="mt-3.5 inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg text-primary-600 hover:text-primary-700 bg-primary-50 border border-primary-200 transition-colors" type="button">
+<i class="pi pi-plus text-xs"></i>
+<span>Crear primer acuerdo</span>
+</button>
+</div>
+</div>
+</section>
+<!-- END: Gestión de Acuerdos Section -->
+</div>
+<!-- END: Drawer Scrollable Body Content -->
+<!-- BEGIN: Drawer Sticky Footer -->
+
+<!-- END: Drawer Sticky Footer -->
+</aside>
+<!-- END: PrimeVue Drawer Component -->
+<!-- BEGIN: Interactive Drawer Script -->
+<script data-purpose="drawer-interactivity">
+    document.addEventListener('DOMContentLoaded', () => {
+      // Accessible ESC key listener to emulate modal/drawer behavior
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          console.log('Cerrar drawer activado por tecla Esc');
+        }
+      });
+    });
+  </script>
+<!-- END: Interactive Drawer Script -->
+
+
+</body></html>

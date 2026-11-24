@@ -1,0 +1,341 @@
+<!DOCTYPE html><html class="h-full bg-slate-100" lang="es" data-lt-installed="true"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Detalle del Servicio - Drawer PrimeVue</title>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<!-- PrimeIcons CDN -->
+<link href="https://cdn.jsdelivr.net/npm/primeicons@6.0.1/primeicons.css" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            pv: {
+              primary: '#0284c7', // Sky-600 / PrimeVue Corporate Blue
+              'primary-hover': '#0369a1',
+              'primary-light': '#f0f9ff',
+              surface: '#ffffff',
+              border: '#e2e8f0',
+              tagGreen: '#ecfdf5',
+              tagGreenText: '#059669',
+              tagGreenBorder: '#a7f3d0'
+            }
+          },
+          boxShadow: {
+            'drawer': '-10px 0 25px -5px rgba(0, 0, 0, 0.1), -8px 10px 10px -5px rgba(0, 0, 0, 0.04)',
+            'card': '0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px 0 rgba(0, 0, 0, 0.03)'
+          }
+        }
+      }
+    }
+  </script>
+<!-- BEGIN: Base Layout Styles -->
+<style data-purpose="custom-scrollbars">
+    /* PrimeVue clean scrollbar look */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #f8fafc;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+<!-- END: Base Layout Styles -->
+</head>
+<body class="h-full font-sans antialiased text-slate-800 bg-slate-900/40 relative overflow-hidden flex justify-end">
+<!-- BEGIN: Background Simulated App Screen (PrimeVue Data View Behind Drawer) -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none select-none overflow-hidden opacity-40 blur-[1px] flex flex-col p-6 space-y-4">
+<div class="flex items-center space-x-3 pb-4 border-b border-slate-300">
+<div class="w-9 h-9 rounded-lg bg-sky-600 flex items-center justify-center text-white font-bold text-sm">BA</div>
+<div class="h-5 w-48 bg-slate-300 rounded"></div>
+</div>
+<div class="h-8 w-64 bg-slate-300 rounded mb-4"></div>
+<div class="h-10 w-full max-w-md bg-slate-200 rounded"></div>
+<div class="space-y-3 pt-4">
+<div class="h-12 w-full bg-white rounded shadow-sm"></div>
+<div class="h-12 w-full bg-white rounded shadow-sm"></div>
+<div class="h-12 w-full bg-white rounded shadow-sm"></div>
+<div class="h-12 w-full bg-white rounded shadow-sm"></div>
+</div>
+</div>
+<!-- END: Background Simulated App Screen -->
+<!-- BEGIN: SlideOver Drawer Container -->
+<aside aria-labelledby="drawer-title" aria-modal="true" class="relative w-full max-w-[760px] h-full bg-slate-50 border-l border-slate-200 shadow-drawer flex flex-col z-50 overflow-hidden transform transition-all duration-300 ease-in-out" data-purpose="service-detail-drawer" id="service-detail-drawer" role="dialog">
+<!-- BEGIN: Drawer Header -->
+<header class="sticky top-0 z-20 bg-white border-b border-slate-200/90 flex items-center justify-between shadow-xs p-6">
+<!-- Header Left: Icon, Title, and State Badge -->
+<div class="flex items-center space-x-3.5 min-w-0">
+<!-- Service Type Icon -->
+<div class="w-11 h-11 rounded-xl bg-sky-50 border border-sky-100 flex items-center justify-center text-sky-600 shrink-0">
+<i aria-hidden="true" class="pi pi-box text-xl"></i>
+</div>
+<div class="min-w-0">
+<div class="flex items-center space-x-2.5 flex-wrap">
+<h1 class="text-lg font-bold text-slate-900 tracking-tight truncate" id="drawer-title">
+              Almacenamiento en Bodega
+            </h1>
+<!-- PrimeVue p-tag status badge -->
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Activo
+            </span>
+</div>
+<!-- Subtitle / Internal Code Reference -->
+<div class="flex items-center text-xs text-slate-500 font-medium space-x-2 mt-0.5">
+<span class="text-slate-400 font-mono tracking-wider font-semibold">CÓDIGO:</span>
+<span class="text-slate-700 font-mono font-medium">ALMACENAMIENTO</span>
+<span class="text-slate-300">•</span>
+<span>Servicio Operativo</span>
+</div>
+</div>
+</div>
+<!-- Header Right: Action Buttons (Edit, Maximize, Close) -->
+<div class="flex items-center space-x-1 shrink-0 ml-4">
+<!-- PrimeVue Outlined Button: Editar -->
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 hover:border-slate-400 transition-colors shadow-2xs" title="Editar detalles generales" type="button">
+<i class="pi pi-pencil text-xs text-slate-500"></i>
+<span>Editar</span>
+</button>
+<!-- PrimeVue Icon Button: Expand Screen -->
+<button aria-label="Maximizar drawer" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors" title="Pantalla completa" type="button">
+<i class="pi pi-window-maximize text-sm"></i>
+</button>
+<!-- PrimeVue Icon Button: Close Drawer -->
+<button aria-label="Cerrar modal" class="w-8 h-8 inline-flex items-center justify-center rounded-lg text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors" title="Cerrar panel" type="button">
+<i class="pi pi-times text-base"></i>
+</button>
+</div>
+</header>
+<!-- END: Drawer Header -->
+<!-- BEGIN: Drawer Body Scrollable Content -->
+<main class="flex-1 overflow-y-auto custom-scroll p-6 space-y-5">
+<!-- BEGIN: Section 1 - Información del Servicio (Card PrimeVue) -->
+<section class="bg-white rounded-xl border border-slate-200/90 shadow-card p-5" data-purpose="service-main-info-card">
+<!-- Card Subheader -->
+<div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+<div class="flex items-center space-x-2 text-xs font-bold tracking-wider text-sky-800 uppercase">
+<i class="pi pi-id-card text-sky-600 text-sm"></i>
+<span>Información del Servicio</span>
+</div>
+<span class="inline-flex items-center gap-1 text-[11px] font-medium text-slate-400">
+<i class="pi pi-shield"></i> ID Primario Configurado
+          </span>
+</div>
+<!-- Grid Metadata (PrimeVue Fieldset layout) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6 text-sm">
+<!-- Field: Código -->
+<div class="space-y-1">
+<div class="flex items-center space-x-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+<i class="pi pi-tag text-xs text-slate-400"></i>
+<span>Código</span>
+</div>
+<p class="font-semibold text-slate-800 tracking-tight text-sm font-mono bg-slate-50 inline-block px-2 py-0.5 rounded border border-slate-100">
+              ALMACENAMIENTO
+            </p>
+</div>
+<!-- Field: Nombre -->
+<div class="space-y-1">
+<div class="flex items-center space-x-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+<i class="pi pi-box text-xs text-slate-400"></i>
+<span>Nombre</span>
+</div>
+<p class="font-medium text-slate-900 text-sm">
+              Almacenamiento en Bodega
+            </p>
+</div>
+<!-- Field: Descripción -->
+<div class="space-y-1">
+<div class="flex items-center space-x-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+<i class="pi pi-info-circle text-xs text-slate-400"></i>
+<span>Descripción</span>
+</div>
+<p class="text-slate-400 text-sm italic font-normal">
+              Sin descripción
+            </p>
+</div>
+<!-- Field: Fecha de Creación -->
+<div class="space-y-1">
+<div class="flex items-center space-x-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide">
+<i class="pi pi-calendar text-xs text-slate-400"></i>
+<span>Fecha de Creación</span>
+</div>
+<p class="font-medium text-slate-800 text-sm">
+              31/12/2023
+            </p>
+</div>
+</div>
+<!-- Taxes / Impuestos Section -->
+<div class="mt-5 pt-4 border-t border-slate-100">
+<div class="flex items-center space-x-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2.5">
+<i class="pi pi-percentage text-xs text-slate-400"></i>
+<span>Impuestos Asociados</span>
+</div>
+<div class="flex items-center flex-wrap gap-2">
+<!-- PrimeVue Removable Chip -->
+<div class="inline-flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200/80 text-slate-700 font-medium text-xs px-2.5 py-1.5 rounded-lg border border-slate-200 transition-colors">
+<span>Iva (19%)</span>
+<button aria-label="Remover IVA" class="w-4 h-4 rounded-full inline-flex items-center justify-center text-slate-400 hover:text-slate-700 hover:bg-slate-300" title="Eliminar impuesto" type="button">
+<i class="pi pi-minus-circle text-xs"></i>
+</button>
+</div>
+<!-- PrimeVue Outlined Add Button -->
+<button class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium text-slate-600 bg-white border border-dashed border-slate-300 rounded-lg hover:border-sky-500 hover:text-sky-600 hover:bg-sky-50/50 transition-colors" type="button">
+<i class="pi pi-plus text-xs"></i>
+<span>Agregar</span>
+</button>
+</div>
+</div>
+</section>
+<!-- END: Section 1 - Información del Servicio -->
+<!-- BEGIN: Section 2 - Tarifas Base (Empty State Card) -->
+<section class="bg-white rounded-xl border border-slate-200/90 shadow-card p-5" data-purpose="tarifa-base-section">
+<!-- Section Header -->
+<div class="flex items-center justify-between border-b border-slate-100 pb-3 mb-4">
+<h2 class="text-sm font-bold text-slate-800 tracking-tight">Tarifas base</h2>
+<span class="text-xs text-slate-400">Tarifas de lista general</span>
+</div>
+<!-- PrimeVue Empty State Container -->
+<div class="py-8 px-4 flex flex-col items-center justify-center text-center">
+<div class="w-12 h-12 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center text-slate-400 mb-3">
+<i aria-hidden="true" class="pi pi-dollar text-xl"></i>
+</div>
+<p class="text-sm text-slate-500 max-w-sm font-medium">
+            No hay tarifas base configuradas para este servicio
+          </p>
+<p class="text-xs text-slate-400 mt-1 mb-4">
+            Crea la primera tarifa para estandarizar los cobros en almacén.
+          </p>
+<!-- PrimeVue Primary Button -->
+<button class="inline-flex items-center gap-2 px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white text-xs font-semibold rounded-lg shadow-sm hover:shadow transition-all focus:ring-2 focus:ring-sky-500 focus:ring-offset-1" type="button">
+<i class="pi pi-plus text-xs"></i>
+<span>Crear tarifa base</span>
+</button>
+</div>
+</section>
+<!-- END: Section 2 - Tarifas Base -->
+<!-- BEGIN: Section 3 - Valores Mínimos por Tipo de Depósito (DataTable) -->
+<section class="bg-white rounded-xl border border-slate-200/90 shadow-card overflow-hidden" data-purpose="deposit-minimums-section">
+<!-- Section Header & Help Notice -->
+<div class="p-5 border-b border-slate-100">
+<h2 class="text-sm font-bold text-slate-900 tracking-tight">Valores mínimos por tipo de depósito</h2>
+<p class="text-xs text-slate-500 mt-1 leading-relaxed">
+            Se factura este valor cuando el depósito no tiene convenio ni tarifa base aplicable. La factura queda con advertencia para validar el precio.
+          </p>
+</div>
+<!-- PrimeVue p-datatable Table Implementation -->
+<div class="overflow-x-auto">
+<table class="w-full text-left text-xs border-collapse">
+<thead class="bg-slate-50/80 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider">
+<tr>
+<th class="py-3 px-4" scope="col">Tipo de depósito</th>
+<th class="py-3 px-4" scope="col">Valor mínimo</th>
+<th class="py-3 px-4" scope="col">Base</th>
+<th class="py-3 px-4 text-center" scope="col">Estado</th>
+<th class="py-3 px-4 text-right" scope="col">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 text-slate-700">
+<!-- Row 1: Exportación -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-4 font-medium text-slate-900 flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-blue-500"></span>
+<span>Exportación</span>
+</td>
+<td class="py-3.5 px-4 font-bold text-slate-900 font-mono">
+                  $ 0
+                </td>
+<td class="py-3.5 px-4 text-slate-600">
+                  Neto (+ IVA)
+                </td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Activo
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button aria-label="Editar Exportación" class="p-1.5 text-sky-600 hover:text-sky-800 hover:bg-sky-50 rounded-md transition-colors" title="Editar valor mínimo para Exportación" type="button">
+<i class="pi pi-pencil text-sm"></i>
+</button>
+</td>
+</tr>
+<!-- Row 2: Importación -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-4 font-medium text-slate-900 flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-indigo-500"></span>
+<span>Importación</span>
+</td>
+<td class="py-3.5 px-4 font-bold text-slate-900 font-mono">
+                  $ 0
+                </td>
+<td class="py-3.5 px-4 text-slate-600">
+                  Neto (+ IVA)
+                </td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Activo
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button aria-label="Editar Importación" class="p-1.5 text-sky-600 hover:text-sky-800 hover:bg-sky-50 rounded-md transition-colors" title="Editar valor mínimo para Importación" type="button">
+<i class="pi pi-pencil text-sm"></i>
+</button>
+</td>
+</tr>
+<!-- Row 3: Depósito por Inspección -->
+<tr class="hover:bg-slate-50/70 transition-colors">
+<td class="py-3.5 px-4 font-medium text-slate-900 flex items-center space-x-2">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span>Depósito por Inspección</span>
+</td>
+<td class="py-3.5 px-4 font-bold text-slate-900 font-mono">
+                  $ 0
+                </td>
+<td class="py-3.5 px-4 text-slate-600">
+                  Neto (+ IVA)
+                </td>
+<td class="py-3.5 px-4 text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    Activo
+                  </span>
+</td>
+<td class="py-3.5 px-4 text-right">
+<button aria-label="Editar Depósito por Inspección" class="p-1.5 text-sky-600 hover:text-sky-800 hover:bg-sky-50 rounded-md transition-colors" title="Editar valor mínimo para Depósito por Inspección" type="button">
+<i class="pi pi-pencil text-sm"></i>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer / Helper Info -->
+<div class="px-4 py-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+<span>Total: 3 tipos de depósito configurados</span>
+<span class="text-slate-400">Valores en COP</span>
+</div>
+</section>
+<!-- END: Section 3 - Valores Mínimos por Tipo de Depósito -->
+</main>
+<!-- END: Drawer Body Scrollable Content -->
+<!-- BEGIN: Drawer Footer Sticky Bar -->
+
+<!-- END: Drawer Footer Sticky Bar -->
+</aside>
+<!-- END: SlideOver Drawer Container -->
+
+
+</body></html>
