@@ -1,5 +1,7 @@
 # Prompt — F01 «Núcleo de dominio», parte 1 · Backend (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-24; ya no es una instrucción. Parte 1 cerrada en BE `f2/f01-nucleo`: fases 1 a 6 en `b089eef`, `9bb205b`, `5a44a71`, `4f4a78b`, `202a42d` y `f567f40`.
+
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/Backend/wms-api`. Necesita leer `docs/` y escribir solo en `Backend/wms-api` (y en `docs`, para el estado de sus fases).
 > 2. Copia el bloque de abajo. El agente ejecuta las seis fases del plan, una a la vez, con commit y push de `f2/f01-nucleo` al cerrar cada una.
