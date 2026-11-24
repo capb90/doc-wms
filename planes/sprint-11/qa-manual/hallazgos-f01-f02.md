@@ -14,3 +14,21 @@ Estos son los hallazgos encontrados durante la QA manual de las features F01 y F
 10. En general el drawer debe rediseñarse, para las vistas aqui revisadas y las futuras, manteniendo una consistencia visual. 
 
 **Nota**: Los mockups dueron diseñados con IA, por lo que pueden no ser 100% realistas, pero dan una idea de como deberian lucir los drawers.
+---
+
+## Resolución (2026-11-24)
+
+Plan: [plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md](../f02-base/plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md). Fusionado en `fase-2` del frontend (`5793bc9`).
+
+| Hallazgo | Decisión | Estado |
+| --- | --- | --- |
+| 1. Tooltips en los botones de acción | D6 | Corregido (fase 1) |
+| 2. «Ver» de solo icono | D7 | Corregido (fase 1) |
+| 3. Drawer de Terceros; ¿se eliminan los acuerdos del detalle? | D8; D1: sí, F07 los pasa a «Tarifas y acuerdos» y los quita del detalle; hasta entonces siguen en su tarjeta | Corregido (fase 2) |
+| 4. Drawer de Servicios; ¿se eliminan las tarifas base del detalle?; formulario «Crear tarifa base» | D9; D1: sí, en F07; D2: el formulario se rediseña en F07 con el patrón de «Agregar tarifa» (P-FAC-13) | Corregido el drawer (fase 2); formulario en F07 |
+| 5. Drawer de Conductores | D10 | Corregido (fase 3) |
+| 6. Ciudades: botón «Importar» y modal de importación | D13 | Corregido (fase 1) |
+| 7. Prefijos: etiqueta y resaltado del ejemplo | D14 | Corregido (fase 1) |
+| 8. Drawer de Usuarios | D11 y D3 (más de dos acciones: todas en el menú del encabezado) | Corregido (fase 3) |
+| 9. Drawer de Auditoría | D12 | Corregido (fase 3) |
+| 10. Consistencia de los drawers | D5 y D15: anatomía única, escrita en `contexto/convenciones-tecnicas.md` §3 y en la galería `/dev/components` | Corregido |

@@ -48,6 +48,11 @@
 - Textos en español. Números y monedas solo con las utilidades de `app/shared/utils/format.ts` (`formatNumber`, `formatKg`, `formatCurrency`), y las fechas con las de `app/utils/colombia-date.ts` (`formatColombiaDate`, `formatColombiaTime`, `formatColombiaDateTime`). `<InputNumber>` siempre con `locale="es-CO"`.
 - **Guardias de código fuente** en `test/unit/guards/`: prohíben `toLocale*`, `es-ES`, `new Intl.*` fuera de las utilidades y botones sin `label`, `aria-label` o `title`. Un `yarn test` en rojo por una guardia es un defecto real.
 - Errores del API: `app/utils/api-error.ts` y `api-error-notifier.ts`. Envíos dobles: `useSubmitGuard`.
+- **Drawer de detalle** (`DEC-080`; plan `planes/sprint-11/f02-base/plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md`, D3, D5 y D6). Todo detalle de un registro sobre un listado usa `AppDetailDrawer` con secciones `AppDetailSection`; la galería `/dev/components` muestra el patrón:
+  - **Encabezado:** `icon` (PrimeIcons), `title`, `status` (`activeStatus()` de `app/types/app-detail.ts`, o la etiqueta que haga de estado) y `subtitle` en una línea, con los datos clave separados por «·». Ampliar y cerrar los pinta el componente.
+  - **Acciones del registro** (`actions`): con una o dos van en el pie, con botones `small`; con más de dos, todas pasan al menú «Acciones» (⋮) del encabezado y el drawer no lleva pie. Nunca un botón de acción suelto en el encabezado.
+  - **Secciones:** una `AppDetailSection` por bloque, con `title` e `icon`; `count` para listas; la acción de la sección («Agregar») en el slot `actions`; `flush` para una tabla `DataTable size="small"`; `empty`, `empty-text` y el slot `empty-action` para el estado vacío; los diálogos de la sección en el slot `dialogs`. Los datos van en pares `dt`/`dd` dentro de `.app-detail-grid`.
+  - **Botones de solo icono** (acciones de fila, encabezado): siempre con `v-tooltip.top` con el verbo («Ver detalle», «Editar», «Eliminar»…) y su `aria-label`. «Ver» es de solo icono (`pi pi-eye`).
 
 ## 4. Permisos
 

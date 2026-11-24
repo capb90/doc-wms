@@ -1,7 +1,7 @@
 # Seguimiento — Implementación de la fase 2
 
 > **Para qué sirve:** la matriz de la implementación de la fase 2 (`DEC-080`, `DEC-081`): en qué orden se ejecuta cada paso, dónde están su plan y sus prompts, y en qué estado va cada parte.
-> **Fecha de corte:** 2026-11-24. Backend `fase-2` `019fa81` y frontend `fase-2` `042c4ce`, con F01 y F02 integradas (I-01); `develop` sigue en BE `529bda7` y FE `3aa6e3c`.
+> **Fecha de corte:** 2026-11-24. Backend `fase-2` `019fa81` y frontend `fase-2` `5793bc9`, con F01 y F02 integradas (I-01) y los ajustes de la QA manual de F01 y F02; `develop` sigue en BE `529bda7` y FE `3aa6e3c`.
 > **Carpetas:** la raíz de `planes/sprint-11/` guarda el plan maestro, esta matriz y el plan de P0. Cada feature tiene su carpeta `fNN-<tema>/` con su plan cerrado y todos sus prompts, que se quedan ahí aunque ya se hayan ejecutado (plan maestro §5.5).
 > **Fuente del orden:** [plan maestro](plan-maestro-implementacion-fase-2-2026-11-20.md), §4 (orden y paralelismo), §5.3 (ramas y fusiones) y §9 (plantilla del plan cerrado).
 > **Mantenimiento:** §5 de este documento.
@@ -75,7 +75,7 @@ Un plan o un prompt que aún no existe aparece con su ruta esperada, relativa a 
 | Commit del `AGENTS.md` de `Backend/wms-api` y de `Frontend/wms` (anexo A del plan maestro) | Paso 3 (las ramas salen de `develop`) | Hecho el 2026-11-21: BE `42738e1` y FE `3aa6e3c` en `develop`, publicados |
 | Mover el prompt del plan maestro a `archivo/prompts/` | Orden del hub (`README.md`, «Archivos nuevos») | Hecho el 2026-11-21: `archivo/prompts/sprint-11/` |
 | Prompt del planificador para los planes cerrados de F01 y F02, en `f01-nucleo/` | Paso 4 | Hecho el 2026-11-21: [prompt-f2-f01-nucleo-planificador-2026-11-21.md](f01-nucleo/prompt-f2-f01-nucleo-planificador-2026-11-21.md) ejecutado; los dos planes y sus tres prompts, aprobados el 2026-11-21 |
-| Ajustes de la QA manual de F01 y F02: [plan](f02-base/plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md), aprobado el 2026-11-24; FE `f2/f02-ajustes-qa` | Antes de seguir con F03 sobre `fase-2` | Fases 1 (FE `5b31280`) y 2 (FE `6abd68b`) hechas el 2026-11-24; fase 3 pendiente |
+| Ajustes de la QA manual de F01 y F02: [plan](f02-base/plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md), aprobado el 2026-11-24; FE `f2/f02-ajustes-qa` | Antes de seguir con F03 sobre `fase-2` | Hecho el 2026-11-24: fases 1 a 3 (FE `5b31280`, `6abd68b`, `877f26b`), fusión en `fase-2` `5793bc9` |
 
 ---
 
