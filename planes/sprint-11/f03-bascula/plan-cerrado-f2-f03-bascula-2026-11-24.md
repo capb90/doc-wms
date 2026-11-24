@@ -1415,7 +1415,7 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 | BE-1 | 1 | Registro y ciclo | QA2-F03-001 a 016 en PASA; migración `WeighingAtRegistration` aplicada | Hecha el 2026-11-24 (BE `ccfa53d`) |
 | BE-2 | 1 | Cola, historial y detalle | QA2-F03-017 a 023 en PASA | Pendiente |
 | BE-3 | 1 | Tiquete, anulación y correcciones | QA2-F03-024 a 030 en PASA | Pendiente |
-| FE-1 | 2 | Contratos, fuentes simuladas, cola y registro | P-BAS-01 a P-BAS-04 con su lista del wireframe y captura | Pendiente |
+| FE-1 | 2 | Contratos, fuentes simuladas, cola y registro | P-BAS-01 a P-BAS-04 con su lista del wireframe y captura | Hecha el 2026-11-24 (FE `d49a691`) |
 | FE-2 | 2 | Cobro, tiquete, repesaje e impresión | P-BAS-05 a P-BAS-07 y P-BAS-13 con su lista y captura | Pendiente |
 | FE-3 | 2 | Historial, detalle, corrección, Vigilancia › Historial y `cycles/[id]` | P-BAS-08 a P-BAS-11, P-TR-12, Vigilancia › Historial y `cycles/[id]` con su lista y captura | Pendiente |
 | I-03 | 3 | Integración (§13) | §13.5 | Pendiente |
@@ -1466,6 +1466,13 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 - **Pruebas:** `registration-weights.spec.ts`, `process-keys.spec.ts`, `mocks.spec.ts` y las de los componentes nuevos de la fase.
 - **Guardias:** agrega las páginas nuevas y reescritas a `MAQUETACION_PAGES` (`FT/unit/guards/mock-sources.spec.ts:16`); ninguna importa una fuente de `INTEGRATED_SOURCES` (comprobado con grep en el cierre).
 - **Sesión simulada** (`P02/` D10): `NUXT_PUBLIC_MOCK_SESSION=true` con `?roles=Admin,Scale` y, para Vigilancia, `Receiving`.
+- **Estado:** hecha el 2026-11-24 (FE `d49a691`, rama `f2/f03-bascula`). `yarn test` 124 → 142 archivos y 685 → 744 pruebas, en verde; `yarn lint` 249 → 247 errores (avisos 328, sin cambio), ninguno en archivos nuevos; `yarn build` con código 0. Sin llamadas reales: la guardia de `mock-sources.spec.ts` en verde con las dos páginas en `MAQUETACION_PAGES`, el grep de cierre sin importaciones de `INTEGRATED_SOURCES` ni de componentes de hoy que llamen al API, y ninguna petición al API en el navegador. Los datos simulados pasan sus esquemas (`FT/unit/weighbridge/mocks.spec.ts`, `FT/unit/entries/mocks.spec.ts`). Ninguna ruta nueva en el menú. P-BAS-01 a P-BAS-04 revisadas en el navegador con la sesión simulada (`?roles=Admin,Scale`), con su lista del wireframe; capturas en `evidencias/fe1-01` a `fe1-10`.
+- **Hecho:** los contratos de §2.3 (más `deposit-entry.ts` y `exit.ts` copiados de `P01/` §2.3) y las once fuentes de D40, con una Báscula simulada (`F/features/weighbridge/mocks/world.ts`) que comparten todas, así la cola, el registro, el historial y el detalle coinciden; la cola reescrita en `index.vue` (con `?estado=`); el registro en `process/[entryLogId].vue` con los componentes de D39 de la fase y el panel de la cola; las utilidades `registration-weights.ts`, `process-keys.ts`, `registration-form.ts` y `queue-display.ts`, y `F/features/entries/utils/correction-reason.ts` (regla de D3). Pruebas: `registration-weights`, `process-keys`, `registration-form`, `queue-display`, los dos `mocks.spec.ts` y una por componente nuevo de la fase.
+- **Notas para FE-2, FE-3 e I-03:**
+  - `StakeholderQuickDialog` y `DriverQuickDialog` no llaman a una fuente: la página les pasa `create` (y `update`), hoy la fachada de catálogos. En I-03 reciben las fuentes integradas de F01.
+  - La página toma la clave de la entrada de ingreso (`warehouseStorageEntryId`, para C-F03-13) de la fila de la cola (C-F03-21), porque D5 solo lleva `servicio` en la consulta. Una entrada completada no está en la cola: el «Editar» del historial (FE-3) necesita otra forma de pasar esa clave (por ejemplo, en la consulta), que FE-3 debe resolver con el usuario si no la fija el plan.
+  - Los pasos Cobro y Tiquete muestran un aviso hasta FE-2; F2 en una entrada «Por repesar» avisa que el repesaje llega en FE-2.
+  - El simulado de C-F03-11 ya aplica la nota de BE-1 (§8.1): el repesaje es el opuesto al primer pesaje.
 
 ### 8.5 Maquetación, fase 2 — Cobro, tiquete, repesaje e impresión
 
