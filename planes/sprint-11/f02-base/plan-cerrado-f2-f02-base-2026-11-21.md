@@ -370,7 +370,7 @@ Una a la vez, en orden. Cada fase cierra con las compuertas de `PM/` §6.2 (`yar
 | 3 | 2 | Configuración I: Motivos (P-TR-04), Prefijos (P-TR-05), Tasas (P-TR-06), Conductores (P-TR-02 y drawer), Vehículos, Ubicaciones (modal) | QA2-F02-005 a QA2-F02-012 contra los simulados | Hecha el 2026-11-23 (FE `4e60427`); [informe](informe-f2-f02-base-maquetacion-2026-11-23.md) |
 | 4 | 2 | Configuración II: Terceros, Productos, Tipos de embalaje, Tipos de unidad de carga, Servicios, Ciudades, Cuadrillas, Parámetros | QA2-F02-022 y QA2-F02-023 contra los simulados | Hecha el 2026-11-23 (FE `9e738bc`); [informe](informe-f2-f02-base-maquetacion-2026-11-23.md) |
 | 5 | 2 | Administración: Usuarios y Auditoría; revisión final de la guardia (`PATTERN` con todas las de F02; `PENDING` con las de D3 y las de F03 a F09) | QA2-F02-024 y QA2-F02-025 contra los simulados; capturas de todas las pantallas | Hecha el 2026-11-23 (FE `35f1746`); [informe](informe-f2-f02-base-maquetacion-2026-11-23.md). Parte 2 cerrada |
-| I-01 | 3 | En el plan de F01 (`P01/` §13) | `P01/` §13.4 | Pendiente |
+| I-01 | 3 | En el plan de F01 (`P01/` §13) | `P01/` §13.4 | Completada el 2026-11-24: FE `f2/f02-base` `50dd86f` fusionada en `fase-2` (`042c4ce`); QA2-F02-001 a 026 en PASA en el navegador contra el backend local ([casos](../../../qa/casos-qa2-f01-f02-2026-11-24.md)); `yarn test` 722 → 679, lint 258 → 255 errores. Detalle en `P01/` §8 (nota de I-01) |
 
 ---
 

@@ -1,5 +1,7 @@
 # Prompt — I-01, integración de F01 «Núcleo de dominio» y F02 «Base transversal», parte 3 (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-24; ya no es una instrucción. Resultado en los planes de F01 (§8 y §13) y de F02 (§8), en la matriz de seguimiento (§2.2) y en `qa/casos-qa2-f01-f02-2026-11-24.md`.
+
 > **Cómo usarlo:**
 > 1. Lánzalo cuando F01 (fases 1 a 6) y F02 (fases 1 a 5) estén cerradas, con push, y ningún otro agente trabaje en `Backend/wms-api` ni en `Frontend/wms`.
 > 2. Abre una sesión nueva de Claude Code en `code_workspace/`: necesita los dos repos y `docs/`.

@@ -515,7 +515,7 @@ Cada ficha dice: política; qué cambia; petición; respuesta (con el esquema de
 
 ##### C-F01-27 · `POST stakeholder` (modificado)
 - **Política:** `StakeholderConfigurationAccess` (antes `StakeholderAccess`; suma Billing).
-- **Petición:** `stakeholderCreateSchema` — la de hoy (`CreateStakeholderCommand`: `name`, `idType`, `idNumber`, `commercialStatus`, `chamberOfCommerce`, `businessRoles[]` (códigos), `bankAccounts[]`, `contacts[]`, `isUap`). El modal de F02 envía `bankAccounts` y `contacts` nulos: se agregan después desde el detalle.
+- **Petición:** `stakeholderCreateSchema` — la de hoy (`CreateStakeholderCommand`: `name`, `idType`, `idNumber`, `commercialStatus`, `chamberOfCommerce`, `businessRoles[]` (**Ids** de los roles, `guid`; (corregido en I-01 al backend de hoy; respuesta del usuario del 2026-11-24)), `bankAccounts[]`, `contacts[]`, `isUap`). El modal de F02 envía `bankAccounts` y `contacts` nulos: se agregan después desde el detalle.
 - **Respuesta 201:** `dataSchema(stakeholderSchema)`. **Errores:** los de hoy (documento repetido 409). **Zod:** `stakeholderCreateSchema`, `stakeholderSchema`.
 
 ##### C-F01-28 · `PATCH stakeholder/{id}` (modificado)
@@ -660,20 +660,20 @@ Cada ficha dice: política; qué cambia; petición; respuesta (con el esquema de
 - **Política:** `AdminOnly`. **Respuesta 200:** `dataSchema(userSchema)`. **Errores:** 404 como hoy. **Zod:** `userSchema`.
 
 ##### C-F01-61 · `POST user` (sin cambios)
-- **Política:** `AdminOnly`. **Petición:** `userCreateSchema` (`name`, `username`, `identificationNumber`, `password`, `email`, `phone`). **Respuesta 201:** `dataSchema(userSchema)`.
+- **Política:** `AdminOnly`. **Petición:** `userCreateSchema` (`name`, `username`, `identificationNumber`, `password`, `email`, `phone` y `rolIds`, al menos un Id de rol: `CreateUserWithRolesCommand` de hoy, 400 «La lista de roles es requerida.» si falta; (corregido en I-01 al backend de hoy; respuesta del usuario del 2026-11-24)). **Respuesta 201:** `dataSchema(userSchema)`.
 - **Errores:** los de hoy (`B/Wms.Application/Users/Commands/CreateUser/`). **Zod:** `userCreateSchema`, `userSchema`. **Notas:** la contraseña no se muestra ni se guarda en el navegador.
 
 ##### C-F01-62 · `PATCH user/{id}` (sin cambios)
 - **Política:** `AdminOnly`. **Petición:** `userUpdateSchema` (los de C-F01-61 sin contraseña, opcionales). **Respuesta 200:** `dataSchema(userSchema)`. **Errores:** los de hoy. **Zod:** `userUpdateSchema`, `userSchema`.
 
 ##### C-F01-63 · `POST user/{id}/assign-roles` (sin cambios)
-- **Política:** `AdminOnly`. **Petición:** `{ "roleIds": ["guid"] }`. **Respuesta 200:** `dataSchema(userSchema)`. **Errores:** los de hoy. **Zod:** `userRolesChangeSchema`, `userSchema`.
+- **Política:** `AdminOnly`. **Petición:** `{ "roleIds": ["guid"] }`. **Respuesta 200:** `dataSchema(userRolesResultSchema)` = `{ userId, roleNames }` (corregido en I-01 al backend de hoy; respuesta del usuario del 2026-11-24). **Errores:** los de hoy. **Zod:** `userRolesChangeSchema`, `userRolesResultSchema`.
 
 ##### C-F01-64 · `POST user/{id}/remove-roles` (sin cambios)
-- **Política:** `AdminOnly`. **Petición:** `{ "roleIds": ["guid"] }`. **Respuesta 200:** `dataSchema(userSchema)`. **Errores:** los de hoy. **Zod:** `userRolesChangeSchema`, `userSchema`.
+- **Política:** `AdminOnly`. **Petición:** `{ "roleIds": ["guid"] }`. **Respuesta 200:** `dataSchema(userRolesResultSchema)` = `{ userId, roleNames }` (corregido en I-01 al backend de hoy; respuesta del usuario del 2026-11-24). **Errores:** los de hoy. **Zod:** `userRolesChangeSchema`, `userRolesResultSchema`.
 
 ##### C-F01-65 · `POST user/{id}/reset-password` (sin cambios)
-- **Política:** `AdminOnly`. **Petición:** `{ "newPassword": "…" }`. **Respuesta 200:** `dataSchema(z.null())`. **Errores:** los de hoy (reglas de contraseña). **Zod:** `userResetPasswordSchema`.
+- **Política:** `AdminOnly`. **Petición:** `{ "newPassword": "…" }`. **Respuesta 200:** `dataSchema(userSchema)` (el usuario, con `mustChangePassword` en verdadero) (corregido en I-01 al backend de hoy; respuesta del usuario del 2026-11-24). **Errores:** los de hoy (reglas de contraseña). **Zod:** `userResetPasswordSchema`, `userSchema`.
 
 ##### C-F01-66 · `POST user/{id}/manage-active` (sin cambios)
 - **Política:** `AdminOnly`. **Petición:** `{ "isActive": true, "lockoutEndDate": null }`. **Respuesta 200:** `dataSchema(userSchema)`. **Errores:** los de hoy. **Zod:** `userActivationSchema`, `userSchema`.
@@ -895,6 +895,7 @@ Petición, respuesta, errores y Zod: no aplica; responden 404 desde la fase 2. E
 | --- | --- |
 | 404 | «La entrada no existe.» |
 | 409 | «El depósito {N} está anulado: no se corrige.» |
+| 409 | «La entrada está anulada: no se corrige.» (agregado en I-01; respuesta del usuario del 2026-11-24) |
 | 409 | «{producto}: la cantidad no puede quedar en {q}; ya tiene {l} levantado y {d} despachado.» |
 | 409 | «{producto} ya tiene levantes o salidas: no se puede quitar.» |
 | 409 | «El depósito {N} ya tiene levantes o salidas: las unidades de carga ya no se cambian.» |
@@ -919,6 +920,7 @@ Petición, respuesta, errores y Zod: no aplica; responden 404 desde la fase 2. E
 - **Política:** `EntryEditAccess` (Admin, Scale, ForeignTrade).
 - **Respuesta 200:** `dataSchema(entryForEditSchema)` = `depositEntrySchema` más los datos de Vigilancia (`entryLogId`, `licensePlate`, `entryReasonId`, `entryReasonCategory`, `dateTimeEntry`), el conductor completo, la modalidad, el depósito (`warehouseStorageId`, número y estado), `usesCargoUnits` y `cargoUnits[]`, y `canScaleEdit` (bool: depósito en Borrador).
 - **Errores:** 404 «La entrada no existe.» **Zod:** `entryForEditSchema` (`F/features/weighbridge/contracts/entry-edit.ts`).
+- **Notas:** `driver` y `entryReasonId` vienen nulos si Vigilancia no los registró (I-01; respuesta del usuario del 2026-11-24).
 
 #### 2.2.4 Grupo E — Salidas (fase 5)
 
@@ -1024,7 +1026,7 @@ Petición, respuesta, errores y Zod: no aplica; responden 404 desde la fase 2. E
 | 409 | «La salida {N} no está en Borrador.» |
 | 400 | «Complete la salida antes de confirmar: {lo que falta}.» (líneas, vehículo, conductor o ciudad) |
 | 409 | «{producto} del depósito {N}: disponible {d}, pidió {q}.» (el stock cambió) |
-| 409 | «El tercero {nombre} tiene las salidas bloqueadas.» (marca «sin salidas» de hoy, BR-05-004) |
+| 400 | «El cliente '{nombre}' tiene las salidas bloqueadas: {motivo}.» (marca «sin salidas» de hoy, BR-05-004; status y texto de hoy, corregido en I-01: respuesta del usuario del 2026-11-24) |
 | 400 | los de formato del cobro de hoy (`BillingRecipientInput`) |
 
 - **Zod:** `exitConfirmSchema`, `billingRecipientInputSchema` (`F/features/billing/contracts/billing-recipient.ts`), `exitSchema`.
@@ -1476,7 +1478,7 @@ export const stakeholderCreateSchema = z.object({
   idNumber: z.string().trim().min(1).max(30),
   commercialStatus: z.string().nullable(),
   chamberOfCommerce: z.string().nullable(),
-  businessRoles: z.array(z.string()).min(1),
+  businessRoles: z.array(guidSchema).min(1), // Ids de los roles (I-01)
   bankAccounts: z.null(), // el modal no los envía: se agregan desde el detalle
   contacts: z.null(),
   isUap: z.boolean(),
@@ -1636,9 +1638,11 @@ export const userListQuerySchema = listQueryBaseSchema.extend({
 export const userCreateSchema = z.object({
   name: z.string().trim().min(1), username: z.string().trim().min(3), identificationNumber: z.int().positive(),
   password: z.string().min(8), email: z.email(), phone: z.string().trim().min(1),
+  rolIds: z.array(guidSchema).min(1), // I-01: el alta exige al menos un rol
 });
-export const userUpdateSchema = userCreateSchema.omit({ password: true }).partial();
+export const userUpdateSchema = userCreateSchema.omit({ password: true, rolIds: true }).partial();
 export const userRolesChangeSchema = z.object({ roleIds: z.array(guidSchema).min(1) });
+export const userRolesResultSchema = z.object({ userId: guidSchema, roleNames: z.array(z.string()) }); // C-F01-63 y 64 (I-01)
 export const userResetPasswordSchema = z.object({ newPassword: z.string().min(8) });
 export const userActivationSchema = z.object({ isActive: z.boolean(), lockoutEndDate: dateTimeSchema.nullable() });
 
@@ -1749,10 +1753,10 @@ export const entryCorrectionScaleSchema = entryCorrectionCeSchema
 export const entryForEditSchema = depositEntrySchema.extend({
   entryLogId: guidSchema,
   licensePlate: z.string(),
-  entryReasonId: guidSchema,
+  entryReasonId: guidSchema.nullable(), // I-01: nulo si Vigilancia no lo registró
   entryReasonCategory: entryReasonCategorySchema.nullable(),
   dateTimeEntry: z.iso.datetime({ offset: true }),
-  driver: z.object({ id: guidSchema, firstName: z.string(), lastName: z.string(), idType: z.string(), idNumber: z.string() }),
+  driver: z.object({ id: guidSchema, firstName: z.string(), lastName: z.string(), idType: z.string(), idNumber: z.string() }).nullable(), // I-01
   vehicleCountry: z.string().nullable(),
   modalityCode: z.string(),
   warehouseStorageId: guidSchema,
@@ -2167,9 +2171,17 @@ Una a la vez, en orden (`D/procesos/flujo-de-trabajo-agentes.md` §3). Cada fase
 | 4 | 1 | Edición del ingreso: D29 a D32; C-F01-90 a C-F01-93; sin migración | QA2-F01-032 a QA2-F01-035 en PASA | Completada el 2026-11-23 (BE `4f4a78b`): QA2-F01-032 a 035 en PASA por API (pruebas de integración HTTP contra Postgres: `EntryCorrectionTests`, 9 pruebas, una o más por endpoint de C-F01-90 a C-F01-93); `Wms.Tests` 2120 → 2133 (entran 18 de `EntryCorrectionRulesTests`, salen 5 del validador del manifiesto retirado); `Wms.IntegrationTests` 661 → 670, con los mismos 2 fallos heredados de la cola de báscula (pasan aislados); `has-pending-model-changes` limpio, sin migración. Ver la nota de la fase 4 |
 | 5 | 1 | Salidas: D1 a D4, D33 a D40, D45 a D47; C-F01-94 a C-F01-139 y R-SAL; migración `ReplaceLoadingOrderWithGoodsExit` | QA2-F01-036 a QA2-F01-050 en PASA; `grep -rl LoadingOrder` sin resultados fuera de `Migrations/` | Completada el 2026-11-24 (BE `202a42d`): QA2-F01-036 a 050 en PASA por API (pruebas de integración HTTP contra Postgres: `GoodsExitFlowTests`, 25 pruebas, y `OutputInitiationTests`, 7, con una o más por endpoint de C-F01-94 a C-F01-111 y 11 de los retirados en 404; C-F01-139 en `DispatchGuideVerificationTests`); `Wms.Tests` 2133 → 2030 (salen las de la orden de cargue, sus validadores, el pesaje compartido y la salida con tiquete; entran 31 de `ExitStateRulesTests`, `ExitAvailabilityTests` y `DispatchedWeightAllocatorTests`); `Wms.IntegrationTests` 670 → 673, con los mismos 2 fallos heredados de la cola de báscula (pasan aislados); `has-pending-model-changes` limpio; migración `ReplaceLoadingOrderWithGoodsExit` aplicada en la base local; `grep` sin resultados. Ver la nota de la fase 5 |
 | 6 | 1 | Facturación: D41 a D43; C-F01-140; importador con la tasa (D44); importación completa de ensayo (§7); sin migración | QA2-F01-051 a QA2-F01-054 en PASA; conteos de la importación iguales; se borran `IDianTrmService`, `DianTrmService`, `DianTrmOptions` y `TrmSource.Dian` | Completada el 2026-11-24 (BE `f567f40`): QA2-F01-051 a 054 en PASA por API (pruebas de integración HTTP contra Postgres: `WeeklyRateBillingTests`, 5 pruebas, con C-F01-140 en 404 y el origen de la tasa del levante, y `MerchandiseWeightBillingTests`, 1); `Wms.Tests` 2030 → 2037 (entran `StorageTrmResolverTests` y `StorageMerchandiseWeightTests`; salen las de la TRM de la DIAN y la manual, y las del validador de `RegisterManualTrm`); `Wms.IntegrationTests` 673 → 678, con los mismos 2 fallos heredados de la cola de báscula (pasan aislados); `has-pending-model-changes` limpio, sin migración; importación completa de ensayo con conteos iguales; el servicio de la DIAN y `TrmSource.Dian`, borrados. Ver la nota de la fase 6 |
-| I-01 | 3 | Integración con F02 (§13) | §13.4 | Pendiente |
+| I-01 | 3 | Integración con F02 (§13) | §13.4 | Completada el 2026-11-24: fusionada en `fase-2` con `--no-ff` y push (BE `019fa81`, que trae `f2/f01-nucleo` `f567f40` sin cambios; FE `042c4ce`, que trae `f2/f02-base` con la integración `50dd86f`). QA2-F01-055 a 065 y QA2-F02-001 a 026 en PASA en el navegador contra el backend local con `wmsdb` recreada, sin la sesión simulada ([casos](../../../qa/casos-qa2-f01-f02-2026-11-24.md)). Compuertas: `Wms.Tests` 2037 → 2037; `Wms.IntegrationTests` 678 → 678 (los 2 fallos heredados de la cola de báscula, que pasan aislados); `has-pending-model-changes` limpio; `yarn test` 722 → 679 (salen las 49 pruebas de los datos simulados borrados; entran 6: cliente del contrato y guardias); `yarn lint` 258 → 255 errores, ninguno en archivos nuevos; `yarn build` con código 0. Contrato corregido al backend con las respuestas del usuario del 2026-11-24 (C-F01-27, 61, 63, 64, 65, 90, 93 y 98). Ver la nota de I-01 |
 
 Los avisos de D45 entran en la fase de su regla (3 y 5; el de la tasa, en la 6).
+
+**I-01, integración (2026-11-24; respuestas del usuario del mismo día y decisiones aplicadas por `DEC-002`):**
+
+- *Contrato al backend de hoy.* Las sondas de I-01 validaron con sus esquemas Zod 37 lecturas y 47 escrituras que usan las pantallas de F02. Las lecturas cumplieron; cuatro escrituras no, y el usuario eligió corregir el contrato (sin tocar el backend): C-F01-27 (`businessRoles` lleva Ids), C-F01-61 (el alta del usuario exige `rolIds`; el modal de alta pide los roles), C-F01-63 y C-F01-64 (responden `{ userId, roleNames }`; la fuente vuelve a leer el usuario) y C-F01-65 (responde el usuario). También se cerraron los tres puntos que las fases 4 y 5 dejaron para I-01: C-F01-90 suma el 409 de la entrada anulada, C-F01-93 admite `driver` y `entryReasonId` nulos y C-F01-98 toma el 400 de hoy de las salidas bloqueadas.
+- *Galería de componentes.* QA2-F01-062 pide un usuario de Bodega, pero la galería es solo de Admin (D20 de F02): gana la Dn. Se pasó con Admin y el permiso de Bodega sobre C-F01-141 se verificó por API (201).
+- *Unidades de medida.* §13.1 paso 6 manda borrar los composables y servicios de la unidad, pero D19 de F02 los conserva porque los usan pantallas de F03, F04, F05 y F07: gana la Dn; el último que los use los borra. La página ya la había borrado F02.
+- *Secciones conservadas.* Se montan con `StakeholderDetailSections.vue` y `ServiceRateSections.vue`, que reúnen los componentes de hoy sin cambiarlos. Los impuestos del servicio llegan con `id` (C-F01-38) y el componente de hoy los identifica por `taxId`: la sección los adapta. Con la página vieja, «quitar impuesto» no hacía nada por esa diferencia; en el drawer no se probó en I-01.
+- *Pendiente sin reproducir.* En el modal de Tasas, un valor escrito con la automatización del navegador se perdió al pulsar «Guardar» sin salir del campo; con Tab, o en otros modales con `InputNumber` (Ubicaciones), se guarda. Conviene que el usuario lo pruebe a mano.
 
 **Servicio de la DIAN (respuesta del usuario del 2026-11-23, «Dejarlo hasta la fase 6»):** la fase 1 retiró `GET system/dian-trm/today` (C-F01-14) y la consulta del levante (D15), pero el servicio de la DIAN lo sigue usando la facturación de almacenamiento (`StorageBillingService.TryAssignDianTrmAsync`, `WarehouseStorage.AssignDianTrm`). Se borra en la fase 6, cuando D42 y D43 lo reemplazan por la tasa semanal.
 
@@ -2188,7 +2200,7 @@ Los avisos de D45 entran en la fase de su regla (3 y 5; el de la tasa, en la 6).
 
 - *Historial de guías.* `GET foreign-trade/dispatch-guides` se retira como dice C-F01-119 (D2, D3): la fila C-F01-171 de §2.2.6 fue el renombre mecánico de la fase 2 sobre ese mismo endpoint. La guía se consulta en la salida (`exitSchema.guide`, `guideHistory`) y se busca con `GET exits?guideNumber=`.
 - *Inventario de Bodega.* `GET warehouse/inventory/deposits` no está en la lista de retirados: se conserva con la misma respuesta; su consulta pasa a `GetInventoryDepositsQuery` (antes compartida con la orden de cargue).
-- *Salidas bloqueadas (BR-05-004).* La confirmación responde el mensaje y el status de hoy: 400 «El cliente '{nombre}' tiene las salidas bloqueadas: {motivo}.». C-F01-98 lo escribió como 409 «El tercero {nombre} tiene las salidas bloqueadas.»: **pendiente de decidir con el usuario en I-01** (cambiarlo toca la regla compartida del tercero). El Borrador se arma aunque el cliente esté bloqueado: lo que se detiene es la confirmación.
+- *Salidas bloqueadas (BR-05-004).* La confirmación responde el mensaje y el status de hoy: 400 «El cliente '{nombre}' tiene las salidas bloqueadas: {motivo}.». C-F01-98 lo escribió como 409 «El tercero {nombre} tiene las salidas bloqueadas.»: **decidido en I-01 (respuesta del usuario del 2026-11-24): el contrato toma el 400 de hoy**, sin cambiar la regla compartida del tercero. El Borrador se arma aunque el cliente esté bloqueado: lo que se detiene es la confirmación.
 - *Vencimiento de la guía.* La confirmación no trae fecha de vencimiento: con días de tránsito, salida + días; sin ellos, 30 días (la regla de hoy de la guía de exportación).
 - *Firmante.* La global la firma el importador del depósito; sin importador registrado (o con varios), el conductor.
 - *Exportación.* La guía se emite al confirmar con su cobro (D36), ya no gratis al cargar.
@@ -2203,7 +2215,7 @@ Los avisos de D45 entran en la fase de su regla (3 y 5; el de la tasa, en la 6).
 
 - *Cambio de documento (D29).* Si la entrada es la única vigente de su depósito y no se elige otro, se corrige el tipo y el número del documento del mismo depósito, que conserva su número. Si no, la entrada se traslada al depósito elegido (`DEC-057` D1, misma modalidad) o a uno nuevo. Solo lo bloquean el levante o la salida de sus productos (409 «{producto} ya tiene levantes o salidas: no se puede quitar.»); se trasladan con ella las cantidades y el stock (kárdex en los dos depósitos), la recepción de Bodega, las novedades, las unidades de carga, lo ubicado (en las mismas ubicaciones) y el ciclo de báscula con su tiquete y su factura. El depósito nuevo copia del de origen los terceros, la fecha del documento, la moneda, las observaciones y la descripción de la inspección; su fecha de ingreso es la de Vigilancia del camión. Un depósito de origen que queda sin entradas sigue en su estado y Comercio Exterior lo anula.
 - *Unidades de carga (D31).* El modo de carga del depósito sale de la suma: unidades de carga si alguna entrada vigente las tiene; si ninguna, mercancía suelta. Se admiten entradas mixtas. `usesCargoUnits` de C-F01-93 es «la entrada tiene unidades»; la mercancía de cada unidad se sigue repartiendo con `PUT …/cargo-unit-breakdown`.
-- *Precisiones del contrato para I-01 (sin cambiar rutas, campos ni mensajes):* la lectura (`depositEntrySchema`) no trae el Id del embalaje, así que `products[].packagingTypeId` nulo deja el embalaje como está y `packaging` (el nombre) se ignora; una entrada anulada no se corrige (409 «La entrada está anulada: no se corrige.», mensaje nuevo que falta agregar a C-F01-90); en C-F01-93, `driver` y `entryReasonId` pueden venir nulos si Vigilancia no los registró (el esquema los declara obligatorios); «despachado» es lo de las guías vigentes, hasta que la fase 5 cambie la salida.
+- *Precisiones del contrato para I-01 (sin cambiar rutas, campos ni mensajes):* la lectura (`depositEntrySchema`) no trae el Id del embalaje, así que `products[].packagingTypeId` nulo deja el embalaje como está y `packaging` (el nombre) se ignora; una entrada anulada no se corrige (409 «La entrada está anulada: no se corrige.», agregado a C-F01-90 en I-01); en C-F01-93, `driver` y `entryReasonId` pueden venir nulos si Vigilancia no los registró (el esquema se corrigió en I-01); «despachado» es lo de las guías vigentes, hasta que la fase 5 cambie la salida.
 
 **Fase 3, ciclo en el cobro (respuesta del usuario del 2026-11-23, «Ciclo en el cobro»):** el ciclo de báscula de cada entrada sigue naciendo en el cobro (`storage/process-payment` o `storage/start-pending-billing`), uno por entrada; ahí se marca `IsDuplicateEntry` y la duplicada sale en $0 aunque el operario envíe otro valor. Por eso `storage/initiate` y `storage/register` devuelven `weighbridgeCycleId` nulo (el esquema `storageEntryInitiateResultChangesSchema` pasa a `guidSchema.nullable()`) y la pantalla de F03 toma el ciclo de la respuesta del cobro, como hoy. F02 no cambia. Precisiones de la fase, por las decisiones: el detalle del depósito expone `dispatchedWeight` y `weightBalance` en nulo hasta la fase 5 (D39); el formulario debe enviar el peso de la mercancía para que la tara y el neto se deduzcan (D21: el manifiesto solo se informa); una inspección sin documento se reconoce como ingreso con depósito por su depósito; dos registros del mismo camión sin depósito elegido dejan el segundo como entrada duplicada en un depósito nuevo (D20 y `DEC-057` D1).
 
