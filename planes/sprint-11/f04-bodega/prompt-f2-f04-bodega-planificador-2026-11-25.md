@@ -1,5 +1,7 @@
 # Prompt — Planificación de F04 «Bodega» (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-25; ya no es una instrucción. Resultado: [plan-cerrado-f2-f04-bodega-2026-11-25.md](plan-cerrado-f2-f04-bodega-2026-11-25.md) y sus tres prompts, aprobados por el usuario el 2026-11-25 («Aprobar con §10»).
+
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/`. Necesita leer `docs/`, `Backend/wms-api` y `Frontend/wms`, los dos en su rama `fase-2`.
 > 2. Copia el bloque de abajo.
