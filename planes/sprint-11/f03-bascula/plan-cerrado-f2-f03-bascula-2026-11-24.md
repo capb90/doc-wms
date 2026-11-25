@@ -423,6 +423,7 @@ Los números C-F03-42 y C-F03-47 no se usan. `POST weighbridge/cycles/{cycleId}/
 
 ##### C-F03-48 · `GET entry-logs/{id}` (sin cambios)
 - **Política:** `GateAccess` (`EntryLogController.cs:41`). **Petición:** el Id en la ruta. **Respuesta 200:** `dataSchema(entryLogSchema)`. **Errores:** 404 de hoy. **Zod:** `entryLogSchema`.
+- **Cambio de F04 (I-04 (1), 2026-11-25):** pasa a `EntryLogReadController` con la política `EntryLogReadAccess` (Admin, Vigilancia, Bodega), para que Bodega precargue la recepción directa. Ruta, respuesta y errores iguales (plan de F04 §2.0).
 
 ##### C-F03-28 a C-F03-33 · lecturas retiradas
 - `GET weighbridge/history` (`WeighbridgeController.cs:707`), `history/totals` (`:722`), `pending` (`:517`), `pending-second-weight` (`:562`), `cycles/open` (`:600`) y `cycles/open-by-plate` (`:582`): 404 desde la fase 2. Solo los llaman pantallas de Báscula (`F/features/weighbridge/composables/useWeighbridgeHistory.ts`, `useWeighbridgeHistoryTotals.ts`, `useWeighbridgePending.ts`, `usePendingSecondWeight.ts`, `useOpenCycles.ts`, `useOpenCycleByPlate.ts`). Petición, respuesta, errores y Zod: no aplica.
