@@ -418,6 +418,7 @@ Los números C-F03-42 y C-F03-47 no se usan. `POST weighbridge/cycles/{cycleId}/
 - **Petición (consulta):** paginación, los filtros de «Qué cambia» y el orden (C-F01-00).
 - **Orden:** lista blanca `dateTimeEntry`, `dateTimeDeparture`, `licensePlate`, `status`; por defecto `dateTimeEntry desc`.
 - **Respuesta 200:** `pagedSchema(entryLogSchema)` (`EntryLogDto`, `B/Wms.Application/Logistics/Common/Dtos/EntryLogDto.cs`, sin cambios).
+- **Corrección tras I-03 (2026-11-25):** `EntryLogDto` omite `vehicle`, `driver`, `entryReason`, `manifests` y `departureAuthorizations` cuando no tienen valor (`JsonIgnore(WhenWritingNull)`). El esquema los exigía presentes, y un ingreso sin conductor dejaba Vigilancia › Historial vacío con «[contrato] La respuesta de GET /entry-logs no cumple su esquema.». Desde FE `a020039` (fusión `10d8a94`) se aceptan ausentes o nulos (`nullish`). El backend no cambia.
 - **Errores:** los de C-F01-00. **Zod:** `entryLogListQuerySchema`, `entryLogSchema` (`F/features/entries/contracts/entry-log.ts`).
 
 ##### C-F03-48 · `GET entry-logs/{id}` (sin cambios)
@@ -1207,11 +1208,12 @@ export const entryLogSchema = z.object({
   lastCorrectedByName: z.string().nullable(),
   hasOperation: z.boolean(),
   hasDeposits: z.boolean(),
-  vehicle: z.object({ id: guidSchema, licensePlate: z.string() }).loose().nullable(),
-  driver: z.object({ id: guidSchema, firstName: z.string(), lastName: z.string(), idNumber: z.string() }).loose().nullable(),
-  entryReason: z.object({ id: guidSchema, description: z.string() }).loose().nullable(),
-  manifests: z.array(z.object({ id: guidSchema, manifestNumber: z.string(), manifestWeight: z.number().nullable() }).loose()).nullable(),
-  departureAuthorizations: z.array(z.object({ id: guidSchema }).loose()).nullable(),
+  // Corrección tras I-03: el API omite estas cinco propiedades cuando no tienen valor; se aceptan ausentes (nullish).
+  vehicle: z.object({ id: guidSchema, licensePlate: z.string() }).loose().nullish(),
+  driver: z.object({ id: guidSchema, firstName: z.string(), lastName: z.string(), idNumber: z.string() }).loose().nullish(),
+  entryReason: z.object({ id: guidSchema, description: z.string() }).loose().nullish(),
+  manifests: z.array(z.object({ id: guidSchema, manifestNumber: z.string(), manifestWeight: z.number().nullable() }).loose()).nullish(),
+  departureAuthorizations: z.array(z.object({ id: guidSchema }).loose()).nullish(),
 }).loose();
 export const departureAuthorizationSchema = z.object({ observations: z.string().max(500).nullable() });
 export const manifestCreateSchema = z.object({
