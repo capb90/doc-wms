@@ -1,5 +1,7 @@
 # Prompt — Fase 2 · Páginas sin tarjeta de título (tableros, formularios y reportes)
 
+> **Ejecutado** el 2026-11-25; ya no es una instrucción. Fase 1 en FE `34254eb`, fase 2 en FE `00ab4c2`, fusión en `fase-2` `2c848af`.
+
 > **Fecha:** 25 de noviembre de 2026. **Plan:** [plan-cerrado-f2-paginas-sin-tarjeta-titulo-2026-11-24.md](plan-cerrado-f2-paginas-sin-tarjeta-titulo-2026-11-24.md), aprobado el 2026-11-24. **Repo y rama:** `Frontend/wms`, `f2/ui-paginas-sin-tarjeta`, que sale de `fase-2` **después de fusionar I-03** (D4). Dos fases; una por turno.
 
 ```text

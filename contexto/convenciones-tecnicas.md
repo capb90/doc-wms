@@ -61,6 +61,12 @@
     - Una acción destructiva lleva `severity="danger"` y `separator` para ir al final, tras un divisor.
   - **Filtros:** en la columna, no en una búsqueda global. Los estados de una cola o de una lista corta pueden ir en pestañas (`Tabs`) con su contador en el slot `toolbar`.
   - **Galería:** `/dev/components` muestra `AppRowActions` con tres y con cinco acciones.
+- **Páginas que no son listados** (`DEC-080`; plan `planes/sprint-11/plan-cerrado-f2-paginas-sin-tarjeta-titulo-2026-11-24.md`, D1, D2, D5, D6 y D8). Tableros, formularios de operación y reportes no llevan la tarjeta de título (`AppPageHeader`), como los listados:
+  - **Título:** nada visible en su lugar; el breadcrumb nombra la página. La página pone un `<h1 class="sr-only">` con su título para los lectores de pantalla y conserva su raíz `.wms-page`.
+  - **Subtítulo:** se elimina, salvo que explique una regla del reporte; esa regla va como texto atenuado (`text-sm text-muted-color`) al pie de la tarjeta de filtros.
+  - **Acciones de un reporte** («Exportar Excel», «Descargar PDF»): en la fila de botones de la tarjeta de filtros, a la derecha (`ml-auto`), después de «Consultar» o «Generar», con su `severity`, `loading` y `disabled`.
+  - **Acciones de una página sin tarjeta propia donde ponerlas:** en una barra sin tarjeta arriba del contenido, alineada a la derecha (`flex flex-wrap items-center justify-end gap-2`).
+  - **Guardia:** `test/unit/guards/list-pattern.spec.ts` exige que ninguna ruta de `OUTSIDE` use `AppPageHeader`, salvo las de `TITLE_CARD_PENDING` (con la fase que la rehace; hoy, los dos reportes de Facturación de F08), y que tengan un `<h1`. Una página nueva que no sea listado entra a `OUTSIDE` y cumple la regla desde el principio. `AppPageHeader` se borra cuando desaparezca su último uso.
 
 ## 4. Permisos
 
