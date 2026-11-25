@@ -1,5 +1,7 @@
 # Prompt — F03 «Báscula», parte 3 (integración I-03)
 
+> **Ejecutado** el 2026-11-24; ya no es una instrucción. Resultado: FE `7758c4d` (parte 1: fuentes http y casos QA) y `cd0c2b5` (parte 2: menú, enlaces y borrados) en `f2/f03-bascula`; BE sin cambios (`8d78339`); fusiones en `fase-2`: BE `935b103`, FE `e5c88c1`. Casos en `qa/casos-qa2-f03-bascula-2026-11-24.md`; estado en el plan cerrado §8 y §13.
+
 > **Fecha:** 24 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f03-bascula-2026-11-24.md](plan-cerrado-f2-f03-bascula-2026-11-24.md) (§13). **Repos y ramas:** `Backend/wms-api` y `Frontend/wms`, las dos en `f2/f03-bascula`. Entra cuando BE-1 a BE-3 y FE-1 a FE-3 están cerradas y con push; ocupa los dos repos.
 
 ```text

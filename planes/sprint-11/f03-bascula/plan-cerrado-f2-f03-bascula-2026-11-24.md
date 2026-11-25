@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · F03 Báscula
 
-> **Fecha:** 24 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-24 («Aprobar»). En ejecución desde que se lanzan sus prompts (§11).
+> **Fecha:** 24 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-24 («Aprobar»). Ejecutado el 2026-11-24: partes 1 a 3 (I-03) hechas y F03 fusionada en `fase-2` (BE `935b103`, FE `e5c88c1`); §8 y §13.6.
 > **Origen:**
 > - `DEC-080` y el análisis funcional `levantamiento-2026-11/fase_2-analisis-funcional-2026-11-19.md` (§2.1, §3.3 y §3.6), con los wireframes `fase_2-mockups/bascula.html` (P-BAS-01 a P-BAS-13) y `transversales.html` (P-TR-02, P-TR-03, P-TR-09, P-TR-11 y P-TR-12);
 > - el plan maestro `planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md` (M1 a M25, `DEC-081`);
@@ -1419,7 +1419,7 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 | FE-1 | 2 | Contratos, fuentes simuladas, cola y registro | P-BAS-01 a P-BAS-04 con su lista del wireframe y captura | Hecha el 2026-11-24 (FE `d49a691`) |
 | FE-2 | 2 | Cobro, tiquete, repesaje e impresión | P-BAS-05 a P-BAS-07 y P-BAS-13 con su lista y captura | Hecha el 2026-11-24 (FE `cd58697`) |
 | FE-3 | 2 | Historial, detalle, corrección, Vigilancia › Historial y `cycles/[id]` | P-BAS-08 a P-BAS-11, P-TR-12, Vigilancia › Historial y `cycles/[id]` con su lista y captura | Hecha el 2026-11-24 (FE `ae34783`) |
-| I-03 | 3 | Integración (§13) | §13.5 | En curso: parte 1 (fuentes http y QA2-F03-031 a 048) hecha el 2026-11-24 (FE `7758c4d`); falta la parte 2 (menú, enlaces, borrados, QA2-F03-049 y 050, fusión) |
+| I-03 | 3 | Integración (§13) | §13.5 | Hecha el 2026-11-24 (FE `7758c4d` y `cd0c2b5`; BE sin cambios); fusionada en `fase-2`: BE `935b103`, FE `e5c88c1`. Estado en §13.6 |
 
 ### 8.1 Backend, fase 1 — Registro y ciclo
 
@@ -1641,3 +1641,9 @@ Con `rm`, después de comprobar con grep que nada fuera de lo que se borra los i
 - Ningún import de `mocks/` de una feature fuera de las pruebas; las carpetas `mocks/` de F03, borradas.
 - Menú con las rutas de F03; páginas, componentes y pruebas viejas, borradas.
 - Fusión con `--no-ff` de `f2/f03-bascula` en `fase-2` en los dos repos, y push.
+
+### 13.6 Estado
+
+Hecha el 2026-11-24, en dos partes. Parte 1 (FE `7758c4d`): diez fuentes http con su esquema Zod y `contractApi.getBlob`; fachada `catalog.source.ts` borrada; el mundo simulado de Báscula y Vigilancia sale de `app/` a `test/fixtures/` para las pruebas de componentes; `cycles/[id]` con «Modificar pesaje» y la fecha de ingreso (D32); dos defectos de la maquetación corregidos (`entryDeclaredQuantity` y el peso del manifiesto con carta porte). Parte 2 (FE `cd0c2b5`): menú con «Historial» ▸ Entradas, Salidas, Solo báscula; Alt+K y el tablero a `?estado=PendingReweigh`; `VehicleForm` con C-F01-141; la cola lleva su `AppDataTable` en la página (guardia del patrón; se borra `WeighbridgeQueueTable`); se borran `recover`, `in-process`, `pending-reweigh` y lo que nadie importa (análisis de imports: 25 componentes, 24 composables, 13 utilidades y 3 tipos, con 17 pruebas), y `weighbridge-service.ts` queda con 13 métodos. Backend sin cambios.
+
+Compuertas: BE: build sin errores; `Wms.Tests` 2158 → 2158 y `Wms.IntegrationTests` 762 → 762, todas en verde; `has-pending-model-changes` limpio (sin cambios en I-03). FE: `yarn test` 157 archivos / 804 pruebas (1 error suelto) → 138 / 695 en verde (salen las pruebas de lo borrado); `yarn lint` 239 → 229 errores, ninguno nuevo; `yarn build` con código 0. QA2-F03-031 a 050 en PASA en el navegador salvo el caso A de QA2-F03-038 (sin datos de CE; nota 2 de `D/qa/casos-qa2-f03-bascula-2026-11-24.md`). Pendiente para el usuario: la duda de la fecha de ingreso sin precarga en `cycles/[id]` (C-F03-34 no la trae) y el «+» de transportadora de Vigilancia, oculto en la página desde antes de F03.
