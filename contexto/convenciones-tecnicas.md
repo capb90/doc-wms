@@ -87,11 +87,13 @@
 | `DepositEntryDateAccess` | Admin, Scale, ForeignTrade |
 | `ExitBlockAccess` | Admin, ForeignTrade, Billing (marca «sin salidas» del tercero, `PATCH stakeholder/{id}/exit-block`) |
 | `GateAccess` | Admin, Receiving |
+| `EntryLogReadAccess` | Admin, Receiving, Warehouse (leer un ingreso de Vigilancia, `GET entry-logs/{id}` en `EntryLogReadController`; lo usa la recepción directa de Bodega, F04 I-04) |
 | `StakeholderAccess` | Admin, ForeignTrade |
 | `TransportCatalogAccess` | Admin, Receiving, Scale, ForeignTrade |
 | `DriverCatalogAccess` | Admin, Receiving, Scale, ForeignTrade, Warehouse |
 | `NoveltyReadAccess` | Admin, Warehouse, ForeignTrade |
 | `InventoryReportAccess` | Admin, ForeignTrade, Warehouse, Billing |
+| `LocationCreateAccess` | Admin, ForeignTrade, Billing, Warehouse (crear una ubicación desde la recepción de Bodega, `POST warehouse/locations`; editar y borrar siguen en `ConfigurationAccess`) |
 | `ActiveUser` | Cualquier usuario autenticado y activo |
 
 **Convención:** los permisos se aflojan **por endpoint**, no por controlador.
@@ -105,6 +107,7 @@ Los `[Authorize]` de ASP.NET se suman (AND): para aflojar una acción de un cont
 - `WeighbridgeCatalogController`, `WeighbridgeSharedController` y `WeighbridgeCycleReadController`.
 - `BillingPreviewController`, `WarehouseMovementsReportController`, `InventoryReportsController` y `WarehouseNoveltiesController`.
 - `DriverController` y `VehicleController`.
+- `EntryLogReadController` (F04, I-04).
 
 `InventoryAdjustmentController` (ajuste CE-7) usa `ForeignTradeAccess`: el ajuste es de Comercio Exterior, no de Bodega.
 
@@ -132,6 +135,7 @@ Los `[Authorize]` de ASP.NET se suman (AND): para aflojar una acción de un cont
 | `AbandonmentAlertBackgroundService` | Alerta de depósitos próximos al abandono (07:00 Colombia) |
 | `DatabaseBackupBackgroundService` | Respaldo diario de base y archivos (02:00 Colombia, si `Backups:Enabled`); el primero exitoso del mes queda como mensual. Si falla, envía el correo de fallo a los Admin activos y a `Notifications:AdminEmails` |
 | `AgreementActivationBackgroundService` | Activa los convenios «Programados» cuya fecha llegó (a los 30 s del arranque y cada día a las 00:00:30 Colombia) y archiva el activo anterior |
+| `WarehouseDelayAlertBackgroundService` | Relojes de Bodega: cada minuto (`WarehouseAlerts:IntervalSeconds`) avisa «Atraso de Bodega» a CE y Bodega al cruzar el umbral amarillo o rojo de la recepción, el cargue o la salida de patio; un aviso por nivel y por reloj (`warehouse_delay_alerts`) |
 
 `Wms.IntegrationTests` retira los jobs y sustituye por dobles el correo, la TRM y los respaldos.
 

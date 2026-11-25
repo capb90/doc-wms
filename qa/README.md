@@ -7,6 +7,7 @@
 | `00-plan-maestro.md` | Alcance, ambientes, riesgos (§9) y **decisiones del negocio (§10)**, que mandan sobre las fichas |
 | `fase-00-smoke.md` … `fase-11-regresion-cierre.md` | Casos de prueba por fase. La fase 11 tiene el Anexo A (datos migrados) |
 | `plan-ronda-qa-preproduccion-2026-10-25.md` | Ronda QA de preproducción (regresión integral sobre una copia de los datos migrados, antes de la fase 13 del plan P1). Prompt: `prompt-ronda-qa-preproduccion-2026-10-25.md` |
+| `casos-qa2-f04-bodega-2026-11-25.md` | Casos QA2 de la fase 2 de F04 (Bodega), con su resultado: QA2-F04-001 a 030 por API en las fases del backend y QA2-F04-031 a 050 en el navegador, en la integración I-04 (2026-11-25) |
 | `casos-qa2-f03-bascula-2026-11-24.md` | Casos QA2 de la fase 2 de F03 (Báscula), con su resultado: QA2-F03-001 a 030 por API en las fases del backend y QA2-F03-031 a 050 en el navegador, en la integración I-03 (2026-11-24) |
 | `casos-qa2-f01-f02-2026-11-24.md` | Casos QA2 de la fase 2 de F01 (núcleo de dominio) y F02 (base transversal), con su resultado: QA2-F01-001 a 054 por API en las fases de F01 y QA2-F01-055 a 065 y QA2-F02-001 a 026 en el navegador, en la integración I-01 (2026-11-24) |
 | `plan-correccion-defectos.md` | Plan de corrección: CHG-01…CHG-90 en 12 fases, todas completadas. Su §4.0 contiene las reglas comunes de implementación |
