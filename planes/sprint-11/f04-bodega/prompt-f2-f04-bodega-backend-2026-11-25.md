@@ -1,5 +1,7 @@
 # Prompt — F04 «Bodega», parte 1 (backend)
 
+> **Ejecutado** el 2026-11-25; ya no es una instrucción. BE-1 (`fb707f7`), BE-2 (`b80f8f4`) y BE-3 (`b8cbd07`) en `f2/f04-bodega`; estado en el plan §8.1 a §8.3.
+
 > **Fecha:** 25 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f04-bodega-2026-11-25.md](plan-cerrado-f2-f04-bodega-2026-11-25.md) (§8.1 a §8.3). **Repo y rama:** `Backend/wms-api`, `f2/f04-bodega`, que sale de `fase-2` (base `eb4e428`, o lo que haya en `fase-2` si avanzó). Corre en paralelo con la maquetación (otro agente, en el frontend).
 
 ```text
