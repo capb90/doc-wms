@@ -1380,6 +1380,8 @@ Con `rm`, después de comprobar con grep que nada fuera de lo que se borra los i
 
 ### 13.6 Estado
 
+**QA del usuario en local: aprobada el 2026-11-25** («Terminé el QA, apruebo»), sobre `fase-2` (BE `c2ca314`, FE `12f6656`) con el API local en el puerto 5281 y la base `wmsdb`. `fase-2` pasa a `develop` solo cuando F01 a F09 estén integradas (M25, plan maestro §5.3).
+
 **I-04 (1): hecha el 2026-11-25** (BE `80053c4`, FE `34dc7ff`, rama `f2/f04-bodega` en los dos repos, con push).
 
 - **Fuentes http:** `reception.http.ts` (C-F04-06 a C-F04-10, C-F04-13, C-F04-17, C-F01-146, C-F01-152), `forklift.http.ts` (C-F04-18 a C-F04-21, C-F04-24, C-F04-25), `inventory.http.ts` (C-F04-26 a C-F04-29, C-F01-148), `novelty.http.ts` (C-F04-30, C-F04-31, con el PDF binario) y `F/features/administration/services/alert-threshold.http.ts` (C-F04-01, C-F04-02), con `contractApi` y su esquema en cada respuesta; las cinco son la línea activa y están en `INTEGRATED_SOURCES`. `IReceptionSource` suma `vehicleTypes()` (C-F04-17). `location.source.ts` ya traía `isSystem`.
