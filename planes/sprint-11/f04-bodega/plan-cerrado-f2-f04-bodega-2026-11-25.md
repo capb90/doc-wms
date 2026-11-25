@@ -1131,7 +1131,7 @@ La parte 1 (backend) y la parte 2 (maquetación) corren en paralelo, una por rep
 | FE-1 | 2 | Contratos, fuentes simuladas, Recepción, modal y recepción directa (§8.4) | P-BOD-01 a P-BOD-03 con su lista del wireframe y captura | Hecha el 2026-11-25 (FE `b5c8e78`). Estado en §8.4 |
 | FE-2 | 2 | Montacargas, Umbrales e historial de recepciones (§8.5) | P-BOD-04, P-BOD-05, P-TR-08 e historial con su lista y captura | Hecha el 2026-11-25 (FE `5722122`). Estado en §8.5 |
 | FE-3 | 2 | Inventario y Novedades (§8.6) | Las dos con el patrón y captura | Hecha el 2026-11-25 (FE `3ff4603`). Estado en §8.6 |
-| Revisión | — | Revisión del usuario con la sesión simulada (§8.7) | Visto bueno del usuario o plan de ajustes | Hallazgos del 2026-11-25 (`qa-manual/hallazgos-UI-F04.md`) resueltos con [plan-cerrado-f2-f04-ajustes-ui-2026-11-25.md](plan-cerrado-f2-f04-ajustes-ui-2026-11-25.md), ejecutado (FE `f9f4da0`). Falta el visto bueno del usuario para I-04 |
+| Revisión | — | Revisión del usuario con la sesión simulada (§8.7) | Visto bueno del usuario o plan de ajustes | Hallazgos del 2026-11-25 (`qa-manual/hallazgos-UI-F04.md`) resueltos con [plan-cerrado-f2-f04-ajustes-ui-2026-11-25.md](plan-cerrado-f2-f04-ajustes-ui-2026-11-25.md), ejecutado (FE `f9f4da0` y `09c0b87`). Visto bueno del usuario el 2026-11-25 («Visto bueno»): sigue I-04 |
 | I-04 (1) | 3 | Fuentes http y casos QA en el navegador (§13) | QA2-F04-031 a 046 y 049, 050 en PASA | Pendiente |
 | I-04 (2) | 3 | Menú, enlaces, borrados, guardias y fusión (§13) | QA2-F04-047 y 048 en PASA; fusión en `fase-2` | Pendiente |
 
