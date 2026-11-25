@@ -1,5 +1,7 @@
 # Prompt — F04 «Bodega», parte 2 (maquetación del frontend)
 
+> **Ejecutado** el 2026-11-25; ya no es una instrucción. FE-1 (`b5c8e78`), FE-2 (`5722122`) y FE-3 (`3ff4603`) en `f2/f04-bodega`; estado en el plan §8.4 a §8.6. Pendiente la revisión del usuario (§8.7).
+
 > **Fecha:** 25 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f04-bodega-2026-11-25.md](plan-cerrado-f2-f04-bodega-2026-11-25.md) (§8.4 a §8.7). **Repo y rama:** `Frontend/wms`, `f2/f04-bodega`, que sale de `fase-2` (base `2c848af`, o lo que haya en `fase-2` si avanzó). Corre en paralelo con el backend (otro agente): trabajas sin API, con la sesión simulada.
 
 ```text
