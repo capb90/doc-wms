@@ -1125,7 +1125,7 @@ La parte 1 (backend) y la parte 2 (maquetación) corren en paralelo, una por rep
 
 | Fase | Parte | Contenido | Criterio de salida | Estado |
 | --- | --- | --- | --- | --- |
-| BE-1 | 1 | Umbrales, relojes y avisos (§8.1) | QA2-F04-001 a 008 en PASA por API | Pendiente |
+| BE-1 | 1 | Umbrales, relojes y avisos (§8.1) | QA2-F04-001 a 008 en PASA por API | Hecha el 2026-11-25 (BE `fb707f7`). Estado en §8.1 |
 | BE-2 | 1 | Recepción (§8.2) | QA2-F04-009 a 020 en PASA por API | Pendiente |
 | BE-3 | 1 | Montacargas, inventario y novedades (§8.3) | QA2-F04-021 a 030 en PASA por API | Pendiente |
 | FE-1 | 2 | Contratos, fuentes simuladas, Recepción, modal y recepción directa (§8.4) | P-BOD-01 a P-BOD-03 con su lista del wireframe y captura | Pendiente |
@@ -1144,6 +1144,14 @@ La parte 1 (backend) y la parte 2 (maquetación) corren en paralelo, una por rep
 - **Pruebas:** `WarehouseClockRulesTests`, `AlertThresholdRulesTests`, `DelayAlertPlannerTests`, `PendingReceptionFiltersTests` (ajustada), `AlertThresholdsEndpointTests`, `WarehouseClockReadsTests`, `WarehouseDelayAlertServiceTests` (§5).
 - **Casos QA:** QA2-F04-001 a 008.
 - **Nota:** el aviso usa el orquestador con roles fijos (D36); no se crea un tipo de notificación (F09).
+- **Estado:** hecha el 2026-11-25 (BE `fb707f7`, rama `f2/f04-bodega`). QA2-F04-001 a 008 en PASA por API. `Wms.Tests` 2166 → 2218; `Wms.IntegrationTests` 766 → 776, todas en verde; migración `AddWarehouseDelayAlerts` (el contenido de §4) aplicada en local y `has-pending-model-changes` limpio. Pruebas de integración por endpoint: C-F04-01 y C-F04-02 en `AlertThresholdsEndpointTests`; C-F04-03 a C-F04-05 en `WarehouseClockReadsTests`; el trabajo en `WarehouseDelayAlertServiceTests` (`RunOnceAsync` con un `now` fijo desde un *scope* del `WmsApiFactory`, que excluye `WarehouseDelayAlertBackgroundService`). Unitarias: `WarehouseClockRulesTests`, `AlertThresholdRulesTests`, `DelayAlertPlannerTests`, `WarehouseDelayAlertMessagesTests` y `PendingReceptionFiltersTests` (reescrita con D14).
+- **Cómo quedó:** reglas puras en `B/Wms.Application/Warehouse/Alerts/` (`WarehouseClockRules`, `AlertThresholdRules`, `DelayAlertPlanner`, `WarehouseDelayAlertMessages`); `WarehouseClockReader` arma los umbrales, los relojes abiertos y la recepción por entrada; `WarehouseDelayAlertService.RunOnceAsync` inserta la fila de `warehouse_delay_alerts` y solo avisa si entra (índice único); el trabajo corre cada `WarehouseAlerts:IntervalSeconds` (60). `PendingReceptionFilters.IsPendingReception` aplica D14 (primer peso del vínculo sin ciclo o primer pesaje del ciclo vigente; sin anulada, sin recepción activa, depósito abierto).
+- **Notas para BE-2, FE-1 e I-04 (aplicadas por `DEC-002`):**
+  - C-F04-02 valida en el handler con `BadRequestException`: el mensaje del contrato llega en `description` (no en `errors[]`), como los demás errores de negocio.
+  - C-F04-06 (`GET warehouse/pending-from-weighbridge`) sigue listando solo entradas con ciclo hasta que BE-2 la rehaga: su proyección de hoy lee el camión y el peso del ciclo.
+  - `reception.staysOnVehicle` sale `false` en las recibidas hasta que BE-2 agregue `ReceptionLog.StaysOnVehicle`; en las pendientes, `null`. «Recibida» = recepción activa en `Completed` (o `Unloaded`, de datos anteriores); una en curso (`InProgress`, que BE-2 retira) cuenta como pendiente.
+  - `reception` también llega en las demás respuestas que usan `DepositStorageEntryDto` (C-F03-13 y las correcciones de la entrada), y `warehouseClock` en la respuesta del cargue (C-F01-104); sus esquemas lo aceptan o lo descartan.
+  - El aviso sale por `NotifyRoleAsync` una vez por rol (ForeignTrade y Warehouse): un usuario con los dos roles recibe dos. Título «Atraso de Bodega»; el tiempo se escribe «40 min», «1 h», «1 h 5 min».
 
 ### 8.2 Backend, fase 2 — Recepción
 
