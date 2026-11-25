@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · F04 Bodega · Ajustes de UI de la maquetación
 
-> **Fecha:** 25 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-25 («Apruebo el plan»). Ejecutado el 2026-11-25 (FE `f9f4da0`, en `f2/f04-bodega`); estado en §4.
+> **Fecha:** 25 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-25 («Apruebo el plan»). Ejecutado el 2026-11-25 (FE `f9f4da0` y, con D13, `09c0b87`, en `f2/f04-bodega`); estado en §4.
 > **Origen:** la revisión del usuario sobre la maquetación de F04 (FE-1 a FE-3, datos simulados; plan de F04 §8.7), antes de I-04: [`../qa-manual/hallazgos-UI-F04.md`](../qa-manual/hallazgos-UI-F04.md), siete hallazgos y una duda, con el mockup [`../qa-manual/modal-facturacion-montacargas/`](../qa-manual/modal-facturacion-montacargas/). Las respuestas del usuario del 2026-11-25 están en D1 a D4.
 > **Base:** FE `f2/f04-bodega` `3ff4603` · docs `main` `e70efef`. Rama: `f2/f04-bodega` (FE). Se aplica antes de I-04.
 > **Alcance:** solo frontend, sobre las pantallas maquetadas con datos simulados. Sin cambios de backend, de contrato ni migraciones. Cambia decisiones del plan de F04 (D24, D30 en la forma del diálogo, D39 y D42): donde chocan, gana este plan.
@@ -26,9 +26,11 @@ Mandan sobre el resto del plan (`DEC-002`).
 | # | Decisión | Fuente |
 | --- | --- | --- |
 | D1 | **Slot `toolbarEnd` en `AppDataTable`.** La barra de la tabla suma un slot a la derecha, antes de «Limpiar filtros» y «Exportar», para los controles propios de una página. Es aditivo: sin el slot, la barra se ve como hoy. Lo usan Montacargas (D7) y Novedades (D9). Excepción a `P04/` D39, con su prueba | Usuario: «Slot nuevo en AppDataTable (Recommended)»; hallazgos 3 y 7 |
-| D2 | **Inventario: la tarjeta del depósito se queda arriba.** Las pestañas pasan a la barra de cada tabla (D8). En Existencias, la tarjeta de filtros con el depósito, su estado, cliente y totales sigue encima de la tabla (`P04/` D42); en Movimientos y Ubicaciones no hay tarjeta y la tabla sube | Usuario: «Tarjeta de filtros arriba (Recommended)»; hallazgo 6 |
+| D2 | **(Reemplazada por D13.)** **Inventario: la tarjeta del depósito se queda arriba.** Las pestañas pasan a la barra de cada tabla (D8). En Existencias, la tarjeta de filtros con el depósito, su estado, cliente y totales sigue encima de la tabla (`P04/` D42); en Movimientos y Ubicaciones no hay tarjeta y la tabla sube | Usuario: «Tarjeta de filtros arriba (Recommended)»; hallazgo 6 |
 | D3 | **«Registro fotográfico» sigue siendo texto**, con una ayuda bajo el campo: «Referencia de las fotos: carpeta o números de foto». Rige la decisión del plan de paridad (`D/planes/paridad-legacy/plan-backend-paridad-legacy.md` §B.4.8 y F4-03: `PhotoRecord` texto hasta 200, sin archivos; en el legacy, `reg_fotografico` `varchar(200)`) | Usuario: «Texto con mejor ayuda (Recommended)»; hallazgo 8 |
 | D4 | **«Finalizar y cobrar» al final de la sección «Destinatario y pago».** El diálogo del cobro toma las secciones del mockup (D6), pero el botón lo sigue pintando `AppChargeForm`, al final de su formulario; `AppChargeForm` no cambia | Usuario: «Al final de la sección (Recommended)»; hallazgo 5 |
+
+| D13 | **El depósito de Existencias en el extremo derecho de la tarjeta de la tabla** (pedido del usuario del 2026-11-25, después de ejecutar D1 a D12; reemplaza D2). Sale la tarjeta de filtros: el selector del depósito (`WarehouseDepositSelect`, 20 rem) va en `toolbarEnd`, a la derecha de las pestañas, con el estado, el cliente, la modalidad y los totales a su izquierda; el aviso del Borrador pasa al tooltip de su estado. Con un filtro de columna activo, «Limpiar filtros» aparece a la derecha del selector (lo pinta `AppDataTable` después de `toolbarEnd`) | Usuario: «en `warehouse/inventory` el filtro de "Depósito" ponerlo en extremo derecho de la card de la tabla» |
 
 ### 1.2 Recepción (hallazgos 1 y 2)
 
@@ -89,6 +91,7 @@ Mandan sobre el resto del plan (`DEC-002`).
 - **Capturas** en `D/planes/sprint-11/f04-bodega/evidencias/aui-*`: `aui-01` Recepción con «Finalizar montacargas»; `aui-02` modal de recepción; `aui-03` Montacargas; `aui-04` cobro; `aui-05` Inventario (Existencias y Movimientos); `aui-06` Novedades; `aui-07` formulario de novedad.
 - **Criterio de salida:** los siete hallazgos y la duda resueltos como dicen D1 a D12, con su captura; compuertas de §5 en verde.
 - **Estado:** hecha el 2026-11-25 (FE `f9f4da0`). `yarn build` con código 0; `yarn test` 150 archivos y 768 → 769 pruebas, todas en verde (sale con código 1 antes y después por el error no controlado heredado de `FT/components/weighbridge/WeighbridgeQueuePage.spec.ts`); las guardias en verde; `yarn lint` 209 → 209 errores, ninguno en los archivos tocados. Verificado en `yarn dev` con la sesión simulada: «Finalizar montacargas» desde la fila de Recepción cobra el uso y la fila vuelve a «Montacargas»; sin llamadas al API ni errores en consola. Capturas `evidencias/aui-01` a `aui-07` (Inventario en `aui-05a` y `aui-05b`).
+- **D13:** hecha el 2026-11-25 (FE `09c0b87`). `yarn build` con código 0; `yarn test` 150 archivos y 769 pruebas en verde, con el mismo error heredado de F03; `yarn lint` 209 → 209 errores. La prueba de `ForkliftChargeDialog` espera el temporizador de 10 ms del aviso de éxito antes de desmontar: en una corrida dejaba un segundo error no controlado («document is not defined», `useWmsToast.ts:22`). Captura `evidencias/aui-08`.
 - **Nota para I-04:** `findInProgressUse` (`F/features/warehouse/composables/forklift.queries.ts`) usa la fuente del montacargas; con `forklift.http.ts` llama a C-F04-18 con `status=InProgress`, `vehiclePlate` y `all=true`.
 
 ---
