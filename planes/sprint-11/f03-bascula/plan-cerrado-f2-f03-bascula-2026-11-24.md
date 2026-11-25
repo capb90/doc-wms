@@ -1419,7 +1419,7 @@ Cada fase cierra con las compuertas de `PM/` §6 (§6.1 en el backend, §6.2 en 
 | FE-1 | 2 | Contratos, fuentes simuladas, cola y registro | P-BAS-01 a P-BAS-04 con su lista del wireframe y captura | Hecha el 2026-11-24 (FE `d49a691`) |
 | FE-2 | 2 | Cobro, tiquete, repesaje e impresión | P-BAS-05 a P-BAS-07 y P-BAS-13 con su lista y captura | Hecha el 2026-11-24 (FE `cd58697`) |
 | FE-3 | 2 | Historial, detalle, corrección, Vigilancia › Historial y `cycles/[id]` | P-BAS-08 a P-BAS-11, P-TR-12, Vigilancia › Historial y `cycles/[id]` con su lista y captura | Hecha el 2026-11-24 (FE `ae34783`) |
-| I-03 | 3 | Integración (§13) | §13.5 | Pendiente |
+| I-03 | 3 | Integración (§13) | §13.5 | En curso: parte 1 (fuentes http y QA2-F03-031 a 048) hecha el 2026-11-24 (FE `7758c4d`); falta la parte 2 (menú, enlaces, borrados, QA2-F03-049 y 050, fusión) |
 
 ### 8.1 Backend, fase 1 — Registro y ciclo
 
