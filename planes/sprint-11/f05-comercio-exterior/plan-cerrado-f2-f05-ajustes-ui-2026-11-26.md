@@ -1,0 +1,216 @@
+# Plan cerrado — Fase 2 · F05 Comercio Exterior · Ajustes de UI de la maquetación
+
+> **Fecha:** 26 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-26 («Apruebo el plan»). Se ejecuta por fases (§5).
+> **Origen:** la revisión del usuario sobre la maquetación de F05 (FE-1 a FE-3, datos simulados; plan de F05 §8.7), antes de I-05: [`../qa-manual/hallazgos-UI-F05.md`](../qa-manual/hallazgos-UI-F05.md), con los mockups [`../qa-manual/detalle-deposito-v2/`](../qa-manual/detalle-deposito-v2/) (encabezado y etapa), [`../qa-manual/tabla-levantes-detalle-deposito/`](../qa-manual/tabla-levantes-detalle-deposito/) (tabla de Levantes) y [`../../../levantamiento_staging/mockups/detalle_deposito/`](../../../levantamiento_staging/mockups/detalle_deposito/) (la tarjeta de la etapa 1). Los mockups los hizo una IA: de ellos se toman la distribución y el estilo, no los datos. Las respuestas del usuario del 2026-11-26 están en D1 a D4.
+> **Base:** FE `f2/f05-comercio-exterior` `1af6707` · docs `main` `9175b9e`. Rama: `f2/f05-comercio-exterior` (FE). Se aplica antes de I-05.
+> **Alcance:** frontend, sobre las pantallas maquetadas con datos simulados, en tres fases (§5). Suma parámetros de filtro a C-F05-01 y C-F05-32 en el contrato y en los datos simulados (§2); su backend lo hace I-05 (D1). Sin migraciones. Cambia la forma de P-CE-01, P-CE-02, P-CE-03, P-CE-06, P-CE-07, P-CE-10, Abandono y Listas de empaque descrita en el plan de F05 (§8.4 a §8.6; D16 en la forma del stepper, D39 en el encabezado y D40 en la tabla de Entradas): donde chocan, gana este plan.
+> **Rutas:** relativas a `code_workspace/`. Prefijos: `F/` = `Frontend/wms/app/`; `FT/` = `Frontend/wms/test/`; `D/` = `docs/`; `P05/` = `D/planes/sprint-11/f05-comercio-exterior/plan-cerrado-f2-f05-comercio-exterior-2026-11-25.md`; `H/` = el archivo de hallazgos, citado por sección: `L` (listas de depósitos), `DI` (detalle de importación), `DE` y `DN` (detalle de exportación y de inspección), `EI` (edición del ingreso) y `LR` (listados y reporte).
+
+---
+
+## 0. Instrucciones para el ejecutor
+
+1. Lee `Frontend/wms/AGENTS.md` (sección «Eficiencia de contexto y cierres por fase»), este plan completo y, de `P05/`, §8.4 a §8.6 (cómo quedó cada pantalla). Las líneas citadas son de la base `1af6707`; confírmalas con grep antes de cambiar.
+2. Trabaja en `f2/f05-comercio-exterior`. Son tres fases (§5) y se ejecuta una por turno. Al cerrar cada una: compuertas de §6, commit con el mensaje de §7, push de la rama, el estado aquí (§5), en `P05/` §8 (fila «Revisión») y en la matriz; después te detienes con el reporte.
+3. Sin llamadas reales: las páginas siguen en `MAQUETACION_PAGES`, con la sesión simulada (`NUXT_PUBLIC_MOCK_SESSION=true`; `?roles=Admin,ForeignTrade` y `?roles=ForeignTrade`) y sin enlaces del menú.
+4. Compartidos: solo se suma `AppAlertIcon` (D4) y los estilos `.registration-card` pasan a una hoja global (D26). `AppDataTable`, `AppRowActions`, `AppDetailSection` y el resto no cambian. Si una pantalla necesita cambiar otro, detente y pregunta.
+5. De los mockups se toman la distribución y el estilo. Los datos, los rótulos y las reglas siguen siendo los de `P05/` y los de este plan.
+
+---
+
+## 1. Decisiones
+
+Mandan sobre el resto del plan (`DEC-002`).
+
+### 1.1 Respuestas del usuario (2026-11-26)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| D1 | **El backend de los filtros nuevos va en I-05.** Este plan suma a C-F05-01 el filtro por placa y a C-F05-32 los filtros por columna (§2), en el contrato Zod y en los datos simulados. I-05, que ya ocupa los dos repos, los implementa en el backend al empezar, con sus pruebas. Sin migración | Usuario: «En I-05 (Recommended)»; H/ L4, LR1 |
+| D2 | **Motivo automático en los productos de Amparados.** `DepositProductDialog` deja de pedir el motivo y envía un texto fijo que cumple `reasonSchema` (10 a 500 caracteres): al agregar (C-F05-12), «Producto agregado desde Amparados del depósito {N}.»; al corregir (C-F05-13), «Producto corregido desde Amparados del depósito {N}.»; al cambiar el producto (C-F05-15), «Cambio de producto desde Amparados del depósito {N}.». No cambian el contrato ni el backend, y la auditoría conserva un motivo. «Quitar» sigue pidiendo el motivo con `ReasonDialog` | Usuario: «Motivo automático (Recommended)»; H/ DI7 |
+| D3 | **«Ver pesaje» se queda en Entradas.** Abre `/operations/weighbridge/cycles/{id}`, el detalle del ciclo que F03 conservó para Comercio Exterior (`F/pages/operations/weighbridge/cycles/[id].vue:3-12`). Se ve vacío porque el Id simulado no existe en el API; con I-05 muestra el ciclo (C-F03-34) | Usuario: «Mantenerla (Recommended)»; H/ DI4 |
+| D4 | **`AppAlertIcon` y la convención del aviso junto a un dato.** Componente nuevo `F/components/app/AppAlertIcon.vue` (aditivo): icono `pi pi-exclamation-circle` de 0,875 rem, ámbar con `severity="warn"` (la de omisión), rojo con `danger` y azul con `info`; `v-tooltip.top` con `text`, `role="img"`, `aria-label` igual a `text` y `tabindex="0"`, para que el tooltip también se abra con el teclado. En F05 reemplaza las etiquetas y los mensajes que acompañan un dato: las etapas pendientes de la lista (D6), «Datos pendientes» de Entradas (D17) y la diferencia de peso de Levantes (D23, D29). La regla pasa a `D/contexto/convenciones-tecnicas.md` §3: «Un aviso junto a un dato es un `AppAlertIcon` con tooltip, no una etiqueta ni un mensaje». F01 a F04 la adoptan en un plan aparte | Usuario: «F05 y convención (Recommended)»; H/ DI10 |
+
+### 1.2 Listas de depósitos (H/ L1 a L7)
+
+Las tres rutas (`/foreign-trade/{imports,exports,inspections}`) montan `F/features/foreign-trade/components/DepositListTable.vue`, así que cada cambio vale para las tres.
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| D5 | **Estados en pestañas y la fecha como filtro de columna.** Sale la tarjeta de filtros (`#globalFilters`, `:165-208`: el `SelectButton` de estado y «Ingreso desde» y «Ingreso hasta»). Las pestañas «Borrador», «Confirmado», «Cerrado» y «Anulado» van en el slot `toolbar` de la tabla, con el marcado y el estilo de la cola de báscula (`F/pages/operations/weighbridge/index.vue:90-101`, `:118-122`: `Tabs`, `TabList` y `Tab`, con la lista transparente). Borrador sigue siendo la pestaña por defecto (PR-15). Las pestañas no llevan contador, porque C-F05-01 no trae los conteos por estado (§4). La pestaña queda en la URL (`?estado=borrador\|confirmado\|cerrado\|anulado`, con `router.replace`, como la cola), y cambiarla vuelve a la página 1 y cierra las filas abiertas. La columna «Fecha» lleva `filter: "dateRange"`, que manda `entryDateFrom` y `entryDateTo`, los parámetros de hoy | H/ L1 |
+| D6 | **Etapas pendientes en un icono.** Sale la etiqueta «n etapas pendientes» de la columna de estado (`:260-267`). En la celda del N.º de depósito, a la derecha del número, va `AppAlertIcon` (D4) con el tooltip de `pendingStagesTooltip` («Pendiente: Entradas, Amparados.»); conserva `data-testid="pending-stages"` | H/ L2 |
+| D7 | **Solo el estado aduanero.** En importación, la columna «Estado» muestra una etiqueta con dos valores: «Sin nacionalizar» (`warn`), para `NotNationalized` y `Partial`, y «Nacionalizado» (`success`), para `Nationalized`. Los da un ayudante nuevo, `customsStatusLabel` y `customsStatusSeverity`, en `F/features/foreign-trade/utils/deposit-display.ts`. Exportación e inspección no tienen estado aduanero en el contrato (`nationalizationStatus` es nulo), así que la columna no se muestra. El estado del depósito lo dice la pestaña (D5). El Excel conserva «Estado» (del depósito) y cambia «Nacionalización» por «Estado aduanero», con los mismos dos valores | H/ L3 |
+| D8 | **Placas en su columna.** Columna nueva, «Placas», después de «N.º de depósito»: un `VehiclePlateTag` por placa, uno debajo de otro, con filtro de texto `vehiclePlate` (parámetro nuevo de C-F05-01, §2). Sale la línea «Placa(s) …» de la celda del número (`:210-217`) | H/ L4 |
+| D9 | **Inspección con «Descripción» aparte.** En `/foreign-trade/inspections`, la columna «Descripción» (`inspectionDescription`) va después de «Documento», y «Documento» muestra solo el tipo y el número («—» si no hay). `documentLines` (`F/features/foreign-trade/utils/deposit-display.ts:83-91`) deja de caer en la descripción. La columna «Descripción» no lleva filtro: el filtro `document` de C-F05-01 sigue buscando también en la descripción, como hoy | H/ L5 |
+| D10 | **Sin «Pesos (kg)».** Sale la columna (`:93`, `:249-251`) y con ella el uso de `WeightLines` en la lista. El Excel conserva los cuatro pesos | H/ L6 |
+| D11 | **«Imprimir etiqueta» en las acciones.** `AppRowActions` lleva dos acciones: «Ver depósito» (`pi pi-eye`) e «Imprimir etiqueta» (`pi pi-print`), esta salvo en Anulado, como en el detalle (`F/features/foreign-trade/components/DepositDetailHeader.vue:60`). Llama a `depositSource.label(modality, id, "print")` con el mismo Id de la ruta del detalle (`importDepositId` en importación, `warehouseStorageId` en las otras) y abre el PDF con `openPdf` y el nombre `etiqueta_{N}.pdf`. Mientras se genera, la fila muestra la espera como `DepositListExpansion`; si falla, el aviso es «No se pudo generar la etiqueta» | H/ L7 |
+
+### 1.3 Detalle del depósito (H/ DI1 a DI3, DE1, DN1)
+
+`DepositStageDetail` es el mismo en los tres tipos, así que exportación e inspección toman los mismos cambios (H/ DE1, DN1), cada una con sus etapas.
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| D12 | **Encabezado con el resumen del depósito** (mockup `detalle-deposito-v2`). `DepositDetailHeader` pasa a ser una tarjeta (`card`) con tres partes. **Primera línea:** «Depósito {N}» (`h1`), las etiquetas del tipo, de la nacionalización (importación, con los tres valores de hoy) y del estado, y una etiqueta nueva de progreso, «{hechas} de {total} al día ({%} %)», con `stageProgress`; a la derecha, «Volver» y «Acciones» como hoy. **Segunda línea**, en texto pequeño: las impresiones de la etiqueta, la prórroga y la planilla, como hoy. **Recuadro de resumen** (fondo `surface-50`, borde y esquinas redondeadas; dos columnas desde `lg`). A la izquierda, en pares rótulo-valor en mayúsculas pequeñas: placas (etiquetas), mercancía con embalaje, importador o exportador con su NIT, cliente, manifiesto DIAN (importación) o la inspección (inspección) y la fecha y hora de ingreso. A la derecha, dos franjas. «Cantidades» lleva entrada · amparado · saldo, con la etiqueta «Cuadrado» (`success`) si el saldo es cero o «Descuadrado» (`danger`) si no; en inspección, solo la entrada. «Pesos (kg)» lleva entrada · amparado · saldo, con la etiqueta «Informativo» (`secondary`) y su tooltip «El saldo en peso es informativo: no impide confirmar.»; en inspección, solo la entrada. El mensaje de anulado y el aviso financiero siguen al pie de la tarjeta. Los datos y cálculos son los de `DepositGeneralInfo` (`:24-50`), que se borra con `rm` | H/ DI3; mockup `detalle-deposito-v2/screen.png` |
+| D13 | **Stepper sin marco.** Sale el fondo, el borde y el relleno de `.deposit-stepper` (`F/features/foreign-trade/components/DepositStageStepper.vue`, estilo `.deposit-stepper`); cada paso sigue siendo su propia tarjeta, con un espacio de 0,75 rem entre ellos y el mismo indicador | H/ DI1 |
+| D14 | **Una sola columna.** Sale la rejilla `.deposit-stage-layout` y la columna derecha (`F/features/foreign-trade/components/DepositStageDetail.vue:248-272`, `:374-387`). La etapa ocupa todo el ancho, debajo del stepper. La lista de progreso por etapa no pasa al encabezado: el stepper ya dice cómo va cada etapa, y el encabezado da el total (D12) | H/ DI3 |
+| D15 | **Tarjeta de la etapa.** Componente nuevo de la función, `F/features/foreign-trade/components/DepositStageCard.vue`: una `card` sin borde con encabezado y cuerpo. El encabezado lleva, a la izquierda, el icono de la etapa (`STAGE_ICON`) en un cuadro de 2,5 rem con fondo primario, el título «Etapa {n} · {nombre}» (`h2`, con el `id` `stage-title-{slug}` y el `data-testid="stage-title"` de hoy), una etiqueta con el estado de la etapa (el texto y el tono de `stageCaption` y `stageTone`) y, debajo, la descripción (`STAGE_HINT`); a la derecha, el slot `actions` con los botones generales de la etapa, todos `size="small"`. Una línea separa el encabezado del cuerpo. `DepositStageDetail` arma el encabezado (`header`: índice, título, descripción, icono, texto y tono) y se lo pasa a la etapa, y cada etapa pinta su `DepositStageCard`, para que sus botones lleguen al encabezado con su estado (cambios sin guardar, guardado en curso). Sale el `<header>` de hoy (`DepositStageDetail.vue:250-255`) | H/ DI2; mockup `levantamiento_staging/mockups/detalle_deposito/screen.png` (etapa 1) |
+| D16 | **Bloque de tabla, el de la fila expandida de la lista.** Componente nuevo de la función, `F/features/foreign-trade/components/DepositTableBlock.vue`, con el marco del bloque de `DepositListExpansion` (`:202-250` del estilo): borde y esquinas redondeadas, una franja de título con el fondo `content-hover-background` (slot `title` a la izquierda y slot `end` a la derecha), la tabla `size="small"` en el cuerpo y un pie opcional con los subtotales alineados a la derecha (slot `footer`). `DepositListExpansion` pasa a usarlo, sin cambio visible. Lo usan Entradas, Bodega, Amparados y Levantes (D17 a D23) | H/ DI4, DI6, DI7, DI8, DI9 |
+
+### 1.4 Etapas (H/ DI4 a DI9)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| D17 | **Entradas.** Un `DepositTableBlock` con el título «Camiones del depósito» y su número de camiones vigentes. Dentro, la tabla de hoy (`F/features/foreign-trade/components/DepositEntriesStage.vue:103-193`) sin el `ColumnGroup` del pie (`:182-192`). Los totales vigentes pasan al pie del bloque: «Total vigente · Bruto … · Mercancía … · Tara … · Cantidad … · Manifiesto …». «Datos pendientes» (`:125-131`) pasa a `AppAlertIcon` junto a la placa, con el tooltip «Falta: …» y el `data-testid="entry-missing"`; la etiqueta «Anulada» se queda, porque es un estado. Las acciones por fila no cambian, «Ver pesaje» incluida (D3). La etapa no tiene botones generales | H/ DI4 |
+| D18 | **Datos principales.** Las seis tarjetas de `AppDetailSection` (`F/features/foreign-trade/components/DepositMainDataStage.vue:203-338`) pasan a ser secciones dentro de la tarjeta de la etapa: cada una con su título en mayúsculas pequeñas y su icono, como `registration-card__legend` (D26), y una línea entre secciones. Los campos y las reglas no cambian. «Descartar cambios» y «Guardar» suben al encabezado de la tarjeta (`#actions`), en tamaño pequeño. El `<form>` envuelve toda la tarjeta, así «Guardar» sigue siendo `type="submit"`. El aviso de solo lectura y el error del guardado van al inicio del cuerpo | H/ DI5 |
+| D19 | **Bodega.** «Recepciones» e «Inventario» pasan a ser dos `DepositTableBlock` con su número de filas. «Ajustar cantidad», «Movimientos» y «Ver novedades» (`F/features/foreign-trade/components/DepositWarehouseStage.vue:93-121`) suben al encabezado de la tarjeta. Sale «(CE-7)» del botón y del título del diálogo, que queda «Ajustar cantidad · {N}» (`F/features/foreign-trade/components/DepositAdjustDialog.vue:62`) | H/ DI6 |
+| D20 | **Amparados.** La tabla va en un `DepositTableBlock` titulado «Cantidades amparadas», con el número de productos. «Agregar producto», «Descartar cambios» y «Guardar» (`F/features/foreign-trade/components/DepositCoverageStage.vue:110`, `:199-200`) suben al encabezado de la tarjeta, en tamaño pequeño. El aviso del camión tardío (AF-84) queda al inicio del cuerpo | H/ DI7 |
+| D21 | **Modal del producto** (`F/features/foreign-trade/components/DepositProductDialog.vue`). Sale «Motivo» (D2). El encabezado pasa a tener dos líneas, como el cobro de F04 (D9 de su plan de ajustes): el título («Agregar producto al depósito» o «Corregir producto del depósito») y debajo, en texto pequeño, «Depósito {N} · La cantidad se registra por camión; la cantidad del depósito es su suma.». Sale el párrafo de hoy. El cuerpo tiene dos secciones con el mismo marco (borde y esquinas redondeadas, título en mayúsculas pequeñas). **Mercancía:** producto (con «Crear producto»), embalaje y descripción. **Cantidad por camión:** al agregar, el camión y la cantidad declarada; al corregir, una tabla pequeña (placa · tiquete · cantidad, editable) con la fila «Cantidad del depósito» y lo de antes, y debajo el piso («No puede quedar por debajo de …»). Todos los campos usan `AppFormField`, con `required` en lugar del «*» del rótulo. El pie sigue con «Cancelar» y «Agregar» o «Guardar» | H/ DI7 |
+| D22 | **Levantes: un bloque por mercancía** (mockup `tabla-levantes-detalle-deposito`). La tabla única (`F/features/foreign-trade/components/DepositReleasesStage.vue:258-356`) pasa a ser un `DepositTableBlock` por producto. La franja lleva un punto de color, el nombre, el embalaje en una etiqueta y «{n} levante(s) registrado(s)»; a la derecha, «+ Nuevo levante» (`size="small"`), que lleva el foco a la fila editable de ese producto, deshabilitado sin saldo o en Borrador. Las columnas, la fila «INGRESO», las filas de los levantes, la fila editable y las filas «NACIONALIZADO» y «SALDO» (esta con el fondo ámbar suave del mockup) se conservan. Sale la etiqueta del estado del producto (`:280-285`): el color del saldo ya dice el estado (verde en cero, naranja con saldo, rojo si es negativo). Las acciones de cada levante («Ver», «Editar» y «Retirar») siguen en `AppRowActions`, que ya usa botones pequeños de solo icono | H/ DI8 |
+| D23 | **Levantes: indicadores compactos y avisos.** Las cuatro tarjetas (`:219-243`) pasan a ser una franja de una línea bajo el encabezado de la tarjeta, con el estilo de los totales de la fila expandida (`.deposit-expansion__totals`): «Ingreso {q} · {kg}», «Nacionalizado {q} ({%} %)», «Saldo {q} · {kg}», con el saldo en su color, y «Levantes {n} · {m} completas». La alerta de diferencia de peso (`:247-253`) pasa a `AppAlertIcon` (`danger`) en la franja, con el texto de hoy en el tooltip. El texto de la fila «SALDO» (`:346-348`) pasa a `AppAlertIcon` junto al saldo de peso. El aviso de Borrador (`:255-257`) pasa a texto pequeño bajo la franja. «Exportar» sube al encabezado de la tarjeta. Sale «Nuevo levante» del encabezado: cada mercancía tiene el suyo (D22) | H/ DI8 |
+| D24 | **Levantes: la fila editable** (`F/features/foreign-trade/components/ReleaseEditableRow.vue`). Sale «Levante total del saldo» (`:338-348`) con `fillBalance` y su prueba; la fila ya propone el saldo. «Guardar» y el de limpiar o cancelar quedan en tamaño pequeño. Cada campo lleva `v-tooltip.top` con su rótulo: «N.º de levante», «N.º de aceptación», «Fecha del levante», «Tasa de cambio (COP por USD)» con la pista de la tasa, «Valor en aduanas (USD)», «Cantidad a levantar» y «Peso a levantar (kg)». La pista de la fila sigue debajo, con «Enter guarda · Esc limpia» en teclas como el mockup. Los problemas de la validación (`:368-372`) dejan de ser un `Message`: son una línea pequeña en rojo con su icono («Revise: …»), debajo de la pista. El error del guardado sigue igual | H/ DI8 |
+| D25 | **Salidas.** La etapa vacía (`F/features/foreign-trade/components/DepositExitsStage.vue`) va dentro de su tarjeta (D15), con el mismo texto y sin el borde punteado. Hoy no tiene tablas: cuando llegue su fase, usará `DepositTableBlock` (§4) | H/ DI9 |
+
+### 1.5 Edición del ingreso (H/ EI1)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| D26 | **Estilos de báscula en una hoja global.** Las reglas `.registration-card*` (`F/pages/operations/weighbridge/process/[entryLogId].vue:820-900`) están en el `<style>` sin `scoped` de esa página, así que solo existen después de abrirla. Pasan sin cambios a `F/assets/layout/_wms-registration-card.scss`, que se suma a `F/assets/layout/layout.scss` junto a `wms-datatable` y `wms-workbench`. La página de báscula conserva sus otras reglas (`.weighbridge-process*`) y no cambia a la vista | H/ EI1 |
+| D27 | **`EntryEditForm` con la distribución de báscula** (`F/features/foreign-trade/components/EntryEditForm.vue`; evidencias de F03 `fe1-03` y de F05 `fe2-13`). Usa las clases de D26 y sale `.entry-edit-card*`. Las secciones 1 y 2 son la fila resumen de báscula (`registration-card__summary`): título en mayúsculas, los datos con separador («Motivo · Fecha · Placa»; «Empresa · País · Conductor») y «Editar», que abre el cuerpo debajo. Las secciones 3 a 5 llevan la cabecera de báscula (`registration-card__head`): título en tipo oración, subtítulo y, donde báscula la tiene, la pista. «Mercancía declarada» va en el bloque gris de `RegistrationGoodsLines`, con su rótulo, el número de artículos y «Agregar producto». En la sección 4, los pesos van en la rejilla de 2 × 2 de `RegistrationWeights`, con cajas, rótulos y etiquetas: «P. indicador», «P. vehículo / tara», «P. manifiesto» («Documento de transporte») y «P. mercancía» («Calculado»). Las reglas de hoy no cambian: la tara se digita, la pista de la tara real se mantiene y también la diferencia con el manifiesto. El motivo de la corrección queda al final, con el mismo marco. El encabezado (título, depósito, «Volver» y «Guardar») no cambia | H/ EI1 |
+
+### 1.6 Levantes (vista 2), Abandono y Listas de empaque (H/ LR1 a LR3)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| D28 | **Levantes sin filtros globales.** Sale todo el slot `toolbar` de `F/pages/foreign-trade/releases/index.vue` (`:148-187`): la búsqueda, las pestañas y «Con diferencia de peso» con su contador. Los filtros pasan a las columnas: «Fecha de ingreso» (rango, como hoy); «Depósito» (texto, `warehouseStorageNumber`); «Documento comercial» (texto, `document`: tipo, número o manifiesto DIAN); «Importador» (texto, `importer`); «Mercancía» (texto, `product`); «Saldo» (lista con una opción, «Con diferencia de peso», que manda `withWeightDifference=true`); «Estado» (lista con «Sin nacionalizar», que manda `NotNationalized` y `Partial`, y «Nacionalizado», que manda `Nationalized`, en `nationalizationStatus`); y la columna nueva «Levantes» (el número de levantes, con filtro de texto `releaseNumber`: los depósitos que tienen ese N.º de levante, para no perder la búsqueda de hoy). Los parámetros nuevos están en §2. `?estado=sin-nacionalizar\|parcial\|nacionalizados` fija el filtro de «Estado» al abrir; `parcial` cae en «Sin nacionalizar». La página deja de leer C-F05-33 | H/ LR1 |
+| D29 | **Columnas de la vista 2.** Fecha de ingreso, Depósito (el enlace a `?etapa=levantes` de hoy), Documento comercial, Importador, Mercancía, Ingreso, Saldo, Nacionalizado, Estado y Levantes. «Ingreso» y «Saldo» quedan juntas. La diferencia de peso pasa de la columna de estado a `AppAlertIcon` (`danger`) junto al peso del saldo, con el tooltip «Diferencia de peso». «Estado» muestra solo la etiqueta de dos valores (D7) | H/ LR1 |
+| D30 | **«Nacionalizado» con un anillo.** «Spinner» se entiende como un indicador circular del avance, no como la animación de carga. Componente nuevo de la función, `F/features/foreign-trade/components/ProgressRing.vue`: un SVG de 1,75 rem con el avance en el trazo (verde al 100 %, color primario por debajo), y a su lado «{%} %» en negrita y «{nacionalizado} / {ingreso}» en texto pequeño. Sale el `ProgressBar` de la celda (`:215-223`) | H/ LR1 |
+| D31 | **La fila expandida de Levantes** (`DepositReleasesStage` con `compact`, desde `ReleaseDepositExpansion`) toma D22 a D24: un bloque por mercancía con su «+ Nuevo levante». Sale la cabecera compacta (`DepositReleasesStage.vue:198-217`: el título, «Agregar levante» y «Ver detalle del depósito»), porque el N.º de depósito de la fila ya enlaza al detalle. Como hoy, no lleva indicadores ni la columna del valor en pesos | H/ LR1 |
+| D32 | **Abandono sin el aviso superior.** Sale el `Message` (`F/pages/foreign-trade/abandonment/index.vue:153-164`), su consulta del resumen (`:66-67`, C-F05-49) y `showStatus` (`:69`) si queda sin uso. `?estado=` y el filtro de estado en la columna se quedan | H/ LR2 |
+| D33 | **«Cargar lista de empaque» como el importador de ciudades** (`F/features/administration/components/CityImportDialog.vue`). En `F/features/foreign-trade/components/PackingListImportDialog.vue` el orden queda así: arriba, el aviso de las columnas; después, «Proveedor» (con su alta rápida) e «Importador» en una fila; la zona para soltar el archivo o hacer clic, que al elegirlo muestra el nombre, el tamaño y «Quitar», en lugar del `FileUpload` básico; y «Filas de encabezado» en `AppFormField`, con la ayuda «Filas del inicio del archivo que no son artículos.». Todos los campos usan `AppFormField` con `required`. La simulación (resumen y tablas), el pie (Cancelar · Simular · Importar) y las reglas no cambian, y las filas con error no se cargan. El ancho sigue en 64 rem por la tabla de la simulación. El marcado y los estilos de la zona se copian de `CityImportDialog`, sin un componente compartido nuevo (§4) | H/ LR3 |
+
+---
+
+## 2. Contrato (aditivo, D1)
+
+| Contrato | Cambio | Zod | Datos simulados |
+| --- | --- | --- | --- |
+| C-F05-01 (lista de depósitos) | Parámetro `vehiclePlate` (texto, opcional): los depósitos con un camión vigente cuya placa lo contiene, sin distinguir mayúsculas | `depositListQuerySchema` (`F/features/foreign-trade/contracts/deposit.ts:40-49`) | `LIST_RULES.text.vehiclePlate` en `F/features/foreign-trade/mocks/deposit.mock.ts:42-47`, sobre `row.vehiclePlates` |
+| C-F05-32 (Levantes por depósito) | Parámetros `warehouseStorageNumber`, `document` (tipo, número o manifiesto DIAN), `importer` (nombre), `product` (nombre de la mercancía) y `releaseNumber` (N.º de levante), todos de texto, opcionales y por «contiene». `search` sigue en el contrato, pero la pantalla deja de enviarlo | `releaseDepositQuerySchema` (`F/features/foreign-trade/contracts/release.ts:46-52`) | Reglas de texto en `F/features/foreign-trade/mocks/release.mock.ts`, junto a `bySearch` (`:31-43`) |
+
+**Nota para I-05 (D1):** el backend suma los filtros a la consulta de C-F05-01 y a la de C-F05-32, con pruebas por filtro. Después de este plan, ninguna pantalla de F05 lee C-F05-33 (contadores de Levantes) ni C-F05-49 (resumen de Abandono): no se retiran, e I-05 decide si el tablero de Comercio Exterior los usa.
+
+---
+
+## 3. Archivos que se tocan
+
+| Archivo | Cambio | Decisión | Fase |
+| --- | --- | --- | --- |
+| `F/components/app/AppAlertIcon.vue` (nuevo) | Icono de aviso con tooltip | D4 | AUI-1 |
+| `FT/unit/components/AppAlertIcon.spec.ts` (nuevo) | Pinta el icono con su `aria-label`, `tabindex` y color por severidad | D4 | AUI-1 |
+| `D/contexto/convenciones-tecnicas.md` | §3: la regla del aviso junto a un dato | D4 | AUI-1 |
+| `F/features/foreign-trade/components/DepositListTable.vue` | Pestañas, fecha por columna, icono de etapas, estado aduanero, placas, descripción, sin pesos, imprimir etiqueta | D5 a D11 | AUI-1 |
+| `F/features/foreign-trade/utils/deposit-display.ts` | `customsStatusLabel`, `customsStatusSeverity`; `documentLines` sin la descripción | D7, D9 | AUI-1 |
+| `F/features/foreign-trade/contracts/deposit.ts`, `…/contracts/release.ts` | Parámetros nuevos | §2 | AUI-1 |
+| `F/features/foreign-trade/mocks/deposit.mock.ts`, `…/mocks/release.mock.ts` | Filtros nuevos | §2 | AUI-1 |
+| `F/pages/foreign-trade/releases/index.vue` | Sin barra; filtros, orden de columnas, anillo, icono de diferencia | D28 a D30 | AUI-1 |
+| `F/features/foreign-trade/components/ProgressRing.vue` (nuevo) | Anillo del avance | D30 | AUI-1 |
+| `F/pages/foreign-trade/abandonment/index.vue` | Sin el aviso superior | D32 | AUI-1 |
+| `F/features/foreign-trade/components/PackingListImportDialog.vue` | Como `CityImportDialog` | D33 | AUI-1 |
+| `F/features/foreign-trade/components/DepositDetailHeader.vue` | Tarjeta con progreso y recuadro de resumen | D12 | AUI-2 |
+| `F/features/foreign-trade/components/DepositGeneralInfo.vue` | Se borra (`rm`) | D12, D14 | AUI-2 |
+| `F/features/foreign-trade/components/DepositStageStepper.vue` | Sin marco | D13 | AUI-2 |
+| `F/features/foreign-trade/components/DepositStageDetail.vue` | Una columna; arma el `header` de la etapa | D14, D15 | AUI-2 |
+| `F/features/foreign-trade/components/DepositStageCard.vue` (nuevo) | Tarjeta de la etapa | D15 | AUI-2 |
+| `F/features/foreign-trade/components/DepositTableBlock.vue` (nuevo) | Bloque de tabla | D16 | AUI-2 |
+| `F/features/foreign-trade/components/DepositListExpansion.vue` | Usa `DepositTableBlock`, sin cambio visible | D16 | AUI-2 |
+| `F/features/foreign-trade/components/DepositEntriesStage.vue` | Tarjeta, bloque, totales al pie, icono de datos pendientes | D17 | AUI-2 |
+| `F/features/foreign-trade/components/DepositMainDataStage.vue` | Secciones en la tarjeta; botones arriba | D18 | AUI-2 |
+| `F/features/foreign-trade/components/DepositWarehouseStage.vue`, `DepositAdjustDialog.vue` | Bloques; botones arriba; sin «CE-7» | D19 | AUI-2 |
+| `F/features/foreign-trade/components/DepositExitsStage.vue` | Dentro de su tarjeta | D25 | AUI-2 |
+| `F/assets/layout/_wms-registration-card.scss` (nuevo), `F/assets/layout/layout.scss`, `F/pages/operations/weighbridge/process/[entryLogId].vue` | Estilos de báscula a la hoja global | D26 | AUI-2 |
+| `F/features/foreign-trade/components/EntryEditForm.vue` | Distribución de báscula | D27 | AUI-2 |
+| `F/features/foreign-trade/components/DepositCoverageStage.vue` | Tarjeta, bloque, botones arriba | D20 | AUI-3 |
+| `F/features/foreign-trade/components/DepositProductDialog.vue` | Sin motivo (texto fijo), encabezado de dos líneas, dos secciones | D2, D21 | AUI-3 |
+| `F/features/foreign-trade/components/DepositReleasesStage.vue` | Bloques por mercancía, franja de indicadores, avisos con icono, sin cabecera compacta | D22, D23, D31 | AUI-3 |
+| `F/features/foreign-trade/components/ReleaseEditableRow.vue` | Sin «Levante total del saldo»; tooltips; problemas en una línea | D24 | AUI-3 |
+| `FT/components/foreign-trade/DepositListTable.spec.ts` | Pestañas, columnas nuevas y quitadas, «Imprimir etiqueta», descripción en inspección | D5 a D11 | AUI-1 |
+| `FT/unit/foreign-trade/mocks*.spec.ts` | Filtros nuevos de C-F05-01 y C-F05-32 | §2 | AUI-1 |
+| `FT/components/foreign-trade/EntryEditForm.spec.ts` | Las cinco secciones con la estructura de báscula | D27 | AUI-2 |
+| `FT/components/foreign-trade/DepositCoverageStage.spec.ts` | Botones en el encabezado; el modal envía el motivo fijo sin pedirlo | D2, D20, D21 | AUI-3 |
+| `FT/components/foreign-trade/DepositReleasesStage.spec.ts` | Bloques, franja, icono de diferencia, sin «Levante total del saldo» ni cabecera compacta | D22 a D24, D31 | AUI-3 |
+
+---
+
+## 4. Fuera de alcance
+
+- **Contadores en las pestañas de las listas de depósitos (D5):** C-F05-01 no trae los conteos por estado; sumarlos pide un endpoint o un campo nuevo.
+- **Las tablas de Salidas (D25):** la etapa sigue vacía hasta su fase (`P05/` §8.5); cuando llegue, usará `DepositTableBlock`.
+- **`AppAlertIcon` en F01 a F04 (D4):** va en un plan aparte.
+- **Un componente compartido de zona de archivo:** D33 copia el marcado de `CityImportDialog`; extraerlo cambiaría también Ciudades.
+- **Retirar C-F05-33 y C-F05-49 del backend:** quedan sin pantalla en F05 (§2, nota para I-05).
+- **«Quitar producto» sin motivo:** sigue con `ReasonDialog` (D2).
+
+---
+
+## 5. Fases
+
+### AUI-1 — Listas, Levantes (vista 2), Abandono y Listas de empaque
+
+- **Contenido:** D1, D4 a D11, D28 a D30, D32, D33 y §2.
+- **Verificación en el navegador** (`yarn dev` con la sesión simulada, con los dos juegos de roles). En las tres listas: las pestañas, con Borrador por defecto y `?estado=` en la URL; el filtro de rango en «Fecha»; el icono de etapas pendientes con su tooltip; «Placas» con su filtro; «Estado» con dos valores en importación y sin la columna en exportación e inspección; «Descripción» en inspección; sin «Pesos (kg)»; «Imprimir etiqueta» abre el PDF. En Levantes (vista 2): sin barra, los filtros por columna, «Ingreso» junto a «Saldo», el anillo, el icono de diferencia de peso y `?estado=sin-nacionalizar`. Abandono sin el aviso. Listas de empaque: cargar un CSV, simular e importar. Sin llamadas al API ni errores en la consola.
+- **Capturas** en `D/planes/sprint-11/f05-comercio-exterior/evidencias/aui-*`: `aui-01` importación con pestañas y tooltip de etapas; `aui-02` exportación sin «Estado»; `aui-03` inspección con «Descripción»; `aui-04` filtro de placa y de fecha; `aui-05` Levantes (vista 2); `aui-06` Abandono; `aui-07` el modal de lista de empaque con la simulación.
+- **Criterio de salida:** H/ L1 a L7 y LR1 a LR3, salvo la fila expandida de LR1 (D31, en AUI-3), resueltos como dicen las decisiones, con su captura; compuertas de §6 en verde.
+- **Estado:** pendiente.
+
+### AUI-2 — Detalle por etapas y Edición del ingreso
+
+- **Contenido:** D3, D12 a D19, D25 a D27.
+- **Verificación en el navegador:** el detalle de importación (2026BA00001, 2026BA00003 y 2026BA00010), de exportación (2026BA00011) y de inspección (2026BA00014). En los tres: el encabezado con el progreso y el recuadro de resumen (cuadrado y descuadrado; la inspección, solo con la entrada); el stepper sin marco; una sola columna; la tarjeta de cada etapa con su título, estado, descripción y botones. Además: Entradas en su bloque, con los totales al pie y el icono de datos pendientes; Datos principales en secciones, con «Guardar» arriba y guardando; Bodega con «Ajustar cantidad» sin «CE-7»; Salidas en su tarjeta. La Edición del ingreso (camión IAA111) con la distribución de báscula, que edita y guarda; la cola de báscula no cambia a la vista. Sin llamadas al API ni errores en la consola.
+- **Capturas:** `aui-08` encabezado y Entradas (importación); `aui-09` Datos principales; `aui-10` Bodega; `aui-11` inspección (encabezado y etapa); `aui-12` Edición del ingreso; `aui-13` Edición del ingreso, sección de pesaje.
+- **Criterio de salida:** H/ DI1 a DI6, DI9 (Salidas), DE1, DN1 y EI1 resueltos como dicen las decisiones, con su captura; compuertas de §6 en verde.
+- **Estado:** pendiente.
+
+### AUI-3 — Amparados y Levantes
+
+- **Contenido:** D2, D20 a D24, D31.
+- **Verificación en el navegador:** Amparados de 2026BA00001, con los botones arriba; «Agregar producto» y «Corregir» sin motivo, con el encabezado de dos líneas, guardan y la auditoría simulada lleva el texto fijo; 2026BA00002, con el camión tardío. Levantes de 2026BA00001 y de 2026BA00015: un bloque por mercancía con «+ Nuevo levante», la franja de indicadores, el icono de diferencia de peso, la fila editable sin «Levante total del saldo», con tooltips, con los problemas en una línea, y registrar, editar y retirar. La fila expandida de Levantes (vista 2) sin la cabecera compacta. Sin llamadas al API ni errores en la consola.
+- **Capturas:** `aui-14` Amparados; `aui-15` modal de agregar producto; `aui-16` modal de corregir producto; `aui-17` Levantes (2026BA00015) con la fila editable y un problema de validación; `aui-18` la fila expandida de la vista 2.
+- **Criterio de salida:** H/ DI7, DI8 y la fila expandida de LR1 resueltos como dicen las decisiones, con su captura; compuertas de §6 en verde. Con AUI-3 cerrada, la maquetación vuelve a la revisión del usuario (`P05/` §8.7).
+- **Estado:** pendiente.
+
+---
+
+## 6. Pruebas y compuertas
+
+En cada fase, sobre el código final:
+
+- `yarn test` en verde, con los casos de §3 de la fase. La base es de 152 archivos y 814 pruebas; sale con código 1 por el error no controlado heredado de `FT/components/weighbridge/WeighbridgeQueuePage.spec.ts`, que no hace fallar ninguna prueba. Las guardias de `FT/unit/guards/` en verde (las páginas siguen en `MAQUETACION_PAGES`).
+- `yarn lint` con 171 errores o menos y ninguno en los archivos nuevos ni en los tocados.
+- `yarn build` con código 0.
+
+---
+
+## 7. Commits
+
+| Fase | Repo | Mensaje |
+| --- | --- | --- |
+| AUI-1 | FE | `feat(foreign-trade): ajustes de UI de F05: listas con pestañas y filtros por columna, Levantes, Abandono y Listas de empaque (DEC-080, F05)` |
+| AUI-2 | FE | `style(foreign-trade): ajustes de UI de F05: encabezado con resumen, etapas en tarjetas y edición del ingreso como báscula (DEC-080, F05)` |
+| AUI-3 | FE | `style(foreign-trade): ajustes de UI de F05: Amparados sin motivo y Levantes por mercancía (DEC-080, F05)` |
+| Cada fase | docs | `docs(f05): ajustes de UI de la maquetación de F05, fase AUI-{n} (sprint 11)` |
+
+Cada uno termina con la línea de coautoría que indique la sesión.
+
+---
+
+## 8. Riesgos
+
+| Riesgo | Mitigación |
+| --- | --- |
+| Los filtros nuevos funcionan con los datos simulados y no en el API hasta I-05 | D1 y la nota de §2: I-05 los implementa al empezar, con pruebas por filtro |
+| El motivo fijo dice menos en la auditoría que uno escrito | Nombra la pantalla y el depósito (D2); «Quitar» sigue pidiendo un motivo |
+| Mover `.registration-card` cambia la vista de báscula | Las reglas pasan sin cambios y la página deja de declararlas (D26); se verifica la cola y el registro de báscula en AUI-2 |
+| Los botones en el encabezado de la tarjeta quedan fuera del `<form>` de Datos principales | El `<form>` envuelve toda la tarjeta (D18) |
+| La etapa ya no lleva la lista de progreso por etapa | El stepper dice cómo va cada etapa, y el encabezado da el total con su porcentaje (D12, D14) |
+| `parcial` en `?estado=` de Levantes pierde su pestaña | Cae en «Sin nacionalizar», que la incluye (D28); el tablero solo enlaza `sin-nacionalizar` y `nacionalizados` |
