@@ -63,7 +63,8 @@
   - **Galería:** `/dev/components` muestra `AppRowActions` con tres y con cinco acciones.
 - **Aviso junto a un dato** (`DEC-080`; plan `planes/sprint-11/f05-comercio-exterior/plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md`, D4). Un aviso junto a un dato es un `AppAlertIcon` con tooltip, no una etiqueta ni un mensaje.
   - **Componente:** `app/components/app/AppAlertIcon.vue`, con `text` (el tooltip y el `aria-label`) y `severity`: `warn` (ámbar, por omisión), `danger` (rojo) o `info` (azul). Es enfocable y el tooltip también se abre con el teclado.
-  - **Dónde va:** a la derecha del dato que acompaña (el N.º de depósito con etapas pendientes, la placa con datos pendientes, el peso con diferencia). Un estado del registro («Anulada») sigue siendo una etiqueta (`Tag`).
+  - **Dónde va:** a la derecha del dato que acompaña (el N.º de depósito con etapas pendientes, la placa con datos pendientes, el peso con diferencia). Una fila anulada también: `AppAlertIcon` (`danger`) junto a su dato principal, con la fecha de la anulación en el tooltip, sin la etiqueta «Anulada» (D34).
+  - **Fila anulada en una tabla:** el fondo de la fila va en rojo tenue (`--p-red-50`; en tema oscuro, rojo al 15 %), como el historial de Báscula (AF-23). La regla de CSS necesita más especificidad que las filas alternas de `app/assets/layout/_wms-datatable.scss` (D36).
   - **Adopción:** F05 lo usa desde sus ajustes de UI; F01 a F04 lo adoptan en un plan aparte.
 - **Páginas que no son listados** (`DEC-080`; plan `planes/sprint-11/plan-cerrado-f2-paginas-sin-tarjeta-titulo-2026-11-24.md`, D1, D2, D5, D6 y D8). Tableros, formularios de operación y reportes no llevan la tarjeta de título (`AppPageHeader`), como los listados:
   - **Título:** nada visible en su lugar; el breadcrumb nombra la página. La página pone un `<h1 class="sr-only">` con su título para los lectores de pantalla y conserva su raíz `.wms-page`.
