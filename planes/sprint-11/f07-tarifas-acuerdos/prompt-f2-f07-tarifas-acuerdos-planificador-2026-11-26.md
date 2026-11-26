@@ -1,5 +1,7 @@
 # Prompt — Planificación de F07 «Tarifas y acuerdos» (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-26; ya no es una instrucción. Produjo el [plan cerrado](plan-cerrado-f2-f07-tarifas-acuerdos-2026-11-26.md) y sus tres prompts, aprobados por el usuario el 2026-11-26 («Aprobar con §10»), con las retenciones del tercero que paga que el usuario pidió al revisarlo (D52 a D55).
+
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/`. Necesita leer `docs/`, `Backend/wms-api` y `Frontend/wms`.
 > 2. Copia el bloque de abajo.

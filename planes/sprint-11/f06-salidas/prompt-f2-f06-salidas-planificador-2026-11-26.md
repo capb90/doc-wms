@@ -1,5 +1,7 @@
 # Prompt — Planificación de F06 «Salidas de mercancía» (fase 2, sprint 11)
 
+> **Ejecutado** el 2026-11-26; ya no es una instrucción. Con él se escribieron el [plan cerrado](plan-cerrado-f2-f06-salidas-2026-11-26.md) y sus tres prompts, aprobados por el usuario el 2026-11-26 («Aprobar»). Como I-05 se fusionó mientras se planeaba, el plan ya está sobre `fase-2` con F05 (BE `348ab15`, FE `3531432`) y no necesita la revisión de «Cuándo».
+
 > **Cómo usarlo:**
 > 1. Abre una sesión nueva de Claude Code en `code_workspace/`. Necesita leer `docs/`, `Backend/wms-api` y `Frontend/wms`.
 > 2. Copia el bloque de abajo.
