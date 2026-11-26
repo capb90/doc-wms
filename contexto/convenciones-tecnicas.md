@@ -61,6 +61,10 @@
     - Una acción destructiva lleva `severity="danger"` y `separator` para ir al final, tras un divisor.
   - **Filtros:** en la columna, no en una búsqueda global. Los estados de una cola o de una lista corta pueden ir en pestañas (`Tabs`) con su contador en el slot `toolbar`.
   - **Galería:** `/dev/components` muestra `AppRowActions` con tres y con cinco acciones.
+- **Aviso junto a un dato** (`DEC-080`; plan `planes/sprint-11/f05-comercio-exterior/plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md`, D4). Un aviso junto a un dato es un `AppAlertIcon` con tooltip, no una etiqueta ni un mensaje.
+  - **Componente:** `app/components/app/AppAlertIcon.vue`, con `text` (el tooltip y el `aria-label`) y `severity`: `warn` (ámbar, por omisión), `danger` (rojo) o `info` (azul). Es enfocable y el tooltip también se abre con el teclado.
+  - **Dónde va:** a la derecha del dato que acompaña (el N.º de depósito con etapas pendientes, la placa con datos pendientes, el peso con diferencia). Un estado del registro («Anulada») sigue siendo una etiqueta (`Tag`).
+  - **Adopción:** F05 lo usa desde sus ajustes de UI; F01 a F04 lo adoptan en un plan aparte.
 - **Páginas que no son listados** (`DEC-080`; plan `planes/sprint-11/plan-cerrado-f2-paginas-sin-tarjeta-titulo-2026-11-24.md`, D1, D2, D5, D6 y D8). Tableros, formularios de operación y reportes no llevan la tarjeta de título (`AppPageHeader`), como los listados:
   - **Título:** nada visible en su lugar; el breadcrumb nombra la página. La página pone un `<h1 class="sr-only">` con su título para los lectores de pantalla y conserva su raíz `.wms-page`.
   - **Subtítulo:** se elimina, salvo que explique una regla del reporte; esa regla va como texto atenuado (`text-sm text-muted-color`) al pie de la tarjeta de filtros.
