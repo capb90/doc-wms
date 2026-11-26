@@ -1261,7 +1261,7 @@ Una a la vez por repo; el backend y la maquetación corren en paralelo (M10). Ca
 | Fase | Parte | Contenido | Criterio de salida | Estado |
 | --- | --- | --- | --- | --- |
 | BE-1 | 1 | Depósitos: modelo, listado, detalle, confirmación, edición, apertura tardía, recálculo, retiros, salida con cliente, importador | QA2-F05-001 a 016 en PASA | Hecha el 2026-11-25 (`bb0d735`) |
-| BE-2 | 1 | Entradas, edición del ingreso por CE, candidatos, Tickets, Abandono y Listas de empaque | QA2-F05-017 a 026 en PASA | Pendiente |
+| BE-2 | 1 | Entradas, edición del ingreso por CE, candidatos, Tickets, Abandono y Listas de empaque | QA2-F05-017 a 026 en PASA | Hecha el 2026-11-25 (`aac6de8`) |
 | BE-3 | 1 | Levantes, rótulo, vista 2, inventario nacionalizado, importación de ensayo | QA2-F05-027 a 036 en PASA | Pendiente |
 | FE-1 | 2 | Contratos, fuentes simuladas, `AppDataTable` expandible, P-CE-01 (tres rutas) y P-CE-09 | P-CE-01 y P-CE-09 con su lista del wireframe y captura | Hecha el 2026-11-25 (FE `8881589`) |
 | FE-2 | 2 | Detalle por etapas: P-CE-02 a P-CE-06, P-CE-03 y Salidas vacía | P-CE-02 a P-CE-06 con su lista y captura | Hecha el 2026-11-25 (FE `45defb9`) |
@@ -1294,7 +1294,14 @@ Una a la vez por repo; el backend y la maquetación corren en paralelo (M10). Ca
 - **Endpoints:** C-F05-22 a C-F05-28.
 - **Archivos:** §3.2, filas de BE-2. Sin migración.
 - **Casos:** QA2-F05-017 a 026.
-- **Estado:** pendiente.
+- **Notas para FE e I-05** (BE-2, 2026-11-25; los nombres coinciden con las fichas y los esquemas de §2.3):
+  - **C-F05-22:** `canEdit` es `true` también en Cerrado (regla de D25: depósito no anulado y entrada no anulada). Los campos nuevos viajan también en C-F03-13 y en la respuesta de C-F05-23 (mismo DTO); Zod de Báscula los descarta.
+  - **C-F05-23:** (1) `dateTimeEntry` se compara al minuto: si llega en el mismo minuto que la de hoy, no cuenta como cambio. (2) El motivo de la corrección sigue opcional para CE, como C-F01-90. (3) Las reglas de Vigilancia son las de C-F01-07, extraídas a `EntryLogCorrector` (las usan las dos correcciones, sin cambio de comportamiento en C-F01-07): además del 409 de la categoría, 409 «La placa {placa} ya tiene un ingreso abierto.», 404 «El motivo de ingreso no existe.», los 400 de la placa y los de la fecha («… no puede ser futura.», «… posterior a la salida registrada (…).», «… posterior al primer pesaje del ingreso (…).»). (4) `currency` fuera de COP o USD: 400 «La moneda debe ser COP o USD.». (5) Los cambios de Vigilancia marcan el ingreso como corregido y quedan en la auditoría de `entry_logs`, con la descripción de la corrección de la entrada (incluye el motivo).
+  - **C-F05-24:** la acción pasó a `EntryCorrectionController`; ruta, petición y respuesta sin cambios. Bodega recibe 403.
+  - **C-F05-25:** `merchandise[].quantity` es lo declarado en el camión; `grossWeight` es el indicador y `tareWeight` la tara real o calculada, como C-F05-22.
+  - **C-F05-26:** `status` ahora acepta varios valores separados por coma; uno inválido responde 400 «El valor «{valor}» no es válido para status.». Los filtros de texto se aplican en memoria (los días se calculan en hora de Colombia), sin tildes ni mayúsculas. Sin `sortField` ni `sortOrder` queda el orden de hoy (días faltantes y número del depósito).
+  - **C-F05-27 y C-F05-28:** las columnas de la lista blanca existen en `PackingListFileDto` y `PackingListItemDto`; `quantity` es calculada y se ordena por bultos × unidades por bulto. El 400 sin importador es el de hoy, «Seleccione el importador.» (la ficha lo citaba como «Indique el importador.»; gana el de hoy, que la ficha manda conservar). El filtro `status` de los artículos sigue siendo de un valor, como hoy.
+- **Estado:** hecha el 2026-11-25 (BE `aac6de8`, rama `f2/f05-comercio-exterior`). QA2-F05-017 a 026 en PASA por API (`EntryCorrectionTests` (los casos `F05_*`: 017, 018, 019 y 026), `EntryTicketsEndpointTests` (020 a 022), `AbandonmentListTests` (023) y `PackingListsListTests` (024 y 025)). `dotnet build Wms.sln` sin errores; `Wms.Tests` 2315 → 2326 y `Wms.IntegrationTests` 846 → 858, todas en verde. Sin migración; `has-pending-model-changes` limpio.
 
 ### 8.3 Backend, fase 3 — Levantes e inventario nacionalizado
 
