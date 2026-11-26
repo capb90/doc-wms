@@ -1,8 +1,8 @@
 # Plan cerrado — Fase 2 · Aviso junto a un dato (`AppAlertIcon`) en F01 a F04
 
-> **Fecha:** 26 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-26 («Apruebo el plan con las recomendaciones de P1 a P4»; §1.4). Sin ejecutar: arranca cuando `AppAlertIcon` llegue a `fase-2` con la fusión de F05 (D3, P4).
+> **Fecha:** 26 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-26 («Apruebo el plan con las recomendaciones de P1 a P4»; §1.4). **Ejecutado el 2026-11-26** (§4): fase única hecha y fusionada en `fase-2`; detalle del cierre en §9.
 > **Origen:** la regla del usuario en la revisión de F05 ([`qa-manual/hallazgos-UI-F05.md`](qa-manual/hallazgos-UI-F05.md), punto 10): «Si se necesita agregar un mensaje en una columna al lado de un dato como el de "Datos pendientes", usar un icono de alerta pequeño y con tooltip. Esto aplica para toda la app». El plan de ajustes de UI de F05 (`AUI/`) creó `AppAlertIcon` y la convención «Aviso junto a un dato» (D4), la extendió a lo anulado (D34) y a la fila anulada en rojo tenue (D36), y dejó F01 a F04 «en un plan aparte» (`AUI/` §4). Este es ese plan.
-> **Base:** FE `fase-2` `12f6656` (inventario hecho sobre `f2/f05-comercio-exterior` `17694dc`, que tiene las mismas pantallas de F01 a F04) · docs `main` `e8deb14`. Rama: `f2/ui-alert-icon`, desde `fase-2` cuando tenga `AppAlertIcon` (D3).
+> **Base:** FE `fase-2` `12f6656` (inventario hecho sobre `f2/f05-comercio-exterior` `17694dc`, que tiene las mismas pantallas de F01 a F04) · docs `main` `e8deb14`. Rama: `f2/ui-alert-icon`, desde `fase-2` cuando tenga `AppAlertIcon` (D3): creada el 2026-11-26 desde FE `fase-2` `3531432` (fusión de I-05).
 > **Alcance:** solo frontend. Cambia la forma de seis avisos en cinco archivos de Báscula y Bodega, suma una guardia y ajusta la convención. Sin cambios de backend, de contrato, de datos ni de reglas.
 > **Rutas:** relativas a `code_workspace/`. Prefijos: `F/` = `Frontend/wms/app/`; `FT/` = `Frontend/wms/test/`; `D/` = `docs/`; `AUI/` = `D/planes/sprint-11/f05-comercio-exterior/plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md`; `AUI3/` = `D/planes/sprint-11/f03-bascula/plan-cerrado-f2-f03-ajustes-ui-2026-11-24.md`; `PAJ/` = `D/planes/sprint-11/f02-base/plan-cerrado-f2-f02-ajustes-qa-2026-11-24.md`; `P04/` = `D/planes/sprint-11/f04-bodega/plan-cerrado-f2-f04-bodega-2026-11-25.md`.
 
@@ -129,7 +129,7 @@ El historial de recepciones (D6) no tiene prueba de página: lo cubre QA-AI-003.
 
 | Fase | Contenido | Criterio de salida | Estado |
 | --- | --- | --- | --- |
-| 1 | D4 a D11 y el icono de F05 (P3), la convención, el cierre y la fusión en `fase-2` | Compuertas de §6; QA-AI-001 a 006 en PASA; fusión hecha y publicada | Pendiente |
+| 1 | D4 a D11 y el icono de F05 (P3), la convención, el cierre y la fusión en `fase-2` | Compuertas de §6; QA-AI-001 a 006 en PASA; fusión hecha y publicada | Hecha el 2026-11-26 (§9) |
 
 Es una sola fase: seis cambios pequeños en cinco archivos, sin dependencias entre ellos.
 
@@ -180,3 +180,39 @@ Al cerrar: el estado de este plan y su fila en `D/planes/README.md`; una línea 
 | R2 | La regla de la fila roja de Novedades pierde contra las filas alternas | La misma especificidad que los historiales de Báscula (`:nth-child(n)`, D4); QA-AI-001 en los dos temas |
 | R3 | Se confunde un estado con un aviso en las fases siguientes | D10: «Qué no es un aviso» en la convención |
 | R4 | F05 llega a `fase-2` con más cambios a `AppAlertIcon` o a la convención | §0.3: confirmar con grep al empezar; si cambió la interfaz, preguntar |
+
+---
+
+## 9. Cierre (2026-11-26)
+
+**Commits:** FE `5be76e8` (cambios de D4 a D9, pruebas y guardia) y `b4a9905` (ajuste de D6 visto en el navegador), rama `f2/ui-alert-icon` publicada; fusión `--no-ff` en `fase-2` `00d15e5`, publicada. Docs: la convención (D10) y este cierre.
+
+**Cifras (antes → después):**
+
+| Compuerta | Antes (`fase-2` `3531432`) | Después (`00d15e5`) |
+| --- | --- | --- |
+| `yarn test` | 146 archivos, 785 pruebas en verde; 1 error no manejado (el heredado de `WeighbridgeQueuePage.spec.ts`) | 148 archivos, 790 pruebas en verde; el mismo error heredado |
+| `yarn lint` | 142 errores, 265 avisos | 142 errores, 265 avisos; ninguno en los archivos tocados |
+| `yarn build` | — | Código 0 |
+
+**Cambios:** los seis de §2.1, con `AppAlertIcon` (D4 a D9); `test/components/warehouse/ForkliftStartDialog.spec.ts` y `NoveltiesPage.spec.ts` (nuevos; la página de Novedades se montó con la lista sustituida, sin más simulación); `WeighbridgeEntryDetail.spec.ts` y `RegistrationGoodsLines.spec.ts` leen el `aria-label`; la guardia «aviso junto a un dato (DEC-080)» en `source-guards.spec.ts` (D11); en la convención, «Qué no es un aviso», una línea de la guardia y la «Adopción» (D10).
+
+**Diferencias con el plan:**
+- **P3 sin cambio:** `DepositExpandedEntriesTable.vue` ya no existe en `fase-2`; I-05 lo borró (FE `2e7c76b`). La guardia pasa sin excepciones, que era el fin de P3.
+- **D6:** en el navegador, con la mercancía en dos líneas, el icono pasaba a la línea de «Sobre vehículo». El texto y el icono van juntos en un `inline-flex` (FE `b4a9905`) y el icono queda a la derecha de la mercancía, como pide D6. «Sobre vehículo» sigue en etiqueta.
+- **D4, tema oscuro:** la regla oscura va en un `<style>` sin alcance (`.app-dark … tr:has(.novelty-row-voided)`), como la entrada anulada de F05, porque el selector global se recorta en un estilo con alcance.
+
+**Casos QA** (navegador, frontend de la rama en el puerto 3030 contra un API de `fase-2` en el 5283, sobre la base local; Bodega en 001 a 004, Báscula en 005 y 006; Admin revisó 001, 002, 003 y 005 por el DOM). Capturas en [`evidencias-alert-icon/`](evidencias-alert-icon/):
+
+| Caso | Resultado | Nota |
+| --- | --- | --- |
+| QA-AI-001 | PASA | Icono rojo junto al producto; con el teclado (Tab) y con el mouse, «Novedad anulada el 26/11/2026 08:23: Registrada por error en la prueba QA I05.»; sin tachado ni etiqueta; fila en rojo tenue, también en tema oscuro (`ai-001-oscuro.jpg`) |
+| QA-AI-002 | PASA | Icono ámbar con «La suma de buena, dañada y faltante (10) no coincide con el total (12).» |
+| QA-AI-003 | PASA | Icono ámbar «Lo contado difiere de lo declarado» junto a la mercancía de 2026BA00001; «Sobre vehículo» en etiqueta |
+| QA-AI-004 | PASA | ABC122: 2026BA00001 con el icono y su tooltip, «Recibido» en etiqueta y la opción deshabilitada; 2026BA00002, elegible |
+| QA-AI-005 | PASA | ABC122 (2026T00001): icono junto a «P. manifiesto» 18.000 con el texto de hoy; ningún mensaje bajo las tarjetas |
+| QA-AI-006 | PASA, sin guardar | WER123: «Producto QA AI 006» con el «+» muestra el icono y su tooltip. No se guardó el registro, para no crear el producto ni avisar a Comercio Exterior en la base local; el cambio solo toca la plantilla |
+
+**Datos QA que quedaron en la base local:** una novedad vigente de Arroz en 2026BA00003 (total 12, buena 10, descripción «QA-AI-002…») y un uso de montacargas en curso de ABC122 sobre 2026BA00001 (horómetro 100, observación «QA-AI-004…»). El contenedor `wms-postgres-db` estaba detenido y se arrancó para la verificación; los servidores de 3000 y 5281 no estaban levantados y no se tocaron.
+
+**Pendientes:** ninguno del plan. La QA del usuario sobre `fase-2`.
