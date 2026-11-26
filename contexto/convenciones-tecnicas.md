@@ -97,6 +97,7 @@
 | `TransportCatalogAccess` | Admin, Receiving, Scale, ForeignTrade |
 | `DriverCatalogAccess` | Admin, Receiving, Scale, ForeignTrade, Warehouse |
 | `NoveltyReadAccess` | Admin, Warehouse, ForeignTrade |
+| `NoveltyWriteAccess` | Admin, Warehouse, ForeignTrade (registrar, editar y anular novedades; CE lo hace desde la etapa Bodega del depósito, F05 I-05 (1)) |
 | `InventoryReportAccess` | Admin, ForeignTrade, Warehouse, Billing |
 | `LocationCreateAccess` | Admin, ForeignTrade, Billing, Warehouse (crear una ubicación desde la recepción de Bodega, `POST warehouse/locations`; editar y borrar siguen en `ConfigurationAccess`) |
 | `ActiveUser` | Cualquier usuario autenticado y activo |
