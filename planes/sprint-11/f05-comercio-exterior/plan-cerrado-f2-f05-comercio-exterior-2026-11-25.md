@@ -1266,7 +1266,7 @@ Una a la vez por repo; el backend y la maquetación corren en paralelo (M10). Ca
 | FE-1 | 2 | Contratos, fuentes simuladas, `AppDataTable` expandible, P-CE-01 (tres rutas) y P-CE-09 | P-CE-01 y P-CE-09 con su lista del wireframe y captura | Hecha el 2026-11-25 (FE `8881589`) |
 | FE-2 | 2 | Detalle por etapas: P-CE-02 a P-CE-06, P-CE-03 y Salidas vacía | P-CE-02 a P-CE-06 con su lista y captura | Hecha el 2026-11-25 (FE `45defb9`) |
 | FE-3 | 2 | P-CE-07, P-CE-10, P-CE-12, Abandono, Listas de empaque y rótulos | Su lista y captura | Hecha el 2026-11-25 (FE `fe18386`) |
-| Revisión | — | El usuario revisa la maquetación (§8.7) | Su visto bueno o un plan de ajustes ejecutado | En revisión del usuario (§8.7): pidió ajustes ([hallazgos](../qa-manual/hallazgos-UI-F05.md)) y el [plan de ajustes de UI](plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md), aprobado el 2026-11-26, quedó ejecutado en tres fases: AUI-1 (listas, Levantes vista 2, Abandono y Listas de empaque; FE `b0695f5`), AUI-2 (detalle por etapas y Edición del ingreso; FE `6ff70ca`) y AUI-3 (Amparados sin motivo y Levantes por mercancía; FE `84ef2d7`), las tres el 2026-11-26. Después, dos pedidos de la revisión (D34 y D35: la entrada anulada con icono y los botones de solo icono de la fila de Levantes; FE `17694dc`). La maquetación vuelve a la revisión del usuario; I-05 espera su visto bueno |
+| Revisión | — | El usuario revisa la maquetación (§8.7) | Su visto bueno o un plan de ajustes ejecutado | En revisión del usuario (§8.7): pidió ajustes ([hallazgos](../qa-manual/hallazgos-UI-F05.md)) y el [plan de ajustes de UI](plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md), aprobado el 2026-11-26, quedó ejecutado en tres fases: AUI-1 (listas, Levantes vista 2, Abandono y Listas de empaque; FE `b0695f5`), AUI-2 (detalle por etapas y Edición del ingreso; FE `6ff70ca`) y AUI-3 (Amparados sin motivo y Levantes por mercancía; FE `84ef2d7`), las tres el 2026-11-26. Después, dos pedidos de la revisión (D34 y D35: la entrada anulada con icono y los botones de solo icono de la fila de Levantes; FE `17694dc`). Hecha: visto bueno del usuario el 2026-11-26 («Apruebo la maquetación»); I-05 puede empezar |
 | I-05 (1) | 3 | Fuentes http, menú, borrado y casos de depósitos (§13) | QA2-F05-041 a 050 en PASA | Pendiente |
 | I-05 (2) | 3 | Levantes, tickets, reportes y listados; casos a `D/qa/`; fusión | QA2-F05-051 a 060 en PASA; fusión en `fase-2` | Pendiente |
 
@@ -1442,6 +1442,11 @@ Cada commit termina con la línea de coautoría que indique la sesión.
 ## 13. Integración I-05 (parte 3)
 
 Ocupa los dos repos, en `f2/f05-comercio-exterior`, después de BE-3, FE-3 y la revisión del usuario (§8.7). Dos fases, una por turno.
+
+**Entrada del plan de ajustes de UI** ([`plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md`](plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md), visto bueno del usuario el 2026-11-26). Antes de I-05 (1), lee sus decisiones D1 a D35 y sus notas de §2 y §5, porque cambian la forma de las pantallas que se integran:
+- **Backend (D1, §2):** I-05 (1) suma primero en el backend los filtros nuevos, con pruebas por filtro y sin migración: `vehiclePlate` en C-F05-01, y `warehouseStorageNumber`, `document`, `importer`, `product` y `releaseNumber` en C-F05-32.
+- **Motivo de los productos (D2):** lo envía la pantalla con un texto fijo, así que el backend no cambia.
+- **C-F05-33 y C-F05-49:** ninguna pantalla los lee ya. No se retiran; I-05 decide si el tablero los usa.
 
 ### 13.1 Fuentes http
 
