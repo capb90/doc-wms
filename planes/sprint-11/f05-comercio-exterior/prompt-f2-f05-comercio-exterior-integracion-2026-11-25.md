@@ -1,5 +1,6 @@
 # Prompt — F05 «Comercio Exterior», parte 3 (integración I-05)
 
+> **Ejecutado** el 2026-11-26; ya no es una instrucción. I-05 (1): BE `9699194`, FE `2e7c76b`; I-05 (2): BE `89ee2fc`, FE `7229bea`; fusiones en `fase-2`: BE `348ab15`, FE `3531432`. Estado en el plan §13.6.
 > **Fecha:** 25 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f05-comercio-exterior-2026-11-25.md](plan-cerrado-f2-f05-comercio-exterior-2026-11-25.md) (§13). **Repos y ramas:** `Backend/wms-api` y `Frontend/wms`, `f2/f05-comercio-exterior` en los dos. Arranca cuando BE-1 a BE-3 y FE-1 a FE-3 están cerradas y con push, y el usuario dio su visto bueno a la revisión de §8.7. Ocupa los dos repos.
 
 ```text

@@ -59,7 +59,7 @@
     - La regla es por tabla, no por fila: la página pasa todas las acciones posibles, con `visible` según la fila. Así, una fila que solo tiene «Ver» también usa el menú.
     - Con tres o menos, `AppRowActions` pinta botones de solo icono con tooltip.
     - Una acción destructiva lleva `severity="danger"` y `separator` para ir al final, tras un divisor.
-  - **Filtros:** en la columna, no en una búsqueda global. Los estados de una cola o de una lista corta pueden ir en pestañas (`Tabs`) con su contador en el slot `toolbar`.
+  - **Filtros:** en la columna, no en una búsqueda global. Los estados de una cola o de una lista corta pueden ir en pestañas (`Tabs`) con su contador en el slot `toolbar`. **Fila expandible** (F05, D34): un maestro-detalle usa `AppDataTable` con `expandable`, `v-model:expandedRows` y el slot `expansion`; las acciones van solo en la fila principal (AF-99).
   - **Galería:** `/dev/components` muestra `AppRowActions` con tres y con cinco acciones.
 - **Aviso junto a un dato** (`DEC-080`; plan `planes/sprint-11/f05-comercio-exterior/plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md`, D4). Un aviso junto a un dato es un `AppAlertIcon` con tooltip, no una etiqueta ni un mensaje.
   - **Componente:** `app/components/app/AppAlertIcon.vue`, con `text` (el tooltip y el `aria-label`) y `severity`: `warn` (ámbar, por omisión), `danger` (rojo) o `info` (azul). Es enfocable y el tooltip también se abre con el teclado.

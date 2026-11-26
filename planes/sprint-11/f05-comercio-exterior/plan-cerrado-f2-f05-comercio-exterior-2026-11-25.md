@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · F05 Comercio Exterior
 
-> **Fecha:** 25 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-25 («Aprobar con §10»), con los cambios al hub de su §10, que aplica I-05 (§13.4).
+> **Fecha:** 25 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-25 («Aprobar con §10»), con los cambios al hub de su §10, aplicados en I-05 (§13.4). **Ejecutado:** F05 integrada en `fase-2` el 2026-11-26 (BE `348ab15`, FE `3531432`; §13.6).
 > **Origen:**
 > - `DEC-080` y el análisis funcional `levantamiento-2026-11/fase_2-analisis-funcional-2026-11-19.md` (§2.3 completo, §3.3, §3.5 y §3.6), con los wireframes `fase_2-mockups/comercio-exterior.html` (P-CE-01 a P-CE-07, P-CE-09, P-CE-10 y P-CE-12; P-CE-08 y P-CE-11 son de F06) y `transversales.html` (P-TR-02, P-TR-03 y P-TR-11), y los mockups del usuario MK-02 a MK-06 (`levantamiento_staging/mockups/`);
 > - el plan maestro `planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md` (M1 a M25, `DEC-081`);
@@ -154,6 +154,14 @@ Las 19 tienen decisión y fase (§6 las cubre con casos).
 
 Ningún rol pierde una función: los endpoints que se retiran (C-F05-02 a C-F05-04, C-F05-16 a C-F05-20) solo los llaman pantallas de CE que F05 reemplaza (grep en la base: `F/features/foreign-trade/services/foreign-trade-service.ts:150`, `:162-166`, `:320`, `:332-336`, `:402-406`, `:810`, `:839-853`, `:931`; `F/features/foreign-trade/services/deposit-service.ts:17`).
 
+
+### 1.9 Decisiones del usuario durante la integración (I-05)
+
+| # | Decisión | Fuente |
+| --- | --- | --- |
+| D47 | **Estado del depósito en los detalles de exportación e inspección** (C-F05-06, C-F05-07). Los dos DTO traían `status` y no `warehouseStorageStatus`, que el contrato exige para los tres detalles (§2.3, `depositDetailSchema`), así que con el API real no cargaban. El backend suma `WarehouseStorageStatus` (el mismo valor de `Status`) a `ExportDepositDetailDto` e `InspectionDepositDetailDto`, con su prueba de integración; sin migración. El contrato no cambia | Usuario, 2026-11-26, I-05 (2): «1a» |
+| D48 | **Abandono sin los Id de importador y agencia en la fila** (C-F05-26). `AbandonmentItemDto` usa `ImporterId` y `CustomsAgencyId` solo para filtrar (`[JsonIgnore]`) y la pantalla no los usa: salen de `abandonmentItemSchema` (§2.3). El backend no cambia; los filtros `importerId` y `customsAgencyId` de la consulta siguen | Usuario, 2026-11-26, I-05 (2): «2a» |
+| D49 | **Novedades del depósito con escritura para CE** (`NoveltyWriteAccess`; ver §13). Registrada en I-05 (1) | Usuario, 2026-11-26, I-05 (1) |
 ---
 
 ## 2. Contrato (parte 0)
@@ -435,7 +443,7 @@ Los números C-F05-37 a C-F05-39 no se usan.
 - **Política:** `ForeignTradeAccess` (`B/Wms.Api/Controllers/v1/AbandonmentController.cs:20`, `:53`). Orden y filtros (C-F01-00).
 - **Petición (consulta):** los filtros de hoy (`status`, `hasExtension`, `warehouseStorageNumber`, `cargoManifestNumber`, `importerId`, `customsAgencyId`; `B/Wms.Application/ForeignTrade/Queries/GetAbandonmentList/GetAbandonmentListQuery.cs:15-20`), con `warehouseStorageNumber` y `cargoManifestNumber` como «contiene», más `importerName`, `customsAgencyName` y `customerName` (texto) y `entryDateFrom`, `entryDateTo`.
 - **Orden:** lista blanca `warehouseStorageNumber`, `entryDate`, `daysRemaining`, `status`, `importerName`; por defecto `daysRemaining asc` (el de hoy, `B/Wms.Application/ForeignTrade/Common/Services/AbandonmentReader.cs:81`).
-- **Respuesta 200:** `pagedSchema(abandonmentItemSchema)` (`AbandonmentItemDto`, sin cambios). **Errores:** los de C-F01-00. **Zod:** `abandonmentListQuerySchema`, `abandonmentItemSchema` (`F/features/foreign-trade/contracts/abandonment.ts`).
+- **Respuesta 200:** `pagedSchema(abandonmentItemSchema)` (`AbandonmentItemDto`, sin cambios; sin `importerId` ni `customsAgencyId`, que no viajan en el JSON: D48). **Errores:** los de C-F01-00. **Zod:** `abandonmentListQuerySchema`, `abandonmentItemSchema` (`F/features/foreign-trade/contracts/abandonment.ts`).
 
 ##### C-F05-27 · `GET foreign-trade/packing-lists` (modificado)
 - **Política:** `ForeignTradeAccess` (`B/Wms.Api/Controllers/v1/PackingListsController.cs:27`, `:101`). Orden y filtros (C-F01-00).
@@ -954,7 +962,7 @@ export const abandonmentItemSchema = z.object({   // AbandonmentItemDto (B/…/D
   daysRemaining: z.int(), status: z.string(), hasExtension: z.boolean(), extensionRegisteredAt: dateTimeSchema.nullable(),
   importerName: z.string().nullable(), customsAgencyName: z.string().nullable(), customerName: z.string().nullable(),
   pendingToNationalize: z.number(), currentStock: z.number(),
-  importerId: guidSchema.nullable(), customsAgencyId: guidSchema.nullable(),
+  // D48 (I-05 (2)): sin importerId ni customsAgencyId; el DTO los usa solo para filtrar ([JsonIgnore]).
 });
 export const abandonmentSummarySchema = z.object({ inAlert: z.int(), abandoned: z.int() });
 
@@ -1268,7 +1276,7 @@ Una a la vez por repo; el backend y la maquetación corren en paralelo (M10). Ca
 | FE-3 | 2 | P-CE-07, P-CE-10, P-CE-12, Abandono, Listas de empaque y rótulos | Su lista y captura | Hecha el 2026-11-25 (FE `fe18386`) |
 | Revisión | — | El usuario revisa la maquetación (§8.7) | Su visto bueno o un plan de ajustes ejecutado | En revisión del usuario (§8.7): pidió ajustes ([hallazgos](../qa-manual/hallazgos-UI-F05.md)) y el [plan de ajustes de UI](plan-cerrado-f2-f05-ajustes-ui-2026-11-26.md), aprobado el 2026-11-26, quedó ejecutado en tres fases: AUI-1 (listas, Levantes vista 2, Abandono y Listas de empaque; FE `b0695f5`), AUI-2 (detalle por etapas y Edición del ingreso; FE `6ff70ca`) y AUI-3 (Amparados sin motivo y Levantes por mercancía; FE `84ef2d7`), las tres el 2026-11-26. Después, dos pedidos de la revisión (D34 y D35: la entrada anulada con icono y los botones de solo icono de la fila de Levantes; FE `17694dc`). Hecha: visto bueno del usuario el 2026-11-26 («Apruebo la maquetación»); I-05 puede empezar |
 | I-05 (1) | 3 | Fuentes http, menú, borrado y casos de depósitos (§13) | QA2-F05-041 a 050 en PASA | Hecha el 2026-11-26 (BE `9699194`, FE `2e7c76b`; §13.6) |
-| I-05 (2) | 3 | Levantes, tickets, reportes y listados; casos a `D/qa/`; fusión | QA2-F05-051 a 060 en PASA; fusión en `fase-2` | Pendiente |
+| I-05 (2) | 3 | Levantes, tickets, reportes y listados; casos a `D/qa/`; fusión | QA2-F05-051 a 060 en PASA; fusión en `fase-2` | Hecha el 2026-11-26 (BE `89ee2fc`, FE `7229bea`; fusiones en `fase-2`: BE `348ab15`, FE `3531432`; §13.6) |
 
 ### 8.1 Backend, fase 1 — Depósitos
 
@@ -1483,3 +1491,14 @@ Compuertas de `PM/` §6.3 en los dos repos; QA2-F05-041 a 060 en PASA; ningún i
 - **Casos QA2-F05-041 a 050** en el navegador, contra el API local de la rama, sin la sesión simulada (usuarios de prueba CE, Bodega y Admin): **041** PASA (CE y Admin ven el menú de D43; Bodega no ve CE). **042** PASA (Borrador por defecto, pestañas en `?estado=`, filtros por columna con la placa, rango de fecha, orden, fila expandida con saldo en rojo, tarjeta y tiquete, la fila no navega, Excel con `all=true`). **043** PASA (exportación sin columnas de levantes; inspección con «Descripción» aparte). **044** PASA (seis etapas, acciones sin «Devolver a Borrador» ni «Cerrar ingreso», PDF y etiqueta con su conteo, `?etapa=` al recargar). **045** PASA (placa, peso del indicador, precio, moneda y unidad de carga; el CPI no manual refleja el precio, en un Borrador; con un levante, el switch bloqueado con su mensaje). **046** PASA (agencia con «+», CPI y fecha; la factura del período se recalcula; total 0 porque el cliente no tiene tarifa en la base local). **047** PASA (asignar cliente a un confirmado sin período abre el primero desde la fecha de ingreso con su factura). **048** PASA (con umbrales temporales, reloj y paso Bodega en amarillo; Movimientos; el bloque de novedades: CE registra, edita y anula; «Ajustar cantidad» responde 400 en local por el parámetro `INVENTORY_ADJUSTMENT_ADMIN_EMAIL` vacío, pendiente de ambiente por decisión del usuario). **049** PASA (amparado distinto, requisito al confirmar, producto con «+», confirma). **050** PASA (camión tardío por API de Vigilancia y Báscula: Amparados en rojo en el listado y el detalle, aviso en la etapa y notificación a CE).
 - **Datos de prueba en la BD local:** 2026BA00002 y 2026BA00003 confirmados, producto «Lenteja QA I05», agencia «Agencia QA I05», levante QAI05-LEV-1, placa QAI051 con la unidad QAIC05, camión tardío ABC125 y una novedad anulada. Umbrales de alertas devueltos a vacío.
 - **Para I-05 (2):** las fuentes de `release`, `abandonment`, `packing-list` y `nationalized-inventory`; la fachada y `mocks/`; `MAQUETACION_PAGES` vacía; los diálogos sin uso de arriba; los cambios al hub de §10 y `contexto/decisiones.md` con `NoveltyWriteAccess`.
+
+**I-05 (2): hecha el 2026-11-26** (BE `89ee2fc`, FE `7229bea`, rama `f2/f05-comercio-exterior`, con push; fusiones `--no-ff` en `fase-2`: BE `348ab15`, FE `3531432`, con push; `develop` no había avanzado sobre `fase-2`).
+
+- **Cifras:** `dotnet build Wms.sln` sin errores; `Wms.Tests` 2348 → 2348 y `Wms.IntegrationTests` 878 → 879, todas en verde; `has-pending-model-changes` limpio, sin migración. `yarn build` con código 0; `yarn test` 785 → 785 pruebas (146 → 146 archivos), todas en verde, guardias incluidas, con el error no controlado heredado de `FT/components/weighbridge/WeighbridgeQueuePage.spec.ts`; `yarn lint` 143 → 142 errores, ninguno nuevo (los 5 de `foreign-trade-service.ts` son de F06 y ya estaban).
+- **Fuentes (§13.1):** `release.http.ts`, `abandonment.http.ts`, `packing-list.http.ts` (la carga del CSV en `multipart`) y `F/features/reports/services/nationalized-inventory.http.ts`, en `INTEGRATED_SOURCES`; `MAQUETACION_PAGES` vacía. La fachada `catalog.source.ts` y `catalog.http.ts` se borraron: `catalog.queries.ts`, `deposit.queries.ts`, `deposit-detail.queries.ts` y `release.queries.ts` leen las fuentes integradas de F01, F03 y F04, y la tasa de una fecha (C-F01-13) pasa a `exchangeRateSource.forDate` (F02). `mocks/` de `foreign-trade` y `reports` pasaron a `FT/fixtures/foreign-trade/` y `FT/fixtures/reports/`; las pruebas de componentes reemplazan cada fuente integrada con `catalogModules` del fixture. Ningún import de `mocks/` en `app/`.
+- **Borrado:** sin uso tras I-05 (1): `useAbandonment.ts`, `types/abandonment.ts` y los métodos de abandono de `foreign-trade-service.ts` (el aviso del tablero lee C-F05-49 por la fuente de Abandono), `AdjustInventoryDialog.vue` y `useInventoryAdjustment.ts` (reemplazados por `DepositAdjustDialog`). `RegisterExtensionDialog` ya lo había borrado I-05 (1).
+- **Decisiones del usuario (D47, D48, §1.9):** el backend no cumplía el contrato en dos puntos. D47: `ExportDepositDetailDto` e `InspectionDepositDetailDto` suman `WarehouseStorageStatus` (antes los detalles de exportación e inspección no cargaban), con `DepositDetailStagesTests.Detail_ExportAndInspection_ReturnWarehouseStorageStatus`. D48: `abandonmentItemSchema` sin `importerId` ni `customsAgencyId` (antes Abandono salía vacío).
+- **Defecto corregido:** con un producto, `ReleaseEditableRow` recalculaba la cantidad cuando el peso perdía el foco y guardaba otra cantidad que la que se veía; prueba en `FT/components/foreign-trade/DepositReleasesStage.spec.ts`.
+- **Casos QA2-F05-051 a 060** en el navegador, contra el API local de la rama, sin la sesión simulada (usuarios de prueba CE, Báscula y Facturación): todos PASA; detalle en `D/qa/casos-qa2-f05-comercio-exterior-2026-11-26.md`. 054 (enlace a la inspección) y 057 se repitieron con D47 y D48.
+- **Docs (§13.4):** casos a `D/qa/`; los dos cambios al hub de §10 (fila expandible en `contexto/convenciones-tecnicas.md` §3 y la nota de F05 en `DEC-029`) y `NoveltyWriteAccess` en `DEC-030`.
+- **Datos de prueba en la BD local:** levantes 482026052 (2026BA00003) y 482026055 (2026BA00002, nacionalizado con diferencia de peso de 800 kg); prórroga de 2026BA00003; lista de empaque `lista-qa-i05.csv` del «Proveedor QA I05» con un artículo asociado a ABC122 de 2026BA00001; manifiesto de ABC125 corregido a `MF-QAI05-T`. Las fechas de ingreso movidas para 057 se restauraron.
