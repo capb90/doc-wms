@@ -1,5 +1,7 @@
 # Prompt — F05 «Comercio Exterior», parte 1 (backend)
 
+> **Ejecutado** el 2026-11-25; ya no es una instrucción. BE-1 (BE `bb0d735`), BE-2 (BE `aac6de8`) y BE-3 (BE `d94f831`) hechas en `f2/f05-comercio-exterior`; estado en el plan §8.1 a §8.3 y en la matriz.
+
 > **Fecha:** 25 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f05-comercio-exterior-2026-11-25.md](plan-cerrado-f2-f05-comercio-exterior-2026-11-25.md) (§8.1 a §8.3). **Repo y rama:** `Backend/wms-api`, `f2/f05-comercio-exterior`, que sale de `fase-2` (base `c2ca314`, o lo que haya en `fase-2` si avanzó). Corre en paralelo con la maquetación del frontend (otro agente).
 
 ```text
