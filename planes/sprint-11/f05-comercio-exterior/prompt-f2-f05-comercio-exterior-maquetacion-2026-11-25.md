@@ -1,5 +1,7 @@
 # Prompt — F05 «Comercio Exterior», parte 2 (maquetación del frontend)
 
+> **Ejecutado** el 2026-11-25; ya no es una instrucción. FE-1 (FE `8881589`), FE-2 (FE `45defb9`) y FE-3 (FE `fe18386`) hechas; estado en el plan §8.4 a §8.6 y en la matriz.
+
 > **Fecha:** 25 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f05-comercio-exterior-2026-11-25.md](plan-cerrado-f2-f05-comercio-exterior-2026-11-25.md) (§8.4 a §8.7). **Repo y rama:** `Frontend/wms`, `f2/f05-comercio-exterior`, que sale de `fase-2` (base `12f6656`, o lo que haya en `fase-2` si avanzó). Corre en paralelo con el backend (otro agente): trabajas sin API, con la sesión simulada.
 
 ```text
