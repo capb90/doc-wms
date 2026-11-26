@@ -1375,6 +1375,8 @@ Una a la vez por repo; el backend y la maquetación corren en paralelo (M10). Ca
 
 Con FE-1 a FE-3 cerradas y con push, el usuario revisa las pantallas en `yarn dev` con la sesión simulada (`NUXT_PUBLIC_MOCK_SESSION=true`; `?roles=Admin,ForeignTrade` y `?roles=ForeignTrade`) antes de I-05. Si pide ajustes, van en un plan de ajustes de la maquetación, como el de F03 y F04, y se ejecutan en `f2/f05-comercio-exterior` antes de I-05. El agente de maquetación, al cerrar FE-3, le dice qué rutas abrir y con qué roles: las tres listas de depósitos, un detalle de cada tipo con cada etapa, `/foreign-trade/entries/{id}`, `/foreign-trade/entry-tickets`, `/foreign-trade/releases`, `/reports/nationalized-inventory`, `/foreign-trade/abandonment` y `/foreign-trade/packing-lists`.
 
+- **Ajustes durante la revisión** (2026-11-25): (1) ancho del contenido: la plantilla fijaba `.layout-content` en 1504 px desde 1729 px de pantalla (`F/assets/layout/_responsive.scss:204-210`) y dejaba márgenes grandes; por decisión del usuario («Quitar el tope») el contenido ocupa todo el ancho en todas las páginas (FE `0ee7de6`).
+
 ---
 
 ## 9. Riesgos
