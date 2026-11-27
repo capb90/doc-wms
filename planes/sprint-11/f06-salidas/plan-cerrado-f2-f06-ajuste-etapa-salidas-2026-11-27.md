@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · F06 Salidas de mercancía · Ajuste de la etapa Salidas en el stepper
 
-> **Fecha:** 27 de noviembre de 2026. **Estado:** Pendiente de aprobación. Las decisiones del usuario del 2026-11-27 están en A1 a A4.
+> **Fecha:** 27 de noviembre de 2026. **Estado:** Ejecutado el 2026-11-27. Aprobado por el usuario el 2026-11-27 («Apruebo, ejecútalo»); fase A-1 hecha (FE `9df8af7`). Las decisiones del usuario del 2026-11-27 están en A1 a A4.
 > **Origen:** la nota de cierre de FE-2 de F06 (`P06/` §8.4): el stepper del detalle del depósito y la etiqueta de la tarjeta de la etapa Salidas siguen fijos por F05 («Con la próxima actualización», sin color y fuera del progreso), aunque D22 de F06 dice que la pantalla «pinta lo que llega». El backend ya marca la etapa (BE-1, `DepositStageRules.cs:108-112`, C-F06-10); el frontend la ignora.
 > **Base:** FE `f2/f06-salidas` `a2cac51` (FE-2 cerrada) · docs `main` `5bed929`.
 > **Alcance:** solo frontend, en `f2/f06-salidas`. Sin contrato nuevo, sin backend, sin migración.
@@ -56,7 +56,9 @@ Sin cambios. `pendingStages` ya incluye `Exits` por C-F06-10 (BE-1).
 
 | Fase | Contenido | Criterio de salida | Estado |
 | --- | --- | --- | --- |
-| A-1 | A1 a A3, A5 y A7 en el frontend (§3) | Pruebas de §3 en verde; en la galería, la etapa en amarillo con «Salida por completar» y en un ejemplo sin pendiente «Al día»; captura en `D/planes/sprint-11/f06-salidas/evidencias/aj1-*` | Pendiente |
+| A-1 | A1 a A3, A5 y A7 en el frontend (§3) | Pruebas de §3 en verde; en la galería, la etapa en amarillo con «Salida por completar» y en un ejemplo sin pendiente «Al día»; captura en `D/planes/sprint-11/f06-salidas/evidencias/aj1-*` | Hecha el 2026-11-27 (FE `9df8af7`) |
+
+**Estado de A-1:** hecha el 2026-11-27 (FE `9df8af7`, rama `f2/f06-salidas` sobre FE-2 `a2cac51`). Cifras: `yarn test` 904 → 906 pruebas en verde (163 archivos; el error no manejado de `WeighbridgeQueuePage.spec.ts` ya estaba en la base), `yarn lint` 142 → 142 errores y cero en los archivos tocados, `yarn build` con código 0 antes y después, guardias de `FT/unit/guards/` en verde (37). Hecho: `stageTone` pinta Salidas en amarillo si llega en `pendingStages`, también en Cerrado, y «Al día» si no; «Salida por completar» como texto; `stageProgress` cuenta todas las etapas; la galería arma el encabezado con los pendientes de cada ejemplo. El tono `idle` queda en el tipo `StageTone` sin uso. Capturas: `aj1-01-etapa-salidas-pendiente.jpg` (2026BA00010, «Salida por completar» en amarillo) y `aj1-02-etapa-salidas-al-dia.jpg` (2026BA00016, «Al día»). El stepper con Salidas pendiente lo cubre `FT/components/foreign-trade/DepositStageStepper.spec.ts`; en el detalle real se verá con I-06 (R1).
 
 ## 5. Compuertas
 
