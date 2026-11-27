@@ -1,6 +1,6 @@
 # Prompt — F06 «Salidas de mercancía», parte 1 (backend)
 
-> **Fecha:** 26 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f06-salidas-2026-11-26.md](plan-cerrado-f2-f06-salidas-2026-11-26.md) (§8.1 y §8.2). **Repo y rama:** `Backend/wms-api`, `f2/f06-salidas`, que sale de `fase-2` con I-05 fusionada (base `348ab15`, o lo que haya en `fase-2` en ese momento). Corre en paralelo con la maquetación del frontend (otro agente).
+> **Estado:** Ejecutado el 2026-11-27 (BE-1 `8ff47be`, BE-2 `f0b9007`). **Fecha:** 26 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f06-salidas-2026-11-26.md](plan-cerrado-f2-f06-salidas-2026-11-26.md) (§8.1 y §8.2). **Repo y rama:** `Backend/wms-api`, `f2/f06-salidas`, que sale de `fase-2` con I-05 fusionada (base `348ab15`, o lo que haya en `fase-2` en ese momento). Corre en paralelo con la maquetación del frontend (otro agente).
 
 ```text
 Eres el agente de backend de la feature F06 «Salidas de mercancía» de la fase 2 del WMS de Bodegas Asociadas.
