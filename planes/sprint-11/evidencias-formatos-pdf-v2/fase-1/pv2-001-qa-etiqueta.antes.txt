@@ -1,0 +1,22 @@
+Deposito No. 2026BA00013                        Importador:       COMERCIALIZADO
+                                                                  RA LUHOMAR S.A.S
+                                                Intermediario:    SURCOMEX S.A
+                                                                  NIVEL 2
+
+Fecha Ingreso: 2026-11-26 13:36:36
+
+  Ampara        Saldo      Mercancia
+
+   640,13       1.920      FRIJOL EN GRANO (SACOS)
+
+Carta Porte: PE000843 (2026-11-24)           Manifiesto No. 116575014469850(2026-11-26)
+Placa(s):
+IBA2021, PUB010, XAI1204
+
+
+
+        MERCANCIA NACIONALIZADA
+DATOS DE NACIONALIZACION
+Levantes: 372024000009520 (26/11/2026)
+N Aceptacion: 372024000009905 (26/11/2026)
+

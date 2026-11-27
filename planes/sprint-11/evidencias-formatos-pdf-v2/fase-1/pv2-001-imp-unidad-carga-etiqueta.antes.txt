@@ -1,0 +1,21 @@
+Deposito No. 2026BA00002                  Importador:        QA Importación
+                                                             18cd03362fc74
+                                          Intermediario:     QA Agencia F6
+
+Fecha Ingreso: 2026-11-27 00:38:00
+
+  Ampara        Saldo      Mercancia
+
+     30           30       GRANOS
+
+Carta Porte: CP-IT-8f8f92668c514c      Manifiesto No. DIAN-QA-057(N/A)
+(2026-11-26)
+Placa(s):
+QF161861
+Unidad(es) de carga:
+TANQUERO QFT202
+
+
+
+     MERCANCIA SIN NACIONALIZAR
+

@@ -1,0 +1,18 @@
+escenario/anulada-guia                        págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/exp-deposito                        págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/exp-etiqueta-exp                    págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/exp-tarjeta-exp-1                   págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/imp-nacionalizado-deposito          págs=1 texto_idéntico=False texto_sin_hora=True imagen=pág 1: filas 851-860 (10 filas de píxeles)
+escenario/imp-nacionalizado-etiqueta          págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/imp-nacionalizado-tarjeta-1         págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/imp-unidad-carga-deposito           págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/imp-unidad-carga-etiqueta           págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/imp-unidad-carga-tarjeta-1          págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/vigente-guia-barras                 págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/vigente-guia-por-deposito           págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+escenario/vigente-guia                        págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+local/qa-deposito                             págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+local/qa-etiqueta                             págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+local/qa-tarjeta-1                            págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+local/qa-tarjeta-2                            págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+local/qa-tarjeta-3                            págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
