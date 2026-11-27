@@ -72,7 +72,7 @@ Ningún contrato cambia: el API envía y recibe números JSON, con punto decimal
 
 | Fase | Repo | Contenido | Cierre | Estado |
 | --- | --- | --- | --- | --- |
-| 1 | BE | D6 a D8: `WmsCulture`, los 19 archivos, los textos de D7 y la guardia | Compuertas BE; QA-FN-001 a 004 y QA-FN-009 en PASA con el API en cultura invariante | Pendiente |
+| 1 | BE | D6 a D8: `WmsCulture`, los 19 archivos, los textos de D7 y la guardia | Compuertas BE; QA-FN-001 a 004 y QA-FN-009 en PASA con el API en cultura invariante | Hecha el 2026-11-27 (BE `08a1f72`, rama `f2/formato-numerico`). `Wms.Tests` 2368 → 2408; `Wms.IntegrationTests` 879/888 → 882/888: los 6 que fallan también fallan en `fase-2` `dcb7b8f` en la misma corrida (trazabilidad del día, báscula y recálculo de TRM, ajenos a este plan); `has-pending-model-changes` limpio. La guardia encontró además el peso total del PDF del depósito (`:N0`), el IVA del PDF de la factura (`:N1`) y los `:C` de los avisos de la factura de almacenamiento, que pasan a `WmsCulture` (D7). Con el punto de miles, «1.279,87» se partía en la guía de salida: sus cuatro columnas numéricas pasan de 35-38 a 40 pt. QA-FN-001 a 004 y 009 en PASA con el proceso en cultura invariante, por la prueba de integración (el Mac ignora `LANG=C` y `wmsdb` no tiene guías): [evidencias](evidencias-formato-numerico/fn-textos-fase-1.md) |
 | 2 | FE | D10 y D11: plugin del punto decimal y marcador | Compuertas FE; QA-FN-005 a 008 en PASA en el navegador | Pendiente |
 | 3 | docs | D9: `DEC-082`, convenciones y estado; casos a `D/qa/`; fusión de `f2/formato-numerico` en `fase-2` en los dos repos | Fusiones con push | Pendiente |
 
