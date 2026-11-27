@@ -1,5 +1,7 @@
 # Prompt — F06 «Salidas de mercancía», parte 2 (maquetación del frontend)
 
+> **Ejecutado** el 2026-11-27; ya no es una instrucción. FE-1 (FE `2c5540b`), FE-2 (FE `a2cac51`), el ajuste de la etapa Salidas (FE `9df8af7`) y FE-3 (FE `1a45f7c`) hechos en `f2/f06-salidas`; estado en el plan §8.3 a §8.5 y en la matriz. Sigue la revisión del usuario (§8.6).
+
 > **Fecha:** 26 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f06-salidas-2026-11-26.md](plan-cerrado-f2-f06-salidas-2026-11-26.md) (§8.3 a §8.6). **Repo y rama:** `Frontend/wms`, `f2/f06-salidas`, que sale de `fase-2` cuando I-05 (ya fusionada: `3531432`) y el plan de `AppAlertIcon` en F01 a F04 (`f2/ui-alert-icon`) estén fusionados, con lo que haya en `fase-2` en ese momento. Corre en paralelo con el backend (otro agente): trabajas sin API, con la sesión simulada.
 
 ```text
