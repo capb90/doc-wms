@@ -252,6 +252,15 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Valor inicial:** `QR`.
 - **Verificación:** al escanear el QR se abre una página pública, sin iniciar sesión. Muestra los datos mínimos de la guía para cotejarlos con el papel: número, fechas, estado vigente o anulada, depósito, destino, productos y cantidades, y la placa parcialmente oculta. Nunca muestra datos de personas (`DEC-007`).
 - **Fuente:** el usuario, en el plan `planes/plan-cerrado-brechas-paridad-p1-2026-10-23.md` (fase 11, D35–D42).
+- **Formatos de los documentos impresos** (ampliación del 2026-11-27, plan `planes/sprint-11/plan-cerrado-f2-formatos-pdf-v2-2026-11-26.md`, D1, D2, D6, D7, D21, D22 y D28). Cuatro documentos tienen un formato v2, más limpio, y conservan el legacy: los v2 son **aditivos** y el legacy no se elimina. Tres parámetros de sistema, con el patrón de `GUIDE_CODE_TYPE`, eligen cuál sale:
+  - **`LABEL_FORMAT`:** la etiqueta del depósito y la tarjeta por vehículo, de importación, exportación e inspección (D22).
+  - **`DEPOSIT_PDF_FORMAT`:** el PDF del depósito de importación, exportación (D22) e inspección (D28).
+  - **`DISPATCH_GUIDE_FORMAT`:** la guía de salida, completa y por depósito, también la anulada. El QR o el código de barras sigue saliendo de `GUIDE_CODE_TYPE`.
+  - **Valores:** `LEGACY` (el formato de siempre) o `V2`, sin distinguir mayúsculas. Otro valor se rechaza con 400 «El parámetro {código} solo admite LEGACY o V2.». Un valor vacío o desconocido, o el parámetro inactivo, equivalen a `LEGACY`.
+  - **Valor inicial:** `LEGACY` en los tres (D21). Se pasan a `V2` cuando el usuario apruebe los formatos en local.
+  - **Cómo se cambia:** el Admin lo edita en Configuración › Parámetros. Rige en la próxima descarga, sin desplegar ni reiniciar.
+  - **Diseño v2:** encabezado y pie comunes en el PDF del depósito y la guía (logotipos del frontend), fuentes Inter y JetBrains Mono embebidas y los mismos datos y reglas del legacy (D4). Exportación e inspección llevan su banda azul «MERCANCIA PARA EXPORTACION» o naranja «INSPECCION ADUANERA».
+  - **Fuente:** el usuario, al aprobar el plan el 2026-11-26 y en las dudas del cierre de su fase 1 (D27 y D28, 2026-11-27).
 
 ## 8. Notificaciones
 

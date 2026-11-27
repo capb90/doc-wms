@@ -193,3 +193,43 @@ Los archivos son `fase-3/pv2-*.antes.pdf` y `*.despues.pdf`. Los dibujos legacy 
 | `has-pending-model-changes` | — | Limpio |
 
 Las dos suites de antes corrieron en la misma sesión, sobre un worktree de `bf61eac`. No hubo fallas que dependan de la hora.
+
+## Fase 4 (BE y docs) — 2026-11-27
+
+BE en `f2/formatos-pdf-v2`, sobre la fase 3 (`190f56f`), y después fusionado en `fase-2` (`996828e`).
+
+### QA-PV2-011: de vuelta a LEGACY, sin desplegar (PASA, por API)
+
+**Método.** Una prueba de integración temporal, que no se subió, usó el API de las pruebas de integración con un token de Admin para los parámetros y uno de Comercio Exterior para las descargas. Las contraseñas locales del README no sirven, así que no se entró al frontend. El escenario de Testcontainers tenía:
+
+- un depósito de importación con un levante, una salida y su guía;
+- un depósito de exportación y uno de inspección.
+
+Los pasos fueron tres, sin reiniciar el API:
+
+1. Los tres parámetros en `LEGACY` (el valor de la semilla): se descargaron los documentos («legacy-antes»).
+2. Los tres en `V2` por `PATCH`: se descargaron otra vez («v2»).
+3. Los tres de vuelta en `LEGACY` por `PATCH`: se descargaron otra vez («legacy-despues»).
+
+En cada paso se descargaron la etiqueta, la tarjeta por vehículo, el PDF del depósito y la guía de importación, más el PDF del depósito de exportación y la etiqueta de inspección. Cada `PATCH` respondió 200 y cada descarga, 200 `application/pdf` ([`fase-4/pv2-011-api.log`](fase-4/pv2-011-api.log)).
+
+**Resultado** ([`fase-4/pv2-011-comparacion.txt`](fase-4/pv2-011-comparacion.txt)):
+
+- En `V2`, los seis PDF llevan las fuentes v2 y su texto es otro.
+- De vuelta en `LEGACY`, ninguno las lleva. Salen con el mismo texto (`pdftotext -layout`) y la misma imagen de cada página (100 ppp) que en el paso 1.
+- La única diferencia es el último dígito de los segundos de «impreso el …» en el PDF del depósito, el de exportación y las dos copias de la guía: una zona de 7 × 10 píxeles.
+
+**Archivos.** En `fase-4/`, `pv2-011-<documento>.<paso>.pdf` con su texto (`.txt`), y la captura de la primera página de «legacy-despues» y de «v2» (`-1.png`). Los documentos son `etiqueta`, `tarjeta`, `deposito`, `guia`, `exp-deposito` e `insp-etiqueta`.
+
+**Base local.** Al cerrar, `wmsdb` tiene los tres parámetros en `LEGACY`, activos, y la migración `20261127060211_AddPdfFormatParameters` aplicada. Ninguna fase cambió los parámetros de la base local.
+
+### Compuertas (BE `fase-2` `996828e`, después de la fusión)
+
+| Compuerta | Antes (`190f56f`, fase 3) | Después (`fase-2` `996828e`) |
+| --- | --- | --- |
+| `dotnet build Wms.sln` | Sin errores | Sin errores |
+| `Wms.Tests` | 2475 | 2475, con la guardia `NumberCultureGuardTests` (29) en verde |
+| `Wms.IntegrationTests` | 893 | 893 |
+| `has-pending-model-changes` | Limpio | Limpio; `20261127060211_AddPdfFormatParameters` aplicada en la base local |
+
+La fase 4 no agrega pruebas: la prueba temporal de QA-PV2-011 se borró antes de fusionar.

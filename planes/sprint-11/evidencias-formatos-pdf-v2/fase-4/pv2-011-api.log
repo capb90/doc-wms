@@ -1,0 +1,45 @@
+1) Estado inicial (semilla)
+PATCH LABEL_FORMAT = LEGACY -> 200
+PATCH DEPOSIT_PDF_FORMAT = LEGACY -> 200
+PATCH DISPATCH_GUIDE_FORMAT = LEGACY -> 200
+  LABEL_FORMAT: value=LEGACY active=True
+  DEPOSIT_PDF_FORMAT: value=LEGACY active=True
+  DISPATCH_GUIDE_FORMAT: value=LEGACY active=True
+GET etiqueta [legacy-antes] -> 200 234058 bytes, fuentes v2: no
+GET tarjeta [legacy-antes] -> 200 231949 bytes, fuentes v2: no
+GET deposito [legacy-antes] -> 200 249779 bytes, fuentes v2: no
+GET guia [legacy-antes] -> 200 265823 bytes, fuentes v2: no
+GET exp-deposito [legacy-antes] -> 200 247274 bytes, fuentes v2: no
+GET insp-etiqueta [legacy-antes] -> 200 229213 bytes, fuentes v2: no
+2) Los tres en V2
+PATCH LABEL_FORMAT = V2 -> 200
+PATCH DEPOSIT_PDF_FORMAT = V2 -> 200
+PATCH DISPATCH_GUIDE_FORMAT = V2 -> 200
+  LABEL_FORMAT: value=V2 active=True
+  DEPOSIT_PDF_FORMAT: value=V2 active=True
+  DISPATCH_GUIDE_FORMAT: value=V2 active=True
+GET etiqueta [v2] -> 200 116635 bytes, fuentes v2: sí
+GET tarjeta [v2] -> 200 116193 bytes, fuentes v2: sí
+GET deposito [v2] -> 200 163558 bytes, fuentes v2: sí
+GET guia [v2] -> 200 259705 bytes, fuentes v2: sí
+GET exp-deposito [v2] -> 200 166508 bytes, fuentes v2: sí
+GET insp-etiqueta [v2] -> 200 110816 bytes, fuentes v2: sí
+3) Los tres de vuelta en LEGACY
+PATCH LABEL_FORMAT = LEGACY -> 200
+PATCH DEPOSIT_PDF_FORMAT = LEGACY -> 200
+PATCH DISPATCH_GUIDE_FORMAT = LEGACY -> 200
+  LABEL_FORMAT: value=LEGACY active=True
+  DEPOSIT_PDF_FORMAT: value=LEGACY active=True
+  DISPATCH_GUIDE_FORMAT: value=LEGACY active=True
+GET etiqueta [legacy-despues] -> 200 234058 bytes, fuentes v2: no
+GET tarjeta [legacy-despues] -> 200 231949 bytes, fuentes v2: no
+GET deposito [legacy-despues] -> 200 249779 bytes, fuentes v2: no
+GET guia [legacy-despues] -> 200 266287 bytes, fuentes v2: no
+GET exp-deposito [legacy-despues] -> 200 247715 bytes, fuentes v2: no
+GET insp-etiqueta [legacy-despues] -> 200 229213 bytes, fuentes v2: no
+PATCH LABEL_FORMAT = LEGACY -> 200
+PATCH DEPOSIT_PDF_FORMAT = LEGACY -> 200
+PATCH DISPATCH_GUIDE_FORMAT = LEGACY -> 200
+  LABEL_FORMAT: value=LEGACY active=True
+  DEPOSIT_PDF_FORMAT: value=LEGACY active=True
+  DISPATCH_GUIDE_FORMAT: value=LEGACY active=True

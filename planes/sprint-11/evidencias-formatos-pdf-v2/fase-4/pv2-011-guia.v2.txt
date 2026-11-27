@@ -1,0 +1,121 @@
+                                      GUÍA DE SALIDA NO.
+                                                                                                                                          FECHA HORA SALIDA
+                                      2026S00001                                                                                2026-11-27 02 07 25
+
+ Escanee para verificar esta guía
+
+
+Importador: QA IMPORTACIÓN 652D0E675AFC4                                                       Dirección:
+Codigo/Cedula/NIT 574186759 COL
+
+Placas: QX243376 (CO)                                  Tiquetes:                                             Fecha ingreso: 2026BA00001 27/11/2026
+
+Conductores: Conductor Prueba F01 1921431230
+Empresa de transporte: QA Transportadora compartida
+Identificación empresa transporte: NIT 1686242712
+
+Agencia de aduanas: QA Agencia F6
+Identificación agencia: NIT 694386642
+
+
+                                                                                                                                    Saldo     Cant.   Nvo.
+No. Producto                   Doc / CPI    Deposito     Manifiesto         Levante          Aceptacion       Embalaje   Entrada
+                                                                                                                                    Ante.     Sale    Saldo
+
+                              CP-IT-890
+                                                                                           ACE-37202400000
+ 1   GRANOS                   572acfa81 2026BA00001      MAN-QA-F3       372024000000311
+                                                                                           0311
+                                                                                                                 —         10        10         5      5
+                              4f
+
+
+                                                                      Total en esta salida 5
+
+
+Unidades de carga: N/A
+Observaciones:
+Responsable: P.F.
+Cuadrilla:
+
+Destino: QA Ciudad 09b544a51f                                                                                        Vence:        20261130 en 3 días
+
+
+                                Firma Entrega:                                                                   Firma Conductor:
+
+
+
+
+                           PRUEBA FA167CF76C8D                                                       CONDUCTOR PRUEBA F01 1921431230
+                                406915847
+
+
+
+
+                                           Guía generada el 2026-11-27 02 07 25, impreso el 2026-11-27 02 07 27
+                                               Para mayor información de esta guía favor llamar al 3183324398
+                                                                          Página 1 de 2
+
+                                    CALLE 3 ESTE No. 2732 BARRIO EL TEJAR TEL 7736748  7736522 IPIALES  COLOMBIA
+                                                            E-mail: info@bodegasasociadas.com
+                                      GUÍA DE SALIDA NO.
+                                                                                                                                          FECHA HORA SALIDA
+                                      2026S00001 QX243376 (CO)                                                                  2026-11-27 02 07 25
+
+ Escanee para verificar esta guía
+
+
+Importador: QA IMPORTACIÓN 652D0E675AFC4                                                       Dirección:
+Codigo/Cedula/NIT 574186759 COL
+
+Placas: QX243376 (CO)                                  Tiquetes:                                             Fecha ingreso: 2026BA00001 27/11/2026
+
+Conductores: Conductor Prueba F01 1921431230
+Empresa de transporte: QA Transportadora compartida
+Identificación empresa transporte: NIT 1686242712
+
+Agencia de aduanas: QA Agencia F6
+Identificación agencia: NIT 694386642
+
+
+                                                                                                                                    Saldo     Cant.   Nvo.
+No. Producto                   Doc / CPI    Deposito     Manifiesto         Levante          Aceptacion       Embalaje   Entrada
+                                                                                                                                    Ante.     Sale    Saldo
+
+                              CP-IT-890
+                                                                                           ACE-37202400000
+ 1   GRANOS                   572acfa81 2026BA00001      MAN-QA-F3       372024000000311
+                                                                                           0311
+                                                                                                                 —         10        10         5      5
+                              4f
+
+
+                                                                      Total en esta salida 5
+
+
+Unidades de carga: N/A
+Observaciones:
+Responsable: P.F.
+Cuadrilla:
+
+Destino: QA Ciudad 09b544a51f                                                                                        Vence:        20261130 en 3 días
+
+
+                                Firma Entrega:                                                                   Firma Conductor:
+
+
+
+
+                           PRUEBA FA167CF76C8D                                                       CONDUCTOR PRUEBA F01 1921431230
+                                406915847
+
+
+
+
+                                           Guía generada el 2026-11-27 02 07 25, impreso el 2026-11-27 02 07 27
+                                               Para mayor información de esta guía favor llamar al 3183324398
+                                                                          Página 2 de 2
+
+                                    CALLE 3 ESTE No. 2732 BARRIO EL TEJAR TEL 7736748  7736522 IPIALES  COLOMBIA
+                                                            E-mail: info@bodegasasociadas.com
+

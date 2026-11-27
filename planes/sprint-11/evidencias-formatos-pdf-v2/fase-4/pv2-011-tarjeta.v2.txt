@@ -1,0 +1,36 @@
+                                                                    Deposito No.
+                                                           2026BA00001
+
+                                                      2 0 2 6 B A 0 0 0 0 1
+
+
+
+
+Importador: QA Importación           Intermediario: QA Agencia F6
+652d0e675afc4
+
+Fecha Ingreso: 2026-11-27 01 37 24
+
+
+
+  Cant. ingresa   Mercancia
+
+            10    GRANOS
+
+
+
+Carta Porte: CP-IT-890572acfa814f    Manifiesto No. DIAN-QA-057 N/A
+20261126
+
+Placa: QF821769
+
+
+
+
+             MERCANCIA NACIONALIZADA
+
+DATOS DE NACIONALIZACION
+
+Levantes: 372024000000311            N Aceptacion: ACE-372024000000311
+26/11/2026                         26/11/2026
+

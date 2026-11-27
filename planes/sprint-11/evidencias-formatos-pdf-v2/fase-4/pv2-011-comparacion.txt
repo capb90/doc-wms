@@ -1,0 +1,25 @@
+== etiqueta: 1 pág.; imagen legacy antes/después: igual; texto legacy después vs v2: distinto
+   texto legacy antes/después: igual
+== tarjeta: 1 pág.; imagen legacy antes/después: igual; texto legacy después vs v2: distinto
+   texto legacy antes/después: igual
+== deposito: 1 pág.; imagen legacy antes/después: distinta; texto legacy después vs v2: distinto
+   texto legacy antes/después, diferencias:
+     <                                    Depósito registrado el 2026-11-27 01:37:24, impreso el 2026-11-27 02:07:27
+     >                                    Depósito registrado el 2026-11-27 01:37:24, impreso el 2026-11-27 02:07:28
+== guia: 2 pág.; imagen legacy antes/después: distinta; texto legacy después vs v2: distinto
+   texto legacy antes/después, diferencias:
+     <                                                 Guía generada el 2026-11-27 02:07:25, impreso el 2026-11-27 02:07:27
+     >                                                 Guía generada el 2026-11-27 02:07:25, impreso el 2026-11-27 02:07:28
+     <                                                 Guía generada el 2026-11-27 02:07:25, impreso el 2026-11-27 02:07:27
+     >                                                 Guía generada el 2026-11-27 02:07:25, impreso el 2026-11-27 02:07:28
+== exp-deposito: 1 pág.; imagen legacy antes/después: distinta; texto legacy después vs v2: distinto
+   texto legacy antes/después, diferencias:
+     <                                    Depósito registrado el 2026-11-27 01:37:23, impreso el 2026-11-27 02:07:27
+     >                                    Depósito registrado el 2026-11-27 01:37:23, impreso el 2026-11-27 02:07:28
+== insp-etiqueta: 1 pág.; imagen legacy antes/después: igual; texto legacy después vs v2: distinto
+   texto legacy antes/después: igual
+
+== Zona de píxeles distinta entre legacy antes y después (pdftoppm, 100 ppp, carta 850x1100):
+   deposito y exp-deposito: filas 851-860, columnas 603-609 (el último dígito de los segundos de «impreso el …»)
+   guia (copias 1 y 2): filas 908-917, columnas 591-597 (el mismo dígito)
+   etiqueta, tarjeta e insp-etiqueta: imagen igual

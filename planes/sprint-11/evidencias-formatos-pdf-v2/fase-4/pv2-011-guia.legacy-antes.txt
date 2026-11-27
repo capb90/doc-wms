@@ -1,0 +1,103 @@
+                                 Guía de Salida No. 2026S00001
+
+Escanee para verificar
+                                                                                                                       Fecha Hora Salida:       2026-11-27
+esta guía                                                                                                                                         02:07:25
+
+
+Importador: QA Importación 652d0e675afc4
+Codigo/Cedula/NIT: 574186759 COL                                                    Dirección:
+
+Placas      QX243376 (CO)                               Tiquetes:                                          Fecha ingreso: 2026BA00001
+                                                                                                           27/11/2026
+Conductores: Conductor Prueba F01 (1921431230)
+Empresa de transporte: QA Transportadora compartida
+Identificación empresa transporte: NIT 1686242712
+
+Agencia de aduanas: QA Agencia F6
+Identificación agencia: NIT 694386642
+
+                                            Deposit                                                      Embalaj              Saldo    Cant.        Nvo.
+ No.       Producto             Doc / CPI              Manifiesto         Levante         Aceptacion               Entrada
+                                              o                                                            e                  Ante.    Sale         Saldo
+                                CP-IT-8905 2026BA                     372024000000 ACE-372024000
+  1        GRANOS                                     MAN-QA-F3                                             —          10       10          5        5
+                                72acfa814f 00001                           311        000311
+                                                                      Total en esta salida 5
+
+Unidades de carga:               N/A
+Observaciones:
+Responsable:             P.F.
+Cuadrilla:
+
+Destino:       QA Ciudad 09b544a51f                                                 Vence: 2026-11-30 en 3 días
+
+
+                            Firma Entrega:                                                             Firma Conductor:
+
+
+
+                            PRUEBA FA167CF76C8D                                                        CONDUCTOR PRUEBA F01 (1921431230)
+                                 406915847
+
+                                                Guía generada el 2026-11-27 02:07:25, impreso el 2026-11-27 02:07:27
+
+Para mayor información de esta guia favor llamar al 3183324398
+
+
+
+
+                                      CALLE 3 ESTE No. 2-732 BARRIO EL TEJAR TEL: 7736748 - 7736522 IPIALES - COLOMBIA
+                                                               E-mail: info@bodegasasociadas.com
+                                 Guía de Salida No. 2026S00001 QX243376
+                                 (CO)
+Escanee para verificar
+                                                                                                                       Fecha Hora Salida:       2026-11-27
+esta guía                                                                                                                                         02:07:25
+
+
+Importador: QA Importación 652d0e675afc4
+Codigo/Cedula/NIT: 574186759 COL                                                    Dirección:
+
+Placas      QX243376 (CO)                               Tiquetes:                                          Fecha ingreso: 2026BA00001
+                                                                                                           27/11/2026
+Conductores: Conductor Prueba F01 (1921431230)
+Empresa de transporte: QA Transportadora compartida
+Identificación empresa transporte: NIT 1686242712
+
+Agencia de aduanas: QA Agencia F6
+Identificación agencia: NIT 694386642
+
+                                            Deposit                                                      Embalaj              Saldo    Cant.        Nvo.
+ No.       Producto             Doc / CPI              Manifiesto         Levante         Aceptacion               Entrada
+                                              o                                                            e                  Ante.    Sale         Saldo
+                                CP-IT-8905 2026BA                     372024000000 ACE-372024000
+  1        GRANOS                                     MAN-QA-F3                                             —          10       10          5        5
+                                72acfa814f 00001                           311        000311
+                                                                      Total en esta salida 5
+
+Unidades de carga:               N/A
+Observaciones:
+Responsable:             P.F.
+Cuadrilla:
+
+Destino:       QA Ciudad 09b544a51f                                                 Vence: 2026-11-30 en 3 días
+
+
+                            Firma Entrega:                                                             Firma Conductor:
+
+
+
+                            PRUEBA FA167CF76C8D                                                        CONDUCTOR PRUEBA F01 (1921431230)
+                                 406915847
+
+                                                Guía generada el 2026-11-27 02:07:25, impreso el 2026-11-27 02:07:27
+
+Para mayor información de esta guia favor llamar al 3183324398
+
+
+
+
+                                      CALLE 3 ESTE No. 2-732 BARRIO EL TEJAR TEL: 7736748 - 7736522 IPIALES - COLOMBIA
+                                                               E-mail: info@bodegasasociadas.com
+

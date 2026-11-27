@@ -1,0 +1,20 @@
+Deposito No. 2026INSP00001                     Importador:   QA Cliente PV2 011
+                                               Exportador:   QA Cliente PV2 011
+
+
+
+Fecha Ingreso: 2026-11-27 01:37:24
+
+  Ampara        Saldo      Mercancia
+
+     10           10       GRANOS
+
+Documentos:
+  Carta Porte: CP-IT-6e4b0f7a710b4e (2026-11-26)
+Placa(s):
+QF986644
+
+
+
+               INSPECCION ADUANERA
+
