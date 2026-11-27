@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · F05 Comercio Exterior · Ajustes de la QA manual de la integración
 
-> **Fecha:** 26 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-26 («Apruebo y ejecuta F1 en una nueva sesión»). En ejecución: fase 1 pendiente.
+> **Fecha:** 26 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-26 («Apruebo y ejecuta F1 en una nueva sesión»). En ejecución: fase 1 hecha el 2026-11-26 (BE `f076b2c`); fase 2 pendiente.
 > **Origen:** la prueba manual del usuario sobre F05 integrada (I-05, contra el backend local, con un flujo completo desde Vigilancia y datos tomados del legacy): [`../qa-manual/hallazgos-int-F05.md`](../qa-manual/hallazgos-int-F05.md). Las respuestas del usuario del 2026-11-26 están en D1 a D7c.
 > **Base:** BE `fase-2` `348ab15` · FE `fase-2` `00d15e5` · docs `main` `6a7984b`.
 > **Alcance:** backend y frontend. Backend: un endpoint de producto rápido para Báscula, la regla del estado aduanero del depósito y las correcciones de los PDF actuales (etiqueta por depósito, tarjeta por vehículo, PDF del depósito y guía de salida). Frontend: el producto nuevo en Báscula, el pesaje en un drawer desde la etapa Entradas, la edición del ingreso, el encabezado del depósito y la tabla de Levantes. Sin migraciones. Cambia decisiones del plan de F05 (D39 y D40) y del plan de ajustes de UI de F05 (D22 y D31). Donde chocan, gana este plan.
@@ -122,7 +122,7 @@ C-F05-33 conserva `partial` (D13). Ningún otro contrato cambia.
 
 | Fase | Repo | Contenido | Cierre | Estado |
 | --- | --- | --- | --- | --- |
-| 1 | BE | C-F05AQ-01 (D8) y el estado aduanero del depósito (D13) | Compuertas BE; QA-AJQ5-001 a 004 en PASA (API) | Pendiente |
+| 1 | BE | C-F05AQ-01 (D8) y el estado aduanero del depósito (D13) | Compuertas BE; QA-AJQ5-001 a 004 en PASA (API) | Hecha el 2026-11-26: BE `f076b2c` en `f2/f05-ajustes-qa`. `POST /weighbridge/products` (201 creado, 200 existente, 400, 403 con CE y Facturación) con `WeighbridgeProductResolver.FindOrCreateAsync` compartido; `DepositStatus` con un levante = `Nationalized`. `Wms.Tests` 2348 → 2350, `Wms.IntegrationTests` 879 → 886, `has-pending-model-changes` limpio. QA-AJQ5-001 a 004 en PASA contra el API local (el depósito de la QA, con 640,13 de 1.920 levantados: depósito `Nationalized`, producto `Partial`) |
 | 2 | BE | PDF actuales: D17 a D20 | Compuertas BE; QA-AJQ5-005 a 012 en PASA (PDF descargados y revisados) | Pendiente |
 | 3 | FE | Báscula y edición del ingreso: D9, D15, D16 y D22 | Compuertas FE; QA-AJQ5-013 a 017 en PASA en el navegador | Pendiente |
 | 4 | FE y docs | Detalle del depósito y Levantes: D10 a D14; casos a `D/qa/`; respuesta de D21; fusión de `f2/f05-ajustes-qa` en `fase-2` en los dos repos | Compuertas FE; QA-AJQ5-018 a 025 en PASA; fusiones con push | Pendiente |
