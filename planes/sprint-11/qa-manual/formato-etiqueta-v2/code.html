@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="es" data-lt-installed="true"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>Rótulo de Depósito - BODEGAS ASOCIADAS LTDA.</title>
+<!-- Tailwind CSS v3 with Plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter & Barcode -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Barcode+39+Text&amp;family=Inter:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            barcode: ['"Libre Barcode 39 Text"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="print-and-page-setup">
+    @media print {
+      body {
+        background-color: #ffffff !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page-sheet {
+        box-shadow: none !important;
+        border: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 10mm 12mm !important;
+        border-radius: 0 !important;
+      }
+    }
+
+    .barcode-display {
+      font-family: 'Libre Barcode 39 Text', cursive;
+      font-size: 46px;
+      line-height: 1.1;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 font-sans text-slate-900 antialiased min-h-screen flex flex-col justify-between selection:bg-slate-200">
+<!-- BEGIN: TopToolbar -->
+<header class="no-print sticky top-0 z-50 bg-slate-950/90 backdrop-blur border-b border-slate-800 px-6 py-3 shadow-sm" data-purpose="viewer-toolbar">
+<div class="max-w-4xl mx-auto flex items-center justify-between">
+<div class="flex items-center space-x-3">
+<span class="text-sm font-medium text-slate-200 tracking-wide">
+          2026BA00013.pdf
+        </span>
+<span class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">
+          Rótulo de Depósito
+        </span>
+</div>
+<div>
+<button class="inline-flex items-center gap-2 px-4 py-1.5 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold shadow-sm transition focus:outline-none" onclick="window.print()">
+<svg aria-hidden="true" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+<path d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"></path>
+</svg>
+          Imprimir / Guardar PDF
+        </button>
+</div>
+</div>
+</header>
+<!-- END: TopToolbar -->
+<!-- BEGIN: DocumentCanvasWrapper -->
+<main class="flex-grow flex items-center justify-center p-4 sm:p-8" data-purpose="viewport-container">
+<!-- BEGIN: PrintableSheet -->
+<article class="page-sheet bg-white w-full max-w-5xl shadow-xl rounded-sm p-8 sm:p-14 border border-slate-200" data-purpose="label-sheet">
+<!-- 1. Cabecera Institucional y 2. Identificación del depósito y código de barras -->
+<section class="border-b border-slate-300 pb-6 mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
+<!-- Logo y Nombre Institucional -->
+<div class="flex items-center gap-4">
+  <div class="flex-shrink-0 w-16 h-16 bg-white rounded border border-slate-200 shadow-sm flex items-center justify-center p-1.5">
+    <svg viewBox="0 0 64 64" class="w-12 h-12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <!-- Forklift Mast & Forks (Black/Dark Slate) -->
+      <path d="M44 14V46H52" stroke="#1e293b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path>
+      <path d="M48 24H58M48 34H58" stroke="#1e293b" stroke-width="2.5" stroke-linecap="round"></path>
+      <path d="M44 42H58" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"></path>
+      <!-- Overhead Guard & Cabin Frame -->
+      <path d="M22 16H36L42 28V38H20V26L22 16Z" fill="#f59e0b" stroke="#b45309" stroke-width="1.5" stroke-linejoin="round"></path>
+      <path d="M28 16V28H40" stroke="#1e293b" stroke-width="2" stroke-linecap="round"></path>
+      <!-- Driver Seat Silhouette -->
+      <path d="M26 25C26 23.5 27 22 29 22H31V28H27L26 25Z" fill="#1e293b"></path>
+      <!-- Main Chassis / Body (Vibrant Yellow / Amber) -->
+      <path d="M12 34C12 31 14 28 18 28H44V42H14C12.5 42 12 40.5 12 38V34Z" fill="#f59e0b" stroke="#b45309" stroke-width="1.5"></path>
+      <!-- Counterweight Black Accent -->
+      <path d="M12 32C12 30 14 29 17 29V42H13C12.2 42 12 41 12 39V32Z" fill="#1e293b"></path>
+      <!-- Wheels -->
+      <circle cx="22" cy="44" r="6" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.5"></circle>
+      <circle cx="22" cy="44" r="2.5" fill="#f8fafc"></circle>
+      <circle cx="38" cy="44" r="6" fill="#1e293b" stroke="#cbd5e1" stroke-width="1.5"></circle>
+      <circle cx="38" cy="44" r="2.5" fill="#f8fafc"></circle>
+    </svg>
+  </div>
+  <div>
+    <h1 class="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-tight">
+      BODEGAS ASOCIADAS LTDA.
+    </h1>
+    <div class="text-sm sm:text-base text-slate-700 font-medium mt-1.5 space-y-0.5">
+      <p><span class="font-bold text-slate-800">NIT:</span> 837.000.606-1</p>
+      <p><span class="font-bold text-slate-800">DEPÓSITO HABILITADO COD. 22080</span></p>
+    </div>
+  </div>
+</div>
+<!-- Número de Depósito y Código de Barras -->
+<div class="sm:text-right flex flex-col items-start sm:items-end">
+<div class="text-xl sm:text-2xl font-bold font-mono">
+<span class="text-slate-800">Deposito No. </span><span class="text-red-600 font-black">2026BA00013</span>
+</div>
+<div class="barcode-display text-slate-900 select-none -mt-1 -mb-1">
+            *2026BA00013*
+          </div>
+</div>
+</section>
+<!-- 3. Partes y 4. Fecha de Ingreso -->
+<section class="mb-6 text-sm sm:text-base">
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-6 border border-slate-200 rounded p-4 sm:p-5 bg-slate-50/50">
+<div>
+<span class="text-slate-500 font-medium">Importador:</span>
+<span class="font-bold text-slate-900 ml-1.5">COMERCIALIZADORA LUHOMAR S.A.S</span>
+</div>
+<div>
+<span class="text-slate-500 font-medium">Intermediario:</span>
+<span class="font-bold text-slate-900 ml-1.5">SURCOMEX S.A NIVEL 2</span>
+</div>
+<div class="sm:col-span-2 pt-2 border-t border-slate-200 mt-1">
+<span class="text-slate-500 font-medium">Fecha Ingreso:</span>
+<span class="font-bold font-mono text-slate-900 ml-1.5">2026-11-26 13:36:36</span>
+</div>
+</div>
+</section>
+<!-- 5. Tabla de Mercancía -->
+<section class="mb-6">
+<table class="w-full text-sm sm:text-base border border-slate-300 border-collapse">
+<thead>
+<tr class="bg-slate-100 text-slate-800 font-bold border-b border-slate-300">
+<th class="py-3 px-4 text-right w-36 border-r border-slate-300">Ampara</th>
+<th class="py-3 px-4 text-right w-36 border-r border-slate-300">Saldo</th>
+<th class="py-3 px-4 text-left">Mercancia</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-slate-200 bg-white">
+<td class="py-3.5 px-4 text-right font-mono font-medium text-slate-800 border-r border-slate-300 text-base sm:text-lg">640,13</td>
+<td class="py-3.5 px-4 text-right font-mono font-bold text-slate-900 border-r border-slate-300 text-base sm:text-lg">1.920</td>
+<td class="py-3.5 px-4 text-left font-bold text-slate-900 text-base sm:text-lg">FRIJOL EN GRANO (SACOS)</td>
+</tr>
+</tbody>
+</table>
+</section>
+<!-- 6. Datos de transporte y despacho -->
+<section class="mb-6 text-sm sm:text-base">
+<div class="border border-slate-200 rounded p-4 sm:p-5 grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50/50">
+<div>
+<span class="text-slate-500 font-medium">Carta Porte:</span>
+<span class="font-mono font-bold text-slate-900 ml-1.5">PE000843</span>
+<span class="text-slate-600 ml-1.5">(2026-11-24)</span>
+</div>
+<div>
+<span class="text-slate-500 font-medium">Manifiesto No.</span>
+<span class="font-mono font-bold text-slate-900 ml-1.5">116575014469850</span>
+<span class="text-slate-600 ml-1.5">(2026-11-26)</span>
+</div>
+<div>
+<span class="text-slate-500 font-medium">Placa(s):</span>
+<span class="font-mono font-bold text-slate-900 ml-1.5">IBA2021, PUB010, XAI1204</span>
+</div>
+<div>
+<span class="text-slate-500 font-medium">Unidad(es) de carga:</span>
+<span class="font-semibold text-slate-800 ml-1.5">N/A</span>
+</div>
+</div>
+</section>
+<!-- 7. Banner de estado: Barra verde con texto en blanco centrado -->
+<section class="mb-6">
+<div class="bg-emerald-700 text-white font-black text-center py-3.5 px-5 rounded tracking-wide text-lg sm:text-xl">
+          MERCANCIA NACIONALIZADA
+        </div>
+</section>
+<!-- 8. DATOS DE NACIONALIZACION -->
+<section class="text-sm sm:text-base">
+<div class="border border-slate-300 rounded p-4 sm:p-5">
+<div class="font-bold text-slate-800 uppercase tracking-wide text-xs sm:text-sm mb-3 pb-1.5 border-b border-slate-200">
+            DATOS DE NACIONALIZACION
+          </div>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+<div>
+<span class="text-slate-500 font-medium">Levantes:</span>
+<span class="font-mono font-bold text-slate-900 ml-1.5">372024000009520</span>
+<span class="text-slate-600 ml-1.5">(26/11/2026)</span>
+</div>
+<div>
+<span class="text-slate-500 font-medium">N Aceptacion:</span>
+<span class="font-mono font-bold text-slate-900 ml-1.5">372024000009905</span>
+<span class="text-slate-600 ml-1.5">(26/11/2026)</span>
+</div>
+</div>
+</div>
+</section>
+</article>
+<!-- END: PrintableSheet -->
+</main>
+<!-- END: DocumentCanvasWrapper -->
+<!-- BEGIN: BottomStatusBar -->
+<aside class="no-print bg-slate-950 border-t border-slate-800 px-4 py-2 text-center text-xs text-slate-400" data-purpose="viewer-footer-info">
+<span>Visualización de documento oficial • Presione <kbd class="px-1.5 py-0.5 bg-slate-800 text-slate-300 rounded border border-slate-700 font-mono text-[10px]">Ctrl + P</kbd> para imprimir o exportar a PDF</span>
+</aside>
+<!-- END: BottomStatusBar -->
+
+
+</body></html>
