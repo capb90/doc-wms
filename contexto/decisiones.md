@@ -275,6 +275,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
   - `DEC-058` en el panel de báscula (AF-05), el tablero de depósitos (AF-72) y las páginas uniformes (AF-129).
 - **Precisa:** `DEC-010` (2) (AF-77), `DEC-053` BR-06-003 (AF-109) y `DEC-057` H3 (AF-09, AF-41).
 - **También cambia:** P16 del plan de paridad, CHG-36 del plan de corrección, lo construido para `DEC-014` en BAS-07 y la regla de WMS-29 de `contexto-negocio-wms-para-ia.md` §5.11 (sección 5 del análisis).
+- **Nota (2026-11-26, estado aduanero del depósito):** el depósito tiene dos estados aduaneros: «Nacionalizado» en cuanto tiene un levante, aunque no cubra todo lo ingresado, y «Sin nacionalizar» sin levantes. El producto conserva tres («Sin nacionalizar», «Parcial» y «Nacionalizado»), según lo levantado frente a su cantidad. Coincide con las etiquetas impresas, que ya usaban «hay levantes». El contador `partial` de los depósitos (C-F05-33) queda en 0 y se conserva en el contrato. *Fuente:* el usuario, en la QA manual de la integración de F05 («Solo el depósito»; `planes/sprint-11/f05-comercio-exterior/plan-cerrado-f2-f05-ajustes-qa-2026-11-26.md` D4 y D13).
 - **Fuente:** el usuario, sección por sección (AF-55, AF-71, AF-103, AF-126 y AF-137).
 
 **DEC-081 — Implementación de la fase 2** (2026-11-20). Respuestas del usuario a la ronda del plan maestro (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`, M6 a M24).
