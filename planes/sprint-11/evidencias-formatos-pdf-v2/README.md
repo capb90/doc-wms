@@ -97,3 +97,99 @@ En la fase 2, la etiqueta de exportación e inspección pasó a su registro de d
 | `has-pending-model-changes` | — | Limpio |
 
 Las dos suites de antes corrieron en la misma sesión, sobre un worktree de `0612773`.
+
+## Fase 3 (BE) — 2026-11-27
+
+BE en `f2/formatos-pdf-v2`, sobre la fase 2 (`bf61eac`). PDF del depósito v2 de importación, exportación e inspección (D13, D22, D28) y guía de salida v2, completa y por depósito (D14), con el encabezado y el pie comunes de D9, en carta (D24) y sin el sello «DOCUMENTO OFICIAL» (D25). Diseño de los mockups [`../qa-manual/pdf-deposito-v2/`](../qa-manual/pdf-deposito-v2/) y [`../qa-manual/formato-guia-v2/`](../qa-manual/formato-guia-v2/).
+
+**Método.** Igual que en las fases 1 y 2: una prueba de integración temporal, que no se subió, llamó a `DepositPdfService` y `DispatchGuidePdfService` con el formato fijo en `V2` o en `LEGACY` (y, en la guía, con `GUIDE_CODE_TYPE` fijo en QR o en código de barras, con una clave de verificación de prueba generada en la corrida). En la misma corrida dibujó el legacy con una copia de los dos servicios de `bf61eac` («antes»). No se cambió ningún parámetro en la base local ni se entró al frontend (las contraseñas locales del README no sirven). El cambio por API (`PATCH` con token de Admin) lo cubre la prueba de integración que sí se sube, `PdfFormatParameterTests.DepositAndGuideFormat_V2_ChangeTheDepositPdfAndTheGuide`: con `V2` cambian el PDF del depósito de importación, exportación e inspección, la guía completa, la guía por depósito y la guía anulada, y llevan Inter y JetBrains Mono embebidas; con `LEGACY`, no.
+
+Hubo dos fuentes:
+
+- **Base local `wmsdb`:** el depósito de la QA `5f3749d2-…` (2026BA00013) y 2026INSP00001 (inspección, con un camión). **La base local no tiene guías de salida ni depósitos de exportación.**
+- **Escenario en Testcontainers:** un depósito de exportación y uno de inspección con agencia de aduanas; dos depósitos de importación del mismo importador con un levante cada uno, una salida de los dos (guía con dos filas) y otra salida con su guía anulada.
+
+Cada PDF v2 se guardó con su texto (`pdftotext -layout`, `.txt`) y la captura de cada página (`-N.png`, 100 ppp). El PDF del depósito ocupa una página; la guía, dos (las dos copias, como el legacy).
+
+### QA-PV2-007: PDF del depósito de la QA en V2 (PASA)
+
+[`fase-3/pv2-007-qa-deposito.v2.pdf`](fase-3/pv2-007-qa-deposito.v2.pdf) ([captura](fase-3/pv2-007-qa-deposito.v2-1.png)), frente a [`screen.png`](../qa-manual/pdf-deposito-v2/screen.png):
+
+- **Encabezado y pie de D9:** montacargas, logotipo vectorial y raya oscura; abajo, «Depósito registrado el … impreso el …», la raya con «Descripción del Ingreso a Bodega», «Página 1 de 1» y la banda amarilla con los parámetros `COMPANY_*`.
+- «Depósito No.» con 2026BA00013 en rojo y el Code 39 de hoy; a la derecha, «Fecha Hora Ingreso: 2026-11-26 13:36:36».
+- **Bloques separados por rayas finas:** Importador COMERCIALIZADORA LUHOMAR S.A.S con «Codigo/Cedula/NIT: 874534-2 COL» y Dirección (`AJQ/` D19); Carta Porte PE000843 (2026-11-24) y Manifiesto I.C. 116575014469850 (2026-11-26); S.I.A. SURCOMEX S.A NIVEL 2 con NIT 345765-4; Transportadora.
+- **Tabla:** FRIJOL EN GRANO · SACOS; los 3 pesajes PUB010, IBA2021 y XAI1204 con P. mercancía 32.020, 32.020 y 32.010 y sus tiquetes; Entrada 1.920, Ampara 1.920, Saldo 0 (`AJQ/` D19).
+- **«TOTAL PESO (Kg): 96.050»** (es-CO, `DEC-082`).
+- Unidad(es) de carga N/A, Observaciones, Responsable A.L. y Cuadrilla; firmas «Recibido por» (ADMINISTRADOR LOCAL, 123456789) y «Firma Conductor».
+
+### QA-PV2-008: guía en V2 con QR (PASA, escenario)
+
+[`fase-3/pv2-008-escenario-guia-qr.v2.pdf`](fase-3/pv2-008-escenario-guia-qr.v2.pdf) ([copia 1](fase-3/pv2-008-escenario-guia-qr.v2-1.png), [copia 2](fase-3/pv2-008-escenario-guia-qr.v2-2.png)), frente a [`screen.png`](../qa-manual/formato-guia-v2/screen.png):
+
+- El mismo encabezado y pie del PDF del depósito; encima de la banda, «Guía generada el … impreso el …» y la línea de contacto.
+- El QR a la izquierda con «Escanee para verificar esta guía»; «GUÍA DE SALIDA NO.» 2026S00001; a la derecha «FECHA HORA SALIDA». En la copia 2, el número lleva la placa con su país, como el legacy.
+- Importador con identificación y dirección; Placas en su recuadro con el país; Tiquetes; Fecha ingreso de cada depósito; Conductores, Empresa de transporte y su identificación; Agencia de aduanas sin el rol repetido (`AJQ/` D20) y su identificación.
+- Tabla con las 12 columnas de hoy, sin «Unidad» (`AJQ/` D7c); levante y aceptación en su píldora, uno por línea; «Cant. Sale» resaltada; «Total en esta salida 9,25».
+- Unidades de carga, Observaciones, Responsable y Cuadrilla; Destino y «Vence: … en 3 días» resaltado; firmas «Firma Entrega» y la del firmante resuelto al emitir (aquí, el conductor).
+- En el escenario, la salida no trae tiquetes y el «Doc / CPI» y la aceptación de prueba son más largos que los reales, así que se parten en dos líneas.
+
+### QA-PV2-009: código de barras y PDF por depósito (PASA, escenario)
+
+- [`pv2-009-escenario-guia-barras.v2`](fase-3/pv2-009-escenario-guia-barras.v2-1.png): con `GUIDE_CODE_TYPE = BARCODE`, el código de barras va en el lugar del QR.
+- [`pv2-009-escenario-guia-por-deposito-1.v2`](fase-3/pv2-009-escenario-guia-por-deposito-1.v2-1.png): el PDF por depósito con el número 2026S00001-1, solo la fila y la fecha de ingreso de ese depósito.
+
+### QA-PV2-010: guía anulada en V2 (PASA, escenario)
+
+[`pv2-010-escenario-guia-anulada.v2`](fase-3/pv2-010-escenario-guia-anulada.v2-1.png): la marca de agua «ANULADA» en las dos copias, con el tamaño, el ángulo y el color del legacy.
+
+### QA-PV2-013: PDF del depósito de exportación e inspección en V2 (PASA)
+
+- **Exportación** (escenario): [`pv2-013-escenario-exportacion.v2`](fase-3/pv2-013-escenario-exportacion.v2-1.png), con la banda azul «MERCANCIA PARA EXPORTACION» bajo el número.
+- **Inspección** (escenario): [`pv2-013-escenario-inspeccion.v2`](fase-3/pv2-013-escenario-inspeccion.v2-1.png), con la banda naranja «INSPECCION ADUANERA».
+- **Inspección** (base local, 2026INSP00001): [`pv2-013-insp-2026INSP00001.v2`](fase-3/pv2-013-insp-2026INSP00001.v2-1.png), con «Sin cliente» y la banda naranja.
+- La importación no lleva banda, como el mockup.
+- Con sus datos de hoy: el PDF de exportación sigue rotulando «Importador:» al cliente, como el legacy.
+
+### El legacy no cambia
+
+Con `LEGACY` sale el mismo PDF de hoy ([`fase-3/legacy-comparacion.txt`](fase-3/legacy-comparacion.txt)). Los 8 pares «antes» (copia de los servicios de `bf61eac`) y «después» tienen el mismo texto y la misma imagen de cada página, a 100 ppp:
+
+- el PDF del depósito de la QA;
+- el de exportación e inspección del escenario;
+- el de 2026INSP00001;
+- y la guía en QR, en código de barras, por depósito y anulada.
+
+Los archivos son `fase-3/pv2-*.antes.pdf` y `*.despues.pdf`. Los dibujos legacy (`Services/Pdf/Legacy*Renderer.cs`) no se tocaron.
+
+### Decisiones de dibujo y colores
+
+**Diferencias con el mockup, por D4 (gana el PDF de hoy):**
+
+- El PDF del depósito conserva la columna **Embalaje** (F01 D18) y la rejilla paralela producto/pesaje del legacy (CE-1, D8). El mockup pone el embalaje entre paréntesis bajo el producto y une la celda del producto entre pesajes.
+- La guía conserva **las dos copias** del legacy, con la placa en el número de la segunda.
+
+**Otras diferencias con el mockup:**
+
+- La banda de exportación e inspección va bajo el número y el código de barras: D13 y D22 no dicen dónde.
+- Margen horizontal de 30 pt, el del legacy, para que la tabla de 12 columnas de la guía quepa en carta. En carta, los números, códigos, levantes y aceptaciones van en columnas fijas y en monoespaciada de 6 a 6,5 pt, y el producto se reparte en líneas. El mockup de la guía es A4.
+- Sin cursivas: las fuentes embebidas son regular, semibold y bold (D10). El mockup pone en cursiva las placas y la línea «registrado / generado el …».
+- La línea de contacto dice «guía», con tilde, como el mockup. El legacy dice «guia».
+
+**Colores tomados de `code.html` que difieren de D10:**
+
+- **Tabla del PDF del depósito:** bordes negros y raya entre filas `#b3b3b3` (`border-black` y `border-black/30`), no los grises de D10. Cabecera de «Pesajes» y «Cantidades» `#f8fafc` (`bg-slate-50/50`).
+- **Tabla de la guía:** bordes `#1f2937` (`.doc-table`), cabecera `#f1f5f9`, Levante y Aceptación `#f8fafc`. «Cant. Sale» en `#fffbeb` (cabecera) y `#fef8dd` (celda). «Vence» en `#fef5d2` con borde `#fcd34d`. El ámbar no está en la paleta de D10.
+- **Rótulos secundarios de la guía** («GUÍA DE SALIDA NO.», «FECHA HORA SALIDA:», el texto bajo el QR, la línea «Guía generada …»): `#475569` (slate-600), que no está en D10.
+- **Banda del pie:** el mockup del depósito usa `#FDE047` (yellow-300) y el de la guía `#FACC15`. El pie es común (D9), así que se queda `#facc15`, el de D10 y la guía.
+- El número del depósito `#e11d48` y la raya del encabezado `#0f172a` coinciden con D10.
+
+### Compuertas (BE `190f56f`)
+
+| Compuerta | Antes (`bf61eac`) | Después |
+| --- | --- | --- |
+| `dotnet build Wms.sln` | Sin errores | Sin errores |
+| `Wms.Tests` | 2465 | 2475, con la guardia `NumberCultureGuardTests` (29) en verde |
+| `Wms.IntegrationTests` | 892 | 893 |
+| `has-pending-model-changes` | — | Limpio |
+
+Las dos suites de antes corrieron en la misma sesión, sobre un worktree de `bf61eac`. No hubo fallas que dependan de la hora.

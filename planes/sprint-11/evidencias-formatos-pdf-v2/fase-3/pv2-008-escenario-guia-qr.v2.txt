@@ -1,0 +1,137 @@
+                                      GUÍA DE SALIDA NO.
+                                                                                                                                      FECHA HORA SALIDA
+                                      2026S00001                                                                            2026-11-27 01 55 07
+
+ Escanee para verificar esta guía
+
+
+Importador: QA IMPORTACIÓN 46D1EB0154B44                                                   Dirección:
+Codigo/Cedula/NIT 1202156264 COL
+
+                                                                                                       Fecha ingreso: 2026BA00002 27/11/2026,
+Placas: QG679804 (CO)                                  Tiquetes:
+                                                                                                       2026BA00001 27/11/2026
+Conductores: Conductor Prueba F01 852057534
+Empresa de transporte: QA Transportadora compartida
+Identificación empresa transporte: NIT 2010804113
+
+Agencia de aduanas: QA Agencia F6
+Identificación agencia: NIT 1870608514
+
+
+                                                                                                                                Saldo     Cant.   Nvo.
+No. Producto                   Doc / CPI    Deposito     Manifiesto       Levante         Aceptacion      Embalaje   Entrada
+                                                                                                                                Ante.     Sale    Saldo
+
+                              CP-IT-fce
+                                                                                        ACE-37202400000
+ 1   GRANOS                   4bd2b0b6d 2026BA00001      MAN-QA-F3    372024000000251
+                                                                                        0251
+                                                                                                             —         10        10        6,25   3,75
+                              40
+
+                              CP-IT-069
+                                                                                        ACE-37202400000
+ 2   GRANOS                   53067a760 2026BA00002      MAN-QA-F3    372024000000252
+                                                                                        0252
+                                                                                                             —         10        10         3      7
+                              4b
+
+
+                                                                 Total en esta salida 9,25
+
+
+Unidades de carga: N/A
+Observaciones:
+Responsable: P.D.
+Cuadrilla:
+
+Destino: QA Ciudad 4f31d63636                                                                                    Vence:        20261130 en 3 días
+
+
+                                Firma Entrega:                                                               Firma Conductor:
+
+
+
+
+                          PRUEBA D998B259503A                                                     CONDUCTOR PRUEBA F01 852057534
+                               1560431024
+
+
+
+
+                                           Guía generada el 2026-11-27 01 55 08, impreso el 2026-11-27 01 55 09
+                                               Para mayor información de esta guía favor llamar al 3183324398
+                                                                        Página 1 de 2
+
+                                    CALLE 3 ESTE No. 2732 BARRIO EL TEJAR TEL 7736748  7736522 IPIALES  COLOMBIA
+                                                            E-mail: info@bodegasasociadas.com
+                                      GUÍA DE SALIDA NO.
+                                                                                                                                      FECHA HORA SALIDA
+                                      2026S00001 QG679804 (CO)                                                              2026-11-27 01 55 07
+
+ Escanee para verificar esta guía
+
+
+Importador: QA IMPORTACIÓN 46D1EB0154B44                                                   Dirección:
+Codigo/Cedula/NIT 1202156264 COL
+
+                                                                                                       Fecha ingreso: 2026BA00002 27/11/2026,
+Placas: QG679804 (CO)                                  Tiquetes:
+                                                                                                       2026BA00001 27/11/2026
+Conductores: Conductor Prueba F01 852057534
+Empresa de transporte: QA Transportadora compartida
+Identificación empresa transporte: NIT 2010804113
+
+Agencia de aduanas: QA Agencia F6
+Identificación agencia: NIT 1870608514
+
+
+                                                                                                                                Saldo     Cant.   Nvo.
+No. Producto                   Doc / CPI    Deposito     Manifiesto       Levante         Aceptacion      Embalaje   Entrada
+                                                                                                                                Ante.     Sale    Saldo
+
+                              CP-IT-fce
+                                                                                        ACE-37202400000
+ 1   GRANOS                   4bd2b0b6d 2026BA00001      MAN-QA-F3    372024000000251
+                                                                                        0251
+                                                                                                             —         10        10        6,25   3,75
+                              40
+
+                              CP-IT-069
+                                                                                        ACE-37202400000
+ 2   GRANOS                   53067a760 2026BA00002      MAN-QA-F3    372024000000252
+                                                                                        0252
+                                                                                                             —         10        10         3      7
+                              4b
+
+
+                                                                 Total en esta salida 9,25
+
+
+Unidades de carga: N/A
+Observaciones:
+Responsable: P.D.
+Cuadrilla:
+
+Destino: QA Ciudad 4f31d63636                                                                                    Vence:        20261130 en 3 días
+
+
+                                Firma Entrega:                                                               Firma Conductor:
+
+
+
+
+                          PRUEBA D998B259503A                                                     CONDUCTOR PRUEBA F01 852057534
+                               1560431024
+
+
+
+
+                                           Guía generada el 2026-11-27 01 55 08, impreso el 2026-11-27 01 55 09
+                                               Para mayor información de esta guía favor llamar al 3183324398
+                                                                        Página 2 de 2
+
+                                    CALLE 3 ESTE No. 2732 BARRIO EL TEJAR TEL 7736748  7736522 IPIALES  COLOMBIA
+                                                            E-mail: info@bodegasasociadas.com
+

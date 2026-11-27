@@ -1,0 +1,8 @@
+pv2-007/qa-deposito                           págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+pv2-008/escenario-guia-qr                     págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+pv2-009/escenario-guia-barras                 págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+pv2-009/escenario-guia-por-deposito-1         págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+pv2-010/escenario-guia-anulada                págs=2 texto_idéntico=True texto_sin_hora=True imagen=iguales
+pv2-013/escenario-exportacion                 págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+pv2-013/escenario-inspeccion                  págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
+pv2-013/insp-2026INSP00001                    págs=1 texto_idéntico=True texto_sin_hora=True imagen=iguales
