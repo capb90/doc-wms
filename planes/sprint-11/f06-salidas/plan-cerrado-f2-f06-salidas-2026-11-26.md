@@ -875,7 +875,7 @@ La parte 1 (backend) y la parte 2 (maquetación) corren en paralelo, una por rep
 
 | Fase | Parte | Contenido | Criterio de salida | Estado |
 | --- | --- | --- | --- | --- |
-| BE-1 | 1 | Lecturas: listado y detalle ampliados, depósitos elegibles, guías y su PDF, etapa Salidas (§8.1) | QA2-F06-001 a 011 en PASA por API | Pendiente |
+| BE-1 | 1 | Lecturas: listado y detalle ampliados, depósitos elegibles, guías y su PDF, etapa Salidas (§8.1) | QA2-F06-001 a 011 en PASA por API | Hecha el 2026-11-27 (BE `8ff47be`) |
 | BE-2 | 1 | Escrituras y cobro: orden del cliente con soporte y la migración, confirmar sin «Clientes», cobro sugerido (§8.2) | QA2-F06-012 a 020 en PASA por API | Pendiente |
 | FE-1 | 2 | Contratos, fuentes, drawer y Salidas de CE con sus dos pestañas (§8.3) | P-CE-11 (listado y guías) y el drawer con su lista del wireframe y captura | Hecha el 2026-11-27 (FE `2c5540b`) |
 | FE-2 | 2 | «Nueva salida» y «Editar», confirmación con el cobro y la etapa Salidas (§8.4) | P-CE-11 (formulario y confirmación) y P-CE-08 con su lista y captura | Pendiente |
@@ -892,7 +892,15 @@ La parte 1 (backend) y la parte 2 (maquetación) corren en paralelo, una por rep
 - **Pruebas:** `ExitLineBalancesTests`, `ExitWarehouseRecordTests`, `DepositStageRulesTests` (ajustada), `ExitListReadsTests`, `ExitDetailReadsTests`, `EligibleDepositsTests`, `ExitGuidesEndpointTests`, `DepositExitStageTests` (§5).
 - **Casos QA:** QA2-F06-001 a 011.
 - **Notas:** las rutas `exits/eligible-deposits` y `exits/guides` no chocan con `exits/{id:guid}` (restricción de tipo). El orden por `warehouseRecordAt` usa la fecha del cargue o, si no hay, la de la salida de patio, con las salidas sin registro al final. `products` sale de las líneas de la salida, no de la guía. La lectura por placa (C-F01-101) devuelve los campos nuevos sin cambio de código propio.
-- **Estado:** pendiente.
+- **Estado:** hecha el 2026-11-27 (BE `8ff47be`, rama `f2/f06-salidas` desde `fase-2` `996828e`). QA2-F06-001 a 011 en PASA por API (`ExitListReadsTests`, `ExitDetailReadsTests`, `EligibleDepositsTests`, `ExitGuidesEndpointTests`, `DepositExitStageTests`). Compuertas: `dotnet build Wms.sln` sin errores; `Wms.Tests` 2475 → 2501 y `Wms.IntegrationTests` 893 → 901, todas en verde; sin migración y `has-pending-model-changes` limpio. Reglas puras nuevas: `ExitLineBalances` y `ExitWarehouseRecord`; `DepositStageRules` con la etapa Salidas (`DepositStageInput.HasPendingExit`). Contrato sin cambios. Notas para FE e I-06:
+  - `vehicle.vehicleTypeName` es el rótulo del catálogo de C-F04-17 (p. ej. «Doble-Troque»; `VehicleTypeCatalog.LabelOf`), o el valor guardado si no es del catálogo.
+  - `placedQuantity` sale de lo ubicado del **producto** (con `SOBRE-VEHICULO`): las ubicaciones no distinguen unidad de carga, así que una línea con unidad de carga informa lo ubicado de su producto, con tope su cantidad (lo mismo que libera el cargue, LIFO por producto).
+  - Saldos (C-F06-02): en Confirmada o Completada sin línea de guía ni movimiento (no debería pasar) se usa la regla de Borrador. En inspección se toma el último `Out` de la salida por producto (una reapertura anterior queda antes).
+  - `attendedByWarehouse=false` devuelve el complemento (sin registro o canceladas); el contrato solo usa `true`.
+  - C-F06-07 calcula lo disponible en memoria sobre los depósitos Confirmados de CE antes de paginar; `availableQuantity` es la suma por producto, en importación el menor entre disponible y nacionalizado disponible de cada producto. `documentLabel` = «{tipo de documento} {número}» o, sin número, la descripción de la inspección.
+  - Los filtros de texto nuevos ignoran mayúsculas; producto, cuadrilla, cliente e importador también ignoran tildes (`unaccent`).
+  - La marca «ANULADA» del PDF (C-F06-09) se verificó con el formato vigente (LEGACY, D37) por la matriz de giro de 30° de la marca en el contenido del PDF, porque el texto va en glifos.
+  - *Helpers* nuevos en `B/Wms.IntegrationTests/ForeignTrade/ImportExitScenario.cs` para BE-2 e I-06: `SeedExitDepositAsync` (el antiguo `DepositAsync` de `GoodsExitFlowTests`, que ahora lo llama), `SeedTicketDepositAsync`, `CreateTicketExitAsync`, `SeedTicketExitAsync`; `ConfirmExitAsync` acepta `observations` y `LoadExitAsync`, `crewId`.
 
 ### 8.2 Backend, fase 2 — Escrituras y cobro
 
