@@ -877,7 +877,7 @@ La parte 1 (backend) y la parte 2 (maquetación) corren en paralelo, una por rep
 | --- | --- | --- | --- | --- |
 | BE-1 | 1 | Lecturas: listado y detalle ampliados, depósitos elegibles, guías y su PDF, etapa Salidas (§8.1) | QA2-F06-001 a 011 en PASA por API | Pendiente |
 | BE-2 | 1 | Escrituras y cobro: orden del cliente con soporte y la migración, confirmar sin «Clientes», cobro sugerido (§8.2) | QA2-F06-012 a 020 en PASA por API | Pendiente |
-| FE-1 | 2 | Contratos, fuentes, drawer y Salidas de CE con sus dos pestañas (§8.3) | P-CE-11 (listado y guías) y el drawer con su lista del wireframe y captura | Pendiente |
+| FE-1 | 2 | Contratos, fuentes, drawer y Salidas de CE con sus dos pestañas (§8.3) | P-CE-11 (listado y guías) y el drawer con su lista del wireframe y captura | Hecha el 2026-11-27 (FE `2c5540b`) |
 | FE-2 | 2 | «Nueva salida» y «Editar», confirmación con el cobro y la etapa Salidas (§8.4) | P-CE-11 (formulario y confirmación) y P-CE-08 con su lista y captura | Pendiente |
 | FE-3 | 2 | Bodega: Órdenes de salida, Ejecutar salida, Salida de patio e Historial (§8.5) | P-BOD-06 a P-BOD-09 con su lista y captura | Pendiente |
 | Revisión | — | Revisión del usuario con la sesión simulada (§8.6) | Visto bueno del usuario o plan de ajustes | Pendiente |
@@ -913,7 +913,16 @@ La parte 1 (backend) y la parte 2 (maquetación) corren en paralelo, una por rep
 - **Componentes:** `ExitListTable`, `GuideListTable`, `ExitMissingTags`, `ExitGoodsCell`, `ExitDetailDrawer`, `ExitDetail`; `useExitActions`; `exit-display.ts` con sus pruebas.
 - **Guardias:** la página entra a `MAQUETACION_PAGES`. **Sin llamadas reales y sin menú** (`PM/` §6.2); la sesión simulada de `P02/` D10 (`NUXT_PUBLIC_MOCK_SESSION=true`, `?roles=Admin,ForeignTrade`).
 - **Lista del wireframe:** columnas, filtros y acciones de D10 y D11; «+ Nueva salida» lleva a `/foreign-trade/exits/new` (la página llega en FE-2: hasta entonces, un aviso); el drawer de D14 con sus acciones por rol.
-- **Estado:** pendiente.
+- **Estado:** hecha el 2026-11-27 (FE `2c5540b`, rama `f2/f06-salidas` desde `fase-2` `8884936`).
+  - **Cifras:** `yarn test` 812 → 868 pruebas en verde (151 → 157 archivos; el error no manejado de `WeighbridgeQueuePage.spec.ts` ya estaba en la base), `yarn lint` 142 → 142 errores (sin contar el worktree viejo `.claude/worktrees/ui-alert-icon-0ac35c`, que suma 213) y cero en los archivos nuevos, `yarn build` con código 0, guardias de `FT/unit/guards/` en verde. Los simulados pasan sus esquemas (`FT/unit/exits/mocks.spec.ts`).
+  - **Hecho:** contratos de §2.3 completos (`exit.ts`, `exit-charge.ts`, `guide.ts`) y `contracts/catalog.ts` con lo integrado que reexporta la fachada; fuentes `exit.source.ts` (todas las operaciones de D26, también las de FE-2 y FE-3), `guide.source.ts` y `catalog.source.ts` con sus simulados y las semillas de esta sección; `exits.queries.ts`, `useExitActions.ts` (acciones por rol, estado y contexto `foreign-trade` o `warehouse`, y su ejecución), `exit-display.ts`; `ExitListTable`, `GuideListTable`, `ExitMissingTags`, `ExitGoodsCell`, `ExitDetailDrawer` y `ExitDetail`; la página `/foreign-trade/exits` en `MAQUETACION_PAGES`, sin menú. Fixtures de Báscula y la prueba de Bodega con los campos nuevos de `exitSchema`.
+  - **Lista del wireframe (P-CE-11 y drawer):** columnas, filtros y orden de D10 y D11; la cancelada y la anulada en «Estado» con fecha y motivo en el tooltip y la fila en rojo tenue, también en tema oscuro (D35); acciones en el menú ⋮ por estado; «Salida» de la pestaña «Guías» abre el drawer; drawer con las secciones y el menú de D14; Anular guía, Reabrir y Cancelar con `ReasonDialog` (D15) y Cambiar modo de pago con el método (D16); descargas de la guía, de la guía por Id y del ZIP. Capturas en `D/planes/sprint-11/f06-salidas/evidencias/fe1-01` a `fe1-13`.
+  - **Notas para FE-2, FE-3 e I-06:**
+    - La fila de C-F06-01 no trae la fecha ni el motivo de la cancelación que piden D10 y D35: el tooltip los lee del detalle (C-F06-02) de las canceladas de la página (`useQueries` en `ExitListTable`), sin cambiar el contrato (`DEC-002`). Si se prefiere sumar `cancelledAt` y `cancellationReason` a la fila, es un cambio de contrato que se pregunta al usuario.
+    - «+ Nueva salida» y «Editar» muestran un aviso mientras `FORM_PAGES_READY` sea `false` en la página; FE-2 lo pasa a `true`.
+    - Los filtros de tipo, estado, modo de pago y estado de la guía eligen un valor (el `Select` de `AppDataTable`); el contrato admite varios.
+    - La sección Guía dice «Emitida» o «Sin factura» y la Mercancía muestra «Asignada» en la unidad de carga: el contrato no trae el número de la factura ni el identificador de la unidad de la línea.
+    - Para ver la maquetación: `NUXT_PUBLIC_MOCK_SESSION=true yarn dev` y `/foreign-trade/exits?roles=ForeignTrade` (o `?roles=Admin,ForeignTrade`).
 
 ### 8.4 Maquetación, fase 2 — «Nueva salida», «Editar», confirmación y etapa Salidas
 
