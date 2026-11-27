@@ -1,0 +1,30 @@
+                                                                       Deposito No.
+                                                               2026BA00001
+
+                                                          2 0 2 6 B A 0 0 0 0 1
+
+
+
+
+Importador: QA Importador PV2 Fase 2     Intermediario: QA Agencia de Aduanas
+                                         PV2
+
+Fecha Ingreso: 2026-11-27 01 02 21
+
+
+
+   Ampara            Saldo   Mercancia
+
+        10             10    GRANOS
+
+
+
+Carta Porte: CP-IT-f899a4f0253144        Manifiesto No. N/A N/A
+20261126
+Placa(s): QF669231                       Unidad(es) de carga: TANQUERO
+                                         TQ519546
+
+
+
+             MERCANCIA SIN NACIONALIZAR
+

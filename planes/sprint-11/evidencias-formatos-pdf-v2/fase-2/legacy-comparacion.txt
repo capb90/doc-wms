@@ -1,0 +1,4 @@
+Etiqueta de exportación, legacy antes / después (escenario): texto IGUAL, imagen 100 ppp IGUAL
+Etiqueta de inspección, legacy antes / después (escenario): texto IGUAL, imagen 100 ppp IGUAL
+Etiqueta de importación de la QA, legacy de la fase 2 / de la fase 1: texto IGUAL, imagen 100 ppp IGUAL
+Tarjeta 1 de la QA, legacy de la fase 2 / tarjeta 1 de la fase 1: texto IGUAL, imagen 100 ppp IGUAL

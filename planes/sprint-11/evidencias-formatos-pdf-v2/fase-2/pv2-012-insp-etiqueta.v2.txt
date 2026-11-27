@@ -1,0 +1,31 @@
+                                                                      Deposito No.
+                                                         2026INSP00001
+
+                                                       2 0 2 6 I N S P 0 0 0 0 1
+
+
+
+
+Importador: QA Importador PV2 Fase 2    Exportador: QA Exportador PV2 Fase 2
+Intermediario: QA Agencia de Aduanas
+PV2
+
+Fecha Ingreso: 2026-11-27 01 02 22
+
+
+
+   Ampara          Saldo    Mercancia
+
+        10            10    GRANOS
+
+
+
+Carta Porte: CP-IT-764a862712e542       Factura: FV-1234 20261120
+20261126
+Lista de empaque: LE-77                 Placa(s): QF948592
+
+
+
+
+                  INSPECCION ADUANERA
+
