@@ -1,5 +1,7 @@
 # Prompt — F06 «Salidas de mercancía», parte 3 (integración I-06)
 
+> **Ejecutado** el 2026-11-27; ya no es una instrucción. I-06 (1): FE `7ac023d`; I-06 (2): FE `f01c563`; BE sin cambios (`f0b9007`); fusión en `fase-2`: BE `335eb25`, FE `3069cb7` (plan §13.6).
+
 > **Fecha:** 26 de noviembre de 2026. **Plan:** [plan-cerrado-f2-f06-salidas-2026-11-26.md](plan-cerrado-f2-f06-salidas-2026-11-26.md) (§13). **Repos y ramas:** `Backend/wms-api` y `Frontend/wms`, `f2/f06-salidas` en los dos (salieron de `fase-2`: el backend con I-05 fusionada; el frontend, además, con el plan de `AppAlertIcon`). Arranca cuando BE-1, BE-2 y FE-1 a FE-3 están cerradas y con push, y el usuario dio su visto bueno a la revisión de §8.6. Ocupa los dos repos.
 
 ```text
