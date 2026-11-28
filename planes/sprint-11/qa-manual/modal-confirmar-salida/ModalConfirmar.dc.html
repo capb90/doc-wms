@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Modal: Confirmar salida</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+.k{font-size:12px;color:#5B6577;margin:0}
+.v{font-size:15px;font-weight:600;color:#0F172A;margin:2px 0 0;font-variant-numeric:tabular-nums}
+.lbl{font-size:13px;font-weight:600;color:#1E293B}
+</style>
+</helmet>
+<div style="width: 1120px; height: 980px; box-sizing: border-box; padding: 40px 60px; background: #7C8796; font-family: Inter, system-ui, sans-serif; color: #0F172A; display: flex; justify-content: center; align-items: flex-start">
+<div role="dialog" aria-modal="true" aria-labelledby="mt" style="width: 1000px; background: #fff; border-radius: 14px; box-shadow: 0 24px 60px rgba(15,23,42,.35); display: flex; flex-direction: column; overflow: hidden">
+
+<header style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; padding: 24px 28px 20px; border-bottom: 1px solid #EEF1F5">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<h2 id="mt" style="margin: 0; font-size: 21px; font-weight: 700">Confirmar la salida 2026SM00011</h2>
+<p style="margin: 0; font-size: 14px; color: #5B6577">Al confirmar se emite la guía y se descuenta el stock del depósito.</p>
+</div>
+<button type="button" aria-label="Cerrar" style="width: 40px; height: 40px; flex: none; border: none; border-radius: 8px; background: transparent; color: #475569; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+</header>
+
+<div style="display: flex; gap: 28px; padding: 24px 28px; align-items: flex-start">
+
+<div style="flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 24px">
+<section aria-labelledby="rs" style="display: flex; flex-direction: column; gap: 12px">
+<h3 id="rs" style="margin: 0; font-size: 13px; font-weight: 600; color: #5B6577; text-transform: uppercase; letter-spacing: .05em">Resumen de la salida</h3>
+<div style="background: #F8FAFC; border: 1px solid #E2E7EE; border-radius: 10px; padding: 16px 18px; display: flex; flex-direction: column; gap: 14px">
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px 20px">
+<div><p class="k">Tipo</p><p class="v">Por tiquete de entrada</p></div>
+<div><p class="k">Depósito</p><p class="v">2026BA00013</p></div>
+<div><p class="k">Placa</p><p class="v">XAI1204</p></div>
+</div>
+<div style="height: 1px; background: #E2E7EE"></div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px">
+<div><p class="k">Mercancía que sale</p><p class="v">FRIJOL EN GRANO</p></div>
+<span style="font-size: 18px; font-weight: 700; font-variant-numeric: tabular-nums">640 <span style="font-size: 14px; font-weight: 500; color: #5B6577">sacos</span></span>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="dg" style="display: flex; flex-direction: column; gap: 16px">
+<h3 id="dg" style="margin: 0; font-size: 13px; font-weight: 600; color: #5B6577; text-transform: uppercase; letter-spacing: .05em">Datos de la guía</h3>
+<div style="display: flex; flex-direction: column; gap: 6px">
+<label class="lbl" for="fh">Fecha y hora de salida <span style="color: #B91C1C" aria-hidden="true">*</span></label>
+<div style="display: flex; height: 44px; border: 1px solid #CBD3DE; border-radius: 8px; overflow: hidden">
+<input id="fh" required="" defaultValue="27/11/2026 18:03" style="flex: 1; border: none; padding: 0 12px; font: inherit; font-size: 14px; font-variant-numeric: tabular-nums; min-width: 0">
+<button type="button" aria-label="Abrir calendario" style="width: 44px; border: none; border-left: 1px solid #CBD3DE; background: #F8FAFC; color: #334155; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"></rect><path d="M16 2v4M8 2v4M3 10h18"></path></svg></button>
+</div>
+<span style="display: flex; align-items: center; gap: 6px; font-size: 13px; color: #1E3A8A"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg>La guía vence el <strong>29/11/2026</strong> · 2 días después de la salida</span>
+</div>
+<fieldset style="border: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px">
+<legend class="lbl" style="padding: 0; margin-bottom: 8px">¿Quién firma la guía de salida? <span style="color: #B91C1C" aria-hidden="true">*</span></legend>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+<sc-for list="{{firmantes}}" as="f" hint-placeholder-count="2">
+<label style="display: flex; align-items: center; gap: 10px; min-height: 48px; padding: 8px 14px; box-sizing: border-box; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; border: {{f.border}}; background: {{f.bg}}">
+<input type="radio" name="firmante" required="" checked="{{f.checked}}" onChange="{{f.pick}}" style="margin: 0; width: 18px; height: 18px; flex: none; accent-color: #2563EB">
+<span>{{f.label}}</span>
+</label>
+</sc-for>
+</div>
+</fieldset>
+</section>
+</div>
+
+<div style="flex: 0 0 420px; min-width: 0">
+<dc-import name="Cobro" destinatario="tercero" modo="inmediato" hint-size="420px,600px"></dc-import>
+</div>
+</div>
+
+<footer style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 28px; background: #F8FAFC; border-top: 1px solid #EEF1F5">
+<span style="display: flex; align-items: center; gap: 8px; font-size: 13px; color: #334155"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" aria-hidden="true"><path d="M12 9v4M12 17h.01"></path><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"></path></svg>Se descontarán 640 sacos del depósito 2026BA00013. No se puede deshacer.</span>
+<div style="display: flex; gap: 8px">
+<button type="button" style="height: 44px; padding: 0 18px; border: 1px solid #CBD3DE; background: #fff; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 500; color: #334155; cursor: pointer">Cancelar</button>
+<button type="button" style="height: 44px; padding: 0 20px; border: none; background: #2563EB; border-radius: 8px; font: inherit; font-size: 14px; font-weight: 600; color: #fff; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"></path></svg>Emitir guía y cobrar $ 25.000</button>
+</div>
+</footer>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1120,"height":980}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = { firmante: 'importador' }; }
+  renderVals() {
+    const firmantes = [
+      { id: 'importador', label: 'Importador' },
+      { id: 'conductor', label: 'Conductor' }
+    ].map((f) => {
+      const on = this.state.firmante === f.id;
+      return { ...f, checked: on, border: on ? '2px solid #2563EB' : '1px solid #E2E7EE', bg: on ? '#F1F5FF' : '#FFFFFF', pick: () => this.setState({ firmante: f.id }) };
+    });
+    return { firmantes };
+  }
+}
+</script>
+</body>
+</html>
