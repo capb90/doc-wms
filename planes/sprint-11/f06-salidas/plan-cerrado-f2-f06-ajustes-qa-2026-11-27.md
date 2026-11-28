@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · F06 Salidas de mercancía · Ajustes de la QA manual de la integración
 
-> **Fecha:** 27 de noviembre de 2026. **Estado:** Borrador para aprobación del usuario.
+> **Fecha:** 27 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-27 («Apruebo el plan»). Sin ejecutar: AQ-1 (backend) y AQ-2 (frontend) pueden ir en paralelo; AQ-3 va después de las dos.
 > **Origen:** la prueba manual del usuario sobre F06 integrada (I-06): [`../qa-manual/hallazgos-int-F06.md`](../qa-manual/hallazgos-int-F06.md), con los mockups [`../qa-manual/modal-confirmar-salida/`](../qa-manual/modal-confirmar-salida/) y [`../qa-manual/formulario-cobro-compartido/`](../qa-manual/formulario-cobro-compartido/). Las respuestas del usuario del 2026-11-27 están en D1 a D4.
 > **Base:** BE `fase-2` `335eb25` · FE `fase-2` `3069cb7` · docs `main` `f3f4e0f`.
 > **Alcance:** backend y frontend. Backend: el cuerpo de la confirmación (C-F06-05) recibe el firmante y deja de recibir observaciones (la guía toma las de la salida), y el cobro sugerido (C-F06-06) informa el firmante sugerido y si «Importador» es posible. Frontend: el formulario de cobro compartido (`AppChargeForm`) rediseñado en sus tres vistas (Báscula, montacargas y la confirmación de la salida) y en la galería, y el modal de confirmación de la salida rediseñado. Sin migraciones. Cambia decisiones del plan de F06 (D4, D12, D13) y del plan de F02 (D13, AF-132). Donde chocan, gana este plan.
