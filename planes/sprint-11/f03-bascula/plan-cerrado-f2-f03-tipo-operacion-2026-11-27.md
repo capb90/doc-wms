@@ -1,6 +1,6 @@
 # Plan cerrado — Fase 2 · F03 Báscula · El operario elige el tipo de operación al atender
 
-> **Fecha:** 27 de noviembre de 2026. **Estado:** Propuesto.
+> **Fecha:** 27 de noviembre de 2026. **Estado:** Aprobado por el usuario el 2026-11-27 («Aprobar con §10»), con los cambios al hub de §10 aplicados el mismo día. Por ejecutar: fase 1 (BE).
 > **Origen:** pedido del usuario del 2026-11-27 («Báscula: el operario elige el tipo de operación al atender, sin depender de Vigilancia»), con su diseño de referencia ([canvas «Báscula — Tipo de operación explícito»](https://claude.ai/artifact/D2BcbcEmz3Bf7KrCGYjhSL): artboards «1 · Cola» y «2 · Formulario»). Las respuestas del usuario a la ronda de este plan (2026-11-27) están en D1 a D3.
 > **Base:** BE `fase-2` `a81b99c` · FE `fase-2` `efa65ff` · docs `main` `c39ea31`. Rama: `f2/f03-tipo-operacion` en BE y en FE.
 > **Alcance:** backend y frontend. Se elimina la categoría del motivo de ingreso (una migración). El tipo de operación lo elige Báscula al atender un camión «Sin iniciar». Los campos de cada variante del formulario no cambian; cambia de dónde sale la variante.
@@ -210,7 +210,7 @@ Fusiones: `f2/f03-tipo-operacion` en `fase-2`, con `--no-ff`, en BE y en FE, al 
 
 ---
 
-## 10. Cambios al hub (con el «sí» del usuario)
+## 10. Cambios al hub (aplicados el 2026-11-27 con el «sí» del usuario)
 
 1. `D/contexto/decisiones.md`, nueva al final: «**DEC-083 — Tipo de operación en Báscula** (2026-11-27). Pedido del usuario: el operario de Báscula elige el tipo de operación (Entrada, Salida o Solo pesaje) al atender un camión «Sin iniciar»; se elimina la categoría del motivo de ingreso. El motivo sigue obligatorio en Vigilancia y conserva «Requiere pesaje», que decide si el camión va a Báscula. El tipo se guarda con el registro y solo se cambia antes de guardarlo; después, se anula el registro y se atiende de nuevo. Reemplaza la parte de la categoría de AF-08 y M22. Plan: `planes/sprint-11/f03-bascula/plan-cerrado-f2-f03-tipo-operacion-2026-11-27.md`.»
 2. `D/contexto/decisiones.md`, `DEC-080`, al final: «*La categoría del motivo de AF-08 y M22 la reemplaza `DEC-083` (2026-11-27).*»

@@ -285,6 +285,7 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
 - **Precisa:** `DEC-010` (2) (AF-77), `DEC-053` BR-06-003 (AF-109) y `DEC-057` H3 (AF-09, AF-41).
 - **También cambia:** P16 del plan de paridad, CHG-36 del plan de corrección, lo construido para `DEC-014` en BAS-07 y la regla de WMS-29 de `contexto-negocio-wms-para-ia.md` §5.11 (sección 5 del análisis).
 - **Nota (2026-11-26, estado aduanero del depósito):** el depósito tiene dos estados aduaneros: «Nacionalizado» en cuanto tiene un levante, aunque no cubra todo lo ingresado, y «Sin nacionalizar» sin levantes. El producto conserva tres («Sin nacionalizar», «Parcial» y «Nacionalizado»), según lo levantado frente a su cantidad. Coincide con las etiquetas impresas, que ya usaban «hay levantes». El contador `partial` de los depósitos (C-F05-33) queda en 0 y se conserva en el contrato. *Fuente:* el usuario, en la QA manual de la integración de F05 («Solo el depósito»; `planes/sprint-11/f05-comercio-exterior/plan-cerrado-f2-f05-ajustes-qa-2026-11-26.md` D4 y D13).
+- **Nota (2026-11-27, categoría del motivo):** la categoría del motivo de AF-08 y M22 la reemplaza `DEC-083`.
 - **Fuente:** el usuario, sección por sección (AF-55, AF-71, AF-103, AF-126 y AF-137).
 
 **DEC-081 — Implementación de la fase 2** (2026-11-20). Respuestas del usuario a la ronda del plan maestro (`planes/sprint-11/plan-maestro-implementacion-fase-2-2026-11-20.md`, M6 a M24).
@@ -303,3 +304,5 @@ Respuestas del usuario a las diferencias con el legacy que no tenían decisión,
   - **Pegar en un campo sin decimales:** un número con decimal (`640.5`) no pega nada, porque el campo rechaza la coma decimal. Antes daba 6.405. El usuario vio el cambio al cerrar la fase 2 y siguió sin objetarlo. `1.234` se sigue pegando como 1.234 (miles).
   - **Los Excel siguen como números** (D3 del plan): las celdas conservan su valor y los formatos `#,##0` y `#,##0.00`; Excel los muestra según la configuración regional del equipo.
 - **Dónde está la regla:** `contexto/convenciones-tecnicas.md` §3, «Formato numérico es-CO».
+
+**DEC-083 — Tipo de operación en Báscula** (2026-11-27). Pedido del usuario: el operario de Báscula elige el tipo de operación (Entrada, Salida o Solo pesaje) al atender un camión «Sin iniciar»; se elimina la categoría del motivo de ingreso. El motivo sigue obligatorio en Vigilancia y conserva «Requiere pesaje», que decide si el camión va a Báscula. El tipo se guarda con el registro y solo se cambia antes de guardarlo; después, se anula el registro y se atiende de nuevo. Reemplaza la parte de la categoría de AF-08 y M22. Plan: `planes/sprint-11/f03-bascula/plan-cerrado-f2-f03-tipo-operacion-2026-11-27.md`.
