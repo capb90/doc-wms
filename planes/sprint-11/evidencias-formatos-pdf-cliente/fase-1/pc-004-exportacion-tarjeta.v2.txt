@@ -1,0 +1,30 @@
+                                                                                        DEPÓSITO NO.
+
+                                                                                  2026BA00003
+
+                                                                              2 0 2 6 B A 0 0 0 0 3
+
+
+
+EXPORTADOR                                 INTERMEDIARIO    FECHA INGRESO
+Cliente Cobro Ejemplo                      Agencia QA I05   2026-11-24 18:15:19
+
+CARTA PORTE                                MANIFIESTO NO.   PLACA
+CP-9001                                    MF-9001          QAI051
+2026-11-25
+
+UNIDAD(ES) DE CARGA
+CONTENEDOR QAIC05
+
+
+  CANT. INGRESA       MERCANCÍA
+
+              12      ARROZ
+
+              5       LENTEJA QA I05 (CAJAS)
+
+
+
+                                  MERCANCÍA PARA EXPORTACIÓN
+                                                                                        Impresión # 1
+

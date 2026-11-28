@@ -1,0 +1,14 @@
+2026BA00003-etiqueta: páginas 1/1, texto igual, imagen igual
+2026BA00003-exportacion-etiqueta: páginas 1/1, texto igual, imagen igual
+2026BA00003-exportacion-tarjeta: páginas 1/1, texto igual, imagen igual
+2026BA00003-tarjeta: páginas 1/1, texto igual, imagen igual
+2026BA00008-etiqueta: páginas 1/1, texto igual, imagen igual
+2026BA00008-exportacion-etiqueta: páginas 1/1, texto igual, imagen igual
+2026BA00008-exportacion-tarjeta: páginas 1/1, texto igual, imagen igual
+2026BA00008-tarjeta: páginas 1/1, texto igual, imagen igual
+2026BA00013-etiqueta: páginas 1/1, texto igual, imagen igual
+2026BA00013-exportacion-etiqueta: páginas 1/1, texto igual, imagen igual
+2026BA00013-exportacion-tarjeta: páginas 1/1, texto igual, imagen igual
+2026BA00013-tarjeta: páginas 1/1, texto igual, imagen igual
+2026INSP00001-inspeccion-etiqueta: páginas 1/1, texto igual, imagen igual
+2026INSP00001-inspeccion-tarjeta: páginas 1/1, texto igual, imagen igual
