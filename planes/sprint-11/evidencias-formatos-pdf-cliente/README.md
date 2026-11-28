@@ -85,3 +85,76 @@ Sobre `f2/formatos-pdf-cliente` `c764750`, antes y después (la base se midió e
 - `Wms.Tests`: 2547 → 2563, todo en verde. La guardia `NumberCultureGuardTests` pasa con 29 en los dos.
 - `Wms.IntegrationTests`: 916 → 917, todo en verde. La prueba nueva es la del número de impresión.
 - `dotnet ef migrations has-pending-model-changes`: sin cambios (no hay migración).
+
+## Fase 2 (BE) — 2026-11-28
+
+BE `471aefe` en `f2/formatos-pdf-cliente`, sobre la fase 1 (`c764750`).
+
+**Método.** Un arnés temporal, que no se subió: una aplicación de consola que usa `DepositPdfService` contra la base local `wmsdb`, con el formato fijo (`LEGACY` o `V2`). Generó el PDF de diez depósitos:
+
+- **2026BA00013**: el depósito de la QA de F05, con tres camiones de un producto;
+- **2026BA00001** y **2026BA00003**: un camión con dos productos;
+- **2026BA00002**, **2026BA00008** y **2026BA00009**: de importación, uno sin P. mercancía;
+- **2026EXP00001**: exportación (la base local ya tiene uno);
+- **2026INSP00001** y **2026INSP00006**: inspección;
+- **2026INSP00007**: inspección con un camión que no declara productos.
+
+### El legacy no cambia (PASA)
+
+Los 10 PDF legacy se generaron con el código de la fase 1, antes de tocarlo, y con el de la fase 2. Cada par se comparó con `pdftotext -layout` y con la imagen de cada página (`pdftoppm`, 100 ppp), píxel a píxel: los 10 tienen el mismo texto y la misma imagen ([`fase-2/legacy-comparacion.txt`](fase-2/legacy-comparacion.txt)).
+
+- La línea «Depósito registrado el …, impreso el …» se enmascara: la hora de impresión cambia en cada corrida y, como la línea va centrada, se corre con el ancho de sus dígitos. Por eso el texto se compara también con los espacios normalizados.
+- Una prueba negativa (el PDF legacy frente al v2) da «texto distinto, imagen distinta».
+- Una prueba unitaria comprueba además que el legacy ignora los datos nuevos: los pesajes de cada producto y los camiones sin productos.
+
+### QA-PC-005: PDF del depósito de la QA (PASA)
+
+[`fase-2/pc-005-cliente-vs-v2.png`](fase-2/pc-005-cliente-vs-v2.png): a la izquierda, el diseño del cliente; a la derecha, el PDF v2 de 2026BA00013.
+
+- Carta, Barlow, el logotipo, «DEPÓSITO NO.», el número en rojo, el código de barras y «FECHA HORA INGRESO».
+- El recuadro Importador · S.I.A. / Intermediario · Transportadora, con Carta porte, Manifiesto I.C. y sus fechas.
+- La tabla Producto · Pesajes · Cantidades: FRIJOL EN GRANO (SACOS) con sus tres camiones, cada uno con Cant. 640, su P. mercancía (32.020, 32.020 y 32.010) y su tiquete; Entrada 1.920, Ampara 1.920 y Saldo 0, unidos a lo alto de los camiones.
+- «TOTAL PESO (KG)» 96.050 (es-CO, D18).
+- Observaciones en su recuadro y Responsable, sin Cuadrilla (D19).
+- «RECIBIDO POR» con el nombre y la identificación del responsable, y «FIRMA CONDUCTOR», al pie de la hoja.
+- El pie del cliente: «Depósito registrado el …, impreso el …», «Página 1 de 1» y la banda naranja.
+
+Las diferencias con la imagen son de datos: la dirección del importador y la fecha del manifiesto están vacías en la base local.
+
+Archivos: `pc-005-qa-deposito.v2.pdf`, `.png` y `.txt`.
+
+### QA-PC-011: un camión con dos productos (PASA)
+
+[`fase-2/pc-011-cliente-vs-v2.png`](fase-2/pc-011-cliente-vs-v2.png): el diseño del cliente y el PDF v2 de 2026BA00003.
+
+- El camión QAI051 aparece bajo LENTEJA QA I05 (CAJAS) con Cant. 5 y bajo ARROZ con Cant. 12, con el mismo Peso kg (20.000) y el mismo tiquete (2026T00003).
+- «TOTAL PESO (KG)» 20.000: cuenta el camión una vez, como el legacy del mismo depósito (`TOTAL PESO (Kg): 20.000`) y como el legacy de 2024BA1443 (D18).
+- `pc-011-camion-dos-productos-2.v2.*`: 2026BA00001, el camión ABC122 con 8 y 2, 17.700 kg en cada fila y total 17.700, igual al legacy.
+
+### QA-PC-006: exportación e inspección (PASA)
+
+- [`fase-2/pc-006-cliente-vs-exportacion.png`](fase-2/pc-006-cliente-vs-exportacion.png) y `pc-006-exportacion.v2.*`: 2026EXP00001, con la banda azul «MERCANCÍA PARA EXPORTACIÓN» sobre el recuadro.
+- [`fase-2/pc-006-cliente-vs-inspeccion.png`](fase-2/pc-006-cliente-vs-inspeccion.png) y `pc-006-inspeccion.v2.*`: 2026INSP00001, con la banda naranja «INSPECCIÓN ADUANERA». En la inspección, Ampara y Saldo van en blanco, como hoy.
+- `pc-006-inspeccion-camion-sin-producto.v2.*`: 2026INSP00007, sin productos; su camión QAF407 va al final de la tabla, sin producto.
+
+### Decisiones de dibujo
+
+Para que el usuario las revise:
+
+- **Medidas.** Las del `*.dc.html`, a 0,75 pt por px, con una excepción: «Peso Kg.» pasa de 96 a 88 px y «Tiquete» de 84 a 92 px, para que los tiquetes de 10 caracteres (`2026T00020`) quepan en una línea.
+- **Código de barras.** Sigue siendo el Code 39 del PDF del depósito (el legacy y el v2 imprimen la misma imagen). Ocupa el recuadro de 170 × 30 px del diseño, estirado como su SVG. El diseño trae un Code 128, más corto: en ese ancho, las barras finas del Code 39 quedan de unos 0,19 mm.
+- **Pesajes de cada producto (D18).** Una fila por camión no anulado que declara el producto, en el orden de las entradas. Si un camión no trae la cantidad de ese producto, Cant. va en blanco.
+- **Camiones sin productos.** Van al final de la tabla, sin producto y sin cantidades, para que la tabla muestre todos los pesos que suma el total. El legacy no los muestra.
+- **Entre productos**, una raya `#CBD5E1`; entre los camiones de un producto, una `#E2E8F0`. El diseño solo tiene un producto.
+- **Unidades de carga.** El diseño no las trae. Salen junto a Responsable solo con valor, como en la etiqueta de la fase 1.
+- **Firmas.** Al pie de la última hoja, como el `margin-top: auto` del diseño. Si no caben, pasan a una hoja nueva.
+- **Banda de exportación e inspección.** Encima del recuadro de las partes, con los textos con tilde de la etiqueta.
+
+### Compuertas
+
+Sobre `f2/formatos-pdf-cliente` `471aefe`, antes (sobre `c764750`) y después:
+
+- `dotnet build Wms.sln`: sin errores, antes y después.
+- `Wms.Tests`: 2563 → 2568, todo en verde. La guardia `NumberCultureGuardTests` pasa con 29 en los dos. Las nuevas prueban los pesajes de cada producto (con el caso de 2024BA1443), el dibujo con un camión bajo dos productos y en varias hojas, y que el legacy ignora los datos nuevos.
+- `Wms.IntegrationTests`: 917 → 917, todo en verde. `PdfFormatParameterTests` espera ahora Barlow en el PDF del depósito v2 (las guías siguen en Inter hasta la fase 3).
+- `dotnet ef migrations has-pending-model-changes`: sin cambios (no hay migración).

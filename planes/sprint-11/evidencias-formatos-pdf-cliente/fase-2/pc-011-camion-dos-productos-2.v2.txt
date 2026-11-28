@@ -1,0 +1,54 @@
+                                                                                                                                DEPÓSITO NO.
+
+                                                                                                                         2026BA00001
+
+
+                                                                                                  FECHA HORA INGRESO      2026-11-24 18:15:19
+
+
+
+   IMPORTADOR                                    S.I.A. / INTERMEDIARIO             TRANSPORTADORA
+   Importadora Ejemplo 1                                                            TRANSPORTES EJEMPLO 1
+
+   CÓDIGO/CÉDULA/NIT                             IDENTIFICACIÓN SIA                 CARTA PORTE                   FECHA CARTA PORTE
+   810000001 COL                                                                    CP-1234
+   DIRECCIÓN                                                                        MANIFIESTO I.C. #             FECHA DEL M.I.C.
+
+
+
+
+DESCRIPCIÓN DEL INGRESO A BODEGA
+
+                                                                PESAJES                                           CANTIDADES
+  PRODUCTO
+                                     PLACA             CANT.          PESO KG.        TIQUETE           ENTRADA        AMPARA        SALDO
+
+ ARROZ (ESTIBAS)                     ABC122                 8             17.700   2026T00001                 8
+
+ CEBOLLA                             ABC122                 2             17.700   2026T00001                 2
+
+                                                                                                                  TOTAL PESO (KG)    17.700
+OBSERVACIONES
+
+
+
+
+RESPONSABLE
+U.V.
+
+
+
+
+                         RECIBIDO POR                                                             FIRMA CONDUCTOR
+                     USUARIO VIGILANCIA
+                        900000003
+
+
+
+Depósito registrado el 2026-11-24 18:15:19, impreso el 2026-11-28 06:30:14                                                       Página 1 de 1
+
+
+
+                       CALLE 3 ESTE No. 2-732 BARRIO EL TEJAR TEL: 7736748 - 7736522 IPIALES - COLOMBIA
+                                              E-mail: info@bodegasasociadas.com
+

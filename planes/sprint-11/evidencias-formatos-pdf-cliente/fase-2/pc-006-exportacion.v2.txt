@@ -1,0 +1,54 @@
+                                                                                                                                DEPÓSITO NO.
+
+                                                                                                                     2026EXP00001
+
+
+                                                                                                FECHA HORA INGRESO      2026-11-27 16:08:05
+
+
+
+                                            MERCANCÍA PARA EXPORTACIÓN
+
+   IMPORTADOR                                   S.I.A. / INTERMEDIARIO            TRANSPORTADORA
+   Cliente Cobro Ejemplo                                                          TRANSPORTES EJEMPLO 1
+
+   CÓDIGO/CÉDULA/NIT                            IDENTIFICACIÓN SIA                CARTA PORTE                   FECHA CARTA PORTE
+   830000002 COL                                                                  CP-QA-F06-9162                2026-11-26
+   DIRECCIÓN                                                                      MANIFIESTO I.C. #             FECHA DEL M.I.C.
+
+
+
+
+DESCRIPCIÓN DEL INGRESO A BODEGA
+
+                                                               PESAJES                                          CANTIDADES
+ PRODUCTO
+                                    PLACA              CANT.         PESO KG.       TIQUETE           ENTRADA         AMPARA          SALDO
+
+ ARROZ                              QEX935                20             20.000                            20              20              0
+
+                                                                                                                TOTAL PESO (KG)    20.000
+OBSERVACIONES
+
+
+
+
+RESPONSABLE
+U.V.
+
+
+
+
+                         RECIBIDO POR                                                           FIRMA CONDUCTOR
+                     USUARIO VIGILANCIA
+                        900000003
+
+
+
+Depósito registrado el 2026-11-27 16:08:05, impreso el 2026-11-28 06:30:14                                                        Página 1 de 1
+
+
+
+                       CALLE 3 ESTE No. 2-732 BARRIO EL TEJAR TEL: 7736748 - 7736522 IPIALES - COLOMBIA
+                                              E-mail: info@bodegasasociadas.com
+
